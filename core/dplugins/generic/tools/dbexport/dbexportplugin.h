@@ -3,11 +3,10 @@
  * This file is a part of digiKam project
  * https://www.digikam.org
  *
- * Date        : 2018-07-30
- * Description : a plugin to render slideshow.
+ * Date        : 2021-01-14
+ * Description : a plugin to export data from digikam's database
  *
- * Copyright (C) 2018-2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
- * Copyright (C) 2020      by Nghia Duong <minhnghiaduong997 at gmail dot com>
+ * Copyright (C) 2021 by Nghia Duong <minhnghiaduong997 at gmail dot com>
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -21,33 +20,29 @@
  *
  * ============================================================ */
 
-#ifndef DIGIKAM_SLIDESHOW_PLUGIN_H
-#define DIGIKAM_SLIDESHOW_PLUGIN_H
+#ifndef DIGIKAM_DBEXPORT_PLUGIN_H
+#define DIGIKAM_DBEXPORT_PLUGIN_H
 
 // Local includes
 
 #include "dplugingeneric.h"
-#include "iteminfolist.h"
 
-#define DPLUGIN_IID "org.kde.digikam.plugin.generic.SlideShow"
+#define DPLUGIN_IID "org.kde.digikam.plugin.generic.DatabaseExport"
 
 using namespace Digikam;
 
-namespace DigikamGenericSlideShowPlugin
+namespace DigikamGenericDbExportPlugin
 {
 
-class SlideShowSettings;
-
-class SlideShowPlugin : public DPluginGeneric
+class DbExportPlugin: public DPluginGeneric
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID DPLUGIN_IID)
     Q_INTERFACES(Digikam::DPluginGeneric)
 
 public:
-
-    explicit SlideShowPlugin(QObject* const parent = nullptr);
-    ~SlideShowPlugin() override;
+    explicit DbExportPlugin(QObject* const parent = nullptr);
+    ~DbExportPlugin() override;
 
     QString name()                 const override;
     QString iid()                  const override;
@@ -57,25 +52,9 @@ public:
     QList<DPluginAuthor> authors() const override;
 
     void setup(QObject* const)           override;
-
-    void addConnectionSlideEnd(QObject* const obj);
-
-private Q_SLOTS:
-
-    void slotMenuSlideShow();
-    void slotMenuSlideShowAll();
-    void slotMenuSlideShowSelection();
-    void slotMenuSlideShowRecursive();
-    void slotShowRecursive(const QList<QUrl>& imageList);
-    void slotShowManual();
-
 private:
-
-    void slideshow(SlideShowSettings* const settings,
-                   bool autoPlayEnabled = true,
-                   const QUrl& startFrom = QUrl());
 };
 
-} // namespace DigikamGenericSlideShowPlugin
+} // namespace DigikamGenericDbExportPlugin
 
-#endif // DIGIKAM_SLIDESHOW_PLUGIN_H
+#endif  // DIGIKAM_DBEXPORT_PLUGIN_H

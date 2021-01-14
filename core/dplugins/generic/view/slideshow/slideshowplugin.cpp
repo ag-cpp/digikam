@@ -7,7 +7,7 @@
  * Description : a plugin to render slideshow.
  *
  * Copyright (C) 2018-2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
- * Copyright (C) 2019-2020 by Minh Nghia Duong <minhnghiaduong997 at gmail dot com>
+ * Copyright (C) 2019-2020 by Nghia Duong <minhnghiaduong997 at gmail dot com>
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -96,7 +96,7 @@ QList<DPluginAuthor> SlideShowPlugin::authors() const
             << DPluginAuthor(QString::fromUtf8("Gilles Caulier"),
                              QString::fromUtf8("caulier dot gilles at gmail dot com"),
                              QString::fromUtf8("(C) 2005-2020"))
-            << DPluginAuthor(QString::fromUtf8("Minh Nghia Duong"),
+            << DPluginAuthor(QString::fromUtf8("Nghia Duong"),
                              QString::fromUtf8("minhnghiaduong997 at gmail dot com"),
                              QString::fromUtf8("(C) 2019-2020"))
             ;
