@@ -78,6 +78,19 @@ target_link_libraries(databasetagstest
                       ${COMMON_TEST_LINK}
 )
 
+#------------------------------------------------------------------------
+
+add_executable(databaseretrievetest ${CMAKE_CURRENT_SOURCE_DIR}/databaseretrievetest.cpp)
+
+target_link_libraries(databaseretrievetest
+
+                      digikamcore
+                      digikamdatabase
+                      digikamgui
+
+                      ${COMMON_TEST_LINK}
+)
+
 # NOTE: this unit test fail to work as the temporary collection creation cannot be done in /tmp.
 #       we need to port code to use QTest directory, as it done with metadataengine unit-tests.
 #
