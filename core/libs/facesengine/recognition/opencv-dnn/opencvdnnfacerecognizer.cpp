@@ -185,4 +185,21 @@ int OpenCVDNNFaceRecognizer::verifyTestData(const cv::Mat& preprocessedImage)
     return id;
 }
 
+std::vector<float> OpenCVDNNFaceRecognizer::extractFaceEmbeddeding(QImage* inputImage)
+{
+    cv::Mat faceEmbedding = d->extractors[0]->getFaceEmbedding(prepareForRecognition(*inputImage));
+
+    std::vector<float> vector;
+
+    for (int i = 0 ; i < faceEmbedding.rows ; ++i)
+    {
+        for (int j = 0 ; j < faceEmbedding.cols ; ++j)
+        {
+            vector.push_back(faceEmbedding.at<float>(i,j));
+        }
+    }
+
+    return vector;
+}
+
 } // namespace Digikam

@@ -179,6 +179,12 @@ public:
     void clearTraining(const QList<Identity>& identitiesToClean,
                        const QString& trainingContext = QString());
 
+    /**
+     * Extract face vectors from images
+     * For experimental usages only
+     */
+    QList<std::vector<float> > extractFaceEmbeddings(const QList<QImage*>& images);
+
     // --- Recognition management (facesengine_interface_recognize.cpp) -------------------
 
     /**

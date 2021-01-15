@@ -143,4 +143,16 @@ void FacialRecognitionWrapper::clearTraining(const QList<Identity>& identitiesTo
     d->clear(ids, trainingContext);
 }
 
+QList<std::vector<float> > FacialRecognitionWrapper::extractFaceEmbeddings(const QList<QImage*>& images)
+{
+    QList<std::vector<float> > faceEmbeddings;
+
+    for (int i = 0; i < images.size(); ++i)
+    {
+        faceEmbeddings.append(d->recognizer->extractFaceEmbeddeding(images[i]));
+    }
+
+    return faceEmbeddings;
+}
+
 } // namespace Digikam

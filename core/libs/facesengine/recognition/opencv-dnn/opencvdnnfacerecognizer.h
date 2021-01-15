@@ -103,6 +103,8 @@ public:
      */
     void setThreshold(float threshold);
 
+    // Methods for testing only
+
     /**
      * @brief register training data for unit test
      */
@@ -112,6 +114,11 @@ public:
      * @brief predict label of test data for unit test
      */
     int verifyTestData(const cv::Mat& preprocessedImage);
+
+    /**
+     * @brief extract FaceEmbeddeding from preprocessed image
+     */
+    std::vector<float> extractFaceEmbeddeding(QImage* inputImage);
 
 private:
 
