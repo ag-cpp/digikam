@@ -30,3 +30,19 @@ svm.linear.fit <- ksvm(Y~., data=data.train.pca, type="C-svc", kernel="vanillado
 svm.linear.pred <- predict(svm.linear.fit, newdata=data.test.pca)
 table(data.test.pca$Y, svm.linear.pred)
 svm.linear.err <- mean(data.test.pca$Y != svm.linear.pred)
+
+
+#1.2 SVM with gaussian kernel
+# Choose hyper-param C by cross-validation
+
+svm.gaussian <- foreach (i=1:N, .combine=c) %do% {
+  error <- foreach (k=1:M, .combine=c) %dopar% {
+    error <- cross(ksvm(Y~., data=data.train.pca, type="C-svc", kernel="rbfdot", kpar="automatic", C=CC[i], cross=5))
+  }
+  
+  res <- mean(error)
+}
+
+plot(CC, svm.gaussian, type="b", log="x", xlab="C", ylab="CV error")
+
+svm.gaussian.C <- CC[which.min(svm.gaussian)]
