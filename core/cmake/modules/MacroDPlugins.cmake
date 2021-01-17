@@ -401,3 +401,84 @@ macro(DIGIKAM_ADD_DIMG_PLUGIN)
     endif()
 
 endmacro()
+
+# -------------------------------------------------------------------------
+
+# This macro implement the rules to compile and link an DB DPlugin with extra arguments.
+#
+# Usage: DIGIKAM_ADD_DB_PLUGIN(NAME    _plugin_name_
+#                              SOURCE  _plugin_sources_
+#                              DEPENDS _plugin_dependencies_)
+#
+# With: _plugin_name_ the literal name of the plugin (mandatory).
+#       _plugin_sources_ the list of source codes to compile (mandatory).
+#       _plugin_dependencies_ the list of dependencies to link (optional).
+#
+# Note: by default a Db plugin is linked with digikamcore shared library.
+#
+# This macro will generate a plugin library with this pattern as file name:
+# Bqm_${_pluginname_}_Plugin
+#
+macro(DIGIKAM_ADD_DB_PLUGIN)
+
+    set(_OPTIONS_ARGS)
+    set(_ONE_VALUE_ARGS)
+    set(_MULTI_VALUE_ARGS NAME SOURCES DEPENDS)
+
+    cmake_parse_arguments(_parse_results "${_OPTIONS_ARGS}"
+                                         "${_ONE_VALUE_ARGS}"
+                                         "${_MULTI_VALUE_ARGS}"
+                                         ${ARGN}
+    )
+
+    # Mandatory
+    if(NOT _parse_results_NAME)
+        message(FATAL_ERROR "Db plugin name is required.")
+    endif()
+
+    if(NOT _parse_results_SOURCES)
+        message(FATAL_ERROR "Db plugin sources is required.")
+    endif()
+
+    if(APPLE)
+        set(_extra_deps /System/Library/Frameworks/AppKit.framework)
+    endif()
+
+    add_library(Db_${_parse_results_NAME}_Plugin
+                MODULE ${_parse_results_SOURCES})
+
+    target_link_libraries(Db_${_parse_results_NAME}_Plugin
+
+                          PRIVATE
+
+                          digikamcore
+                          digikamdatabase
+                          digikamgui
+
+                          Qt5::Core
+                          Qt5::Gui
+                          Qt5::Xml
+                          Qt5::Widgets
+                          Qt5::Sql
+
+                          KF5::XmlGui
+                          KF5::I18n
+                          KF5::ConfigCore
+                          KF5::Service
+
+                          ${_parse_results_DEPENDS}
+                          ${_extra_deps}
+    )
+
+    install(TARGETS Db_${_parse_results_NAME}_Plugin
+            DESTINATION ${PLUGIN_INSTALL_DIR}/digikam/db
+    )
+
+    if(APPLE)
+        install(FILES "$<TARGET_FILE:Db_${_parse_results_NAME}_Plugin>.dSYM"
+                DESTINATION ${PLUGIN_INSTALL_DIR}/digikam/db
+                CONFIGURATIONS Debug RelWithDebInfo
+        )
+    endif()
+
+endmacro()

@@ -50,6 +50,7 @@
 #define DIGIKAM_DPLUGIN_BQM_IID       "org.kde.digikam.DPluginBqm/1.1.0"
 #define DIGIKAM_DPLUGIN_RAWIMPORT_IID "org.kde.digikam.DPluginRawImport/1.1.0"
 #define DIGIKAM_DPLUGIN_DIMG_IID      "org.kde.digikam.DPluginDImg/1.1.0"
+#define DIGIKAM_DPLUGIN_DB_IID        "org.kde.digikam.DPluginDb/1.1.0"
 
 namespace Digikam
 {

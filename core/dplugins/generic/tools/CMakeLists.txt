@@ -10,7 +10,6 @@ add_subdirectory(sendbymail)
 add_subdirectory(printcreator)
 add_subdirectory(jalbum)
 add_subdirectory(mediaserver)
-add_subdirectory(dbexport)
 
 if(LibXml2_FOUND AND LibXslt_FOUND)
     add_subdirectory(htmlgallery)

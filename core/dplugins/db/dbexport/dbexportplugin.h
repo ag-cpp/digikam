@@ -25,16 +25,16 @@
 
 // Local includes
 
-#include "dplugingeneric.h"
+#include "dpluginbqm.h"
 
-#define DPLUGIN_IID "org.kde.digikam.plugin.generic.DatabaseExport"
+#define DPLUGIN_IID "org.kde.digikam.plugin.db.DatabaseExport"
 
 using namespace Digikam;
 
-namespace DigikamGenericDbExportPlugin
+namespace DigikamDbExportPlugin
 {
 
-class DbExportPlugin: public DPluginGeneric
+class DbExportPlugin: public DPluginDb
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID DPLUGIN_IID)
@@ -55,6 +55,6 @@ public:
 private:
 };
 
-} // namespace DigikamGenericDbExportPlugin
+} // namespace DigikamDbExportPlugin
 
 #endif  // DIGIKAM_DBEXPORT_PLUGIN_H

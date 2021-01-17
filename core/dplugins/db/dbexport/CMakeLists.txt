@@ -9,22 +9,19 @@ APPLY_COMMON_POLICIES()
 
 include(MacroDPlugins)
 
-include_directories($<TARGET_PROPERTY:Qt5::Widgets,INTERFACE_INCLUDE_DIRECTORIES>
+include_directories($<TARGET_PROPERTY:Qt5::Gui,INTERFACE_INCLUDE_DIRECTORIES>
+                    $<TARGET_PROPERTY:Qt5::Widgets,INTERFACE_INCLUDE_DIRECTORIES>
                     $<TARGET_PROPERTY:Qt5::Core,INTERFACE_INCLUDE_DIRECTORIES>
 
                     $<TARGET_PROPERTY:KF5::ConfigCore,INTERFACE_INCLUDE_DIRECTORIES>
                     $<TARGET_PROPERTY:KF5::I18n,INTERFACE_INCLUDE_DIRECTORIES>
 )
 
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/dialogs)
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/common)
-
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/widgets)
-
 set(dbexportplugin_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/dbexportplugin.cpp
 )
 
-DIGIKAM_ADD_GENERIC_PLUGIN(NAME    DatabaseExport
-                           SOURCES ${dbexportplugin_SRCS}
+DIGIKAM_ADD_DB_PLUGIN(NAME    DatabaseExport
+                      SOURCES ${dbexportplugin_SRCS}
 )
+

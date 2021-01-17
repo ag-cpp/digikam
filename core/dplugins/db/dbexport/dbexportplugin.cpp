@@ -38,11 +38,11 @@
 
 using namespace Digikam;
 
-namespace DigikamGenericDbExportPlugin
+namespace DigikamDbExportPlugin
 {
 
 DbExportPlugin::DbExportPlugin(QObject* const parent)
-    : DPluginGeneric(parent)
+    : DPluginDb(parent)
 {
 }
 
@@ -166,4 +166,4 @@ void DbExportPlugin::setup(QObject* const parent)
     addAction(ac);
 }
 
-} // namespace DigikamGenericDbExportPlugin
+} // namespace DigikamDbExportPlugin
