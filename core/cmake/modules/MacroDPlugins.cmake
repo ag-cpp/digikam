@@ -417,7 +417,7 @@ endmacro()
 # Note: by default a Db plugin is linked with digikamcore shared library.
 #
 # This macro will generate a plugin library with this pattern as file name:
-# Bqm_${_pluginname_}_Plugin
+# Db_${_pluginname_}_Plugin
 #
 macro(DIGIKAM_ADD_DB_PLUGIN)
 

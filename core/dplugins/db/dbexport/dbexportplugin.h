@@ -25,9 +25,9 @@
 
 // Local includes
 
-#include "dpluginbqm.h"
+#include "dplugindb.h"
 
-#define DPLUGIN_IID "org.kde.digikam.plugin.db.DatabaseExport"
+#define DPLUGIN_IID "org.kde.digikam.plugin.db.DbExport"
 
 using namespace Digikam;
 
@@ -38,9 +38,10 @@ class DbExportPlugin: public DPluginDb
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID DPLUGIN_IID)
-    Q_INTERFACES(Digikam::DPluginGeneric)
+    Q_INTERFACES(Digikam::DPluginDb)
 
 public:
+
     explicit DbExportPlugin(QObject* const parent = nullptr);
     ~DbExportPlugin() override;
 
@@ -52,7 +53,9 @@ public:
     QList<DPluginAuthor> authors() const override;
 
     void setup(QObject* const)           override;
+
 private:
+
 };
 
 } // namespace DigikamDbExportPlugin

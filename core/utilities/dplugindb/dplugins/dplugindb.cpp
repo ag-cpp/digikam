@@ -35,8 +35,9 @@ public:
     }
 };
 
-DPluginDb::DPluginDb(QObject* const parent = nullptr)
-    : DPlugin(parent)
+DPluginDb::DPluginDb(QObject* const parent)
+    : DPlugin(parent),
+      d(new Private())
 {
 }
 

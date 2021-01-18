@@ -179,6 +179,7 @@ set(DIGIKAMGUI_OBJECTS
             $<TARGET_OBJECTS:gui_facemanagement_obj>
             $<TARGET_OBJECTS:gui_queuemanager_obj>
             $<TARGET_OBJECTS:gui_advancedrename_obj>
+            $<TARGET_OBJECTS:gui_dplugindb_obj>
 )
 
 if(${Marble_FOUND})

@@ -163,7 +163,7 @@ void DbExportPlugin::setup(QObject* const parent)
     }
     */
 
-    addAction(ac);
+    //addTool(ac);
 }
 
 } // namespace DigikamDbExportPlugin
