@@ -91,8 +91,8 @@ ScanDialog::ScanDialog(KSaneWidget* const saneWdg, QWidget* const parent)
 
     // ------------------------------------------------------------------------
 
-    connect(d->saneWidget, SIGNAL(imageReady(QByteArray&,int,int,int,int)),
-            this, SLOT(slotSaveImage(QByteArray&,int,int,int,int)));
+    connect(d->saneWidget, &KSaneWidget::scannedImageReady,
+            this, &ScanDialog::slotSaveImage);
 
     connect(this, &QDialog::finished,
             this, &ScanDialog::slotDialogFinished);
@@ -125,7 +125,7 @@ void ScanDialog::slotDialogFinished()
 }
 
 // cppcheck-suppress constParameter
-void ScanDialog::slotSaveImage(QByteArray& ksane_data, int width, int height, int bytes_per_line, int ksaneformat)
+void ScanDialog::slotSaveImage(const QImage &image_data)
 {
     QStringList writableMimetypes;
     QList<QByteArray> supported = QImageWriter::supportedMimeTypes();
@@ -245,15 +245,15 @@ void ScanDialog::slotSaveImage(QByteArray& ksane_data, int width, int height, in
 
     SaveImgThread* const thread = new SaveImgThread(this);
 
-    connect(thread, SIGNAL(signalProgress(QUrl,int)),
-            this, SLOT(slotThreadProgress(QUrl,int)));
+    connect(thread, &SaveImgThread::signalProgress,
+            this, &ScanDialog::slotThreadProgress);
 
-    connect(thread, SIGNAL(signalComplete(QUrl,bool)),
-            this, SLOT(slotThreadDone(QUrl,bool)));
+    connect(thread, &SaveImgThread::signalComplete,
+            this, &ScanDialog::slotThreadDone);
 
-    thread->setImageData(ksane_data, width, height, bytes_per_line, ksaneformat);
+    thread->setImageData(image_data);
     thread->setTargetFile(newURL, format);
-    thread->setScannerModel(d->saneWidget->make(), d->saneWidget->model());
+    thread->setScannerModel(d->saneWidget->deviceVendor(), d->saneWidget->deviceModel());
     thread->start();
 }
 
@@ -276,7 +276,7 @@ void ScanDialog::slotThreadDone(const QUrl& url, bool success)
 
     if (success)
     {
-        emit signalImportedImage(url);
+        Q_EMIT signalImportedImage(url);
     }
 }
 

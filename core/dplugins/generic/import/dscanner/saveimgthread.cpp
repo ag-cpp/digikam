@@ -49,19 +49,10 @@ class Q_DECL_HIDDEN SaveImgThread::Private
 public:
 
     explicit Private()
-      : width       (0),
-        height      (0),
-        bytesPerLine(0),
-        frmt        (0)
     {
     }
 
-    int        width;
-    int        height;
-    int        bytesPerLine;
-    int        frmt;
-
-    QByteArray ksaneData;
+    QImage     imageData;
 
     QString    make;
     QString    model;
@@ -85,14 +76,9 @@ SaveImgThread::~SaveImgThread()
     delete d;
 }
 
-void SaveImgThread::setImageData(const QByteArray& ksaneData, int width, int height,
-                                 int bytesPerLine, int ksaneFormat)
+void SaveImgThread::setImageData(const QImage& imageData)
 {
-    d->width        = width;
-    d->height       = height;
-    d->bytesPerLine = bytesPerLine;
-    d->frmt         = ksaneFormat;
-    d->ksaneData    = ksaneData;
+    d->imageData = imageData;
 }
 
 void SaveImgThread::setTargetFile(const QUrl& url, const QString& format)
@@ -109,126 +95,121 @@ void SaveImgThread::setScannerModel(const QString& make, const QString& model)
 
 void SaveImgThread::run()
 {
-    emit signalProgress(d->newUrl, 10);
+    Q_EMIT signalProgress(d->newUrl, 10);
 
-    bool sixteenBit   = ((d->frmt == KSaneWidget::FormatRGB_16_C) ||
-                         (d->frmt == KSaneWidget::FormatGrayScale16));
-    DImg img((uint)d->width, (uint)d->height, sixteenBit, false);
+    bool sixteenBit   = ((d->imageData.format() == QImage::Format_RGBX64) ||
+                         (d->imageData.format() == QImage::Format_Grayscale16));
+    DImg img((uint)d->imageData.width(), (uint)d->imageData.height(), sixteenBit, false);
     int progress;
 
     if (!sixteenBit)
     {
-        uchar* src = (uchar*)d->ksaneData.data();
         uchar* dst = img.bits();
 
-        for (int h = 0 ; h < d->height ; ++h)
+        for (int h = 0 ; h < d->imageData.height() ; ++h)
         {
-            for (int w = 0 ; w < d->width ; ++w)
+            for (int w = 0 ; w < d->imageData.width() ; ++w)
             {
-                if      (d->frmt == KSaneWidget::FormatRGB_8_C)     // Color 8 bits
+                if      (d->imageData.format() == QImage::Format_RGB32)     // Color 8 bits
                 {
-                    dst[0]  = src[2];    // Blue
-                    dst[1]  = src[1];    // Green
-                    dst[2]  = src[0];    // Red
+                    const QRgb *rgbData = reinterpret_cast<QRgb*>(d->imageData.scanLine(h));
+                    dst[0]  = qBlue(rgbData[w]);     // Blue
+                    dst[1]  = qGreen(rgbData[w]);    // Green
+                    dst[2]  = qRed(rgbData[w]);      // Red
                     dst[3]  = 0x00;      // Alpha
 
                     dst    += 4;
-                    src    += 3;
                 }
-                else if (d->frmt == KSaneWidget::FormatGrayScale8)  // Gray
+                else if (d->imageData.format() == QImage::Format_Grayscale8)  // Gray
                 {
-                    dst[0]  = src[0];    // Blue
-                    dst[1]  = src[0];    // Green
-                    dst[2]  = src[0];    // Red
+                    const uchar *grayScale = d->imageData.scanLine(h);
+                    dst[0]  = grayScale[w];    // Blue
+                    dst[1]  = grayScale[w];    // Green
+                    dst[2]  = grayScale[w];    // Red
                     dst[3]  = 0x00;      // Alpha
 
                     dst    += 4;
-                    src    += 1;
                 }
-                else if (d->frmt == KSaneWidget::FormatBlackWhite)  // Lineart
+                else if (d->imageData.format() == QImage::Format_Mono)  // Lineart
                 {
-                    for (int i = 0 ; i < 8 ; ++i)
+                    const uchar *mono = d->imageData.scanLine(h);
+                    const int index = w / 8;
+                    const int mod = w % 8;
+                    if (mono[index] & (1 << mod))
                     {
-                        if (*src & (1 << (7 - i)))
-                        {
-                            dst[0]  = 0x00;    // Blue
-                            dst[1]  = 0x00;    // Green
-                            dst[2]  = 0x00;    // Red
-                            dst[3]  = 0x00;    // Alpha
-                        }
-                        else
-                        {
-                            dst[0]  = 0xFF;    // Blue
-                            dst[1]  = 0xFF;    // Green
-                            dst[2]  = 0xFF;    // Red
-                            dst[3]  = 0x00;    // Alpha
-                        }
-
-                        dst    += 4;
+                        dst[0]  = 0x00;    // Blue
+                        dst[1]  = 0x00;    // Green
+                        dst[2]  = 0x00;    // Red
+                        dst[3]  = 0x00;    // Alpha
+                    }
+                    else
+                    {
+                        dst[0]  = 0xFF;    // Blue
+                        dst[1]  = 0xFF;    // Green
+                        dst[2]  = 0xFF;    // Red
+                        dst[3]  = 0x00;    // Alpha
                     }
 
-                    src += 1;
-                    w   += 7;
+                    dst += 4;
                 }
             }
 
-            progress = 10 + (int)(((double)h * 50.0) / d->height);
+            progress = 10 + (int)(((double)h * 50.0) / d->imageData.height());
 
             if (progress % 5 == 0)
             {
-                emit signalProgress(d->newUrl, progress);
+                Q_EMIT signalProgress(d->newUrl, progress);
             }
         }
     }
     else
     {
-        unsigned short* src = reinterpret_cast<unsigned short*>(d->ksaneData.data());
         unsigned short* dst = reinterpret_cast<unsigned short*>(img.bits());
 
-        for (int h = 0 ; h < d->height ; ++h)
+        for (int h = 0 ; h < d->imageData.height() ; ++h)
         {
-            for (int w = 0 ; w < d->width ; ++w)
+            for (int w = 0 ; w < d->imageData.width() ; ++w)
             {
-                if      (d->frmt == KSaneWidget::FormatRGB_16_C)    // Color 16 bits
+                if      (d->imageData.format() == QImage::Format_RGBX64)    // Color 16 bits
                 {
-                    dst[0]  = src[2];    // Blue
-                    dst[1]  = src[1];    // Green
-                    dst[2]  = src[0];    // Red
+                    const QRgba64 *rgbData = reinterpret_cast<QRgba64*>(d->imageData.scanLine(h));
+                    dst[0]  = rgbData[w].blue();    // Blue
+                    dst[1]  = rgbData[w].green();    // Green
+                    dst[2]  = rgbData[w].red();    // Red
                     dst[3]  = 0x0000;    // Alpha
 
                     dst    += 4;
-                    src    += 3;
                 }
-                else if (d->frmt == KSaneWidget::FormatGrayScale16) // Gray16
+                else if (d->imageData.format() == QImage::Format_Grayscale16) // Gray16
                 {
-                    dst[0]  = src[0];    // Blue
-                    dst[1]  = src[0];    // Green
-                    dst[2]  = src[0];    // Red
+                    const unsigned short *grayScale = reinterpret_cast<unsigned short*>(d->imageData.scanLine(h));
+                    dst[0]  = grayScale[w];    // Blue
+                    dst[1]  = grayScale[w];    // Green
+                    dst[2]  = grayScale[w];    // Red
                     dst[3]  = 0x0000;    // Alpha
 
                     dst    += 4;
-                    src    += 1;
                 }
             }
 
-            progress = 10 + (int)(((double)h * 50.0) / d->height);
+            progress = 10 + (int)(((double)h * 50.0) / d->imageData.height());
 
             if ((progress % 5) == 0)
             {
-                emit signalProgress(d->newUrl, progress);
+                Q_EMIT signalProgress(d->newUrl, progress);
             }
         }
     }
 
-    emit signalProgress(d->newUrl, 60);
+    Q_EMIT signalProgress(d->newUrl, 60);
 
     bool success = img.save(d->newUrl.toLocalFile(), d->format);
 
-    emit signalProgress(d->newUrl, 80);
+    Q_EMIT signalProgress(d->newUrl, 80);
 
     if (!success)
     {
-        emit signalComplete(d->newUrl, success);
+        Q_EMIT signalComplete(d->newUrl, success);
         return;
     }
 
@@ -241,12 +222,12 @@ void SaveImgThread::run()
     meta->setItemOrientation(DMetadata::ORIENTATION_NORMAL);
     meta->setItemColorWorkSpace(DMetadata::WORKSPACE_SRGB);
 
-    emit signalProgress(d->newUrl, 90);
+    Q_EMIT signalProgress(d->newUrl, 90);
 
     meta->applyChanges(true);
 
-    emit signalProgress(d->newUrl, 100);
-    emit signalComplete(d->newUrl, success);
+    Q_EMIT signalProgress(d->newUrl, 100);
+    Q_EMIT signalComplete(d->newUrl, success);
 }
 
 } // namespace DigikamGenericDScannerPlugin

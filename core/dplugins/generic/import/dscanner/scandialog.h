@@ -27,6 +27,7 @@
 
 #include <QCloseEvent>
 #include <QWidget>
+#include <QImage>
 
 // Local includes
 
@@ -66,7 +67,7 @@ Q_SIGNALS:
 
 private Q_SLOTS:
 
-    void slotSaveImage(QByteArray&, int, int, int, int);
+    void slotSaveImage(const QImage&);
     void slotThreadProgress(const QUrl&, int);
     void slotThreadDone(const QUrl&, bool);
     void slotDialogFinished();
