@@ -28,7 +28,7 @@
 #include <QObject>
 #include <QThread>
 #include <QString>
-#include <QByteArray>
+#include <QImage>
 #include <QUrl>
 
 namespace DigikamGenericDScannerPlugin
@@ -45,8 +45,7 @@ public:
 
     void setTargetFile(const QUrl& url, const QString& format);
     void setScannerModel(const QString& make, const QString& model);
-    void setImageData(const QByteArray& ksaneData, int width, int height,
-                      int bytesPerLine, int ksaneFormat);
+    void setImageData(const QImage& imageData);
 
 Q_SIGNALS:
 

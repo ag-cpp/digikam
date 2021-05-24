@@ -20,7 +20,7 @@ set(EXIV2_MIN_VERSION     "0.27.0")
 set(OPENCV_MIN_VERSION    "3.3.0")
 set(LENSFUN_MIN_VERSION   "0.2.6.0")      # For Lens auto-correction plugin
 set(QTAV_MIN_VERSION      "1.12.0")       # For video support.
-set(KSANE_MIN_VERSION     "5.5.0")        # For digital scanner support.
+set(KSANE_MIN_VERSION     "21.08.0")      # For digital scanner support.
 set(CALENDAR_MIN_VERSION  "5.5.0")        # Calendar Core dependency for plugin.
 set(AKONADI_MIN_VERSION   "4.89.0")       # Akonadi Contact dependency.
 
