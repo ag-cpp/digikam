@@ -29,6 +29,7 @@
 
 #include "imgqsorttest_shared.h"
 #include "digikam_globals.h"
+#include "dpluginloader.h"
 
 using namespace Digikam;
 
