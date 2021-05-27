@@ -20,6 +20,7 @@
  *
  * ============================================================ */
 
+// Local includes
 #include "dngconverterplugin.h"
 
 // Qt includes
