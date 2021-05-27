@@ -35,9 +35,11 @@ enum DetectionType
     DetectBlur = 0,
     DetectNoise,
     DetectCompression,
-    DetectExposure
+    DetectExposure,
+    DetectionGeneral
 };
 
-QMultiMap<int, QString> ImgQSortTest_ParseTestImages(DetectionType type, const QFileInfoList& list);
+QMultiMap<QString, int> ImgQSortTest_ParseTestImages(DetectionType type, const QFileInfoList& list);
+int getLabel(DetectionType type, const QString& path);
 
 #endif // DIGIKAM_IMGQSORT_TEST_SHARED_H

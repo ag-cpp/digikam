@@ -47,6 +47,26 @@ ImgQSortTest::ImgQSortTest(QObject* const)
 {
 }
 
+void ImgQSortTest::testParseTestImages(const QString& testcase_name)
+{
+    QStringList imageNames;
+    QList<pairImageQuality> dataTest = dataTestCases.values(testcase_name);
+    
+    for (auto i = dataTest.begin(); i != dataTest.end(); i++ )
+    {
+        imageNames << (*i).first;
+    }
+
+    QFileInfoList list = imageDir().entryInfoList(imageNames,QDir::Files, QDir::Name);
+
+    QMultiMap<QString, int> results = ImgQSortTest_ParseTestImages(DetectExposure, list);
+
+    for (auto i = dataTest.begin(); i != dataTest.end(); i++ )
+    {
+        QVERIFY(results.values((*i).first).first() == (*i).second);
+    }
+}
+
 void ImgQSortTest::initTestCase()
 {
     QDir dir(QFINDTESTDATA("../../dplugins/dimg"));
@@ -67,61 +87,51 @@ QDir ImgQSortTest::imageDir() const
 
 void ImgQSortTest::testParseTestImagesForExposureDetection()
 {
-    QFileInfoList list = imageDir().entryInfoList(QStringList() << QLatin1String("test_overexposed*.jpg"),
-                                                  QDir::Files, QDir::Name);
-
-    list += imageDir().entryInfoList(QStringList() << QLatin1String("test_underexposed*.jpg"),
-                                     QDir::Files, QDir::Name);
-
-    QMultiMap<int, QString> results = ImgQSortTest_ParseTestImages(DetectExposure, list);
-
-    QVERIFY(results.count(NoPickLabel)   == 0);
-    QVERIFY(results.count(RejectedLabel) == 0);
-    QVERIFY(results.count(PendingLabel)  == 6);
-    QVERIFY(results.count(AcceptedLabel) == 12);
+    testParseTestImages(QLatin1String("exposureDetection"));
 }
 
 void ImgQSortTest::testParseTestImagesForNoiseDetection()
 {
-    QFileInfoList list = imageDir().entryInfoList(QStringList() << QLatin1String("test_noised*.jpg"),
-                                                  QDir::Files, QDir::Name);
-
-    QMultiMap<int, QString> results = ImgQSortTest_ParseTestImages(DetectNoise, list);
-
-/*  FIXME: Algorithm do not work yet
-    QVERIFY(results.count(NoPickLabel)   == 0);
-    QVERIFY(results.count(RejectedLabel) == 1);
-    QVERIFY(results.count(PendingLabel)  == 8);
-    QVERIFY(results.count(AcceptedLabel) == 0);
-*/
+    testParseTestImages(QLatin1String("noiseDetection"));
 }
 
 void ImgQSortTest::testParseTestImagesForBlurDetection()
 {
-    QFileInfoList list = imageDir().entryInfoList(QStringList() << QLatin1String("test_blurred*.jpg"),
-                                                  QDir::Files, QDir::Name);
-
-    QMultiMap<int, QString> results = ImgQSortTest_ParseTestImages(DetectBlur, list);
-
-/*  FIXME: Algorithm do not work yet
-    QVERIFY(results.count(NoPickLabel)   == 0);
-    QVERIFY(results.count(RejectedLabel) == 1);
-    QVERIFY(results.count(PendingLabel)  == 8);
-    QVERIFY(results.count(AcceptedLabel) == 0);
-*/
+    testParseTestImages(QLatin1String("blurDetection"));
 }
 
 void ImgQSortTest::testParseTestImagesForCompressionDetection()
 {
-    QFileInfoList list = imageDir().entryInfoList(QStringList() << QLatin1String("test_compressed*.jpg"),
-                                                  QDir::Files, QDir::Name);
-
-    QMultiMap<int, QString> results = ImgQSortTest_ParseTestImages(DetectCompression, list);
-
-/*  FIXME: Algorithm do not work yet
-    QVERIFY(results.count(NoPickLabel)   == 9);
-    QVERIFY(results.count(RejectedLabel) == 0);
-    QVERIFY(results.count(PendingLabel)  == 0);
-    QVERIFY(results.count(AcceptedLabel) == 0);
-*/
+    testParseTestImages(QLatin1String("compressionDetection"));
 }
+
+// 
+// void ImgQSortTest::testParseTestImagesForBlurDetection_sharpImage()
+// {
+//     QStringList imageNames;
+//     QList<pairImageQuality> dataTest = dataTestCases.values(QLatin1String("blurDetection"));
+    
+//     for (auto i = dataTest.begin(); i != dataTest.end(); i++ )
+//     {
+//         imageNames << (*i).first;
+//     }
+
+//     QFileInfoList list = imageDir().entryInfoList(imageNames,QDir::Files, QDir::Name);
+
+//     QMultiMap<QString, int> results = ImgQSortTest_ParseTestImages(DetectBlur, list);
+
+//     for (auto i = dataTest.begin(); i != dataTest.end(); i++ )
+//     {
+//         QVERIFY(results.values((*i).first).first() == (*i).second);
+//     }
+// }
+
+// void ImgQSortTest::testParseTestImagesForBlurDetection_motionBlurImage()
+// {
+
+// }
+
+// void ImgQSortTest::testParseTestImagesForBlurDetection_defocusImage()
+// {
+
+// }
