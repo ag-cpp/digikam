@@ -46,6 +46,5 @@ int main(int argc, char** argv)
     QString path                = QString::fromUtf8(argv[1]);
     QFileInfoList list          = QFileInfoList() << QFileInfo(path);
     ImgQSortTest_ParseTestImages(DetectBlur, list);
-    print();
     return 0;
 }
