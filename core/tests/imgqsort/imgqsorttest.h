@@ -42,6 +42,7 @@ public:
 private:
 
     QDir imageDir() const;
+    void testParseTestImages(const QString& testcase_name);
 
 private Q_SLOTS:
 
@@ -52,6 +53,46 @@ private Q_SLOTS:
     void testParseTestImagesForNoiseDetection();
     void testParseTestImagesForBlurDetection();
     void testParseTestImagesForCompressionDetection();
+
+    // void testParseTestImagesForBlurDetection_sharpImage();
+    // void testParseTestImagesForBlurDetection_motionBlurImage();
+    // void testParseTestImagesForBlurDetection_defocusImage();
 };
+
+typedef QPair<QString, int> pairImageQuality;
+typedef QMultiMap<QString, pairImageQuality> DataTestCases;
+
+static DataTestCases defineTestData() {
+    DataTestCases map;
+    map.insert(QLatin1String("blurDetection"), pairImageQuality(QLatin1String("test_blurred_1.jpg"),3));
+    map.insert(QLatin1String("blurDetection"), pairImageQuality(QLatin1String("test_blurred_2.jpg"),3));
+    map.insert(QLatin1String("blurDetection"), pairImageQuality(QLatin1String("test_blurred_5.jpg"),3));
+    map.insert(QLatin1String("blurDetection"), pairImageQuality(QLatin1String("test_blurred_9.jpg"),3));
+
+    map.insert(QLatin1String("noiseDetection"), pairImageQuality(QLatin1String("test_noised_1.jpg"),3));
+    map.insert(QLatin1String("noiseDetection"), pairImageQuality(QLatin1String("test_noised_2.jpg"),3));
+    map.insert(QLatin1String("noiseDetection"), pairImageQuality(QLatin1String("test_noised_5.jpg"),3));
+    map.insert(QLatin1String("noiseDetection"), pairImageQuality(QLatin1String("test_noised_9.jpg"),3));
+
+    map.insert(QLatin1String("exposureDetection"), pairImageQuality(QLatin1String("test_overexposed_1.jpg"),3));
+    map.insert(QLatin1String("exposureDetection"), pairImageQuality(QLatin1String("test_overexposed_9.jpg"),3));
+    map.insert(QLatin1String("exposureDetection"), pairImageQuality(QLatin1String("test_underexposed_5.jpg"),3));
+    map.insert(QLatin1String("exposureDetection"), pairImageQuality(QLatin1String("test_underexposed_9.jpg"),3));
+
+    map.insert(QLatin1String("compressionDetection"), pairImageQuality(QLatin1String("test_compressed_1.jpg"),3));
+    map.insert(QLatin1String("compressionDetection"), pairImageQuality(QLatin1String("test_compressed_2.jpg"),3));
+    map.insert(QLatin1String("compressionDetection"), pairImageQuality(QLatin1String("test_compressed_5.jpg"),3));
+    map.insert(QLatin1String("compressionDetection"), pairImageQuality(QLatin1String("test_compressed_9.jpg"),3));
+    
+
+    // map.insert(QLatin1String("sharpImage"), pairImageQuality(QLatin1String("blur_sky_1.jpg"),3));
+    // map.insert(QLatin1String("sharpImage"), pairImageQuality(QLatin1String("blur_rock_1.jpg"),3));
+    // map.insert(QLatin1String("sharpImage"), pairImageQuality(QLatin1String("blur_night_1.jpg"),3));
+    // map.insert(QLatin1String("sharpImage"), pairImageQuality(QLatin1String("blur_light_1.jpg"),3));
+    
+    return map;
+}
+
+static DataTestCases const dataTestCases = defineTestData();
 
 #endif // DIGIKAM_IMGQSORT_TEST_H
