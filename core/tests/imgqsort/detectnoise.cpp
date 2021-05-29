@@ -29,6 +29,7 @@
 
 #include "imgqsorttest_shared.h"
 #include "digikam_globals.h"
+#include "dpluginloader.h"
 
 using namespace Digikam;
 
@@ -42,6 +43,8 @@ int main(int argc, char** argv)
     }
 
     QApplication app(argc, argv);
+
+    DPluginLoader::instance()->init();
 
     QString path                = QString::fromUtf8(argv[1]);
     QFileInfoList list          = QFileInfoList() << QFileInfo(path);
