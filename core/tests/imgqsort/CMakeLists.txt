@@ -4,8 +4,6 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-find_package(Catch2 REQUIRED)
-
 APPLY_COMMON_POLICIES()
 
 include_directories(

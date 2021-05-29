@@ -22,7 +22,6 @@
  * ============================================================ */
 
 #include "imgqsorttest.h"
-#include "imgqsorttest_shared.h"
 
 // Qt includes
 
@@ -47,7 +46,7 @@ ImgQSortTest::ImgQSortTest(QObject* const)
 {
 }
 
-void ImgQSortTest::testParseTestImages(const QString& testcase_name)
+void ImgQSortTest::testParseTestImages(const QString& testcase_name, DetectionType mode)
 {
     QStringList imageNames;
     QList<pairImageQuality> dataTest = dataTestCases.values(testcase_name);
@@ -59,7 +58,7 @@ void ImgQSortTest::testParseTestImages(const QString& testcase_name)
 
     QFileInfoList list = imageDir().entryInfoList(imageNames,QDir::Files, QDir::Name);
 
-    QMultiMap<QString, int> results = ImgQSortTest_ParseTestImages(DetectExposure, list);
+    QMultiMap<QString, int> results = ImgQSortTest_ParseTestImages(mode, list);
 
     for (auto i = dataTest.begin(); i != dataTest.end(); i++ )
     {
@@ -87,51 +86,35 @@ QDir ImgQSortTest::imageDir() const
 
 void ImgQSortTest::testParseTestImagesForExposureDetection()
 {
-    testParseTestImages(QLatin1String("exposureDetection"));
+    testParseTestImages(QLatin1String("exposureDetection"), DetectExposure);
 }
 
 void ImgQSortTest::testParseTestImagesForNoiseDetection()
 {
-    testParseTestImages(QLatin1String("noiseDetection"));
+    testParseTestImages(QLatin1String("noiseDetection"), DetectNoise);
 }
 
 void ImgQSortTest::testParseTestImagesForBlurDetection()
 {
-    testParseTestImages(QLatin1String("blurDetection"));
+    testParseTestImages(QLatin1String("blurDetection"), DetectBlur);
 }
 
 void ImgQSortTest::testParseTestImagesForCompressionDetection()
 {
-    testParseTestImages(QLatin1String("compressionDetection"));
+    testParseTestImages(QLatin1String("compressionDetection"), DetectCompression);
 }
 
-// 
-// void ImgQSortTest::testParseTestImagesForBlurDetection_sharpImage()
-// {
-//     QStringList imageNames;
-//     QList<pairImageQuality> dataTest = dataTestCases.values(QLatin1String("blurDetection"));
-    
-//     for (auto i = dataTest.begin(); i != dataTest.end(); i++ )
-//     {
-//         imageNames << (*i).first;
-//     }
+void ImgQSortTest::testParseTestImagesForBlurDetection_sharpImage()
+{
+    testParseTestImages(QLatin1String("sharpImage"), DetectBlur);
+}
 
-//     QFileInfoList list = imageDir().entryInfoList(imageNames,QDir::Files, QDir::Name);
+void ImgQSortTest::testParseTestImagesForBlurDetection_motionBlurImage()
+{
+    testParseTestImages(QLatin1String("motionBlurImage"), DetectBlur);
+}
 
-//     QMultiMap<QString, int> results = ImgQSortTest_ParseTestImages(DetectBlur, list);
-
-//     for (auto i = dataTest.begin(); i != dataTest.end(); i++ )
-//     {
-//         QVERIFY(results.values((*i).first).first() == (*i).second);
-//     }
-// }
-
-// void ImgQSortTest::testParseTestImagesForBlurDetection_motionBlurImage()
-// {
-
-// }
-
-// void ImgQSortTest::testParseTestImagesForBlurDetection_defocusImage()
-// {
-
-// }
+void ImgQSortTest::testParseTestImagesForBlurDetection_defocusImage()
+{
+    testParseTestImages(QLatin1String("defocusImage"), DetectBlur);
+}

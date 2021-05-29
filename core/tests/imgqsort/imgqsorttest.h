@@ -31,6 +31,10 @@
 #include <QMultiMap>
 #include <QString>
 
+// Local includes
+
+#include "imgqsorttest_shared.h"
+
 class ImgQSortTest : public QObject
 {
     Q_OBJECT
@@ -42,7 +46,7 @@ public:
 private:
 
     QDir imageDir() const;
-    void testParseTestImages(const QString& testcase_name);
+    void testParseTestImages(const QString& testcase_name, DetectionType mode);
 
 private Q_SLOTS:
 
@@ -54,20 +58,21 @@ private Q_SLOTS:
     void testParseTestImagesForBlurDetection();
     void testParseTestImagesForCompressionDetection();
 
-    // void testParseTestImagesForBlurDetection_sharpImage();
-    // void testParseTestImagesForBlurDetection_motionBlurImage();
-    // void testParseTestImagesForBlurDetection_defocusImage();
+    void testParseTestImagesForBlurDetection_sharpImage();
+    void testParseTestImagesForBlurDetection_motionBlurImage();
+    void testParseTestImagesForBlurDetection_defocusImage();
 };
 
+// pair name image - quality expected
 typedef QPair<QString, int> pairImageQuality;
 typedef QMultiMap<QString, pairImageQuality> DataTestCases;
 
 static DataTestCases defineTestData() {
     DataTestCases map;
     map.insert(QLatin1String("blurDetection"), pairImageQuality(QLatin1String("test_blurred_1.jpg"),3));
-    map.insert(QLatin1String("blurDetection"), pairImageQuality(QLatin1String("test_blurred_2.jpg"),3));
-    map.insert(QLatin1String("blurDetection"), pairImageQuality(QLatin1String("test_blurred_5.jpg"),3));
-    map.insert(QLatin1String("blurDetection"), pairImageQuality(QLatin1String("test_blurred_9.jpg"),3));
+    map.insert(QLatin1String("blurDetection"), pairImageQuality(QLatin1String("test_blurred_3.jpg"),2));
+    map.insert(QLatin1String("blurDetection"), pairImageQuality(QLatin1String("test_blurred_8.jpg"),1));
+    map.insert(QLatin1String("blurDetection"), pairImageQuality(QLatin1String("test_blurred_9.jpg"),1));
 
     map.insert(QLatin1String("noiseDetection"), pairImageQuality(QLatin1String("test_noised_1.jpg"),3));
     map.insert(QLatin1String("noiseDetection"), pairImageQuality(QLatin1String("test_noised_2.jpg"),3));
@@ -85,11 +90,21 @@ static DataTestCases defineTestData() {
     map.insert(QLatin1String("compressionDetection"), pairImageQuality(QLatin1String("test_compressed_9.jpg"),3));
     
 
-    // map.insert(QLatin1String("sharpImage"), pairImageQuality(QLatin1String("blur_sky_1.jpg"),3));
-    // map.insert(QLatin1String("sharpImage"), pairImageQuality(QLatin1String("blur_rock_1.jpg"),3));
-    // map.insert(QLatin1String("sharpImage"), pairImageQuality(QLatin1String("blur_night_1.jpg"),3));
-    // map.insert(QLatin1String("sharpImage"), pairImageQuality(QLatin1String("blur_light_1.jpg"),3));
-    
+    map.insert(QLatin1String("sharpImage"), pairImageQuality(QLatin1String("blur_sky_1.jpg"),3));
+    map.insert(QLatin1String("sharpImage"), pairImageQuality(QLatin1String("blur_rock_1.jpg"),3));
+    map.insert(QLatin1String("sharpImage"), pairImageQuality(QLatin1String("blur_caffe_1.jpg"),3));
+    map.insert(QLatin1String("sharpImage"), pairImageQuality(QLatin1String("blur_street_1.jpg"),3));
+
+    map.insert(QLatin1String("motionBlurImage"), pairImageQuality(QLatin1String("blur_sky_2.jpg"),1));
+    map.insert(QLatin1String("motionBlurImage"), pairImageQuality(QLatin1String("blur_rock_2.jpg"),1));
+    map.insert(QLatin1String("motionBlurImage"), pairImageQuality(QLatin1String("blur_caffe_2.jpg"),1));
+    map.insert(QLatin1String("motionBlurImage"), pairImageQuality(QLatin1String("blur_street_2.jpg"),1));
+
+    map.insert(QLatin1String("defocusImage"), pairImageQuality(QLatin1String("blur_sky_3.jpg"),1));
+    map.insert(QLatin1String("defocusImage"), pairImageQuality(QLatin1String("blur_rock_3.jpg"),1));
+    map.insert(QLatin1String("defocusImage"), pairImageQuality(QLatin1String("blur_caffe_3.jpg"),1));
+    map.insert(QLatin1String("defocusImage"), pairImageQuality(QLatin1String("blur_street_3.jpg"),1));
+
     return map;
 }
 
