@@ -61,6 +61,7 @@ private Q_SLOTS:
     void testParseTestImagesForBlurDetection_sharpImage();
     void testParseTestImagesForBlurDetection_motionBlurImage();
     void testParseTestImagesForBlurDetection_defocusImage();
+    void testParseTestImagesForBlurDetection_blurBackGroundImage();
 };
 
 // pair name image - quality expected
@@ -104,6 +105,12 @@ static DataTestCases defineTestData() {
     map.insert(QLatin1String("defocusImage"), pairImageQuality(QLatin1String("blur_rock_3.jpg"),1));
     map.insert(QLatin1String("defocusImage"), pairImageQuality(QLatin1String("blur_caffe_3.jpg"),1));
     map.insert(QLatin1String("defocusImage"), pairImageQuality(QLatin1String("blur_street_3.jpg"),1));
+
+    map.insert(QLatin1String("blurBackGroundImage"), pairImageQuality(QLatin1String("blur_blurbackground_1.jpg"),2));
+    // image have metadata focus region
+    map.insert(QLatin1String("blurBackGroundImage"), pairImageQuality(QLatin1String("blur_blurbackground_2.jpg"),3));
+    map.insert(QLatin1String("blurBackGroundImage"), pairImageQuality(QLatin1String("blur_blurbackground_3.jpg"),3));
+ 
 
     return map;
 }
