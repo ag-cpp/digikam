@@ -48,7 +48,7 @@ int main(int argc, char** argv)
 
     QString path                = QString::fromUtf8(argv[1]);
     QFileInfoList list          = QFileInfoList() << QFileInfo(path);
-    ImgQSortTest_ParseTestImages(DetectExposure, list);
+    ImgQSortTest_ParseTestImages(DETECTEXPOSURE, list);
 
     return 0;
 }

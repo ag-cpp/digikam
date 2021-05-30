@@ -32,11 +32,11 @@
 
 enum DetectionType
 {
-    DetectBlur = 0,
-    DetectNoise,
-    DetectCompression,
-    DetectExposure,
-    DetectionGeneral
+    DETECTBLUR = 0,
+    DETECTNOISE,
+    DETECTCOMPRESSION,
+    DETECTEXPOSURE,
+    DETECTIONGENERAL
 };
 
 QHash<QString, int> ImgQSortTest_ParseTestImages(DetectionType type, const QFileInfoList& list);

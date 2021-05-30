@@ -86,40 +86,40 @@ QDir ImgQSortTest::imageDir() const
 
 void ImgQSortTest::testParseTestImagesForExposureDetection()
 {
-    testParseTestImages(QLatin1String("exposureDetection"), DetectExposure);
+    testParseTestImages(QLatin1String("exposureDetection"), DETECTEXPOSURE);
 }
 
 void ImgQSortTest::testParseTestImagesForNoiseDetection()
 {
-    testParseTestImages(QLatin1String("noiseDetection"), DetectNoise);
+    testParseTestImages(QLatin1String("noiseDetection"), DETECTNOISE);
 }
 
 void ImgQSortTest::testParseTestImagesForBlurDetection()
 {
-    testParseTestImages(QLatin1String("blurDetection"), DetectBlur);
+    testParseTestImages(QLatin1String("blurDetection"), DETECTBLUR);
 }
 
 void ImgQSortTest::testParseTestImagesForCompressionDetection()
 {
-    testParseTestImages(QLatin1String("compressionDetection"), DetectCompression);
+    testParseTestImages(QLatin1String("compressionDetection"), DETECTCOMPRESSION);
 }
 
 void ImgQSortTest::testParseTestImagesForBlurDetection_SharpImage()
 {
-    testParseTestImages(QLatin1String("sharpImage"), DetectBlur);
+    testParseTestImages(QLatin1String("sharpImage"), DETECTBLUR);
 }
 
 void ImgQSortTest::testParseTestImagesForBlurDetection_MotionBlurImage()
 {
-    testParseTestImages(QLatin1String("motionBlurImage"), DetectBlur);
+    testParseTestImages(QLatin1String("motionBlurImage"), DETECTBLUR);
 }
 
 void ImgQSortTest::testParseTestImagesForBlurDetection_DefocusImage()
 {
-    testParseTestImages(QLatin1String("defocusImage"), DetectBlur);
+    testParseTestImages(QLatin1String("defocusImage"), DETECTBLUR);
 }
 
 void ImgQSortTest::testParseTestImagesForBlurDetection_BlurBackGroundImage()
 {
-    testParseTestImages(QLatin1String("blurBackGroundImage"), DetectBlur);
+    testParseTestImages(QLatin1String("blurBackGroundImage"), DETECTBLUR);
 }

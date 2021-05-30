@@ -47,19 +47,19 @@ ImageQualityContainer ImgQSortTest_ArrangeSettings (DetectionType type)
 
     switch (type)
     {
-        case DetectNoise:
+        case DETECTNOISE:
             settings.detectNoise        = true;
             break;
 
-        case DetectCompression:
+        case DETECTCOMPRESSION:
             settings.detectCompression  = true;
             break;
 
-        case DetectExposure:
+        case DETECTEXPOSURE:
             settings.detectExposure     = true;
             break;
         
-        case DetectBlur:
+        case DETECTBLUR:
             settings.detectBlur         = true;
             break;
 
