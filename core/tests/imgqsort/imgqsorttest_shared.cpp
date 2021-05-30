@@ -27,73 +27,60 @@
 
 #include <QStringList>
 #include <QDebug>
-#include <QDir>
-#include <QTest>
 
 // Local includes
 
 #include "dimg.h"
 #include "previewloadthread.h"
 #include "imagequalityparser.h"
-#include "dpluginloader.h"
 
 using namespace Digikam;
 
-QMultiMap<QString, int> ImgQSortTest_ParseTestImages(DetectionType type, const QFileInfoList& list)
+ImageQualityContainer ImgQSortTest_ArrangeSettings (DetectionType type)
 {
-    QString               tname;
     ImageQualityContainer settings;
 
-
-    settings.enableSorter       = true;
     settings.detectBlur         = false;
     settings.detectNoise        = false;
     settings.detectCompression  = false;
     settings.detectExposure     = false;
-    settings.lowQRejected       = true;
-    settings.mediumQPending     = true;
-    settings.highQAccepted      = true;
-    settings.rejectedThreshold  = 10;
-    settings.pendingThreshold   = 40;
-    settings.acceptedThreshold  = 60;
-    settings.blurWeight         = 100;
-    settings.noiseWeight        = 100;
-    settings.compressionWeight  = 100;
-    settings.speed              = 1;
 
     switch (type)
     {
         case DetectNoise:
-            tname                       = QLatin1String("Noise");
             settings.detectNoise        = true;
             break;
 
         case DetectCompression:
-            tname                       = QLatin1String("Compression");
             settings.detectCompression  = true;
             break;
 
         case DetectExposure:
-            tname                       = QLatin1String("Exposure");
             settings.detectExposure     = true;
             break;
         
-        case DetectionGeneral:
-            tname                       = QLatin1String("General");
+        case DetectBlur:
+            settings.detectBlur         = true;
+            break;
+
+        default:
             settings.detectBlur         = true;
             settings.detectCompression  = true;
             settings.detectNoise        = true;
             settings.detectExposure     = true;
             break;
-
-        default:
-            tname                       = QLatin1String("Blur");
-            settings.detectBlur         = true;
-            break;
     }
 
+    return settings;
+}
+
+QMultiMap<QString, int> ImgQSortTest_ParseTestImages(DetectionType type, const QFileInfoList& list)
+{
+    ImageQualityContainer settings = ImgQSortTest_ArrangeSettings(type);
+
     qDebug() << "Quality Detection Settings:" << settings;
-    qDebug() << "Process images for" << tname << "detection (" << list.size() << ")";
+    qInfo()  << "Detection type (0:Blur, 1:Noise, 2:Compression, 3:Exposure, 4: General)";
+    qDebug() << "Process images for detection type "<<type <<" ( size " << list.size() << ")";
 
     QMultiMap<QString, int> results;
 
@@ -103,7 +90,6 @@ QMultiMap<QString, int> ImgQSortTest_ParseTestImages(DetectionType type, const Q
         qDebug() << path;
 
         DImg dimg    = PreviewLoadThread::loadFastSynchronously(path, 1024);
-        qInfo()<<"path"<<path;
 
         if (dimg.isNull())
         {
@@ -114,11 +100,10 @@ QMultiMap<QString, int> ImgQSortTest_ParseTestImages(DetectionType type, const Q
         ImageQualityParser parser(dimg, settings, &pick);
         parser.startAnalyse();
 
-        qDebug() << "==>" << tname << "quality result is" << pick;
         results.insert( path.split(QLatin1String("/")).last(), pick);
     }
 
-    qInfo() << tname << "Quality Results (0:None, 1:Rejected, 2:Pending, 3:Accepted):";
+    qInfo() << "Quality Results (0:None, 1:Rejected, 2:Pending, 3:Accepted):";
 
     for (QMap<QString, int >::const_iterator it = results.constBegin() ; it != results.constEnd() ; ++it)
     {

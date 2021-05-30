@@ -49,10 +49,11 @@ ImgQSortTest::ImgQSortTest(QObject* const)
 void ImgQSortTest::testParseTestImages(const QString& testcase_name, DetectionType mode)
 {
     QStringList imageNames;
-    QList<pairImageQuality> dataTest = dataTestCases.values(testcase_name);
+    QList<PairImageQuality> dataTest = dataTestCases.values(testcase_name);
     
     for (auto i = dataTest.begin(); i != dataTest.end(); i++ )
     {
+        qInfo()<<"image name "<<(*i).first;
         imageNames << (*i).first;
     }
 
@@ -104,22 +105,22 @@ void ImgQSortTest::testParseTestImagesForCompressionDetection()
     testParseTestImages(QLatin1String("compressionDetection"), DetectCompression);
 }
 
-void ImgQSortTest::testParseTestImagesForBlurDetection_sharpImage()
+void ImgQSortTest::testParseTestImagesForBlurDetection_SharpImage()
 {
     testParseTestImages(QLatin1String("sharpImage"), DetectBlur);
 }
 
-void ImgQSortTest::testParseTestImagesForBlurDetection_motionBlurImage()
+void ImgQSortTest::testParseTestImagesForBlurDetection_MotionBlurImage()
 {
     testParseTestImages(QLatin1String("motionBlurImage"), DetectBlur);
 }
 
-void ImgQSortTest::testParseTestImagesForBlurDetection_defocusImage()
+void ImgQSortTest::testParseTestImagesForBlurDetection_DefocusImage()
 {
     testParseTestImages(QLatin1String("defocusImage"), DetectBlur);
 }
 
-void ImgQSortTest::testParseTestImagesForBlurDetection_blurBackGroundImage()
+void ImgQSortTest::testParseTestImagesForBlurDetection_BlurBackGroundImage()
 {
     testParseTestImages(QLatin1String("blurBackGroundImage"), DetectBlur);
 }

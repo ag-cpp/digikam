@@ -58,60 +58,60 @@ private Q_SLOTS:
     void testParseTestImagesForBlurDetection();
     void testParseTestImagesForCompressionDetection();
 
-    void testParseTestImagesForBlurDetection_sharpImage();
-    void testParseTestImagesForBlurDetection_motionBlurImage();
-    void testParseTestImagesForBlurDetection_defocusImage();
-    void testParseTestImagesForBlurDetection_blurBackGroundImage();
+    void testParseTestImagesForBlurDetection_SharpImage();
+    void testParseTestImagesForBlurDetection_MotionBlurImage();
+    void testParseTestImagesForBlurDetection_DefocusImage();
+    void testParseTestImagesForBlurDetection_BlurBackGroundImage();
 };
 
 // pair name image - quality expected
-typedef QPair<QString, int> pairImageQuality;
-typedef QMultiMap<QString, pairImageQuality> DataTestCases;
+using PairImageQuality = QPair<QString, int>;
+using DataTestCases = QMultiMap<QString, PairImageQuality> ;
 
 static DataTestCases defineTestData() {
-    DataTestCases map;
-    map.insert(QLatin1String("blurDetection"), pairImageQuality(QLatin1String("test_blurred_1.jpg"),3));
-    map.insert(QLatin1String("blurDetection"), pairImageQuality(QLatin1String("test_blurred_3.jpg"),2));
-    map.insert(QLatin1String("blurDetection"), pairImageQuality(QLatin1String("test_blurred_8.jpg"),1));
-    map.insert(QLatin1String("blurDetection"), pairImageQuality(QLatin1String("test_blurred_9.jpg"),1));
+    DataTestCases map = 
+    {   
+        {QLatin1String("blurDetection"), PairImageQuality(QLatin1String("test_blurred_1.jpg"),3)},
+        {QLatin1String("blurDetection"), PairImageQuality(QLatin1String("test_blurred_2.jpg"),3)},
+        {QLatin1String("blurDetection"), PairImageQuality(QLatin1String("test_blurred_5.jpg"),2)},
+        {QLatin1String("blurDetection"), PairImageQuality(QLatin1String("test_blurred_9.jpg"),1)},
 
-    map.insert(QLatin1String("noiseDetection"), pairImageQuality(QLatin1String("test_noised_1.jpg"),3));
-    map.insert(QLatin1String("noiseDetection"), pairImageQuality(QLatin1String("test_noised_2.jpg"),3));
-    map.insert(QLatin1String("noiseDetection"), pairImageQuality(QLatin1String("test_noised_5.jpg"),3));
-    map.insert(QLatin1String("noiseDetection"), pairImageQuality(QLatin1String("test_noised_9.jpg"),3));
+        {QLatin1String("noiseDetection"), PairImageQuality(QLatin1String("test_noised_1.jpg"),3)},
+        {QLatin1String("noiseDetection"), PairImageQuality(QLatin1String("test_noised_2.jpg"),3)},
+        {QLatin1String("noiseDetection"), PairImageQuality(QLatin1String("test_noised_5.jpg"),2)},
+        {QLatin1String("noiseDetection"), PairImageQuality(QLatin1String("test_noised_9.jpg"),1)},
 
-    map.insert(QLatin1String("exposureDetection"), pairImageQuality(QLatin1String("test_overexposed_1.jpg"),3));
-    map.insert(QLatin1String("exposureDetection"), pairImageQuality(QLatin1String("test_overexposed_9.jpg"),3));
-    map.insert(QLatin1String("exposureDetection"), pairImageQuality(QLatin1String("test_underexposed_5.jpg"),3));
-    map.insert(QLatin1String("exposureDetection"), pairImageQuality(QLatin1String("test_underexposed_9.jpg"),3));
+        {QLatin1String("exposureDetection"), PairImageQuality(QLatin1String("test_overexposed_1.jpg"),3)},
+        {QLatin1String("exposureDetection"), PairImageQuality(QLatin1String("test_overexposed_9.jpg"),1)},
+        {QLatin1String("exposureDetection"), PairImageQuality(QLatin1String("test_underexposed_1.jpg"),3)},
+        {QLatin1String("exposureDetection"), PairImageQuality(QLatin1String("test_underexposed_9.jpg"),1)},
 
-    map.insert(QLatin1String("compressionDetection"), pairImageQuality(QLatin1String("test_compressed_1.jpg"),3));
-    map.insert(QLatin1String("compressionDetection"), pairImageQuality(QLatin1String("test_compressed_2.jpg"),3));
-    map.insert(QLatin1String("compressionDetection"), pairImageQuality(QLatin1String("test_compressed_5.jpg"),3));
-    map.insert(QLatin1String("compressionDetection"), pairImageQuality(QLatin1String("test_compressed_9.jpg"),3));
-    
+        {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_1.jpg"),3)},
+        {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_2.jpg"),3)},
+        {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_5.jpg"),2)},
+        {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_9.jpg"),1)},
 
-    map.insert(QLatin1String("sharpImage"), pairImageQuality(QLatin1String("blur_sky_1.jpg"),3));
-    map.insert(QLatin1String("sharpImage"), pairImageQuality(QLatin1String("blur_rock_1.jpg"),3));
-    map.insert(QLatin1String("sharpImage"), pairImageQuality(QLatin1String("blur_caffe_1.jpg"),3));
-    map.insert(QLatin1String("sharpImage"), pairImageQuality(QLatin1String("blur_street_1.jpg"),3));
+        {QLatin1String("sharpImage"), PairImageQuality(QLatin1String("blur_sky_1.jpg"),3)},
+        {QLatin1String("sharpImage"), PairImageQuality(QLatin1String("blur_rock_1.jpg"),3)},
+        {QLatin1String("sharpImage"), PairImageQuality(QLatin1String("blur_caffe_1.jpg"),3)},
+        {QLatin1String("sharpImage"), PairImageQuality(QLatin1String("blur_street_1.jpg"),3)},
 
-    map.insert(QLatin1String("motionBlurImage"), pairImageQuality(QLatin1String("blur_sky_2.jpg"),1));
-    map.insert(QLatin1String("motionBlurImage"), pairImageQuality(QLatin1String("blur_rock_2.jpg"),1));
-    map.insert(QLatin1String("motionBlurImage"), pairImageQuality(QLatin1String("blur_caffe_2.jpg"),1));
-    map.insert(QLatin1String("motionBlurImage"), pairImageQuality(QLatin1String("blur_street_2.jpg"),1));
+        {QLatin1String("motionBlurImage"), PairImageQuality(QLatin1String("blur_sky_1.jpg"),1)},
+        {QLatin1String("motionBlurImage"), PairImageQuality(QLatin1String("blur_rock_2.jpg"),1)},
+        {QLatin1String("motionBlurImage"), PairImageQuality(QLatin1String("blur_caffe_2.jpg"),1)},
+        {QLatin1String("motionBlurImage"), PairImageQuality(QLatin1String("blur_street_2.jpg"),1)},
 
-    map.insert(QLatin1String("defocusImage"), pairImageQuality(QLatin1String("blur_sky_3.jpg"),1));
-    map.insert(QLatin1String("defocusImage"), pairImageQuality(QLatin1String("blur_rock_3.jpg"),1));
-    map.insert(QLatin1String("defocusImage"), pairImageQuality(QLatin1String("blur_caffe_3.jpg"),1));
-    map.insert(QLatin1String("defocusImage"), pairImageQuality(QLatin1String("blur_street_3.jpg"),1));
+        {QLatin1String("defocusImage"), PairImageQuality(QLatin1String("blur_sky_3.jpg"),1)},
+        {QLatin1String("defocusImage"), PairImageQuality(QLatin1String("blur_rock_3.jpg"),1)},
+        {QLatin1String("defocusImage"), PairImageQuality(QLatin1String("blur_caffe_3.jpg"),1)},
+        {QLatin1String("defocusImage"), PairImageQuality(QLatin1String("blur_street_3.jpg"),1)},
 
-    map.insert(QLatin1String("blurBackGroundImage"), pairImageQuality(QLatin1String("blur_blurbackground_1.jpg"),2));
-    // image have metadata focus region
-    map.insert(QLatin1String("blurBackGroundImage"), pairImageQuality(QLatin1String("blur_blurbackground_2.jpg"),3));
-    map.insert(QLatin1String("blurBackGroundImage"), pairImageQuality(QLatin1String("blur_blurbackground_3.jpg"),3));
- 
 
+        {QLatin1String("blurBackGroundImage"), PairImageQuality(QLatin1String("blur_blurbackground_1.jpg"),2)},
+        {QLatin1String("blurBackGroundImage"), PairImageQuality(QLatin1String("blur_blurbackground_2.jpg"),3)},
+        {QLatin1String("blurBackGroundImage"), PairImageQuality(QLatin1String("blur_blurbackground_3.jpg"),3)},
+
+    };
     return map;
 }
 
