@@ -39,6 +39,6 @@ enum DetectionType
     DetectionGeneral
 };
 
-QMultiMap<QString, int> ImgQSortTest_ParseTestImages(DetectionType type, const QFileInfoList& list);
+QHash<QString, int> ImgQSortTest_ParseTestImages(DetectionType type, const QFileInfoList& list);
 
 #endif // DIGIKAM_IMGQSORT_TEST_SHARED_H

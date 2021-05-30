@@ -74,7 +74,7 @@ ImageQualityContainer ImgQSortTest_ArrangeSettings (DetectionType type)
     return settings;
 }
 
-QMultiMap<QString, int> ImgQSortTest_ParseTestImages(DetectionType type, const QFileInfoList& list)
+QHash<QString, int> ImgQSortTest_ParseTestImages(DetectionType type, const QFileInfoList& list)
 {
     ImageQualityContainer settings = ImgQSortTest_ArrangeSettings(type);
 
@@ -82,7 +82,7 @@ QMultiMap<QString, int> ImgQSortTest_ParseTestImages(DetectionType type, const Q
     qInfo()  << "Detection type (0:Blur, 1:Noise, 2:Compression, 3:Exposure, 4: General)";
     qDebug() << "Process images for detection type "<<type <<" ( size " << list.size() << ")";
 
-    QMap<QString, int> results;
+    QHash<QString, int> results;
 
     foreach (const QFileInfo& inf, list)
     {
@@ -105,8 +105,8 @@ QMultiMap<QString, int> ImgQSortTest_ParseTestImages(DetectionType type, const Q
 
     qInfo() << "Quality Results (0:None, 1:Rejected, 2:Pending, 3:Accepted):";
 
-    for (const auto& result: results.toStdMap()) {
-        qInfo() << "==>" << result.first << ":" << result.second;
+    for (const auto& image_name: results.keys()) {
+        qInfo() << "==>" << image_name << ":" << results.value(image_name);
     }
 
     return results;
