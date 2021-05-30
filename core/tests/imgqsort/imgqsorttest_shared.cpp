@@ -26,13 +26,13 @@
 // Qt includes
 
 #include <QStringList>
-#include <QDebug>
 
 // Local includes
 
 #include "dimg.h"
 #include "previewloadthread.h"
 #include "imagequalityparser.h"
+#include "digikam_debug.h"
 
 using namespace Digikam;
 
@@ -78,22 +78,22 @@ QHash<QString, int> ImgQSortTest_ParseTestImages(DetectionType type, const QFile
 {
     ImageQualityContainer settings = ImgQSortTest_ArrangeSettings(type);
 
-    qDebug() << "Quality Detection Settings:" << settings;
-    qInfo()  << "Detection type (0:Blur, 1:Noise, 2:Compression, 3:Exposure, 4: General)";
-    qDebug() << "Process images for detection type "<<type <<" ( size " << list.size() << ")";
+    qCDebug(DIGIKAM_TESTS_LOG) << "Quality Detection Settings:" << settings;
+    qCInfo(DIGIKAM_TESTS_LOG)  << "Detection type (0:Blur, 1:Noise, 2:Compression, 3:Exposure, 4: General)";
+    qCDebug(DIGIKAM_TESTS_LOG) << "Process images for detection type "<<type <<" ( size " << list.size() << ")";
 
     QHash<QString, int> results;
 
     foreach (const QFileInfo& inf, list)
     {
         QString path = inf.filePath();
-        qDebug() << path;
+        qCDebug(DIGIKAM_TESTS_LOG) << path;
 
         DImg dimg    = PreviewLoadThread::loadFastSynchronously(path, 1024);
 
         if (dimg.isNull())
         {
-            qDebug() << path << "File cannot be loaded...";
+            qCDebug(DIGIKAM_TESTS_LOG) << path << "File cannot be loaded...";
         }
 
         PickLabel pick;
@@ -103,10 +103,10 @@ QHash<QString, int> ImgQSortTest_ParseTestImages(DetectionType type, const QFile
         results.insert( path.split(QLatin1String("/")).last(), pick);
     }
 
-    qInfo() << "Quality Results (0:None, 1:Rejected, 2:Pending, 3:Accepted):";
+    qCInfo(DIGIKAM_TESTS_LOG) << "Quality Results (0:None, 1:Rejected, 2:Pending, 3:Accepted):";
 
     for (const auto& image_name: results.keys()) {
-        qInfo() << "==>" << image_name << ":" << results.value(image_name);
+        qCInfo(DIGIKAM_TESTS_LOG) << "==>" << image_name << ":" << results.value(image_name);
     }
 
     return results;
