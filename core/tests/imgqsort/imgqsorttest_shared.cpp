@@ -82,7 +82,7 @@ QMultiMap<QString, int> ImgQSortTest_ParseTestImages(DetectionType type, const Q
     qInfo()  << "Detection type (0:Blur, 1:Noise, 2:Compression, 3:Exposure, 4: General)";
     qDebug() << "Process images for detection type "<<type <<" ( size " << list.size() << ")";
 
-    QMultiMap<QString, int> results;
+    QMap<QString, int> results;
 
     foreach (const QFileInfo& inf, list)
     {
@@ -105,9 +105,8 @@ QMultiMap<QString, int> ImgQSortTest_ParseTestImages(DetectionType type, const Q
 
     qInfo() << "Quality Results (0:None, 1:Rejected, 2:Pending, 3:Accepted):";
 
-    for (QMap<QString, int >::const_iterator it = results.constBegin() ; it != results.constEnd() ; ++it)
-    {
-        qInfo() << "==>" << it.key() << ":" << it.value();
+    for (const auto& result: results.toStdMap()) {
+        qInfo() << "==>" << result.first << ":" << result.second;
     }
 
     return results;

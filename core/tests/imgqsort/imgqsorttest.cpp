@@ -51,19 +51,18 @@ void ImgQSortTest::testParseTestImages(const QString& testcase_name, DetectionTy
     QStringList imageNames;
     QList<PairImageQuality> dataTest = dataTestCases.values(testcase_name);
     
-    for (auto i = dataTest.begin(); i != dataTest.end(); i++ )
+    for (const auto& image_refQuality : dataTest)
     {
-        qInfo()<<"image name "<<(*i).first;
-        imageNames << (*i).first;
+        imageNames << image_refQuality.first;
     }
 
     QFileInfoList list = imageDir().entryInfoList(imageNames,QDir::Files, QDir::Name);
 
     QMultiMap<QString, int> results = ImgQSortTest_ParseTestImages(mode, list);
 
-    for (auto i = dataTest.begin(); i != dataTest.end(); i++ )
+    for (const auto& image_refQuality : dataTest)
     {
-        QVERIFY(results.values((*i).first).first() == (*i).second);
+        QVERIFY(results.values(image_refQuality.first).first() == image_refQuality.second);
     }
 }
 

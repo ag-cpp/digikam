@@ -68,8 +68,7 @@ private Q_SLOTS:
 using PairImageQuality = QPair<QString, int>;
 using DataTestCases = QMultiMap<QString, PairImageQuality> ;
 
-static DataTestCases defineTestData() {
-    DataTestCases map = 
+DataTestCases const dataTestCases = 
     {   
         {QLatin1String("blurDetection"), PairImageQuality(QLatin1String("test_blurred_1.jpg"),3)},
         {QLatin1String("blurDetection"), PairImageQuality(QLatin1String("test_blurred_2.jpg"),3)},
@@ -112,9 +111,5 @@ static DataTestCases defineTestData() {
         {QLatin1String("blurBackGroundImage"), PairImageQuality(QLatin1String("blur_blurbackground_3.jpg"),3)},
 
     };
-    return map;
-}
-
-static DataTestCases const dataTestCases = defineTestData();
 
 #endif // DIGIKAM_IMGQSORT_TEST_H
