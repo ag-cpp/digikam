@@ -32,6 +32,9 @@
 #include "digikam_globals.h"
 #include "imagequalitycontainer.h"
 
+#include "digikam_opencv.h"
+
+
 namespace Digikam
 {
 
@@ -64,11 +67,28 @@ private:
      * @function cannyThreshold
      * @brief Trackbar callback - Canny thresholds input with a ratio 1:3
      */
+
+    // blur detection
+
     void   cannyThreshold(int, void*)                   const;
 
     double blurDetector()                               const;
     short  blurDetector2()                              const;
+
+    cv::Mat prepareForDetection(const DImg& inputImage) const;
+    
+    cv::Mat edgeDetection(const cv::Mat& image)         const;
+    cv::Mat defocusDetection(const cv::Mat& edgesMap)    const;
+    cv::Mat motionBlurDetection(const cv::Mat& edgesMap) const;
+    cv::Mat getBlurMap()                                const;
+
+    bool haveFocusMeta()                                const;
+    cv::Mat getWeightsMat()                          const;
+    
+    // noise detection
     double noiseDetector()                              const;
+    
+    // compresssion detection
     int    compressionDetector()                        const;
 
     /**

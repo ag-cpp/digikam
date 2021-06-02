@@ -195,10 +195,12 @@ void ImageQualityParser::startAnalyse()
         double finalCompression   = (compressionLevel / 1024.0) * 100.0;        // we are processing 1024 pixels size image
         double finalExposure      = 100.0 - (underLevel + overLevel) * 100.0;
 
-        finalQuality            = finalBlur          * d->imq.blurWeight        +
-                                  finalNoise         * d->imq.noiseWeight       +
-                                  finalCompression   * d->imq.compressionWeight +
-                                  finalExposure;
+        // FIXME : Re final calculation for quality in week 7 8
+        // For now, just calculate in case of one detection  
+        finalQuality            = (1 - finalBlur)          * d->imq.blurWeight;
+                                //   finalNoise         * d->imq.noiseWeight       +
+                                //   finalCompression   * d->imq.compressionWeight +
+                                //   finalExposure;
 
         qCDebug(DIGIKAM_DIMG_LOG) << "Final Quality estimated: " << finalQuality;
 
