@@ -28,7 +28,7 @@
 // Qt includes
 
 #include <QFlags>
-#include <QHash>
+#include <QMultiHash>
 #include <QString>
 #include <QVariant>
 
@@ -128,8 +128,8 @@ public:
      * There are accessors for both contexts.
      */
     bool                           hasParameters()                  const;
-    const QHash<QString,QVariant>& parameters()                     const;
-    QHash<QString, QVariant>&      parameters();
+    const QMultiHash<QString,QVariant>& parameters()                     const;
+    QMultiHash<QString, QVariant>&      parameters();
 
     bool                           hasParameter(const QString& key) const;
     const QVariant                 parameter(const QString& key)    const;
@@ -173,10 +173,10 @@ public:
     void clearParameters();
 
     /// Adds a set of parameters
-    void addParameters(const QHash<QString, QVariant>& params);
+    void addParameters(const QMultiHash<QString, QVariant>& params);
 
     /// Replaces parameters
-    void setParameters(const QHash<QString, QVariant>& params);
+    void setParameters(const QMultiHash<QString, QVariant>& params);
 
 protected:
 
@@ -187,7 +187,7 @@ protected:
     int                      m_version;
     QString                  m_description;
     QString                  m_displayableName;
-    QHash<QString, QVariant> m_params;
+    QMultiHash<QString, QVariant> m_params;
 };
 
 } // namespace Digikam

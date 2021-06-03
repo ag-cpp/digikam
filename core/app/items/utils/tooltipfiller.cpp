@@ -709,7 +709,7 @@ QString ToolTipFiller::filterActionTipContents(const FilterAction& action)
     {
         tip += cnt.headBeg + i18n("Technical Parameters") + cnt.headEnd;
 
-        const QHash<QString, QVariant>& params = action.parameters();
+        const QMultiHash<QString, QVariant>& params = action.parameters();
         QList<QString> keys                    = params.keys();
         std::sort(keys.begin(), keys.end());
 

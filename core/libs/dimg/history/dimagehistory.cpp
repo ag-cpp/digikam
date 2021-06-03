@@ -537,7 +537,7 @@ QString DImageHistory::toXml() const
 
             stream.writeStartElement(QLatin1String("params"));
 
-            const QHash<QString,QVariant>& params = step.action.parameters();
+            const QMultiHash<QString,QVariant>& params = step.action.parameters();
 
             if (!params.isEmpty())
             {

@@ -117,12 +117,12 @@ bool FilterAction::hasParameters() const
     return !m_params.isEmpty();
 }
 
-const QHash<QString,QVariant> &FilterAction::parameters() const
+const QMultiHash<QString,QVariant> &FilterAction::parameters() const
 {
     return m_params;
 }
 
-QHash<QString, QVariant> &FilterAction::parameters()
+QMultiHash<QString, QVariant> &FilterAction::parameters()
 {
     return m_params;
 }
@@ -139,25 +139,25 @@ const QVariant FilterAction::parameter(const QString& key) const
 
 QVariant& FilterAction::parameter(const QString& key)
 {
-    return m_params[key];
+    return static_cast<QHash<QString, QVariant>>(m_params)[key];
 }
 
 void FilterAction::setParameter(const QString& key, const QVariant& value)
 {
-    m_params.insert(key, value);
+    m_params.replace(key, value);
 }
 
 void FilterAction::addParameter(const QString& key, const QVariant& value)
 {
-    m_params.insertMulti(key, value);
+    m_params.insert(key, value);
 }
 
-void FilterAction::addParameters(const QHash<QString, QVariant>& params)
+void FilterAction::addParameters(const QMultiHash<QString, QVariant>& params)
 {
     m_params = m_params.unite(params);
 }
 
-void FilterAction::setParameters(const QHash<QString, QVariant>& params)
+void FilterAction::setParameters(const QMultiHash<QString, QVariant>& params)
 {
     m_params = params;
 }
