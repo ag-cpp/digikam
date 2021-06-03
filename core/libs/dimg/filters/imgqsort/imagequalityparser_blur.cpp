@@ -53,13 +53,17 @@ double ImageQualityParser::blurDetector() const
     cv::Mat edgesMap = edgeDetection(cvImage);
 
     cv::Mat defocusMap = defocusDetection(edgesMap);
+    defocusMap.convertTo(defocusMap, CV_16F);
 
     // Use motion blur detection here
     // cv::Mat motionBlurMap = motionBlurDetection(edgesMap);
     
-    cv::Mat weightsMat = getWeightsMat();
+    // cv::Mat weightsMat = getWeightsMat();
 
-    cv::Mat blurMap =  weightsMat.mul(defocusMap);
+    qCDebug(DIGIKAM_DIMG_LOG) << "get here";
+
+    // cv::Mat blurMap =  weightsMat.mul(defocusMap);
+    cv::Mat blurMap = defocusMap;
 
     int totalPixels = blurMap.rows * blurMap.cols;
 
@@ -146,15 +150,15 @@ cv::Mat ImageQualityParser::prepareForDetection(const DImg& inputImage) const
 
     cv::Mat cvImage;
     int type               = inputImage.sixteenBit() ? CV_16UC4 : CV_8UC4;
-    cv::Mat cvImageWrapper = cv::Mat(inputImage.height(), inputImage.width(), type, inputImage.bits());
+    cv::Mat cvImageWrapper = cv::Mat(inputImage.height(), inputImage.width(), CV_8U, inputImage.bits());
 
     if (inputImage.hasAlpha())
     {
-        cvtColor(cvImageWrapper, cvImage, cv::COLOR_RGBA2BGR);
+        cvtColor(cvImageWrapper, cvImage, cv::COLOR_BGR2GRAY);
     }
     else
     {
-        cvtColor(cvImageWrapper, cvImage, cv::COLOR_RGB2BGR);
+        cvtColor(cvImageWrapper, cvImage, cv::COLOR_BGR2GRAY);
     }
 
     if (type == CV_16UC4)
@@ -190,9 +194,12 @@ cv::Mat ImageQualityParser::defocusDetection(const cv::Mat& edgesMap)    const
 
     cv::blur(abs_map, abs_map, cv::Size(5,5));
 
-    cv::medianBlur(abs_map, abs_map, 5);
+    qInfo()<<"format abs_map"<< abs_map.type();
+    abs_map.convertTo(abs_map, CV_32F);
+    cv::Mat res;
+    cv::medianBlur(abs_map, res, 5);
 
-    return abs_map;
+    return res;
 
 }
 cv::Mat ImageQualityParser::motionBlurDetection(const cv::Mat& edgesMap) const

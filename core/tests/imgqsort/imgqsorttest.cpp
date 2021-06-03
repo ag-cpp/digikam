@@ -86,12 +86,12 @@ QDir ImgQSortTest::imageDir() const
 
 void ImgQSortTest::testParseTestImagesForExposureDetection()
 {
-    testParseTestImages(QLatin1String("exposureDetection"), DETECTEXPOSURE);
+    // testParseTestImages(QLatin1String("exposureDetection"), DETECTEXPOSURE);
 }
 
 void ImgQSortTest::testParseTestImagesForNoiseDetection()
 {
-    testParseTestImages(QLatin1String("noiseDetection"), DETECTNOISE);
+    // testParseTestImages(QLatin1String("noiseDetection"), DETECTNOISE);
 }
 
 void ImgQSortTest::testParseTestImagesForBlurDetection()
@@ -101,7 +101,7 @@ void ImgQSortTest::testParseTestImagesForBlurDetection()
 
 void ImgQSortTest::testParseTestImagesForCompressionDetection()
 {
-    testParseTestImages(QLatin1String("compressionDetection"), DETECTCOMPRESSION);
+    // testParseTestImages(QLatin1String("compressionDetection"), DETECTCOMPRESSION);
 }
 
 void ImgQSortTest::testParseTestImagesForBlurDetection_SharpImage()
