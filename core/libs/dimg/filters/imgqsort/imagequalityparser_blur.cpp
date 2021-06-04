@@ -60,19 +60,23 @@ double ImageQualityParser::blurDetector() const
     
     // cv::Mat weightsMat = getWeightsMat();
 
-    qCDebug(DIGIKAM_DIMG_LOG) << "get here";
-
     // cv::Mat blurMap =  weightsMat.mul(defocusMap);
+
     cv::Mat blurMap = defocusMap;
 
     int totalPixels = blurMap.rows * blurMap.cols;
 
+    qInfo()<<"format blurMap"<< blurMap.type();
+    
+    blurMap.convertTo(blurMap, CV_16UC1);
+
     int zeroPixels = cv::countNonZero(blurMap);
+    qInfo() <<  "zeroPixels of blur " << zeroPixels << "total pixels :" << totalPixels;
 
-    double percentBlur = zeroPixels / totalPixels;
+    double percentBlur = double(zeroPixels / totalPixels);
 
-    qCDebug(DIGIKAM_DIMG_LOG) << "percentage of blur " << percentBlur;
-
+    // qCDebug(DIGIKAM_DIMG_LOG) << "percentage of blur " << percentBlur;
+    qInfo() <<  "percentage of blur " << percentBlur;
     return percentBlur;
 
 
@@ -99,46 +103,6 @@ double ImageQualityParser::blurDetector() const
 short ImageQualityParser::blurDetector2() const
 {
     return 0;
-    // // Algorithm using Laplacian of Gaussian Filter to detect blur.
-
-    // Mat out;
-    // Mat noise_free;
-    // qCDebug(DIGIKAM_DIMG_LOG) << "Algorithm using LoG Filter started";
-
-    // // To remove noise from the image.
-
-    // GaussianBlur(d->src_gray, noise_free, Size(3, 3), 0, 0, BORDER_DEFAULT);
-
-    // // Aperture size of 1 corresponds to the correct matrix.
-
-    // int kernel_size = 3;
-    // int scale       = 1;
-    // int delta       = 0;
-    // int ddepth      = CV_16S;
-
-    // Laplacian(noise_free, out, ddepth, kernel_size, scale, delta, BORDER_DEFAULT);
-
-    // // noise_free:  The input image without noise.
-    // // out:         Destination (output) image.
-    // // ddepth:      Depth of the destination image. Since our input is CV_8U we define ddepth = CV_16S to avoid overflow.
-    // // kernel_size: The kernel size of the Sobel operator to be applied internally. We use 3 here.
-
-    // short maxLap = -32767;
-
-    // for (int i = 0 ; i < out.rows ; ++i)
-    // {
-    //     for (int j = 0 ; j < out.cols ; ++j)
-    //     {
-    //         short value = out.at<short>(i, j);
-
-    //         if (value > maxLap)
-    //         {
-    //             maxLap = value;
-    //         }
-    //     }
-    // }
-
-    // return maxLap;
 }
 
 cv::Mat ImageQualityParser::prepareForDetection(const DImg& inputImage) const
@@ -150,16 +114,9 @@ cv::Mat ImageQualityParser::prepareForDetection(const DImg& inputImage) const
 
     cv::Mat cvImage;
     int type               = inputImage.sixteenBit() ? CV_16UC4 : CV_8UC4;
-    cv::Mat cvImageWrapper = cv::Mat(inputImage.height(), inputImage.width(), CV_8U, inputImage.bits());
+    cv::Mat cvImageWrapper = cv::Mat(inputImage.height(), inputImage.width(), type, inputImage.bits());
 
-    if (inputImage.hasAlpha())
-    {
-        cvtColor(cvImageWrapper, cvImage, cv::COLOR_BGR2GRAY);
-    }
-    else
-    {
-        cvtColor(cvImageWrapper, cvImage, cv::COLOR_BGR2GRAY);
-    }
+    cv::cvtColor(cvImageWrapper, cvImage, cv::COLOR_RGBA2BGR);
 
     if (type == CV_16UC4)
     {
@@ -180,7 +137,7 @@ cv::Mat ImageQualityParser::edgeDetection(const cv::Mat& image)         const
     Mat dst;
     int ddepth = CV_64F;
     
-    cv::Laplacian( image, dst, ddepth);
+    cv::Laplacian( image_gray, dst, ddepth);
 
     return dst;
 }
@@ -188,17 +145,24 @@ cv::Mat ImageQualityParser::defocusDetection(const cv::Mat& edgesMap)    const
 {
     cv::Mat abs_map = cv::abs(edgesMap);
 
+    abs_map.setTo(5, abs_map < 5);
+
     cv::log(abs_map,abs_map);
 
     abs_map *= 1/log(10);
 
     cv::blur(abs_map, abs_map, cv::Size(5,5));
-
-    qInfo()<<"format abs_map"<< abs_map.type();
-    abs_map.convertTo(abs_map, CV_32F);
+    
+    abs_map.convertTo(abs_map, CV_32FC1);
     cv::Mat res;
     cv::medianBlur(abs_map, res, 5);
 
+    res *= 255;
+
+    cv::threshold(res,res,200,255,THRESH_TOZERO);
+    
+    std::cout<<res;
+    
     return res;
 
 }
@@ -221,7 +185,7 @@ bool    ImageQualityParser::haveFocusMeta()                             const
 }
 cv::Mat ImageQualityParser::getWeightsMat()                          const
 {
-    cv::Mat weightMat = cv::Mat(d->image.height(), d->image.width(), 1);
+    cv::Mat weightMat = cv::Mat::ones(d->image.height(), d->image.width(), CV_8U);
 
     if (!haveFocusMeta())
     {
