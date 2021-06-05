@@ -28,7 +28,6 @@
 #include <QTest>
 #include <QStringList>
 #include <QFileInfoList>
-#include <QDebug>
 #include <QDir>
 
 // Local includes
@@ -36,6 +35,7 @@
 #include "digikam_globals.h"
 #include "imagequalitycontainer.h"
 #include "dpluginloader.h"
+#include "digikam_debug.h"
 
 using namespace Digikam;
 
@@ -50,7 +50,7 @@ void ImgQSortTest::testParseTestImages(const QString& testcase_name, DetectionTy
 {
     QStringList imageNames;
     QList<PairImageQuality> dataTest = dataTestCases.values(testcase_name);
-    
+
     for (const auto& image_refQuality : dataTest)
     {
         imageNames << image_refQuality.first;
@@ -80,7 +80,7 @@ void ImgQSortTest::cleanupTestCase()
 QDir ImgQSortTest::imageDir() const
 {
     QDir dir(QFINDTESTDATA("data/"));
-    qDebug() << "Images Directory:" << dir;
+    qCDebug(DIGIKAM_TESTS_LOG) << "Images Directory:" << dir;
     return dir;
 }
 

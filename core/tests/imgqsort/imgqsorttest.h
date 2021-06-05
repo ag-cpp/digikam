@@ -92,19 +92,21 @@ DataTestCases const dataTestCases =
 
         {QLatin1String("sharpImage"), PairImageQuality(QLatin1String("blur_sky_1.jpg"),3)},
         {QLatin1String("sharpImage"), PairImageQuality(QLatin1String("blur_rock_1.jpg"),3)},
-        {QLatin1String("sharpImage"), PairImageQuality(QLatin1String("blur_caffe_1.jpg"),3)},
         {QLatin1String("sharpImage"), PairImageQuality(QLatin1String("blur_street_1.jpg"),3)},
+        {QLatin1String("sharpImage"), PairImageQuality(QLatin1String("blur_bookcase_1.jpg"),3)},
+        {QLatin1String("sharpImage"), PairImageQuality(QLatin1String("blur_grass_1.jpg"),3)},
 
-        {QLatin1String("motionBlurImage"), PairImageQuality(QLatin1String("blur_sky_1.jpg"),1)},
+        {QLatin1String("motionBlurImage"), PairImageQuality(QLatin1String("blur_sky_2.jpg"),1)},
         {QLatin1String("motionBlurImage"), PairImageQuality(QLatin1String("blur_rock_2.jpg"),1)},
-        {QLatin1String("motionBlurImage"), PairImageQuality(QLatin1String("blur_caffe_2.jpg"),1)},
         {QLatin1String("motionBlurImage"), PairImageQuality(QLatin1String("blur_street_2.jpg"),1)},
+        {QLatin1String("motionBlurImage"), PairImageQuality(QLatin1String("blur_bookcase_2.jpg"),1)},
+        {QLatin1String("motionBlurImage"), PairImageQuality(QLatin1String("blur_grass_2.jpg"),1)},
 
         {QLatin1String("defocusImage"), PairImageQuality(QLatin1String("blur_sky_3.jpg"),1)},
         {QLatin1String("defocusImage"), PairImageQuality(QLatin1String("blur_rock_3.jpg"),1)},
-        {QLatin1String("defocusImage"), PairImageQuality(QLatin1String("blur_caffe_3.jpg"),1)},
         {QLatin1String("defocusImage"), PairImageQuality(QLatin1String("blur_street_3.jpg"),1)},
-
+        {QLatin1String("defocusImage"), PairImageQuality(QLatin1String("blur_bookcase_3.jpg"),1)},
+        {QLatin1String("defocusImage"), PairImageQuality(QLatin1String("blur_grass_3.jpg"),1)},
 
         {QLatin1String("blurBackGroundImage"), PairImageQuality(QLatin1String("blur_blurbackground_1.jpg"),2)},
         {QLatin1String("blurBackGroundImage"), PairImageQuality(QLatin1String("blur_blurbackground_2.jpg"),3)},
