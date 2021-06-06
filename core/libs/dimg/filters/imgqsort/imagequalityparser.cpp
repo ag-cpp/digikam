@@ -114,12 +114,6 @@ void ImageQualityParser::startAnalyse()
 
         blur  = blurDetector();
         qCDebug(DIGIKAM_DIMG_LOG) << "Amount of Blur present in image is:" << blur;
-
-        // Returns blur value between 1 and 32767.
-        // If 1 is returned just assign NoPickLabel
-
-        blur2 = blurDetector2();
-        qCDebug(DIGIKAM_DIMG_LOG) << "Amount of Blur present in image [using LoG Filter] is:" << blur2;
     }
 
     if (d->running && d->imq.detectNoise)

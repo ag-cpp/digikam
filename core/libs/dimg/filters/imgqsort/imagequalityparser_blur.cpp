@@ -30,22 +30,6 @@
 namespace Digikam
 {
 
-void ImageQualityParser::cannyThreshold(int, void*) const
-{
-    return;
-    // // Reduce noise with a kernel 3x3.
-
-    // blur(d->src_gray, d->detected_edges, Size(3, 3));
-
-    // // Canny detector.
-
-    // Canny(d->detected_edges,
-    //       d->detected_edges,
-    //       d->lowThreshold,
-    //       d->lowThreshold * d->ratio,
-    //       d->kernel_size);
-}
-
 double ImageQualityParser::blurDetector() const
 {
     cv::Mat cvImage = prepareForDetection(d->image);
@@ -55,8 +39,7 @@ double ImageQualityParser::blurDetector() const
     cv::Mat defocusMap = defocusDetection(edgesMap);
     defocusMap.convertTo(defocusMap, CV_16F);
 
-    // Use motion blur detection here
-    // cv::Mat motionBlurMap = motionBlurDetection(edgesMap);
+    cv::Mat motionBlurMap = motionBlurDetection(edgesMap);
     
     // cv::Mat weightsMat = getWeightsMat();
 
@@ -65,8 +48,6 @@ double ImageQualityParser::blurDetector() const
     cv::Mat blurMap = defocusMap;
 
     int totalPixels = blurMap.rows * blurMap.cols;
-
-    qInfo()<<"format blurMap"<< blurMap.type();
     
     blurMap.convertTo(blurMap, CV_16UC1);
 
@@ -77,11 +58,6 @@ double ImageQualityParser::blurDetector() const
     // qCDebug(DIGIKAM_DIMG_LOG) << "percentage of blur " << percentBlur;
     qInfo() <<  "percentage of blur " << percentBlur;
     return percentBlur;
-}
-
-short ImageQualityParser::blurDetector2() const
-{
-    return 0;
 }
 
 cv::Mat ImageQualityParser::prepareForDetection(const DImg& inputImage) const
@@ -119,28 +95,28 @@ cv::Mat ImageQualityParser::edgeDetection(const cv::Mat& image)         const
     cv::Laplacian( image_gray, dst, ddepth);
     return dst;
 }
-cv::Mat ImageQualityParser::defocusDetection(const cv::Mat& edgesMap, threshold)    const
+cv::Mat ImageQualityParser::defocusDetection(const cv::Mat& edgesMap, const int threshold,const  int sigmaBlur ,const int min_abs ,const int ordreLog )    const
 {
     cv::Mat abs_map = cv::abs(edgesMap);
 
-    abs_map.setTo(5, abs_map < 5);
+    abs_map.setTo(min_abs, abs_map < min_abs);
 
     // Log filter
     cv::log(abs_map,abs_map);
 
-    abs_map *= 1/log(10);
+    abs_map *= 1/log(ordreLog);
 
     // smooth image to get blur map
-    cv::blur(abs_map, abs_map, cv::Size(5,5));
+    cv::blur(abs_map, abs_map, cv::Size(sigmaBlur,sigmaBlur));
     
     abs_map.convertTo(abs_map, CV_32FC1);
     cv::Mat res;
-    cv::medianBlur(abs_map, res, 5);
+    cv::medianBlur(abs_map, res, sigmaBlur);
 
     res *= 255;
 
     // Mask blurred pixel and sharp pixel 
-    cv::threshold(res,res,200,255,THRESH_BINARY);
+    cv::threshold(res,res,threshold,255,THRESH_BINARY);
         
     return res;
 
@@ -148,9 +124,64 @@ cv::Mat ImageQualityParser::defocusDetection(const cv::Mat& edgesMap, threshold)
 cv::Mat ImageQualityParser::motionBlurDetection(const cv::Mat& edgesMap) const
 {
     // cv::Mat res = cv::Mat::ones (edgesMap.height(), edgesMap.width(), 1);
-    cv::Mat res = edgesMap;
+    int nb_parts_row = 6;
+    int nb_parts_col = 6;
+
+    // Divide image
+    qInfo()<<"divide image";
+    QHash<QPair<int,int>, bool> mapMotionBlur;
+    cv::Size part_size = cv::Size(int(edgesMap.size().width / nb_parts_row), 
+                                  int(edgesMap.size().height  / nb_parts_col));
+
+    for (int i = 0; i < nb_parts_row; i++)
+    {
+        for (int j = 0; j < nb_parts_col; j++)
+        {
+            cv::Mat subImg = edgesMap(cv::Range(i*part_size.height,(i+1)*part_size.height ), 
+                                      cv::Range(j*part_size.width, (j+1)*part_size.width ));
+            subImg.convertTo(subImg,CV_8U);
+            mapMotionBlur.insert(QPair<int,int>(i,j),isMotionBlur(subImg));
+        }
+    }
+
+    qInfo()<<"Mask image";
+    // Mask motion blurred pixel
+    cv::Mat res = cv::Mat::zeros(edgesMap.size(), CV_8U);
+    for (const auto& coordinate :mapMotionBlur.keys() )
+    {
+        if (mapMotionBlur.value(coordinate) )
+        {
+            cv::Mat tmp = cv::Mat::ones(part_size,CV_8U);
+
+            qInfo()<<"coordinate" <<coordinate.first << coordinate.second;
+
+            // for debug
+            tmp.copyTo(res(cv::Rect(coordinate.first*part_size.width, 
+                                        coordinate.second*part_size.height,
+                                        part_size.width,part_size.height)));
+            //res.setTo(1,res(rect));
+            qInfo()<<"get here";
+        }
+    } 
+
     return res;
 }
+
+bool    ImageQualityParser::isMotionBlur(const cv::Mat& frag) const
+{
+    qInfo()<<"detect motion";
+    
+    std::vector<cv::Vec2f> lines; // will hold the results of the detection
+    
+    HoughLines(frag, lines, 1, CV_PI/180, 150, 0, 0 ); // runs the actual detection
+    
+    for( size_t i = 0; i < lines.size(); i++ )
+    {
+        qInfo()<<"theta line i"<<lines[i][0];
+    }
+    return true;
+}
+
 cv::Mat ImageQualityParser::getBlurMap()                                const
 {
     cv::Mat res = cv::Mat(d->image.height(), d->image.width(), 1);
