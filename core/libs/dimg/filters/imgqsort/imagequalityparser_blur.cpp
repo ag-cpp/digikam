@@ -71,7 +71,6 @@ double ImageQualityParser::blurDetector() const
     blurMap.convertTo(blurMap, CV_16UC1);
 
     int zeroPixels = cv::countNonZero(blurMap);
-    qInfo() <<  "zero non Pixels of blur " << zeroPixels << "total pixels :" << totalPixels;
 
     float percentBlur = float(totalPixels - zeroPixels) / float(totalPixels);
 
@@ -112,14 +111,12 @@ cv::Mat ImageQualityParser::edgeDetection(const cv::Mat& image)         const
     cv::Mat image_gray;
     
     cvtColor( image, image_gray, COLOR_BGR2GRAY );
-    qInfo()<<" image_gray type "<< image_gray.type();
 
     // Use laplacian to detect edge
     Mat dst;
     int ddepth = CV_64F;
     
     cv::Laplacian( image_gray, dst, ddepth);
-    qInfo()<<" dst laplacian type "<< dst.type();
     return dst;
 }
 cv::Mat ImageQualityParser::defocusDetection(const cv::Mat& edgesMap, threshold)    const
