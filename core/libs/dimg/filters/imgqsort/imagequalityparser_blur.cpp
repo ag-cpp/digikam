@@ -122,7 +122,7 @@ cv::Mat ImageQualityParser::edgeDetection(const cv::Mat& image)         const
     qInfo()<<" dst laplacian type "<< dst.type();
     return dst;
 }
-cv::Mat ImageQualityParser::defocusDetection(const cv::Mat& edgesMap)    const
+cv::Mat ImageQualityParser::defocusDetection(const cv::Mat& edgesMap, threshold)    const
 {
     cv::Mat abs_map = cv::abs(edgesMap);
 
@@ -135,18 +135,15 @@ cv::Mat ImageQualityParser::defocusDetection(const cv::Mat& edgesMap)    const
 
     // smooth image to get blur map
     cv::blur(abs_map, abs_map, cv::Size(5,5));
-    qInfo()<<" abs_map blur type "<< abs_map.type();
     
     abs_map.convertTo(abs_map, CV_32FC1);
     cv::Mat res;
     cv::medianBlur(abs_map, res, 5);
-    qInfo()<<" abs_map blur median type "<< abs_map.type();
 
     res *= 255;
 
     // Mask blurred pixel and sharp pixel 
     cv::threshold(res,res,200,255,THRESH_BINARY);
-    qInfo()<<" abs_map theshold type "<< abs_map.type();
         
     return res;
 
