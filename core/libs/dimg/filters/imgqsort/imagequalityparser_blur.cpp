@@ -71,33 +71,13 @@ double ImageQualityParser::blurDetector() const
     blurMap.convertTo(blurMap, CV_16UC1);
 
     int zeroPixels = cv::countNonZero(blurMap);
-    qInfo() <<  "zeroPixels of blur " << zeroPixels << "total pixels :" << totalPixels;
+    qInfo() <<  "zero non Pixels of blur " << zeroPixels << "total pixels :" << totalPixels;
 
-    double percentBlur = double(zeroPixels / totalPixels);
+    float percentBlur = float(totalPixels - zeroPixels) / float(totalPixels);
 
     // qCDebug(DIGIKAM_DIMG_LOG) << "percentage of blur " << percentBlur;
     qInfo() <<  "percentage of blur " << percentBlur;
     return percentBlur;
-
-
-    // d->lowThreshold   = 0.4;
-    // d->ratio          = 3;
-    // double maxval     = 0.0;
-    // cannyThreshold(0, nullptr);
-
-    // double average    = mean(d->detected_edges)[0];
-    // int* const maxIdx = new int[sizeof(d->detected_edges)];
-    // minMaxIdx(d->detected_edges, nullptr, &maxval, nullptr, maxIdx);
-
-    // double blurresult = average / maxval;
-
-    // qCDebug(DIGIKAM_DIMG_LOG) << "The average of the edge intensity is " << average;
-    // qCDebug(DIGIKAM_DIMG_LOG) << "The maximum of the edge intensity is " << maxval;
-    // qCDebug(DIGIKAM_DIMG_LOG) << "The result of the edge intensity is  " << blurresult;
-
-    // delete [] maxIdx;
-
-    // return blurresult;
 }
 
 short ImageQualityParser::blurDetector2() const
@@ -131,14 +111,15 @@ cv::Mat ImageQualityParser::edgeDetection(const cv::Mat& image)         const
     // Convert the image to grayscale
     cv::Mat image_gray;
     
-    cvtColor( image, image_gray, COLOR_BGR2GRAY ); 
+    cvtColor( image, image_gray, COLOR_BGR2GRAY );
+    qInfo()<<" image_gray type "<< image_gray.type();
 
     // Use laplacian to detect edge
     Mat dst;
     int ddepth = CV_64F;
     
     cv::Laplacian( image_gray, dst, ddepth);
-
+    qInfo()<<" dst laplacian type "<< dst.type();
     return dst;
 }
 cv::Mat ImageQualityParser::defocusDetection(const cv::Mat& edgesMap)    const
@@ -147,29 +128,33 @@ cv::Mat ImageQualityParser::defocusDetection(const cv::Mat& edgesMap)    const
 
     abs_map.setTo(5, abs_map < 5);
 
+    // Log filter
     cv::log(abs_map,abs_map);
 
     abs_map *= 1/log(10);
 
+    // smooth image to get blur map
     cv::blur(abs_map, abs_map, cv::Size(5,5));
+    qInfo()<<" abs_map blur type "<< abs_map.type();
     
     abs_map.convertTo(abs_map, CV_32FC1);
     cv::Mat res;
     cv::medianBlur(abs_map, res, 5);
+    qInfo()<<" abs_map blur median type "<< abs_map.type();
 
     res *= 255;
 
-    cv::threshold(res,res,200,255,THRESH_TOZERO);
-    
-    std::cout<<res;
-    
+    // Mask blurred pixel and sharp pixel 
+    cv::threshold(res,res,200,255,THRESH_BINARY);
+    qInfo()<<" abs_map theshold type "<< abs_map.type();
+        
     return res;
 
 }
 cv::Mat ImageQualityParser::motionBlurDetection(const cv::Mat& edgesMap) const
 {
-    cv::Mat res = cv::Mat(d->image.height(), d->image.width(), 1);
-
+    // cv::Mat res = cv::Mat::ones (edgesMap.height(), edgesMap.width(), 1);
+    cv::Mat res = edgesMap;
     return res;
 }
 cv::Mat ImageQualityParser::getBlurMap()                                const
