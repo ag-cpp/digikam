@@ -139,7 +139,6 @@ cv::Mat ImageQualityParser::motionBlurDetection(const cv::Mat& edgesMap) const
         {
             cv::Mat subImg = edgesMap(cv::Range(i*part_size.height,(i+1)*part_size.height ), 
                                       cv::Range(j*part_size.width, (j+1)*part_size.width ));
-            subImg.convertTo(subImg,CV_8U);
             mapMotionBlur.insert(QPair<int,int>(i,j),isMotionBlur(subImg));
         }
     }
@@ -152,34 +151,44 @@ cv::Mat ImageQualityParser::motionBlurDetection(const cv::Mat& edgesMap) const
         if (mapMotionBlur.value(coordinate) )
         {
             cv::Mat tmp = cv::Mat::ones(part_size,CV_8U);
-
-            qInfo()<<"coordinate" <<coordinate.first << coordinate.second;
-
-            // for debug
             tmp.copyTo(res(cv::Rect(coordinate.first*part_size.width, 
                                         coordinate.second*part_size.height,
                                         part_size.width,part_size.height)));
             //res.setTo(1,res(rect));
-            qInfo()<<"get here";
         }
     } 
 
     return res;
 }
 
-bool    ImageQualityParser::isMotionBlur(const cv::Mat& frag) const
+bool    ImageQualityParser::isMotionBlur(const cv::Mat& frag, const int threshold) const
 {
-    qInfo()<<"detect motion";
+    //convert to 8u
+    cv::Mat tmp = frag;
+
+    double minVal; 
+    double maxVal; 
+    Point minLoc; 
+    Point maxLoc;
+
+    cv::minMaxLoc( tmp, &minVal, &maxVal, &minLoc, &maxLoc );
+    
+    tmp -= minVal;
+    tmp /= maxVal;
+    tmp *= 255;
+    tmp.convertTo(tmp,CV_8U);
     
     std::vector<cv::Vec2f> lines; // will hold the results of the detection
     
-    HoughLines(frag, lines, 1, CV_PI/180, 150, 0, 0 ); // runs the actual detection
-    
+    HoughLines(tmp, lines, 1, CV_PI/180, 150, 0, 0 ); // runs the actual detection
+    QHash<float,int> list_theta;
     for( size_t i = 0; i < lines.size(); i++ )
     {
-        qInfo()<<"theta line i"<<lines[i][0];
+        list_theta.insert(lines[i][1],i);
     }
-    return true;
+    int max = *std::max_element(list_theta.values().begin(), list_theta.values().end());
+    qInfo()<<"is blur "<< (max >= threshold);
+    return max >= threshold;
 }
 
 cv::Mat ImageQualityParser::getBlurMap()                                const
