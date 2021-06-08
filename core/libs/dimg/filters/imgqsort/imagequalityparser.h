@@ -76,9 +76,10 @@ private:
     
     cv::Mat edgeDetection(const cv::Mat& image)         const;
     cv::Mat defocusDetection(const cv::Mat& edgesMap, const int threshold = 200,const  int sigmaBlur = 5,const int min_abs = 5,const int ordreLog = 10)    const;
-    bool    isMotionBlur(const cv::Mat& frag, const int threshold = 10)  const;
+    bool    isMotionBlur(const cv::Mat& frag, const int threshold_filter = 10, const int threshold_hough = 100, const int threshold_lines = 20)  const;
     cv::Mat motionBlurDetection(const cv::Mat& edgesMap) const;
     cv::Mat getBlurMap()                                const;
+    int     maxRepeating(QList<int> list)               const;
 
     bool haveFocusMeta()                                const;
     cv::Mat getWeightsMat()                          const;
