@@ -1,5 +1,9 @@
 data <- read.table("./face_data.txt",sep = ",")
 
+# Left out  a label as an unknown label on learning data
+leftout <- data[data$V1 == 27,]
+data <-  data[data$V1 != 27,]
+
 data$V1 <- as.factor(data$V1)
 
 # Split train/test/validation
@@ -44,3 +48,10 @@ validation.pca <- predict(train.pca, data.validation[, -1])
 data.validation.pca <- as.data.frame(scale(validation.pca[,1:27]))
 data.validation.pca$Y <- data.validation$V1
 data.validation.pca[, -ncol(data.validation.pca)] <- scale(data.validation.pca[, -ncol(data.validation.pca)])
+
+# LeftoutPCA
+leftout.pca <- predict(train.pca, leftout[, -1])
+leftout.pca  <- as.data.frame(scale(leftout.pca [,1:27]))
+leftout.pca$Y <- 27
+leftout.pca[, -ncol(leftout.pca)] <- scale(leftout.pca[, -ncol(leftout.pca)])
+

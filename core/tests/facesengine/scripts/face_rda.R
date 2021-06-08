@@ -4,9 +4,13 @@
 
 library(MASS)
 lda.fit <- lda(Y~., data=data.train.pca)
-lda.pred <- predict(lda.fit, newdata=data.test.pca)$class
-table(data.test.pca$Y, lda.pred)
-lda.error <- mean(data.test.pca$Y != lda.pred)
+lda.pred <- predict(lda.fit, newdata=data.test.pca)
+lda.class <- lda.pred$class
+table(data.test.pca$Y, lda.class)
+lda.error <- mean(data.test.pca$Y != lda.class)
+
+colnames(lda.pred$posterior)[max.col(lda.pred$posterior,ties.method="first")]
+apply(lda.pred$posterior[, 2:28], 1, max)
 
 # 2.2 QDA
 qda.fit <- qda(Y~., data=data.train.pca)
