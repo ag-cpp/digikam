@@ -34,6 +34,16 @@ rda.cv <- train(Y~.,
 rda.fit <- rda(Y~., data=data.train.pca,
                     lambda=rda.cv$bestTune$lambda, gamma=rda.cv$bestTune$gamma)
 
-rda.pred <- predict(rda.fit, newdata=data.test.pca)$class
-table(data.test.pca$Y, rda.pred)
-rda.error <- mean(data.test.pca$Y != rda.pred)
+rda.pred <- predict(rda.fit, newdata=data.test.pca)
+rda.class <- rda.pred$class
+table(data.test.pca$Y, rda.class)
+rda.error <- mean(data.test.pca$Y != rda.class)
+
+#Outlier detection with RDA
+rda.outlier.pred <- predict(rda.fit, newdata=outlier.test)
+
+colnames(rda.outlier.pred$posterior)[max.col(rda.outlier.pred$posterior,ties.method="first")]
+table(outlier.test$Y==27, apply(rda.outlier.pred$posterior, 1, max) < 0.5)
+rda.outlier.error <- mean((outlier.test$Y==27) != (apply(rda.outlier.pred$posterior, 1, max) < 0.5))
+
+

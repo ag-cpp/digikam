@@ -53,5 +53,7 @@ data.validation.pca[, -ncol(data.validation.pca)] <- scale(data.validation.pca[,
 leftout.pca <- predict(train.pca, leftout[, -1])
 leftout.pca  <- as.data.frame(scale(leftout.pca [,1:27]))
 leftout.pca$Y <- 27
+leftout.pca$Y <- as.factor(leftout.pca$Y)
 leftout.pca[, -ncol(leftout.pca)] <- scale(leftout.pca[, -ncol(leftout.pca)])
 
+outlier.test <- rbind(data.test.pca, leftout.pca)
