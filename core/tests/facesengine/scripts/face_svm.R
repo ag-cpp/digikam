@@ -52,3 +52,9 @@ svm.gaussian.fit <- ksvm(Y~., data=data.train.pca, type="C-svc",kernel="rbfdot",
 svm.gaussian.pred <- predict(svm.gaussian.fit, newdata=data.test.pca)
 table(data.test.pca$Y, svm.gaussian.pred)
 svm.gaussian.error <- mean(data.test.pca$Y != svm.gaussian.pred)
+
+# 1.3 One-class SVM for novelty detection
+svm.onclass.fit <-ksvm(~.-Y, data=data.train.pca, type="one-svc", kernel="rbfdot", nu=0.1,kpar=list(sigma=0.3), cross=10)
+svm.oneclass.pred <- predict(svm.onclass.fit, newdata=outlier.test)
+table(outlier.test$Y==27, svm.oneclass.pred)
+svm.oneclass.error <- mean((outlier.test$Y==27) != svm.oneclass.pred)
