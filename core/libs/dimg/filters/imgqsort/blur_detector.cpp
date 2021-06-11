@@ -36,30 +36,31 @@ public:
         sigma_smoothImage(5),
         filtrer_defocus(120),
 
-        nb_parts_row(6),
-        nb_parts_col(6),
+        part_size(40),
+        // nb_parts_row(6),
+        // nb_parts_col(6),
         edges_filtrer(12),
         threshold_hough(30),
         min_nbLines(12),
-        max_inertia(0.1)
+        max_stddev(0.15)
     {
 
     }
 
     cv::Mat image;
 
-    int filtrer_defocus;
-    int sigma_smoothImage;
     float min_abs;
     int ordre_logFiltrer;
-
-    int nb_parts_row;
-    int nb_parts_col;
-
+    int sigma_smoothImage;
+    int filtrer_defocus;
+    
+    float part_size;
+    // int nb_parts_row;
+    // int nb_parts_col;
     float edges_filtrer;
     float threshold_hough;
     int min_nbLines;
-    float max_inertia;
+    float max_stddev;
 
 
 };
@@ -127,8 +128,6 @@ cv::Mat BlurDetector::detectDefocusMap(const cv::Mat& edgesMap)    const
     
     cv::Mat res;
     cv::medianBlur(abs_map, res, d->sigma_smoothImage);
-    
-    
 
     res *= 255;
     // Mask blurred pixel and sharp pixel 
@@ -141,16 +140,18 @@ cv::Mat BlurDetector::detectDefocusMap(const cv::Mat& edgesMap)    const
 cv::Mat BlurDetector::detectMotionBlurMap(const cv::Mat& edgesMap) const
 {
     // Divide image
+    int nb_parts_row = int(edgesMap.size().height / d->part_size);
+    int nb_parts_col = int(edgesMap.size().width / d->part_size);
+    
     QHash<QPair<int,int>, bool> mapMotionBlur;
-    cv::Size part_size = cv::Size(int(edgesMap.size().width / d->nb_parts_row), 
-                                  int(edgesMap.size().height  / d->nb_parts_col));
 
-    for (int i = 0; i < d->nb_parts_row; i++)
+    for (int i = 0; i < nb_parts_row; i++)
     {
-        for (int j = 0; j < d->nb_parts_col; j++)
+        for (int j = 0; j < nb_parts_col; j++)
         {
-            cv::Mat subImg = edgesMap(cv::Range(i*part_size.height,(i+1)*part_size.height ), 
-                                      cv::Range(j*part_size.width, (j+1)*part_size.width ));
+            cv::Mat subImg = edgesMap(cv::Range(i*d->part_size, (i+1)*d->part_size ), 
+                                      cv::Range(j*d->part_size, (j+1)*d->part_size ));
+            
             mapMotionBlur.insert(QPair<int,int>(i,j),isMotionBlur(subImg));
         }
     }
@@ -161,10 +162,11 @@ cv::Mat BlurDetector::detectMotionBlurMap(const cv::Mat& edgesMap) const
     {
         if (mapMotionBlur.value(coordinate) )
         {
-            cv::Mat tmp = cv::Mat::ones(part_size,CV_8U);
-            tmp.copyTo(res(cv::Rect(coordinate.first*part_size.width, 
-                                    coordinate.second*part_size.height,
-                                    part_size.width,part_size.height)));
+            cv::Mat tmp = cv::Mat::ones(cv::Size(d->part_size, d->part_size), CV_8U);
+            
+            tmp.copyTo(res(cv::Rect(coordinate.second * d->part_size, 
+                                    coordinate.first  *d->part_size,
+                                    d->part_size,d->part_size)));
         }
     } 
 
@@ -184,7 +186,7 @@ bool    BlurDetector::isMotionBlur(const cv::Mat& frag) const
     
     HoughLines(tmp, lines, 1, CV_PI/180, d->threshold_hough); 
 
-    // detect if region have paralle lines
+    // detect if region is motion blurred by number of paralle lines
     if (QVector<cv::Vec2f>::fromStdVector(lines).count() > d->min_nbLines )
     {
         QList<float> list_theta; 
@@ -192,20 +194,28 @@ bool    BlurDetector::isMotionBlur(const cv::Mat& frag) const
         for (const auto line : lines)
         {
             float theta = (line[1] <= 0) ?  line[1] + CV_PI : line[1];
-            sum += theta;
-            list_theta.push_back(theta);
-        }
-        float avg = sum / list_theta.count();
 
-        float inertia = 0;
-        for (const float theta : list_theta)
-        {
-            inertia += abs(avg - theta);
+            theta = (theta < CV_PI/20) ?  CV_PI - theta : theta;
+            
+            list_theta.push_back(theta);
+        
+            sum += theta;
         }
-        inertia /= list_theta.count();
-        qInfo() <<"inertia " << inertia;
-        if (inertia < d->max_inertia) {qInfo()<<"part motion blur";} 
-        return inertia < d->max_inertia;
+
+        // calculate Standard Deviation 
+        float mean_theta = sum / float(list_theta.count());
+        
+        float stddev = 0;
+        
+        for (const auto theta : list_theta)
+        {
+            stddev += pow(mean_theta-theta,2);
+        }
+        stddev /= float(list_theta.count());
+
+        qInfo() <<"stddev " << stddev;
+        // if (inertia < d->max_inertia) {qInfo()<<"part motion blur";} 
+        return stddev < d->max_stddev;
     }
     return false;
 }
@@ -219,6 +229,8 @@ float BlurDetector::detect()
 
     cv::Mat motionBlurMap = detectMotionBlurMap(edgesMap);
     motionBlurMap.convertTo(motionBlurMap,CV_8U);
+    
+    // Read metadata to find focus region here ( dont implement yet )
     // cv::Mat weightsMat = getWeightsMat();
 
     // cv::Mat blurMap =  weightsMat.mul(defocusMap);
