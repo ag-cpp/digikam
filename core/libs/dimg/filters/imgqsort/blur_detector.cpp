@@ -31,13 +31,15 @@ class Q_DECL_HIDDEN BlurDetector::Private
 {
 public:
     explicit Private()
-      : filtrer_defocus(12),
-        sigma_smoothImage(12),
-        min_abs(12),
-        nb_parts_row(12),
-        nb_parts_col(12),
+      : min_abs(1),
+        ordre_logFiltrer(35),
+        sigma_smoothImage(5),
+        filtrer_defocus(120),
+
+        nb_parts_row(6),
+        nb_parts_col(6),
         edges_filtrer(12),
-        threshold_hough(12),
+        threshold_hough(30),
         min_nbLines(12),
         max_inertia(0.1)
     {
@@ -206,6 +208,36 @@ bool    BlurDetector::isMotionBlur(const cv::Mat& frag) const
         return inertia < d->max_inertia;
     }
     return false;
+}
+
+float BlurDetector::detect()
+{ 
+    cv::Mat edgesMap = edgeDetection(d->image);
+
+    cv::Mat defocusMap = detectDefocusMap(edgesMap);
+    defocusMap.convertTo(defocusMap,CV_8U);
+
+    cv::Mat motionBlurMap = detectMotionBlurMap(edgesMap);
+    motionBlurMap.convertTo(motionBlurMap,CV_8U);
+    // cv::Mat weightsMat = getWeightsMat();
+
+    // cv::Mat blurMap =  weightsMat.mul(defocusMap);
+
+    cv::Mat blurMap ;
+    
+    cv::add(defocusMap,motionBlurMap,blurMap);
+
+    int totalPixels = blurMap.rows * blurMap.cols;
+    
+    blurMap.convertTo(blurMap, CV_8UC1);
+
+    int blurPixel = cv::countNonZero(blurMap);
+
+    float percentBlur = float(blurPixel) / float(totalPixels);
+
+    // qCDebug(DIGIKAM_DIMG_LOG) << "percentage of blur " << percentBlur;
+    qInfo() <<  "percentage of blur " << percentBlur;
+    return percentBlur;
 }
 
 }
