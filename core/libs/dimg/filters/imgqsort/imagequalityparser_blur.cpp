@@ -30,13 +30,31 @@
 namespace Digikam
 {
 
+// just for debug
+
+void matrixInfo(const cv::Mat matrix)
+{
+    double minVal; 
+    double maxVal; 
+    Point minLoc; 
+    Point maxLoc;
+    cv::Scalar mean, stddev;
+    cv::meanStdDev(matrix, mean, stddev);
+    qInfo()<< "mean et std "<< mean[0] << stddev[0];
+
+    minMaxLoc( matrix, &minVal, &maxVal, &minLoc, &maxLoc );
+    qInfo()<<"max val"<<maxVal << "min val"<< minVal;
+}
+
+
+
 double ImageQualityParser::blurDetector() const
 {
     cv::Mat cvImage = prepareForDetection(d->image);
     
     cv::Mat edgesMap = edgeDetection(cvImage);
 
-    cv::Mat defocusMap = defocusDetection(edgesMap);
+    cv::Mat defocusMap = defocusDetection(edgesMap, 120, 5,1,35);
     defocusMap.convertTo(defocusMap,CV_8U);
 
     cv::Mat motionBlurMap = motionBlurDetection(edgesMap);
@@ -46,11 +64,12 @@ double ImageQualityParser::blurDetector() const
     // cv::Mat blurMap =  weightsMat.mul(defocusMap);
 
     cv::Mat blurMap ;
+    
     cv::add(defocusMap,motionBlurMap,blurMap);
 
     int totalPixels = blurMap.rows * blurMap.cols;
     
-    blurMap.convertTo(blurMap, CV_16UC1);
+    blurMap.convertTo(blurMap, CV_8UC1);
 
     int blurPixel = cv::countNonZero(blurMap);
 
@@ -88,36 +107,41 @@ cv::Mat ImageQualityParser::edgeDetection(const cv::Mat& image)         const
     cv::Mat image_gray;
     
     cvtColor( image, image_gray, COLOR_BGR2GRAY );
+    matrixInfo(image_gray);
 
     // Use laplacian to detect edge
-    Mat dst;
-    int ddepth = CV_64F;
+    cv::Mat dst;
     
-    cv::Laplacian( image_gray, dst, ddepth);
+    cv::Laplacian( image_gray, dst, CV_64F);
+    
+    matrixInfo(dst);
     return dst;
 }
 cv::Mat ImageQualityParser::defocusDetection(const cv::Mat& edgesMap, const int threshold,const  int sigmaBlur ,const int min_abs ,const int ordreLog )    const
 {
-    cv::Mat abs_map = cv::abs(edgesMap);
-
+    cv::Mat abs_map = cv::Mat(edgesMap.size(),CV_64FC1);
+    abs_map = cv::abs(edgesMap);
+    
     abs_map.setTo(min_abs, abs_map < min_abs);
-
     // Log filter
     cv::log(abs_map,abs_map);
-
+    
     abs_map *= 1/log(ordreLog);
-
+    abs_map.convertTo(abs_map, CV_32F);
+    
     // smooth image to get blur map
     cv::blur(abs_map, abs_map, cv::Size(sigmaBlur,sigmaBlur));
     
-    abs_map.convertTo(abs_map, CV_32FC1);
     cv::Mat res;
     cv::medianBlur(abs_map, res, sigmaBlur);
+    
+    
 
     res *= 255;
-
+    matrixInfo(res);
     // Mask blurred pixel and sharp pixel 
     cv::threshold(res,res,threshold,1,THRESH_BINARY_INV);
+    qInfo()<< "number pixel non 0" << cv::countNonZero(res);
         
     return res;
 
@@ -125,8 +149,8 @@ cv::Mat ImageQualityParser::defocusDetection(const cv::Mat& edgesMap, const int 
 cv::Mat ImageQualityParser::motionBlurDetection(const cv::Mat& edgesMap) const
 {
     // cv::Mat res = cv::Mat::ones (edgesMap.height(), edgesMap.width(), 1);
-    int nb_parts_row = 6;
-    int nb_parts_col = 6;
+    int nb_parts_row = 10;
+    int nb_parts_col = 10;
 
     // Divide image
     QHash<QPair<int,int>, bool> mapMotionBlur;
@@ -139,7 +163,7 @@ cv::Mat ImageQualityParser::motionBlurDetection(const cv::Mat& edgesMap) const
         {
             cv::Mat subImg = edgesMap(cv::Range(i*part_size.height,(i+1)*part_size.height ), 
                                       cv::Range(j*part_size.width, (j+1)*part_size.width ));
-            mapMotionBlur.insert(QPair<int,int>(i,j),isMotionBlur(subImg,10,30,100));
+            mapMotionBlur.insert(QPair<int,int>(i,j),isMotionBlur(subImg,20,10,100));
         }
     }
 
@@ -191,9 +215,9 @@ bool    ImageQualityParser::isMotionBlur(const cv::Mat& frag, const int threshol
             inertia += abs(avg - theta);
         }
         inertia /= list_theta.count();
-        // qInfo() <<"inertia " << inertia;
-
-        return inertia < 0.8;
+        qInfo() <<"inertia " << inertia;
+        if (inertia < 0.7) {qInfo()<<"part motion blur";} 
+        return inertia < 0.7;
     }
     return false;
 }

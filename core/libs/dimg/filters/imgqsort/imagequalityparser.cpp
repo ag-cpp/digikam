@@ -23,6 +23,7 @@
  * ============================================================ */
 
 #include "imagequalityparser_p.h"
+#include "blur_detector.h"
 
 namespace Digikam
 {
@@ -98,7 +99,6 @@ void ImageQualityParser::startAnalyse()
     readImage();
 
     double blur             = 0.0;
-    short  blur2            = 0;
     double noise            = 0.0;
     int    compressionLevel = 0;
     double finalQuality     = 0.0;
@@ -112,7 +112,7 @@ void ImageQualityParser::startAnalyse()
         // Returns blur value between 0 and 1.
         // If NaN is returned just assign NoPickLabel
 
-        blur  = blurDetector();
+        blur  = BlurDetector(d->image).detect();
         qCDebug(DIGIKAM_DIMG_LOG) << "Amount of Blur present in image is:" << blur;
     }
 
@@ -184,7 +184,7 @@ void ImageQualityParser::startAnalyse()
     {
         // All the results to have a range of 1 to 100.
 
-        double finalBlur          = (blur * 100.0)  + ((blur2 / 32767) * 100.0);
+        double finalBlur          = blur;
         // double finalNoise         = noise * 100.0;
         // double finalCompression   = (compressionLevel / 1024.0) * 100.0;        // we are processing 1024 pixels size image
         // double finalExposure      = 100.0 - (underLevel + overLevel) * 100.0;
