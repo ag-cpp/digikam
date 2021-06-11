@@ -213,7 +213,7 @@ bool    BlurDetector::isMotionBlur(const cv::Mat& frag) const
         }
         stddev /= float(list_theta.count());
 
-        qInfo() <<"stddev " << stddev;
+        // qInfo() <<"stddev " << stddev;
         // if (inertia < d->max_inertia) {qInfo()<<"part motion blur";} 
         return stddev < d->max_stddev;
     }
