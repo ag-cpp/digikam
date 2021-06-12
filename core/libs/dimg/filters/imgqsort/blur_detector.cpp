@@ -25,6 +25,10 @@
 
 #include "blur_detector.h"
 
+// Qt includes
+
+#include <QtMath>
+
 namespace Digikam
 {
 class Q_DECL_HIDDEN BlurDetector::Private
@@ -39,9 +43,11 @@ public:
         part_size(40),
         // nb_parts_row(6),
         // nb_parts_col(6),
-        edges_filtrer(12),
-        threshold_hough(30),
-        min_nbLines(12),
+        edges_filtrer(10),
+        theta_resolution(CV_PI/600),
+        min_lineLength(20),
+        threshold_hough(20),
+        min_nbLines(1),
         max_stddev(0.15)
     {
 
@@ -58,6 +64,8 @@ public:
     // int nb_parts_row;
     // int nb_parts_col;
     float edges_filtrer;
+    double theta_resolution;
+    double min_lineLength; 
     float threshold_hough;
     int min_nbLines;
     float max_stddev;
@@ -181,19 +189,20 @@ bool    BlurDetector::isMotionBlur(const cv::Mat& frag) const
     cv::threshold(tmp,tmp,d->edges_filtrer,255,cv::THRESH_BINARY);
     tmp.convertTo(tmp,CV_8U);
     
-    
-    std::vector<cv::Vec2f> lines; 
-    
-    HoughLines(tmp, lines, 1, CV_PI/180, d->threshold_hough); 
+    std::vector<cv::Vec4i> lines;
+    HoughLinesP(tmp, lines, 1, d->theta_resolution, d->threshold_hough, d->min_lineLength,10 );
 
     // detect if region is motion blurred by number of paralle lines
-    if (QVector<cv::Vec2f>::fromStdVector(lines).count() > d->min_nbLines )
+    qInfo()<<"nb lines detected" << QVector<cv::Vec4i>::fromStdVector(lines).count();
+    if (QVector<cv::Vec4i>::fromStdVector(lines).count() > d->min_nbLines )
     {
         QList<float> list_theta; 
         float sum = 0;
         for (const auto line : lines)
         {
-            float theta = (line[1] <= 0) ?  line[1] + CV_PI : line[1];
+            float theta = (line[2] == line[0]) ? 0 : qAtan((line[3]-line[1])/(line[2] - line[0]));
+
+            theta = (theta < 0) ? theta + CV_PI : theta;
 
             theta = (theta < CV_PI/20) ?  CV_PI - theta : theta;
             
@@ -213,7 +222,7 @@ bool    BlurDetector::isMotionBlur(const cv::Mat& frag) const
         }
         stddev /= float(list_theta.count());
 
-        // qInfo() <<"stddev " << stddev;
+        qInfo() <<"stddev " << stddev;
         // if (inertia < d->max_inertia) {qInfo()<<"part motion blur";} 
         return stddev < d->max_stddev;
     }
