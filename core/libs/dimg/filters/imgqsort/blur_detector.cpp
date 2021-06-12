@@ -174,14 +174,11 @@ cv::Mat BlurDetector::detectDefocusMap(const cv::Mat& edgesMap)    const
     abs_map.convertTo(abs_map, CV_32F);
 
     cv::blur(abs_map, abs_map, cv::Size(d->sigma_smoothImage,d->sigma_smoothImage));
-    
-    cv::Mat res;
 
-    cv::medianBlur(abs_map, res, d->sigma_smoothImage);
-
-    res *= 255;
+    cv::medianBlur(abs_map, abs_map, d->sigma_smoothImage);
     
     // Mask blurred pixel as 1 and sharp pixel 0
+    cv::Mat res = abs_map * 255;
     cv::threshold(res,res,d->filtrer_defocus,1,cv::THRESH_BINARY_INV);
         
     return res;
