@@ -118,6 +118,7 @@ set(libmetadatawidgets_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/metadata/exiftool/exiftoollistview.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/metadata/exiftool/exiftoolwidget.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/metadata/exiftool/exiftoolerrorview.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/metadata/exiftool/exiftoolloadingview.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/metadata/exiftool/exiftoolbinary.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/metadata/exiftool/exiftoolconfpanel.cpp
 )
@@ -135,6 +136,7 @@ include_directories(
     $<TARGET_PROPERTY:Qt5::Core,INTERFACE_INCLUDE_DIRECTORIES>
     $<TARGET_PROPERTY:Qt5::Gui,INTERFACE_INCLUDE_DIRECTORIES>
     $<TARGET_PROPERTY:Qt5::Sql,INTERFACE_INCLUDE_DIRECTORIES>
+    $<TARGET_PROPERTY:Qt5::Concurrent,INTERFACE_INCLUDE_DIRECTORIES>
 
     $<TARGET_PROPERTY:KF5::I18n,INTERFACE_INCLUDE_DIRECTORIES>
     $<TARGET_PROPERTY:KF5::XmlGui,INTERFACE_INCLUDE_DIRECTORIES>
