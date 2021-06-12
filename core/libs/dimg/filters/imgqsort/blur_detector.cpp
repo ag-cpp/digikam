@@ -36,9 +36,9 @@ class Q_DECL_HIDDEN BlurDetector::Private
 public:
     explicit Private()
       : min_abs(1),
-        ordre_logFiltrer(35),
+        ordre_logFiltrer(10),
         sigma_smoothImage(5),
-        filtrer_defocus(120),
+        filtrer_defocus(200),
 
         part_size(40),
         // nb_parts_row(6),
