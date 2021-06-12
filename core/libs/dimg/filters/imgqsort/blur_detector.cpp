@@ -50,7 +50,9 @@ public:
         min_lineLength(20),
         threshold_hough(20),
         min_nbLines(1),
-        max_stddev(0.15)
+        max_stddev(0.15),
+
+        haveFocusRegion(false)
     {
 
     }
@@ -70,6 +72,7 @@ public:
     int         min_nbLines;
     float       max_stddev;
 
+    bool        haveFocusRegion;
 
 };
 
@@ -77,6 +80,8 @@ BlurDetector::BlurDetector(const DImg& image)
     :  d(new Private)
 {
     d->image = prepareForDetection(image);
+
+    d->haveFocusRegion = haveFocusRegion(image);
 }
 
 BlurDetector::~BlurDetector()
@@ -269,5 +274,18 @@ bool    BlurDetector::isMotionBlur(const cv::Mat& frag) const
     return false;
 }
 
+bool BlurDetector::haveFocusRegion(const DImg& inputImage)         const
+{
+    // FIXME : not implmented yet
+    // initialate reader metadata to extract information of focus region
+    return false;
+}
+
+cv::Mat BlurDetector::getWeightMap()                               const
+{
+    // FIXME : not implemented yet
+    // use infomation of focus region to construct matrix of weight
+    return cv::Mat::ones(1,1,1);
+}
 
 }

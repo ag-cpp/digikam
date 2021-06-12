@@ -47,10 +47,14 @@ public:
 
 private:
     cv::Mat prepareForDetection(const DImg& inputImage)     const;
+
     cv::Mat edgeDetection(const cv::Mat& image)             const;
     cv::Mat detectDefocusMap(const cv::Mat& edgesMap)       const;
     cv::Mat detectMotionBlurMap(const cv::Mat& edgesMap)    const;
     bool    isMotionBlur(const cv::Mat& frag)               const;
+
+    bool    haveFocusRegion(const DImg& inputImage)         const;
+    cv::Mat getWeightMap()                                  const;
 
 private:
 
