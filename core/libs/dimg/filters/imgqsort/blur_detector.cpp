@@ -29,6 +29,10 @@
 
 #include <QtMath>
 
+// Local includes
+
+#include "digikam_debug.h"
+
 namespace Digikam
 {
 class Q_DECL_HIDDEN BlurDetector::Private
@@ -41,8 +45,6 @@ public:
         filtrer_defocus(200),
 
         part_size(40),
-        // nb_parts_row(6),
-        // nb_parts_col(6),
         edges_filtrer(10),
         theta_resolution(CV_PI/600),
         min_lineLength(20),
@@ -55,20 +57,18 @@ public:
 
     cv::Mat image;
 
-    float min_abs;
-    int ordre_logFiltrer;
-    int sigma_smoothImage;
-    int filtrer_defocus;
+    float       min_abs;
+    int         ordre_logFiltrer;
+    int         sigma_smoothImage;
+    int         filtrer_defocus;
     
-    float part_size;
-    // int nb_parts_row;
-    // int nb_parts_col;
-    float edges_filtrer;
-    double theta_resolution;
-    double min_lineLength; 
-    float threshold_hough;
-    int min_nbLines;
-    float max_stddev;
+    float       part_size;
+    float       edges_filtrer;
+    double      theta_resolution;
+    double      min_lineLength; 
+    float       threshold_hough;
+    int         min_nbLines;
+    float       max_stddev;
 
 
 };
@@ -84,6 +84,8 @@ BlurDetector::~BlurDetector()
 
 }
 
+// Maybe this function will move to read_image() of imagequalityparser 
+// in case all detector of IQS use cv::Mat
 cv::Mat BlurDetector::prepareForDetection(const DImg& inputImage) const
 {
     if (inputImage.isNull() || !inputImage.size().isValid())
@@ -112,7 +114,7 @@ cv::Mat BlurDetector::edgeDetection(const cv::Mat& image)         const
     
     cvtColor( image, image_gray, cv::COLOR_BGR2GRAY );
 
-    // Use laplacian to detect edge
+    // Use laplacian to detect edge map
     cv::Mat dst;
     
     cv::Laplacian( image_gray, dst, CV_64F);
@@ -125,20 +127,24 @@ cv::Mat BlurDetector::detectDefocusMap(const cv::Mat& edgesMap)    const
     cv::Mat abs_map = cv::abs(edgesMap);
     
     abs_map.setTo(d->min_abs, abs_map < d->min_abs);
+    
     // Log filter
     cv::log(abs_map,abs_map);
     
     abs_map *= 1/log(d->ordre_logFiltrer);
-    abs_map.convertTo(abs_map, CV_32F);
     
     // smooth image to get blur map
+    abs_map.convertTo(abs_map, CV_32F);
+
     cv::blur(abs_map, abs_map, cv::Size(d->sigma_smoothImage,d->sigma_smoothImage));
     
     cv::Mat res;
+
     cv::medianBlur(abs_map, res, d->sigma_smoothImage);
 
     res *= 255;
-    // Mask blurred pixel and sharp pixel 
+    
+    // Mask blurred pixel as 1 and sharp pixel 0
     cv::threshold(res,res,d->filtrer_defocus,1,cv::THRESH_BINARY_INV);
         
     return res;
@@ -148,6 +154,7 @@ cv::Mat BlurDetector::detectDefocusMap(const cv::Mat& edgesMap)    const
 cv::Mat BlurDetector::detectMotionBlurMap(const cv::Mat& edgesMap) const
 {
     // Divide image
+    qCDebug(DIGIKAM_DIMG_LOG) << "Divide image to small parts";
     int nb_parts_row = int(edgesMap.size().height / d->part_size);
     int nb_parts_col = int(edgesMap.size().width / d->part_size);
     
@@ -165,6 +172,7 @@ cv::Mat BlurDetector::detectMotionBlurMap(const cv::Mat& edgesMap) const
     }
 
     // Mask motion blurred pixel
+    qCDebug(DIGIKAM_DIMG_LOG) << "Detect if each part is motion blur";
     cv::Mat res = cv::Mat::zeros(edgesMap.size(), CV_8U);
     for (const auto& coordinate :mapMotionBlur.keys() )
     {
@@ -193,7 +201,6 @@ bool    BlurDetector::isMotionBlur(const cv::Mat& frag) const
     HoughLinesP(tmp, lines, 1, d->theta_resolution, d->threshold_hough, d->min_lineLength,10 );
 
     // detect if region is motion blurred by number of paralle lines
-    qInfo()<<"nb lines detected" << QVector<cv::Vec4i>::fromStdVector(lines).count();
     if (QVector<cv::Vec4i>::fromStdVector(lines).count() > d->min_nbLines )
     {
         QList<float> list_theta; 
@@ -222,8 +229,8 @@ bool    BlurDetector::isMotionBlur(const cv::Mat& frag) const
         }
         stddev /= float(list_theta.count());
 
-        qInfo() <<"stddev " << stddev;
-        // if (inertia < d->max_inertia) {qInfo()<<"part motion blur";} 
+        qCDebug(DIGIKAM_DIMG_LOG) << "";
+
         return stddev < d->max_stddev;
     }
     return false;
@@ -247,16 +254,16 @@ float BlurDetector::detect()
     cv::Mat blurMap ;
     
     cv::add(defocusMap,motionBlurMap,blurMap);
-
-    int totalPixels = blurMap.rows * blurMap.cols;
     
     blurMap.convertTo(blurMap, CV_8UC1);
-
+    
+    int totalPixels = blurMap.rows * blurMap.cols;
+    
     int blurPixel = cv::countNonZero(blurMap);
 
     float percentBlur = float(blurPixel) / float(totalPixels);
 
-    // qCDebug(DIGIKAM_DIMG_LOG) << "percentage of blur " << percentBlur;
+    qCDebug(DIGIKAM_DIMG_LOG) << "percentage of blur " << percentBlur;
     qInfo() <<  "percentage of blur " << percentBlur;
     return percentBlur;
 }
