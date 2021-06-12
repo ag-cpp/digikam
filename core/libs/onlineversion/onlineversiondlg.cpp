@@ -55,7 +55,6 @@
 // KDE includes
 
 #include <klocalizedstring.h>
-#include <kactioncollection.h>
 
 // Local includes
 
@@ -645,43 +644,16 @@ void OnlineVersionDlg::slotRunInstaller()
         return;
     }
 
-    // Search Quit menu action from main appication instance.
-
-    QAction* quit             = nullptr;
-    DXmlGuiWindow* const dApp = dynamic_cast<DXmlGuiWindow*>(qApp);
-
-    if (dApp)
-    {
-        QList<QAction*> lst = dApp->actionCollection()->actions();
-
-        foreach (QAction* const act, lst)
-        {
-            if (act->menuRole() == QAction::QuitRole)
-            {
-                quit = act;
-                break;
-            }
-        }
-    }
-
     // Close this dialog
 
     close();
 
     // Now close main window application after 3 secondes to wait Installer to start in background.
+    // See bug #437813.
 
-    if (quit)
-    {
-        qCDebug(DIGIKAM_GENERAL_LOG) << "Call Quit menu action to close main windows";
+    qCDebug(DIGIKAM_GENERAL_LOG) << "Call to close all main windows";
 
-        QTimer::singleShot(3000, quit, SLOT(trigger()));
-    }
-    else
-    {
-        qCDebug(DIGIKAM_GENERAL_LOG) << "Generic call to close main windows";
-
-        QTimer::singleShot(3000, qApp, SLOT(closeAllWindows()));
-    }
+    QTimer::singleShot(3000, qApp, SLOT(closeAllWindows()));
 
 #endif
 
