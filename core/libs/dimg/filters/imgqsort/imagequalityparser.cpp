@@ -52,18 +52,6 @@ void ImageQualityParser::readImage() const
     d->img8 = d->image;
     d->img8.convertToEightBit();                        // Convert to 8 bits color depth.
 
-    // grayscale image creation for noise detector
-
-    d->src_gray = Mat(d->img8.numPixels(), 1, CV_8UC1); // Create a matrix containing the pixel values of grayscaled image
-
-    for (uint x = 0 ; d->running && (x < d->img8.width()) ; ++x)
-    {
-        for (uint y = 0 ; d->running && (y < d->img8.height()) ; ++y)
-        {
-            col                         = d->img8.getPixelColor(x, y);
-            d->src_gray.at<uchar>(x, y) = (col.red() + col.green() + col.blue()) / 3;
-        }
-    }
 
     // For Noise detection
 
@@ -189,7 +177,7 @@ void ImageQualityParser::startAnalyse()
         // double finalCompression   = (compressionLevel / 1024.0) * 100.0;        // we are processing 1024 pixels size image
         // double finalExposure      = 100.0 - (underLevel + overLevel) * 100.0;
 
-        // FIXME : Re final calculation for quality in week 7 8
+        // FIXME : Re final-calculation for quality in week 7 8
         // For now, just calculate in case of one detection  
         finalQuality            = (1 - finalBlur)          * d->imq.blurWeight;
                                 //   finalNoise         * d->imq.noiseWeight       +
@@ -200,13 +188,7 @@ void ImageQualityParser::startAnalyse()
 
         // Assigning PickLabels
 
-        if      (finalQuality == 0.0)
-        {
-            // Algorithms have not been run. So return noPickLabel
-
-            *d->label = NoPickLabel;
-        }
-        else if ((int)finalQuality < d->imq.rejectedThreshold)
+        if ((int)finalQuality < d->imq.rejectedThreshold)
         {
             *d->label = RejectedLabel;
         }

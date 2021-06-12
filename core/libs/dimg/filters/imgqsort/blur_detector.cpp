@@ -40,9 +40,9 @@ class Q_DECL_HIDDEN BlurDetector::Private
 public:
     explicit Private()
       : min_abs(1),
-        ordre_logFiltrer(10),
+        ordre_logFiltrer(120),
         sigma_smoothImage(5),
-        filtrer_defocus(200),
+        filtrer_defocus(150),
 
         part_size(40),
         edges_filtrer(10),
@@ -170,7 +170,7 @@ cv::Mat BlurDetector::detectDefocusMap(const cv::Mat& edgesMap)    const
     
     abs_map *= 1/log(d->ordre_logFiltrer);
     
-    // smooth image to get blur map
+    // Smooth image to get blur map
     abs_map.convertTo(abs_map, CV_32F);
 
     cv::blur(abs_map, abs_map, cv::Size(d->sigma_smoothImage,d->sigma_smoothImage));
