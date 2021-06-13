@@ -164,7 +164,7 @@ cv::Mat BlurDetector::detectDefocusMap(const cv::Mat& edgesMap)    const
     // Log filter
     cv::log(abs_map,abs_map);
     
-    abs_map *= 1/log(d->ordre_log_filtrer);
+    abs_map /= log(d->ordre_log_filtrer);
     
     // Smooth image to get blur map
     cv::blur(abs_map, abs_map, cv::Size(d->sigma_smooth_image,d->sigma_smooth_image));
