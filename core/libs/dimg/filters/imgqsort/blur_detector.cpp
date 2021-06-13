@@ -200,12 +200,13 @@ cv::Mat BlurDetector::detectMotionBlurMap(const cv::Mat& edgesMap) const
             cv::Mat subImg = edgesMap(cv::Range(i*d->part_size, (i+1)*d->part_size ), 
                                       cv::Range(j*d->part_size, (j+1)*d->part_size ));
             
+            qCDebug(DIGIKAM_DIMG_LOG) << "Detect if each part is motion blur";
             mapMotionBlur.insert(QPair<int,int>(i,j),isMotionBlur(subImg));
         }
     }
 
     // Mask motion blurred pixel
-    qCDebug(DIGIKAM_DIMG_LOG) << "Detect if each part is motion blur";
+    qCDebug(DIGIKAM_DIMG_LOG) << "mask motion blurred pixel";
     
     cv::Mat res = cv::Mat::zeros(edgesMap.size(), CV_8U);
     
