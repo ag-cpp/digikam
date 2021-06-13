@@ -64,7 +64,7 @@ public:
     int         sigma_smooth_image;
     int         filtrer_defocus;
     
-    float       part_size;
+    int         part_size;
     float       edges_filtrer;
     double      theta_resolution;
     double      min_line_length; 
@@ -193,12 +193,13 @@ cv::Mat BlurDetector::detectMotionBlurMap(const cv::Mat& edgesMap) const
     {
         for (int j = 0; j < nb_parts_col; j++)
         {
-            cv::Mat subImg = edgesMap(cv::Range(i*d->part_size, (i+1)*d->part_size ), 
-                                      cv::Range(j*d->part_size, (j+1)*d->part_size ));
+            cv::Rect rect{j*d->part_size, i*d->part_size, d->part_size,d->part_size};
+
+            cv::Mat subImg = edgesMap(rect);
             
             qCDebug(DIGIKAM_DIMG_LOG) << "Detect if each part is motion blur";
             if(isMotionBlur(subImg)) {
-                res(cv::Rect(j*d->part_size, i*d->part_size, d->part_size,d->part_size)).setTo(1);
+                res(rect).setTo(1);
             }
 
         }
