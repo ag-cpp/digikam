@@ -185,8 +185,6 @@ cv::Mat BlurDetector::detectMotionBlurMap(const cv::Mat& edgesMap) const
     int nb_parts_row = static_cast<int>(edgesMap.size().height / d->part_size);
     int nb_parts_col = static_cast<int>(edgesMap.size().width / d->part_size);
     
-    QHash<QPair<int,int>, bool> mapMotionBlur;
-
     cv::Mat res = cv::Mat::zeros(edgesMap.size(), CV_8U);
 
     for (int i = 0; i < nb_parts_row; i++)
@@ -203,7 +201,7 @@ cv::Mat BlurDetector::detectMotionBlurMap(const cv::Mat& edgesMap) const
             }
 
         }
-    }  
+    } 
 
     return res;
 }
