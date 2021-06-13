@@ -128,9 +128,7 @@ float BlurDetector::detect()
     // cv::Mat blurMap =  weightsMat.mul(defocusMap);
 
     cv::Mat blurMap = defocusMap + motionBlurMap;
-    
-    // cv::add(defocusMap,motionBlurMap,blurMap);
-    
+        
     blurMap.convertTo(blurMap, CV_8UC1);
     
     int totalPixels = blurMap.rows * blurMap.cols;
@@ -191,6 +189,8 @@ cv::Mat BlurDetector::detectMotionBlurMap(const cv::Mat& edgesMap) const
     
     QHash<QPair<int,int>, bool> mapMotionBlur;
 
+    cv::Mat res = cv::Mat::zeros(edgesMap.size(), CV_8U);
+
     for (int i = 0; i < nb_parts_row; i++)
     {
         for (int j = 0; j < nb_parts_col; j++)
@@ -199,26 +199,12 @@ cv::Mat BlurDetector::detectMotionBlurMap(const cv::Mat& edgesMap) const
                                       cv::Range(j*d->part_size, (j+1)*d->part_size ));
             
             qCDebug(DIGIKAM_DIMG_LOG) << "Detect if each part is motion blur";
-            mapMotionBlur.insert(QPair<int,int>(i,j),isMotionBlur(subImg));
-        }
-    }
+            if(isMotionBlur(subImg)) {
+                res(cv::Rect(j*d->part_size, i*d->part_size, d->part_size,d->part_size)).setTo(1);
+            }
 
-    // Mask motion blurred pixel
-    qCDebug(DIGIKAM_DIMG_LOG) << "mask motion blurred pixel";
-    
-    cv::Mat res = cv::Mat::zeros(edgesMap.size(), CV_8U);
-    
-    for (const auto& coordinate :mapMotionBlur.keys() )
-    {
-        if (mapMotionBlur.value(coordinate) )
-        {
-            cv::Mat tmp = cv::Mat::ones(cv::Size(d->part_size, d->part_size), CV_8U);
-            
-            tmp.copyTo(res(cv::Rect(coordinate.second * d->part_size, 
-                                    coordinate.first  *d->part_size,
-                                    d->part_size,d->part_size)));
         }
-    } 
+    }  
 
     return res;
 }
