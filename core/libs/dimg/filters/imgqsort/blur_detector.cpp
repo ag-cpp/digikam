@@ -127,9 +127,9 @@ float BlurDetector::detect()
 
     // cv::Mat blurMap =  weightsMat.mul(defocusMap);
 
-    cv::Mat blurMap ;
+    cv::Mat blurMap = defocusMap + motionBlurMap;
     
-    cv::add(defocusMap,motionBlurMap,blurMap);
+    // cv::add(defocusMap,motionBlurMap,blurMap);
     
     blurMap.convertTo(blurMap, CV_8UC1);
     
@@ -186,8 +186,8 @@ cv::Mat BlurDetector::detectMotionBlurMap(const cv::Mat& edgesMap) const
 {
     // Divide image
     qCDebug(DIGIKAM_DIMG_LOG) << "Divide image to small parts";
-    int nb_parts_row = int(edgesMap.size().height / d->part_size);
-    int nb_parts_col = int(edgesMap.size().width / d->part_size);
+    int nb_parts_row = static_cast<int>(edgesMap.size().height / d->part_size);
+    int nb_parts_col = static_cast<int>(edgesMap.size().width / d->part_size);
     
     QHash<QPair<int,int>, bool> mapMotionBlur;
 
