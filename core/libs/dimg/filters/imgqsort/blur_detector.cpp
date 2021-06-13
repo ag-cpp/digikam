@@ -210,9 +210,9 @@ cv::Mat BlurDetector::detectMotionBlurMap(const cv::Mat& edgesMap) const
 bool    BlurDetector::isMotionBlur(const cv::Mat& frag) const
 {
     //convert to 8u
-    cv::Mat tmp = frag;
+    cv::Mat tmp;
 
-    cv::threshold(tmp,tmp,d->edges_filtrer,255,cv::THRESH_BINARY);
+    cv::threshold(frag,tmp,d->edges_filtrer,255,cv::THRESH_BINARY);
     tmp.convertTo(tmp,CV_8U);
     
     std::vector<cv::Vec4i> lines;
@@ -221,8 +221,7 @@ bool    BlurDetector::isMotionBlur(const cv::Mat& frag) const
     // detect if region is motion blurred by number of paralle lines
     if (static_cast<int>(lines.size()) > d->min_nb_lines )
     {
-        QList<float> list_theta; 
-        float sum = 0;
+        std::vector<float> list_theta; 
         for (const auto line : lines)
         {
             float theta = (line[2] == line[0]) ? 0 : qAtan((line[3]-line[1])/(line[2] - line[0]));
@@ -232,24 +231,16 @@ bool    BlurDetector::isMotionBlur(const cv::Mat& frag) const
             theta = (theta < CV_PI/20) ?  CV_PI - theta : theta;
             
             list_theta.push_back(theta);
-        
-            sum += theta;
         }
 
-        // calculate Standard Deviation 
-        float mean_theta = sum / float(list_theta.count());
-        
-        float stddev = 0;
-        
-        for (const auto theta : list_theta)
-        {
-            stddev += pow(mean_theta-theta,2);
-        }
-        stddev /= float(list_theta.count());
+        // calculate Standard Deviation         
+        cv::Scalar mean, stddev;
 
-        qCDebug(DIGIKAM_DIMG_LOG) << "Standard Deviation for group of lines " << stddev;
+        cv::meanStdDev(list_theta,mean,stddev);
 
-        return stddev < d->max_stddev;
+        qCDebug(DIGIKAM_DIMG_LOG) << "Standard Deviation for group of lines " << stddev[0];
+
+        return stddev[0] < d->max_stddev;
     }
     return false;
 }
