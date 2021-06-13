@@ -154,7 +154,7 @@ cv::Mat BlurDetector::edgeDetection(const cv::Mat& image)         const
     // Use laplacian to detect edge map
     cv::Mat dst;
     
-    cv::Laplacian( image_gray, dst, CV_64F);
+    cv::Laplacian( image_gray, dst, CV_32F);
     
     return dst;
 }
@@ -171,8 +171,6 @@ cv::Mat BlurDetector::detectDefocusMap(const cv::Mat& edgesMap)    const
     abs_map *= 1/log(d->ordre_log_filtrer);
     
     // Smooth image to get blur map
-    abs_map.convertTo(abs_map, CV_32F);
-
     cv::blur(abs_map, abs_map, cv::Size(d->sigma_smooth_image,d->sigma_smooth_image));
 
     cv::medianBlur(abs_map, abs_map, d->sigma_smooth_image);
