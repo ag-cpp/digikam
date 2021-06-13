@@ -40,19 +40,19 @@ class Q_DECL_HIDDEN BlurDetector::Private
 public:
     explicit Private()
       : min_abs(1),
-        ordre_logFiltrer(120),
-        sigma_smoothImage(5),
+        ordre_log_filtrer(120),
+        sigma_smooth_image(5),
         filtrer_defocus(150),
 
         part_size(40),
         edges_filtrer(10),
         theta_resolution(CV_PI/600),
-        min_lineLength(20),
+        min_line_length(20),
         threshold_hough(20),
-        min_nbLines(1),
+        min_nb_lines(1),
         max_stddev(0.15),
 
-        haveFocusRegion(false)
+        have_focus_region(false)
     {
 
     }
@@ -60,19 +60,19 @@ public:
     cv::Mat image;
 
     float       min_abs;
-    int         ordre_logFiltrer;
-    int         sigma_smoothImage;
+    int         ordre_log_filtrer;
+    int         sigma_smooth_image;
     int         filtrer_defocus;
     
     float       part_size;
     float       edges_filtrer;
     double      theta_resolution;
-    double      min_lineLength; 
+    double      min_line_length; 
     float       threshold_hough;
-    int         min_nbLines;
+    int         min_nb_lines;
     float       max_stddev;
 
-    bool        haveFocusRegion;
+    bool        have_focus_region;
 
 };
 
@@ -81,7 +81,7 @@ BlurDetector::BlurDetector(const DImg& image)
 {
     d->image = prepareForDetection(image);
 
-    d->haveFocusRegion = haveFocusRegion(image);
+    d->have_focus_region = haveFocusRegion(image);
 }
 
 BlurDetector::~BlurDetector()
@@ -168,14 +168,14 @@ cv::Mat BlurDetector::detectDefocusMap(const cv::Mat& edgesMap)    const
     // Log filter
     cv::log(abs_map,abs_map);
     
-    abs_map *= 1/log(d->ordre_logFiltrer);
+    abs_map *= 1/log(d->ordre_log_filtrer);
     
     // Smooth image to get blur map
     abs_map.convertTo(abs_map, CV_32F);
 
-    cv::blur(abs_map, abs_map, cv::Size(d->sigma_smoothImage,d->sigma_smoothImage));
+    cv::blur(abs_map, abs_map, cv::Size(d->sigma_smooth_image,d->sigma_smooth_image));
 
-    cv::medianBlur(abs_map, abs_map, d->sigma_smoothImage);
+    cv::medianBlur(abs_map, abs_map, d->sigma_smooth_image);
     
     // Mask blurred pixel as 1 and sharp pixel 0
     cv::Mat res = abs_map * 255;
@@ -234,10 +234,10 @@ bool    BlurDetector::isMotionBlur(const cv::Mat& frag) const
     tmp.convertTo(tmp,CV_8U);
     
     std::vector<cv::Vec4i> lines;
-    HoughLinesP(tmp, lines, 1, d->theta_resolution, d->threshold_hough, d->min_lineLength,10 );
+    HoughLinesP(tmp, lines, 1, d->theta_resolution, d->threshold_hough, d->min_line_length,10 );
 
     // detect if region is motion blurred by number of paralle lines
-    if (QVector<cv::Vec4i>::fromStdVector(lines).count() > d->min_nbLines )
+    if (QVector<cv::Vec4i>::fromStdVector(lines).count() > d->min_nb_lines )
     {
         QList<float> list_theta; 
         float sum = 0;
