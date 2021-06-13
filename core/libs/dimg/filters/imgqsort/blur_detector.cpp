@@ -86,7 +86,7 @@ BlurDetector::BlurDetector(const DImg& image)
 
 BlurDetector::~BlurDetector()
 {
-
+    delete d;
 }
 
 // Maybe this function will move to read_image() of imagequalityparser 
