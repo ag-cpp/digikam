@@ -63,11 +63,6 @@ private:
      */
     void readImage()                                    const;
 
-    /**
-     * @function cannyThreshold
-     * @brief Trackbar callback - Canny thresholds input with a ratio 1:3
-     */
-    
     // noise detection
     double noiseDetector()                              const;
     

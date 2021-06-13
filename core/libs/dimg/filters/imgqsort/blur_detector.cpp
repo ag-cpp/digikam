@@ -128,10 +128,8 @@ float BlurDetector::detect()
     // cv::Mat blurMap =  weightsMat.mul(defocusMap);
 
     cv::Mat blurMap = defocusMap + motionBlurMap;
-        
-    blurMap.convertTo(blurMap, CV_8UC1);
-    
-    int totalPixels = blurMap.rows * blurMap.cols;
+            
+    int totalPixels = blurMap.total();
     
     int blurPixel = cv::countNonZero(blurMap);
 
