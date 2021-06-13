@@ -219,7 +219,7 @@ bool    BlurDetector::isMotionBlur(const cv::Mat& frag) const
     HoughLinesP(tmp, lines, 1, d->theta_resolution, d->threshold_hough, d->min_line_length,10 );
 
     // detect if region is motion blurred by number of paralle lines
-    if (QVector<cv::Vec4i>::fromStdVector(lines).count() > d->min_nb_lines )
+    if (static_cast<int>(lines.size()) > d->min_nb_lines )
     {
         QList<float> list_theta; 
         float sum = 0;
