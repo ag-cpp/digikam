@@ -1,0 +1,4 @@
+1. fine-tunning paramters of defocus processing
+2. implement metadata reader to extract focus region
+3. implement weight map based on metadata
+4. apply weight map to calculate blur score
