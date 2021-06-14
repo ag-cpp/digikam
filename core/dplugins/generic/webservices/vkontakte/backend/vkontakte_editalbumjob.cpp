@@ -64,7 +64,7 @@ void EditAlbumJob::handleData(const QJsonValue& data)
     {
         setError(1);
         setErrorText(i18n("Failed to edit album"));
-        qCWarning(DIGIKAM_WEBSERVICES_LOG) << "Failed to edit album";
+        //qCWarning(DIGIKAM_WEBSERVICES_LOG) << "Failed to edit album";
     }
 }
 

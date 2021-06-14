@@ -91,7 +91,7 @@ void AllNotesListJob::jobFinished(KJob *kjob)
     {
         setError(job->error());
         setErrorText(job->errorText());
-        qCWarning(DIGIKAM_WEBSERVICES_LOG) << "Job error: " << job->errorString();
+        //qCWarning(DIGIKAM_WEBSERVICES_LOG) << "Job error: " << job->errorString();
 
         return;
     }
@@ -116,7 +116,7 @@ void AllNotesListJob::jobFinished(KJob *kjob)
         doKill();
         setError(KJob::UserDefinedError + 1);
         setErrorText(i18n("The number of notes has changed between requests."));
-        qCWarning(DIGIKAM_WEBSERVICES_LOG) << "Job error: " << job->errorString();
+        //qCWarning(DIGIKAM_WEBSERVICES_LOG) << "Job error: " << job->errorString();
         emitResult();
 
         return;

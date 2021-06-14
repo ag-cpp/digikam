@@ -172,7 +172,7 @@ void ImageQualityParser::startAnalyse()
     {
         // All the results to have a range of 1 to 100.
 
-        double finalBlur          = blur;
+        float finalBlur          = blur;
         // double finalNoise         = noise * 100.0;
         // double finalCompression   = (compressionLevel / 1024.0) * 100.0;        // we are processing 1024 pixels size image
         // double finalExposure      = 100.0 - (underLevel + overLevel) * 100.0;
@@ -184,17 +184,18 @@ void ImageQualityParser::startAnalyse()
                                 //   finalCompression   * d->imq.compressionWeight +
                                 //   finalExposure;
 
+        qInfo()<< "Final Quality estimated: " << finalQuality;
         qCDebug(DIGIKAM_DIMG_LOG) << "Final Quality estimated: " << finalQuality;
 
         // Assigning PickLabels
 
-        if ((int)finalQuality < d->imq.rejectedThreshold)
+        if ((int)finalQuality <= d->imq.rejectedThreshold)
         {
             *d->label = RejectedLabel;
         }
         else if (((int)finalQuality > d->imq.rejectedThreshold) &&
-                 ((int)finalQuality < d->imq.acceptedThreshold))
-        {
+                 ((int)finalQuality <= d->imq.acceptedThreshold))
+        {   
             *d->label = PendingLabel;
         }
         else

@@ -40,9 +40,9 @@ class Q_DECL_HIDDEN BlurDetector::Private
 public:
     explicit Private()
       : min_abs(1),
-        ordre_log_filtrer(120),
+        ordre_log_filtrer(100),
         sigma_smooth_image(5),
-        filtrer_defocus(150),
+        filtrer_defocus(50),
 
         part_size(40),
         edges_filtrer(10),
@@ -122,21 +122,21 @@ float BlurDetector::detect()
     cv::Mat motionBlurMap = detectMotionBlurMap(edgesMap);
     motionBlurMap.convertTo(motionBlurMap,CV_8U);
     
-    // Read metadata to find focus region here ( dont implement yet )
-    // cv::Mat weightsMat = getWeightsMat();
-
-    // cv::Mat blurMap =  weightsMat.mul(defocusMap);
+    //Read metadata to find focus region here ( dont implement yet )
+    cv::Mat weightsMat = getWeightMap();
 
     cv::Mat blurMap = defocusMap + motionBlurMap;
+
+    cv::Mat res = weightsMat.mul(blurMap);
             
-    int totalPixels = blurMap.total();
+    int totalPixels = res.total();
     
-    int blurPixel = cv::countNonZero(blurMap);
+    int blurPixel = cv::countNonZero(res);
 
     float percentBlur = float(blurPixel) / float(totalPixels);
 
     qCDebug(DIGIKAM_DIMG_LOG) << "percentage of blur " << percentBlur;
-    qInfo() <<  "percentage of blur " << percentBlur;
+    qInfo() <<  "percentage of blur bla bla bla bla " << percentBlur;
     return percentBlur;
 }
 
@@ -244,7 +244,7 @@ bool    BlurDetector::isMotionBlur(const cv::Mat& frag) const
     return false;
 }
 
-bool BlurDetector::haveFocusRegion(const DImg& inputImage)         const
+bool BlurDetector::haveFocusRegion(const DImg& image)              const
 {
     // FIXME : not implmented yet
     // initialate reader metadata to extract information of focus region
@@ -255,7 +255,48 @@ cv::Mat BlurDetector::getWeightMap()                               const
 {
     // FIXME : not implemented yet
     // use infomation of focus region to construct matrix of weight
-    return cv::Mat::ones(1,1,1);
+    if (d->have_focus_region)
+    {
+        return cv::Mat::ones(1,1,1);
+    }
+    else
+    {
+        cv::Mat res = detectBackgroundRegion(d->image);
+        cv::threshold(res,res,0.5,1,cv::THRESH_BINARY_INV);
+        return res;
+    }
+}
+
+cv::Mat BlurDetector::detectBackgroundRegion(const cv::Mat& image)    const
+{
+    qCDebug(DIGIKAM_DIMG_LOG) << "Divide image to small parts";
+    int part_size = 40;
+    int nb_parts_row = static_cast<int>(image.size().height / part_size);
+    int nb_parts_col = static_cast<int>(image.size().width / part_size);
+    
+    cv::Mat res = cv::Mat::zeros(image.size(), CV_8U);
+
+    for (int i = 0; i < nb_parts_row; i++)
+    {
+        for (int j = 0; j < nb_parts_col; j++)
+        {
+            cv::Rect rect{j*part_size, i*part_size, part_size,part_size};
+
+            cv::Mat subImg = image(rect);
+            
+            qCDebug(DIGIKAM_DIMG_LOG) << "Detect if each part is mono-color";
+            
+            cv::Scalar mean, stddev;
+
+            cv::meanStdDev(subImg,mean,stddev);
+            // qInfo()<<"stddev color "<<stddev[0];
+
+            if (stddev[0] < 15) {
+                res(rect).setTo(1);
+            }
+        }
+    }
+    return res;
 }
 
 }
