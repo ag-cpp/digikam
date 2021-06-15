@@ -32,6 +32,7 @@
 // Local includes
 
 #include "digikam_debug.h"
+#include "exiftoolparser.h"
 
 namespace Digikam
 {
@@ -59,20 +60,21 @@ public:
 
     cv::Mat image;
 
-    float       min_abs;
-    int         ordre_log_filtrer;
-    int         sigma_smooth_image;
-    int         filtrer_defocus;
+    float                           min_abs;
+    int                             ordre_log_filtrer;
+    int                             sigma_smooth_image;
+    int                             filtrer_defocus;
     
-    int         part_size;
-    float       edges_filtrer;
-    double      theta_resolution;
-    double      min_line_length; 
-    float       threshold_hough;
-    int         min_nb_lines;
-    float       max_stddev;
+    int                             part_size;
+    float                           edges_filtrer;
+    double                          theta_resolution;
+    double                          min_line_length; 
+    float                           threshold_hough;
+    int                             min_nb_lines;
+    float                           max_stddev;
 
-    bool        have_focus_region;
+    bool                            have_focus_region;
+    ExifToolParser::ListAFPoints    AFPoints;
 
 };
 
@@ -122,14 +124,14 @@ float BlurDetector::detect()
     cv::Mat motionBlurMap = detectMotionBlurMap(edgesMap);
     motionBlurMap.convertTo(motionBlurMap,CV_8U);
     
-    //Read metadata to find focus region here ( dont implement yet )
+    //Read metadata to find focus region here
     cv::Mat weightsMat = getWeightMap();
 
     cv::Mat blurMap = defocusMap + motionBlurMap;
 
     cv::Mat res = weightsMat.mul(blurMap);
             
-    int totalPixels = res.total();
+    int totalPixels = cv::countNonZero(weightsMat);
     
     int blurPixel = cv::countNonZero(res);
 
@@ -248,7 +250,14 @@ bool BlurDetector::haveFocusRegion(const DImg& image)              const
 {
     // FIXME : not implmented yet
     // initialate reader metadata to extract information of focus region
-    return false;
+    ExifToolParser* const exiftool = new ExifToolParser(nullptr);
+
+    exiftool->load(image.originalFilePath());
+
+    // qInfo()<< "get here" << exiftool->currentData();
+    d->AFPoints = exiftool->getAFInfo();
+    
+    return !d->AFPoints.isEmpty();
 }
 
 cv::Mat BlurDetector::getWeightMap()                               const
@@ -257,12 +266,36 @@ cv::Mat BlurDetector::getWeightMap()                               const
     // use infomation of focus region to construct matrix of weight
     if (d->have_focus_region)
     {
-        return cv::Mat::ones(1,1,1);
+        int nb_AF_points = d->AFPoints.count();
+        
+        /**
+         * We consider auto focus point (AFPoint) is center of the focus region.
+         * Size of the focus region is propotional to the size of image but inverse ratio
+         * to the number of focus point
+         */
+        cv::Size focus_region_size = cv::Size(static_cast<int>(d->image.size().width  / (nb_AF_points + 3)),
+                                              static_cast<int>(d->image.size().height / (nb_AF_points + 3)));
+
+        cv::Mat res = cv::Mat::zeros(d->image.size(), CV_8U);
+                              
+        for (const auto AFPoint : d->AFPoints)
+        {
+            qInfo()<<"AF point"<< AFPoint << "focus region size "<<focus_region_size.width << focus_region_size.height;
+            cv::Rect rect{AFPoint.first  - static_cast<int> (focus_region_size.width / 2),
+                          AFPoint.second - static_cast<int> (focus_region_size.height  / 2), 
+                          focus_region_size.width,focus_region_size.height};
+
+            res(rect).setTo(1);
+        }
+        return res;
+
     }
     else
     {
         cv::Mat res = detectBackgroundRegion(d->image);
+        
         cv::threshold(res,res,0.5,1,cv::THRESH_BINARY_INV);
+        
         return res;
     }
 }

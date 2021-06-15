@@ -180,6 +180,21 @@ public:
 
     //@}
 
+public : // focus region helper 
+
+    /**
+     * A list of point defines auto focus point of an image
+     */
+    typedef QList<QPair<int,int>> ListAFPoints;
+
+    /**
+     * Read infomation about AF points (focus region)
+     */
+    
+    ListAFPoints        getAFInfo();
+    ListAFPoints        getAFInfo_Nikon();
+    ListAFPoints        getAFInfo_Canon();
+
 private Q_SLOTS:
 
     //---------------------------------------------------------------------------------------------
