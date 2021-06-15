@@ -558,7 +558,7 @@ void TagsPopupMenu::slotAboutToShow()
     {
         if (d->selectedImageIDs.count() == 1)
         {
-            auto list = CoreDbAccess().db()->getItemCommonTagIDs(d->selectedImageIDs);
+            const auto list = CoreDbAccess().db()->getItemCommonTagIDs(d->selectedImageIDs);
             d->assignedTags = QSet<int>(list.begin(), list.end());
         }
     }
