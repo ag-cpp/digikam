@@ -514,7 +514,7 @@ void TagsPopupMenu::slotAboutToShow()
             return;
         }
 
-        auto list = CoreDbAccess().db()->getItemCommonTagIDs(d->selectedImageIDs);
+        const auto list = CoreDbAccess().db()->getItemCommonTagIDs(d->selectedImageIDs);
         d->assignedTags = QSet<int>(list.begin(), list.end());
 
         if (d->assignedTags.isEmpty())

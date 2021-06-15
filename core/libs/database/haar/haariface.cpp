@@ -677,7 +677,7 @@ QSet<qlonglong> HaarIface::imagesFromAlbumsAndTags(const QList<int>& albums2Scan
 
     foreach (int albumId, albums2Scan)
     {
-        auto list = CoreDbAccess().db()->getItemIDsInAlbum(albumId);
+        const auto list = CoreDbAccess().db()->getItemIDsInAlbum(albumId);
         imagesFromAlbums.unite(QSet<qlonglong>(list.begin(), list.end()));
     }
 
@@ -685,7 +685,7 @@ QSet<qlonglong> HaarIface::imagesFromAlbumsAndTags(const QList<int>& albums2Scan
 
     foreach (int albumId, tags2Scan)
     {
-        auto list = CoreDbAccess().db()->getItemIDsInTag(albumId);
+        const auto list = CoreDbAccess().db()->getItemIDsInTag(albumId);
         imagesFromTags.unite(QSet<qlonglong>(list.begin(), list.end()));
     }
 

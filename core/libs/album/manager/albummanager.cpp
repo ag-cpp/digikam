@@ -285,7 +285,7 @@ void AlbumManager::slotImagesDeleted(const QList<qlonglong>& imageIds)
         {
             if ((element == SearchXml::Field) && (reader.fieldName().compare(QLatin1String("imageid")) == 0))
             {
-                auto list = reader.valueToLongLongList();
+                const auto list = reader.valueToLongLongList();
                 images = QSet<qlonglong>(list.begin(), list.end());
             }
         }
