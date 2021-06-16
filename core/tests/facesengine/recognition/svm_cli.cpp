@@ -74,7 +74,10 @@ double test(cv::Ptr<cv::ml::TrainData> data)
     data->setTrainTestSplitRatio(0.8);
 
     cv::Ptr<cv::ml::SVM> svm = cv::ml::SVM::create();
-    svm->setKernel(cv::ml::SVM::LINEAR);
+    svm->setType(cv::ml::SVM::NU_SVC);
+    svm->setNu(0.1);
+    svm->setKernel(cv::ml::SVM::RBF);
+    svm->setC(10);
 
     svm->train(cv::ml::TrainData::create(data->getTrainSamples(), 0, data->getTrainResponses()));
 
@@ -84,7 +87,7 @@ double test(cv::Ptr<cv::ml::TrainData> data)
         int prediction = svm->predict(data->getTestSamples().row(i));
         if (prediction != data->getTestResponses().row(i).at<int>(0)) 
         {
-            qDebug() << prediction << " != " << data->getTestResponses().row(i).at<int>(0);
+            qDebug() << prediction << "!=" << data->getTestResponses().row(i).at<int>(0);
             ++error;
         }
     }
