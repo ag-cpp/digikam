@@ -42,14 +42,18 @@ QCommandLineParser* parseOptions(const QCoreApplication& app)
     return parser;
 }
 
-cv::Ptr<cv::ml::TrainData> loadData(QString fileName) 
+/**
+ * @brief loadData: load data from csv file into a train dataset and a leftout dataset to simulate unknown label
+ */ 
+std::pair<cv::Ptr<cv::ml::TrainData>, cv::Ptr<cv::ml::TrainData>> loadData(QString fileName) 
 {
     cv::Mat predictors, labels;
+    cv::Mat leftoutPredictors, leftoutLabels;
 
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly)) {
         qDebug() << file.errorString();
-        return cv::ml::TrainData::create(predictors, 0, labels);
+        return {cv::ml::TrainData::create(predictors, 0, labels),cv::ml::TrainData::create(leftoutPredictors, 0, leftoutLabels)};
     }
 
     while (!file.atEnd()) {
@@ -62,14 +66,22 @@ cv::Ptr<cv::ml::TrainData> loadData(QString fileName)
             predictor.at<float>(i-1) = data[i].toFloat();
         }
 
-        labels.push_back(data[0].toInt());
-        predictors.push_back(predictor);
+        if (data[0].toInt() == 0) 
+        {
+            leftoutLabels.push_back(data[0].toInt());
+            leftoutPredictors.push_back(predictor);
+        }
+        else 
+        {
+            labels.push_back(data[0].toInt());
+            predictors.push_back(predictor);
+        }
     }
 
-    return cv::ml::TrainData::create(predictors, 0, labels);
+    return {cv::ml::TrainData::create(predictors, 0, labels),cv::ml::TrainData::create(leftoutPredictors, 0, leftoutLabels)};
 }
 
-double test(cv::Ptr<cv::ml::TrainData> data)
+double testClassification(cv::Ptr<cv::ml::TrainData> data)
 {
     data->setTrainTestSplitRatio(0.8);
 
@@ -87,12 +99,49 @@ double test(cv::Ptr<cv::ml::TrainData> data)
         int prediction = svm->predict(data->getTestSamples().row(i));
         if (prediction != data->getTestResponses().row(i).at<int>(0)) 
         {
-            qDebug() << prediction << "!=" << data->getTestResponses().row(i).at<int>(0);
             ++error;
         }
     }
 
     return error / data->getTestSamples().rows;
+}
+
+
+double testNoveltyDetection(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::TrainData> leftout)
+{
+    data->setTrainTestSplitRatio(0.8);
+
+    cv::Ptr<cv::ml::SVM> svm = cv::ml::SVM::create();
+    svm->setType(cv::ml::SVM::ONE_CLASS);
+    svm->setNu(0.1);
+    svm->setGamma(0.3);
+    svm->setKernel(cv::ml::SVM::RBF);
+    svm->setC(10);
+
+    svm->train(cv::ml::TrainData::create(data->getTrainSamples(), 0, data->getTrainResponses()));
+
+    double falseNegative = 0, falsePositive = 0;
+    for (int i = 0; i < data->getTestSamples().rows; ++i) 
+    {
+        int prediction = svm->predict(data->getTestSamples().row(i));
+        if (prediction != 1) 
+        {
+            ++falseNegative;
+        }
+    }
+
+    for (int i = 0; i < leftout->getSamples().rows; ++i) 
+    {
+        int prediction = svm->predict(data->getSamples().row(i));
+        if (prediction != 0) 
+        {
+            ++falsePositive;
+        }
+    }
+
+    qDebug() << falseNegative << "false negative," << falsePositive << "false positive"; 
+
+    return (falseNegative + falsePositive) / (data->getTestSamples().rows + leftout->getSamples().rows);
 }
 
 
@@ -102,7 +151,10 @@ int main(int argc, char** argv)
     app.setApplicationName(QString::fromLatin1("digikam"));
     QCommandLineParser* parser = parseOptions(app);
 
-    qDebug() << "Error rate" << test(loadData(parser->value(QLatin1String("data"))));
+    std::pair<cv::Ptr<cv::ml::TrainData>, cv::Ptr<cv::ml::TrainData>> data = loadData(parser->value(QLatin1String("data")));
+
+    qDebug() << "Classification Error rate" << testClassification(data.first);
+    qDebug() << "Novelty detection Error rate" << testNoveltyDetection(data.first, data.second);
 
     delete parser;
 
