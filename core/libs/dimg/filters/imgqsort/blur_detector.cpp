@@ -137,7 +137,7 @@ float BlurDetector::detect()
 
     float percentBlur = float(blurPixel) / float(totalPixels);
 
-    qCDebug(DIGIKAM_DIMG_LOG) << "percentage of blur " << percentBlur;
+    qCDebug(DIGIKAM_DIMG_LOG) << "percentage of blur bla bla " << percentBlur;
     qInfo() <<  "percentage of blur bla bla bla bla " << percentBlur;
     return percentBlur;
 }
@@ -256,7 +256,7 @@ bool BlurDetector::haveFocusRegion(const DImg& image)              const
 
     // qInfo()<< "get here" << exiftool->currentData();
     d->AFPoints = exiftool->getAFInfo();
-    
+
     return !d->AFPoints.isEmpty();
 }
 
@@ -273,16 +273,16 @@ cv::Mat BlurDetector::getWeightMap()                               const
          * Size of the focus region is propotional to the size of image but inverse ratio
          * to the number of focus point
          */
-        cv::Size focus_region_size = cv::Size(static_cast<int>(d->image.size().width  / (nb_AF_points + 3)),
-                                              static_cast<int>(d->image.size().height / (nb_AF_points + 3)));
+        cv::Size focus_region_size = cv::Size(static_cast<int>(d->image.size().width  / (nb_AF_points + 4)),
+                                              static_cast<int>(d->image.size().height / (nb_AF_points + 4)));
 
         cv::Mat res = cv::Mat::zeros(d->image.size(), CV_8U);
                               
         for (const auto AFPoint : d->AFPoints)
         {
             qInfo()<<"AF point"<< AFPoint << "focus region size "<<focus_region_size.width << focus_region_size.height;
-            cv::Rect rect{AFPoint.first  - static_cast<int> (focus_region_size.width / 2),
-                          AFPoint.second - static_cast<int> (focus_region_size.height  / 2), 
+            cv::Rect rect{static_cast<int>(AFPoint.first  * d->image.size().width  - focus_region_size.width / 2),
+                          static_cast<int>(AFPoint.second * d->image.size().height - focus_region_size.height  / 2), 
                           focus_region_size.width,focus_region_size.height};
 
             res(rect).setTo(1);

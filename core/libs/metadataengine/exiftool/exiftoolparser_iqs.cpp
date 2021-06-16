@@ -29,8 +29,13 @@ namespace Digikam
 
 ExifToolParser::ListAFPoints ExifToolParser::getAFInfo()
 {
-    QString model = currentData().value(QLatin1String("EXIF.IFD0.Camera.Make"))[0].toString();
-    model = model.split(QLatin1String(" "))[0].toUpper();
+    QVariantList tagInfo = currentData().value(QLatin1String("EXIF.IFD0.Camera.Make"));
+
+    if (tagInfo.empty())
+    {
+        return ListAFPoints();
+    }
+    QString model = tagInfo[0].toString().split(QLatin1String(" "))[0].toUpper();
 
     if (model == QLatin1String("CANON"))
     {   
@@ -59,10 +64,10 @@ ExifToolParser::ListAFPoints ExifToolParser::getAFInfo_Canon()
 
     for (auto i =0; i < AF_x_positions.count(); i++)
     {
-        res << QPair<int,int> (image_width  / 2 + AF_x_positions[i].toInt(),
-                               image_height / 2 + AF_y_positions[i].toInt());
+        res << QPair<float,float> (static_cast<float>(image_width  / 2 + AF_x_positions[i].toInt()) / image_width ,
+                                   static_cast<float>(image_height / 2 + AF_y_positions[i].toInt()) / image_height);
     }
-    qInfo()<<"get here";
+    
     return res;
 }
 
@@ -72,16 +77,16 @@ ExifToolParser::ListAFPoints ExifToolParser::getAFInfo_Nikon()
 
     QString TagNameRoot = QLatin1String("MakerNotes.Nikon.Camera.");
 
-    float image_width = data.value(QLatin1String("File.File.Image.ImageWidth"))[0].toFloat();
-    float image_height = data.value(QLatin1String("File.File.Image.ImageHeight"))[0].toFloat();
+    // float image_width = data.value(QLatin1String("File.File.Image.ImageWidth"))[0].toFloat();
+    // float image_height = data.value(QLatin1String("File.File.Image.ImageHeight"))[0].toFloat();
 
     float AF_x_position = data.value(TagNameRoot + QLatin1String("AFAreaXPosition"))[0].toFloat();
     float AF_y_position = data.value(TagNameRoot + QLatin1String("AFAreaYPosition"))[0].toFloat();
     float AF_image_width = data.value(TagNameRoot + QLatin1String("AFImageWidth"))[0].toFloat();
     float AF_image_height = data.value(TagNameRoot + QLatin1String("AFImageHeight"))[0].toFloat();
 
-    ListAFPoints res = ListAFPoints() << QPair<int,int>(static_cast<int>(AF_x_position / AF_image_width * image_width),
-                                                        static_cast<int>(AF_y_position / AF_image_height * image_height));
+    ListAFPoints res = ListAFPoints() << QPair<float,float>((AF_x_position / AF_image_width ),
+                                                            (AF_y_position / AF_image_height ));
 
     return res;
     

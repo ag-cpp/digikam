@@ -185,7 +185,7 @@ public : // focus region helper
     /**
      * A list of point defines auto focus point of an image
      */
-    typedef QList<QPair<int,int>> ListAFPoints;
+    typedef QList<QPair<float,float>> ListAFPoints;
 
     /**
      * Read infomation about AF points (focus region)
