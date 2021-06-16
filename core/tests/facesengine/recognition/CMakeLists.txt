@@ -78,6 +78,16 @@ target_link_libraries(benchmark_recognition_cli
 
 # -----------------------------------------------------------------------------
 
+set(svm_cli_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/svm_cli.cpp)
+add_executable(svm_cli ${svm_cli_SRCS})
+
+target_link_libraries(svm_cli
+                      opencv_ml
+                      ${COMMON_TEST_LINK}
+)
+
+# -----------------------------------------------------------------------------
+
 set(recognition_gui_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/recognition_gui.cpp)
 add_executable(recognition_gui ${recognition_gui_SRCS})
 
