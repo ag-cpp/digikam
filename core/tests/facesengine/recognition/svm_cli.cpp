@@ -42,15 +42,6 @@ QCommandLineParser* parseOptions(const QCoreApplication& app)
     return parser;
 }
 
-cv::Mat vectortomat(const std::vector<float>& vector)
-{
-    cv::Mat mat(1, vector.size(), 5);
-
-    memcpy(mat.data, vector.data(), vector.size()*sizeof(float));
-
-    return mat;
-}
-
 cv::Ptr<cv::ml::TrainData> loadData(QString fileName) 
 {
     cv::Mat predictors, labels;
@@ -64,7 +55,7 @@ cv::Ptr<cv::ml::TrainData> loadData(QString fileName)
     while (!file.atEnd()) {
         QByteArray line = file.readLine();
         QList<QByteArray> data = line.split(',');
-        
+
         cv::Mat predictor(1, data.size()-1, CV_32F);
         for (int i = 1; i < data.size(); ++i) 
         {
@@ -78,6 +69,29 @@ cv::Ptr<cv::ml::TrainData> loadData(QString fileName)
     return cv::ml::TrainData::create(predictors, 0, labels);
 }
 
+double test(cv::Ptr<cv::ml::TrainData> data)
+{
+    data->setTrainTestSplitRatio(0.8);
+
+    cv::Ptr<cv::ml::SVM> svm = cv::ml::SVM::create();
+    svm->setKernel(cv::ml::SVM::LINEAR);
+
+    svm->train(cv::ml::TrainData::create(data->getTrainSamples(), 0, data->getTrainResponses()));
+
+    double error = 0;
+    for (int i = 0; i < data->getTestSamples().rows; ++i) 
+    {
+        int prediction = svm->predict(data->getTestSamples().row(i));
+        if (prediction != data->getTestResponses().row(i).at<int>(0)) 
+        {
+            qDebug() << prediction << " != " << data->getTestResponses().row(i).at<int>(0);
+            ++error;
+        }
+    }
+
+    return error / data->getTestSamples().rows;
+}
+
 
 int main(int argc, char** argv)
 {
@@ -85,7 +99,7 @@ int main(int argc, char** argv)
     app.setApplicationName(QString::fromLatin1("digikam"));
     QCommandLineParser* parser = parseOptions(app);
 
-    loadData(parser->value(QLatin1String("data")));
+    qDebug() << "Error rate" << test(loadData(parser->value(QLatin1String("data"))));
 
     delete parser;
 
