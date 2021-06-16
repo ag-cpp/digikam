@@ -12,6 +12,13 @@ lda.error <- mean(data.test.pca$Y != lda.class)
 colnames(lda.pred$posterior)[max.col(lda.pred$posterior,ties.method="first")]
 apply(lda.pred$posterior[, 2:28], 1, max)
 
+#Outlier detection with RDA
+lda.outlier.pred <- predict(lda.fit, newdata=outlier.test)
+
+colnames(lda.outlier.pred$posterior)[max.col(lda.outlier.pred$posterior,ties.method="first")]
+table(outlier.test$Y==27, apply(lda.outlier.pred$posterior, 1, max) < 0.5)
+lda.outlier.pred <- mean((outlier.test$Y==27) != (apply(lda.outlier.pred$posterior, 1, max) < 0.5))
+
 # 2.2 QDA
 qda.fit <- qda(Y~., data=data.train.pca)
 qda.pred <- predict(qda.fit, newdata=data.test.pca)$class
