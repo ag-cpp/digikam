@@ -165,7 +165,7 @@ double testNoveltyDetection(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::Tra
 
     for (int i = 0; i < leftout->getSamples().rows; ++i) 
     {
-        int prediction = svm->predict(data->getSamples().row(i));
+        int prediction = svm->predict(leftout->getSamples().row(i));
         if (prediction != 0) 
         {
             ++falsePositive;
@@ -198,12 +198,16 @@ double testMultipleClassifiers(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::
         {
             ++falseNegative;
         }
+        else if (prediction != data->getTestResponses().row(i).at<int>(0) && noveltyClassifiers[prediction-1]->predict(data->getTestSamples().row(i)) != 0)
+        {
+            ++falsePositive;
+        }
     }
 
     for (int i = 0; i < leftout->getSamples().rows; ++i) 
     {
-        int prediction = classifier->predict(data->getTestSamples().row(i));
-        if (prediction == data->getTestResponses().row(i).at<int>(0) && noveltyClassifiers[prediction-1]->predict(data->getTestSamples().row(i)) != 0) 
+        int prediction = classifier->predict(leftout->getSamples().row(i));
+        if (noveltyClassifiers[prediction-1]->predict(leftout->getSamples().row(i)) != 0) 
         {
             ++falsePositive;
         }
