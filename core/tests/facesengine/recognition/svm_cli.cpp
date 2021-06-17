@@ -6,7 +6,7 @@
  * Date        : 2021-06-16
  * Description : Testing tool for SVM classifier of face engines
  *
- * Copyright (C) 2020 by Nghia Duong <minhnghiaduong997 at gmail dot com>
+ * Copyright (C) 2021 by Nghia Duong <minhnghiaduong997 at gmail dot com>
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -81,6 +81,40 @@ std::pair<cv::Ptr<cv::ml::TrainData>, cv::Ptr<cv::ml::TrainData>> loadData(QStri
     return {cv::ml::TrainData::create(predictors, 0, labels),cv::ml::TrainData::create(leftoutPredictors, 0, leftoutLabels)};
 }
 
+cv::Ptr<cv::ml::TrainData> filter(cv::Mat samples, cv::Mat labels, int selectedLabel) 
+{
+    cv::Mat predictors, y;
+    for (int i = 0; i < samples.rows; ++i) 
+    {
+        if (labels.row(i).at<int>(0) == selectedLabel) 
+        {
+            predictors.push_back(samples.row(i));
+            y.push_back(selectedLabel);
+        }
+    }
+
+    return cv::ml::TrainData::create(predictors, 0, y);
+}
+
+std::vector<cv::Ptr<cv::ml::SVM>> oneclassClassifiers(cv::Mat samples, cv::Mat labels) 
+{
+    std::vector<cv::Ptr<cv::ml::SVM>> classifier(27);
+    for (int i = 1; i <= 27; ++i)
+    {
+        cv::Ptr<cv::ml::SVM> svm = cv::ml::SVM::create();
+        svm->setType(cv::ml::SVM::ONE_CLASS);
+        svm->setNu(0.1);
+        svm->setGamma(0.3);
+        svm->setKernel(cv::ml::SVM::RBF);
+        svm->setC(10);
+
+        svm->train(filter(samples, labels, i));
+        classifier[i-1] = svm;
+    }
+
+    return classifier;
+}
+
 double testClassification(cv::Ptr<cv::ml::TrainData> data)
 {
     data->setTrainTestSplitRatio(0.8);
@@ -105,7 +139,6 @@ double testClassification(cv::Ptr<cv::ml::TrainData> data)
 
     return error / data->getTestSamples().rows;
 }
-
 
 double testNoveltyDetection(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::TrainData> leftout)
 {
@@ -144,6 +177,43 @@ double testNoveltyDetection(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::Tra
     return (falseNegative + falsePositive) / (data->getTestSamples().rows + leftout->getSamples().rows);
 }
 
+double testMultipleClassifiers(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::TrainData> leftout)
+{
+    data->setTrainTestSplitRatio(0.8);
+    std::vector<cv::Ptr<cv::ml::SVM>> noveltyClassifiers = oneclassClassifiers(data->getTrainSamples(), data->getTrainResponses());
+
+    cv::Ptr<cv::ml::SVM> classifier = cv::ml::SVM::create();
+    classifier->setType(cv::ml::SVM::NU_SVC);
+    classifier->setNu(0.1);
+    classifier->setKernel(cv::ml::SVM::RBF);
+    classifier->setC(10);
+
+    classifier->train(cv::ml::TrainData::create(data->getTrainSamples(), 0, data->getTrainResponses()));
+
+    double falseNegative = 0, falsePositive = 0;
+    for (int i = 0; i < data->getTestSamples().rows; ++i) 
+    {
+        int prediction = classifier->predict(data->getTestSamples().row(i));
+        if (prediction == data->getTestResponses().row(i).at<int>(0) && noveltyClassifiers[prediction-1]->predict(data->getTestSamples().row(i)) != 1) 
+        {
+            ++falseNegative;
+        }
+    }
+
+    for (int i = 0; i < leftout->getSamples().rows; ++i) 
+    {
+        int prediction = classifier->predict(data->getTestSamples().row(i));
+        if (prediction == data->getTestResponses().row(i).at<int>(0) && noveltyClassifiers[prediction-1]->predict(data->getTestSamples().row(i)) != 0) 
+        {
+            ++falsePositive;
+        }
+    }
+
+    qDebug() << falseNegative << "false negative," << falsePositive << "false positive"; 
+
+    return (falseNegative + falsePositive) / (data->getTestSamples().rows + leftout->getSamples().rows);
+}
+
 
 int main(int argc, char** argv)
 {
@@ -155,6 +225,7 @@ int main(int argc, char** argv)
 
     qDebug() << "Classification Error rate" << testClassification(data.first);
     qDebug() << "Novelty detection Error rate" << testNoveltyDetection(data.first, data.second);
+    qDebug() << "Multiple classifier Error rate" << testMultipleClassifiers(data.first, data.second);
 
     delete parser;
 
