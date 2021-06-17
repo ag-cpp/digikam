@@ -198,7 +198,7 @@ double testMultipleClassifiers(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::
         {
             ++falseNegative;
         }
-        else if (prediction != data->getTestResponses().row(i).at<int>(0) && noveltyClassifiers[prediction-1]->predict(data->getTestSamples().row(i)) != 0)
+        else if (prediction != data->getTestResponses().row(i).at<int>(0))
         {
             ++falsePositive;
         }
@@ -218,6 +218,54 @@ double testMultipleClassifiers(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::
     return (falseNegative + falsePositive) / (data->getTestSamples().rows + leftout->getSamples().rows);
 }
 
+double test2Classifiers(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::TrainData> leftout)
+{
+    data->setTrainTestSplitRatio(0.8);
+
+    cv::Ptr<cv::ml::SVM> classifier = cv::ml::SVM::create();
+    classifier->setType(cv::ml::SVM::NU_SVC);
+    classifier->setNu(0.1);
+    classifier->setKernel(cv::ml::SVM::RBF);
+    classifier->setC(10);
+    classifier->train(cv::ml::TrainData::create(data->getTrainSamples(), 0, data->getTrainResponses()));
+
+    cv::Ptr<cv::ml::SVM> noveltyClassifier = cv::ml::SVM::create();
+    noveltyClassifier->setType(cv::ml::SVM::ONE_CLASS);
+    noveltyClassifier->setNu(0.1);
+    noveltyClassifier->setGamma(0.3);
+    noveltyClassifier->setKernel(cv::ml::SVM::RBF);
+    noveltyClassifier->setC(10);
+    noveltyClassifier->train(cv::ml::TrainData::create(data->getTrainSamples(), 0, data->getTrainResponses()));
+
+    double falseNegative = 0, falsePositive = 0;
+    for (int i = 0; i < data->getTestSamples().rows; ++i) 
+    {
+        if (noveltyClassifier->predict(data->getTestSamples().row(i)) != 1)
+        {
+            ++falseNegative;
+        }
+        else 
+        {
+            int prediction = classifier->predict(data->getTestSamples().row(i));
+            if (prediction != data->getTestResponses().row(i).at<int>(0))
+            {
+                ++falsePositive;
+            }
+        }
+    }
+
+    for (int i = 0; i < leftout->getSamples().rows; ++i) 
+    {
+        if (noveltyClassifier->predict(leftout->getSamples().row(i)) != 0)
+        {
+            ++falsePositive;
+        }
+    }
+
+    qDebug() << falseNegative << "false negative," << falsePositive << "false positive"; 
+
+    return (falseNegative + falsePositive) / (data->getTestSamples().rows + leftout->getSamples().rows);
+}
 
 int main(int argc, char** argv)
 {
@@ -230,6 +278,7 @@ int main(int argc, char** argv)
     qDebug() << "Classification Error rate" << testClassification(data.first);
     qDebug() << "Novelty detection Error rate" << testNoveltyDetection(data.first, data.second);
     qDebug() << "Multiple classifier Error rate" << testMultipleClassifiers(data.first, data.second);
+    qDebug() << "2 classifiers Error rate" << test2Classifiers(data.first, data.second);
 
     delete parser;
 
