@@ -218,13 +218,12 @@ void TrashView::slotUndoLastDeletedItems()
     d->selectedIndexesToRemove.clear();
     QDateTime lastDateTime = QDateTime::fromMSecsSinceEpoch(0);
 
-    foreach (const DTrashItemInfo& item, d->model->allItems())
-    {
-        if (item.deletionTimestamp > lastDateTime)
-        {
-            lastDateTime = item.deletionTimestamp;
-        }
-    }
+    auto op = [] (const QDateTime &a, const DTrashItemInfo &b) {
+        return (b.deletionTimestamp > a) ? b.deletionTimestamp : a;
+    };
+
+    const auto list = d->model->allItems();
+    lastDateTime = std::accumulate(list.begin(), list.end(), lastDateTime, op);
 
     foreach (const DTrashItemInfo& item, d->model->allItems())
     {
