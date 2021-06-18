@@ -51,6 +51,7 @@
 #include "itemquerybuilder.h"
 #include "collectionscannerobserver.h"
 #include "digikam_config.h"
+#include "digikam_globals.h"
 
 namespace Digikam
 {
@@ -857,7 +858,7 @@ static QStringList cleanUserFilterString(const QString& filterString)
         sep = QChar(QLatin1Char(' '));
     }
 
-    QStringList sepList = filterString.split(sep, Qt::SkipEmptyParts);
+    QStringList sepList = filterString.split(sep, QT_SKIP_EMPTY_PARTS);
 
     foreach (const QString& f, sepList)
     {

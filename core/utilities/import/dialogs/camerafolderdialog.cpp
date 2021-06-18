@@ -42,6 +42,7 @@
 // Local includes
 
 #include "digikam_debug.h"
+#include "digikam_globals.h"
 #include "camerafolderitem.h"
 #include "camerafolderview.h"
 #include "dxmlguiwindow.h"
@@ -122,7 +123,7 @@ CameraFolderDialog::CameraFolderDialog(QWidget* const parent, const QMap<QString
 
             QString path(QLatin1Char('/'));
 
-            foreach (const QString& sub, folder.split(QLatin1Char('/'), Qt::SkipEmptyParts))
+            foreach (const QString& sub, folder.split(QLatin1Char('/'), QT_SKIP_EMPTY_PARTS))
             {
                 qCDebug(DIGIKAM_IMPORTUI_LOG) << "Camera folder:" << path << "Subfolder:" << sub;
                 d->folderView->addFolder(path, sub, it.value());

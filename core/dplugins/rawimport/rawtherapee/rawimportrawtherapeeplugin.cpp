@@ -220,7 +220,7 @@ void RawTherapeeRawImportPlugin::slotProcessFinished(int code, QProcess::ExitSta
 void RawTherapeeRawImportPlugin::slotProcessReadyRead()
 {
     QByteArray data   = d->rawtherapee->readAllStandardError();
-    QStringList lines = QString::fromUtf8(data).split(QLatin1Char('\n'), Qt::SkipEmptyParts);
+    QStringList lines = QString::fromUtf8(data).split(QLatin1Char('\n'), QT_SKIP_EMPTY_PARTS);
 
     foreach (const QString& one, lines)
     {

@@ -27,6 +27,10 @@
 
 #include <QStringList>
 
+// Local includes
+
+#include "digikam_globals.h"
+
 namespace Digikam
 {
 
@@ -58,7 +62,7 @@ QStringList cleanUserFilterString(QString filterString,
 
     QStringList filterList;
 
-    foreach (const QString& filter, filterString.split(separator, Qt::SkipEmptyParts))
+    foreach (const QString& filter, filterString.split(separator, QT_SKIP_EMPTY_PARTS))
     {
         filterList << filter.trimmed();
     }

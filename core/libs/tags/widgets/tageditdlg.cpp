@@ -57,6 +57,7 @@
 #include "dxmlguiwindow.h"
 #include "dexpanderbox.h"
 #include "dlayoutbox.h"
+#include "digikam_globals.h"
 
 namespace Digikam
 {
@@ -411,7 +412,7 @@ AlbumList TagEditDlg::createTAlbum(TAlbum* const mainRootAlbum, const QString& t
     // Check if new tags are include in a list of tags hierarchy separated by ','.
     // Ex: /Country/France/people,/City/France/Paris
 
-    const QStringList tagsHierarchies = tagStr.split(QLatin1Char(','), Qt::SkipEmptyParts);
+    const QStringList tagsHierarchies = tagStr.split(QLatin1Char(','), QT_SKIP_EMPTY_PARTS);
 
     if (tagsHierarchies.isEmpty())
     {
@@ -438,7 +439,7 @@ AlbumList TagEditDlg::createTAlbum(TAlbum* const mainRootAlbum, const QString& t
                 root = mainRootAlbum;
             }
 
-            QStringList tagsList = hierarchy.split(QLatin1Char('/'), Qt::SkipEmptyParts);
+            QStringList tagsList = hierarchy.split(QLatin1Char('/'), QT_SKIP_EMPTY_PARTS);
             qCDebug(DIGIKAM_GENERAL_LOG) << tagsList;
 
             if (!tagsList.isEmpty())

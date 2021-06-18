@@ -25,6 +25,10 @@
 
 #include "itemquerybuilder_p.h"
 
+// Local includes
+
+#include "digikam_globals.h"
+
 namespace Digikam
 {
 
@@ -456,7 +460,7 @@ bool ItemQueryBuilder::buildField(QString& sql, SearchXmlCachingReader& reader, 
 
         if (readerString.contains(QRegExp(QLatin1String("^\\d+:\\d+$"))))
         {
-            QStringList ratioNum = readerString.split(QLatin1Char(':'), Qt::SkipEmptyParts);
+            QStringList ratioNum = readerString.split(QLatin1Char(':'), QT_SKIP_EMPTY_PARTS);
             int num              = ratioNum.at(0).toInt();
             int denominator = ratioNum.at(1).toInt();
             query                = QString::fromUtf8("ABS((ImageInformation.width/CAST(ImageInformation.height AS DOUBLE)) - ?)  < 0.1");
@@ -510,7 +514,7 @@ bool ItemQueryBuilder::buildField(QString& sql, SearchXmlCachingReader& reader, 
 
                  if (value.contains(QLatin1Char(':')))
                  {
-                     QStringList ratioNum = value.split(QLatin1Char(':'), Qt::SkipEmptyParts);
+                     QStringList ratioNum = value.split(QLatin1Char(':'), QT_SKIP_EMPTY_PARTS);
                      int num              = ratioNum.at(0).toInt();
                      int denominator      = ratioNum.at(1).toInt();
                      ratioValues << (double)num/denominator;
@@ -537,7 +541,7 @@ bool ItemQueryBuilder::buildField(QString& sql, SearchXmlCachingReader& reader, 
 
             if (value.contains(QLatin1Char(':')))
             {
-                QStringList ratioNum = value.split(QLatin1Char(':'), Qt::SkipEmptyParts);
+                QStringList ratioNum = value.split(QLatin1Char(':'), QT_SKIP_EMPTY_PARTS);
                 int num              = ratioNum.at(0).toInt();
                 int denominator      = ratioNum.at(1).toInt();
                 *boundValues << (double)num/denominator;
@@ -1246,7 +1250,7 @@ QString ItemQueryBuilder::convertFromUrlToXml(const QUrl& url) const
     writer.writeAttribute(QLatin1String("convertedFrom09Url"), QLatin1String("true"));
     writer.writeGroup();
 
-    QStringList strList = url.path().split(QLatin1Char(' '), Qt::SkipEmptyParts);
+    QStringList strList = url.path().split(QLatin1Char(' '), QT_SKIP_EMPTY_PARTS);
 
     for (QStringList::const_iterator it = strList.constBegin() ; it != strList.constEnd() ; ++it)
     {
@@ -1406,7 +1410,7 @@ QString ItemQueryBuilder::buildQueryFromUrl(const QUrl& url, QList<QVariant>* bo
 
     QString         sqlQuery;
     SubQueryBuilder subQuery;
-    QStringList     strList = url.path().split(QLatin1Char(' '), Qt::SkipEmptyParts);
+    QStringList     strList = url.path().split(QLatin1Char(' '), QT_SKIP_EMPTY_PARTS);
 
     for (QStringList::const_iterator it = strList.constBegin() ; it != strList.constEnd() ; ++it)
     {

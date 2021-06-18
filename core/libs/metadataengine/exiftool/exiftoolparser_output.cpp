@@ -23,6 +23,10 @@
 
 #include "exiftoolparser_p.h"
 
+// Local includes
+
+#include "digikam_globals.h"
+
 namespace Digikam
 {
 
@@ -188,7 +192,7 @@ void ExifToolParser::slotCmdCompleted(int cmdAction,
 
             // Get extensions and descriptions as pair of strings
 
-            QStringList lines = out.split(QLatin1Char('\n'), Qt::SkipEmptyParts);
+            QStringList lines = out.split(QLatin1Char('\n'), QT_SKIP_EMPTY_PARTS);
             QStringList lst;
             QString s;
 
@@ -213,7 +217,7 @@ void ExifToolParser::slotCmdCompleted(int cmdAction,
 
             // Get extensions and descriptions as pair of strings
 
-            QStringList lines = out.split(QLatin1Char('\n'), Qt::SkipEmptyParts);
+            QStringList lines = out.split(QLatin1Char('\n'), QT_SKIP_EMPTY_PARTS);
             QStringList lst;
             QString s;
 
@@ -237,7 +241,7 @@ void ExifToolParser::slotCmdCompleted(int cmdAction,
 
             // Get i18n list
 
-            QStringList lines = out.split(QLatin1Char('\n'), Qt::SkipEmptyParts);
+            QStringList lines = out.split(QLatin1Char('\n'), QT_SKIP_EMPTY_PARTS);
             QStringList lst;
 
             foreach (const QString& ln, lines)

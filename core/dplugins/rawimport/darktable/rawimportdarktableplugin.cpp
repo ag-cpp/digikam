@@ -275,7 +275,7 @@ void DarkTableRawImportPlugin::slotProcessFinished(int code, QProcess::ExitStatu
 void DarkTableRawImportPlugin::slotProcessReadyRead()
 {
     QByteArray data   = d->darktable->readAllStandardError();
-    QStringList lines = QString::fromUtf8(data).split(QLatin1Char('\n'), Qt::SkipEmptyParts);
+    QStringList lines = QString::fromUtf8(data).split(QLatin1Char('\n'), QT_SKIP_EMPTY_PARTS);
 
     foreach (const QString& one, lines)
     {
