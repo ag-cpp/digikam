@@ -456,13 +456,14 @@ ItemInfo TableView::previousInfo() const
 
 void TableView::slotSetCurrentUrlWhenAvailable(const QUrl& url)
 {
-    foreach (const ItemInfo& info, allItemInfos())
+    auto opCompUrl = [url] (const QUrl &u) {
+        return u == url;
+    };
+    const auto allItemsInfo = allItemInfos();
+    const auto found = std::find_if(allItemsInfo.begin(), allItemsInfo.end(), opCompUrl);
+    if (found != allItemsInfo.end())
     {
-        if (info.fileUrl() == url)
-        {
-            slotSetCurrentWhenAvailable(info.id());
-            break;
-        }
+        slotSetCurrentWhenAvailable(found->id());
     }
 }
 
