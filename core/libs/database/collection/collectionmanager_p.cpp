@@ -318,12 +318,13 @@ SolidVolumeInfo CollectionManager::Private::findVolumeForLocation(const AlbumRoo
 
     if      (!(queryItem = QUrlQuery(url).queryItemValue(QLatin1String("uuid"))).isNull())
     {
-        foreach (const SolidVolumeInfo& volume, volumes)
+        auto op = [queryItem] (const SolidVolumeInfo &volume) {
+            return volume.uuid.compare(queryItem, Qt::CaseInsensitive) == 0;
+        };
+        auto found = std::find_if(volumes.begin(), volumes.end(), op);
+        if (found != volumes.end())
         {
-            if (volume.uuid.compare(queryItem, Qt::CaseInsensitive) == 0)
-            {
-                return volume;
-            }
+            return *found;
         }
         return SolidVolumeInfo();
     }
@@ -408,12 +409,13 @@ SolidVolumeInfo CollectionManager::Private::findVolumeForLocation(const AlbumRoo
     }
     else if (!(queryItem = QUrlQuery(url).queryItemValue(QLatin1String("mountpath"))).isNull())
     {
-        foreach (const SolidVolumeInfo& volume, volumes)
+        auto op = [queryItem] (const SolidVolumeInfo &volume) {
+            return volume.isMounted && (volume.path == queryItem);
+        };
+        auto found = std::find_if(volumes.begin(), volumes.end(), op);
+        if (found != volumes.end())
         {
-            if (volume.isMounted && (volume.path == queryItem))
-            {
-                return volume;
-            }
+            return *found;
         }
 
         return SolidVolumeInfo();
