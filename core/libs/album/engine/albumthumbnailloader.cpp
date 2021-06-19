@@ -387,15 +387,11 @@ void AlbumThumbnailLoader::addUrl(Album* const album, qlonglong id)
 
     if (album->type() == Album::TAG && static_cast<TAlbum*>(album)->hasProperty(TagPropertyName::person()))
     {
-        QList<FaceTagsIface> faces = FaceTagsEditor().databaseFaces(id);
-
-        foreach (const FaceTagsIface& face, faces)
-        {
-            if (face.tagId() == album->id())
-            {
-                faceRect = face.region().toRect();
-            }
-        }
+        const QList<FaceTagsIface> faces = FaceTagsEditor().databaseFaces(id);
+        auto opFindRect = [album] (const QRect &rect, const FaceTagsIface &iface) {
+            return (iface.tagId() == album->id()) ? iface.region().toRect() : rect;
+        };
+        faceRect = std::accumulate(faces.begin(), faces.end(), faceRect, opFindRect);
     }
 
     // Simple way to put QRect into QMap
