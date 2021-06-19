@@ -391,13 +391,14 @@ void RajceWidget::slotStartUpload()
     QString albumName = d->albumsCoB->currentText();
     RajceAlbum album;
 
-    foreach (RajceAlbum a, d->talker->session().albums())
+    auto opFindAlbum = [albumName] (const RajceAlbum &album) {
+        return album.name == albumName;
+    };
+    const auto albums = d->talker->session().albums();
+    const auto found  = std::find_if(albums.begin(), albums.end(), opFindAlbum);
+    if (found != albums.end())
     {
-        if (a.name == albumName)
-        {
-            album = a;
-            break;
-        }
+        album = *found;
     }
 
     if (album.name == albumName)
