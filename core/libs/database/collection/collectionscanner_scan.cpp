@@ -46,18 +46,17 @@ void CollectionScanner::completeScan()
 
     // TODO: Implement a mechanism to watch for album root changes while we keep this list
 
-    QList<CollectionLocation> allLocations = CollectionManager::instance()->allAvailableLocations();
+    const QList<CollectionLocation> allLocations = CollectionManager::instance()->allAvailableLocations();
 
     if (d->wantSignals && d->needTotalFiles)
     {
         // count for progress info
 
         int count = 0;
-
-        foreach (const CollectionLocation& location, allLocations)
-        {
-            count += countItemsInFolder(location.albumRootPath());
-        }
+        auto opSum = [this] (const int &c, const CollectionLocation &location) {
+            return c + countItemsInFolder(location.albumRootPath());
+        };
+        count = std::accumulate(allLocations.begin(), allLocations.end(), count, opSum);
 
         emit totalFilesToScan(count);
     }
@@ -168,10 +167,10 @@ void CollectionScanner::finishCompleteScan(const QStringList& albumPaths)
 
         int count = 0;
 
-        foreach (const QString& path, sortedPaths)
-        {
-            count += countItemsInFolder(path);
-        }
+        auto opSum = [this] (const int &c, const QString &path) {
+            return c + countItemsInFolder(path);
+        };
+        count = std::accumulate(sortedPaths.begin(), sortedPaths.end(), count, opSum);
 
         emit totalFilesToScan(count);
     }
