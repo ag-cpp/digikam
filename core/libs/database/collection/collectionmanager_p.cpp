@@ -318,7 +318,7 @@ SolidVolumeInfo CollectionManager::Private::findVolumeForLocation(const AlbumRoo
 
     if      (!(queryItem = QUrlQuery(url).queryItemValue(QLatin1String("uuid"))).isNull())
     {
-        auto op = [queryItem] (const SolidVolumeInfo &volume) {
+        auto op = [&queryItem] (const SolidVolumeInfo &volume) {
             return volume.uuid.compare(queryItem, Qt::CaseInsensitive) == 0;
         };
         auto found = std::find_if(volumes.begin(), volumes.end(), op);
