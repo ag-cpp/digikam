@@ -717,7 +717,7 @@ CollectionLocation CollectionManager::locationForAlbumRootPath(const QString& al
 
     QReadLocker locker(&d->lock);
 
-    auto opComp = [albumRootPath] (const AlbumRootLocation *location) {
+    auto opComp = [&albumRootPath] (const AlbumRootLocation *location) {
         return albumRootPath == location->albumRootPath();
     };
     const auto locations = d->locations;
