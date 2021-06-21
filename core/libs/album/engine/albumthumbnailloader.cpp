@@ -387,14 +387,14 @@ void AlbumThumbnailLoader::addUrl(Album* const album, qlonglong id)
 
     if (album->type() == Album::TAG && static_cast<TAlbum*>(album)->hasProperty(TagPropertyName::person()))
     {
-        QList<FaceTagsIface> faces = FaceTagsEditor().databaseFaces(id);
-
-        foreach (const FaceTagsIface& face, faces)
+        const QList<FaceTagsIface> faces = FaceTagsEditor().databaseFaces(id);
+        auto opFind = [&album] (const FaceTagsIface &iface) {
+            return iface.tagId() == album->id();
+        };
+        auto found = std::find_if(faces.begin(), faces.end(), opFind);
+        if (found != faces.end())
         {
-            if (face.tagId() == album->id())
-            {
-                faceRect = face.region().toRect();
-            }
+            faceRect = found->region().toRect();
         }
     }
 
