@@ -717,14 +717,12 @@ CollectionLocation CollectionManager::locationForAlbumRootPath(const QString& al
 
     QReadLocker locker(&d->lock);
 
-    auto opComp = [albumRootPath] (const AlbumRootLocation *location) {
-        return albumRootPath == location->albumRootPath();
-    };
-    const auto locations = d->locations;
-    auto found = std::find_if(locations.begin(), locations.end(), opComp);
-    if (found != locations.end())
+    foreach (AlbumRootLocation* const location, d->locations)
     {
-        return *found.value();
+        if (location->albumRootPath() == albumRootPath)
+        {
+            return *location;
+        }
     }
 
     return CollectionLocation();
