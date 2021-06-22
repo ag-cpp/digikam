@@ -145,7 +145,7 @@ bool FilesDownloader::checkDownloadFiles() const
     foreach (const DownloadInfo& info, d->files)
     {
         if (!downloadExists(info))
-        {
+        {   // cppcheck-suppress useStlAlgorithm
             return false;
         }
     }
@@ -176,6 +176,7 @@ void FilesDownloader::startDownload()
     {
         if (!downloadExists(info))
         {
+            // cppcheck-suppress useStlAlgorithm
             size += info.size;
         }
     }

@@ -407,7 +407,7 @@ int ImportView::downloadedCamItemInfos() const
     {
         if (info.downloaded == CamItemInfo::DownloadedYes)
         {
-            ++numberOfDownloaded;
+            ++numberOfDownloaded; // cppcheck-suppress useStlAlgorithm
         }
     }
 
@@ -421,7 +421,7 @@ bool ImportView::isSelected(const QUrl& url) const
     foreach (const QUrl& selected, urlsList)
     {
         if (url == selected)
-        {
+        {   // cppcheck-suppress useStlAlgorithm
             return true;
         }
     }
