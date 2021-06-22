@@ -496,7 +496,7 @@ SolidVolumeInfo CollectionManager::Private::findVolumeForUrl(const QUrl& fileUrl
     return volume;
 }
 
-bool CollectionManager::Private::checkIfExists(const QString& filePath, const QList<CollectionLocation> assumeDeleted)
+bool CollectionManager::Private::checkIfExists(const QString& filePath, QList<CollectionLocation> assumeDeleted)
 {
     const QUrl filePathUrl = QUrl::fromLocalFile(filePath);
 
@@ -515,10 +515,21 @@ bool CollectionManager::Private::checkIfExists(const QString& filePath, const QL
             (filePathUrl.isParentOf(locationPathUrl) ||
              locationPathUrl.isParentOf(filePathUrl)))
         {
-            auto op = [location] (const CollectionLocation &deletedLoc) {
-                return  deletedLoc.id() == location->id();
-            };
-            return !std::any_of(assumeDeleted.begin(), assumeDeleted.end(), op);
+            bool isDeleted = false;
+
+            foreach (const CollectionLocation& deletedLoc, assumeDeleted)
+            {
+                if (deletedLoc.id() == location->id())
+                {
+                    isDeleted = true;
+                    break;
+                }
+            }
+
+            if (!isDeleted)
+            {
+                return true;
+            }
         }
     }
 
