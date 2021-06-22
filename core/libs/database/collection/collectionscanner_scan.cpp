@@ -53,7 +53,7 @@ void CollectionScanner::completeScan()
         // count for progress info
 
         int count = 0;
-        auto opSum = [this] (int c, const CollectionLocation &location) {
+        auto opSum = [this] (const int &c, const CollectionLocation &location) {
             return c + countItemsInFolder(location.albumRootPath());
         };
         count = std::accumulate(allLocations.begin(), allLocations.end(), count, opSum);
@@ -167,7 +167,7 @@ void CollectionScanner::finishCompleteScan(const QStringList& albumPaths)
 
         int count = 0;
 
-        auto opSum = [this] (int c, const QString &path) {
+        auto opSum = [this] (const int &c, const QString &path) {
             return c + countItemsInFolder(path);
         };
         count = std::accumulate(sortedPaths.begin(), sortedPaths.end(), count, opSum);
