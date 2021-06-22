@@ -4084,10 +4084,10 @@ QDate CoreDB::getAlbumAverageDate(int albumID) const
 
     qint64 julianDays = 0;
 
-    auto opAddDate = [] (const qint64 &days, const QDate &date) {
-        return days + date.toJulianDay();
-    };
-    julianDays = std::accumulate(dates.cbegin(), dates.cend(), julianDays, opAddDate);
+    foreach (const QDate& date, dates)
+    {
+        julianDays += date.toJulianDay();
+    }
 
     return QDate::fromJulianDay(julianDays / dates.size());
 }
