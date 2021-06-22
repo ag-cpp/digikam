@@ -201,14 +201,12 @@ QString CollectionManager::oneAlbumRootPath()
 {
     QReadLocker locker(&d->lock);
 
-    const auto locations = d->locations;
-    auto opComp = [] (AlbumRootLocation * const location) {
-        return location->status() == CollectionLocation::LocationAvailable;
-    };
-    auto found = std::find_if(locations.begin(), locations.end(), opComp);
-    if (found != locations.end())
+    foreach (AlbumRootLocation* const location, d->locations)
     {
-        return found.value()->albumRootPath();
+        if (location->status() == CollectionLocation::LocationAvailable)
+        {
+            return location->albumRootPath();
+        }
     }
 
     return QString();
@@ -239,15 +237,16 @@ void CollectionManager::slotAlbumRootChange(const AlbumRootChangeset& changeset)
 
                 if (location)
                 {
-                    const QList<AlbumRootInfo> infos = CoreDbAccess().db()->getAlbumRoots();
-                    auto opMatchId = [location] (const AlbumRootInfo & info) {
-                        return info.id == location->id();
-                    };
-                    auto foundRoot = std::find_if(infos.begin(), infos.end(), opMatchId);
-                    if (foundRoot != infos.end())
+                    QList<AlbumRootInfo> infos = CoreDbAccess().db()->getAlbumRoots();
+
+                    foreach (const AlbumRootInfo& info, infos)
                     {
-                        location->setLabel(foundRoot->label);
-                        toBeEmitted = *location;
+                        if (info.id == location->id())
+                        {
+                            location->setLabel(info.label);
+                            toBeEmitted = *location;
+                            break;
+                        }
                     }
                 }
             }
