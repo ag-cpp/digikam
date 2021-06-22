@@ -564,11 +564,15 @@ void DigikamApp::slotImageSelected(const ItemInfoList& selection, const ItemInfo
 
     ItemInfoList selectionWithoutGrouped = d->view->selectedInfoList(true, false);
 
-    auto opAddFileSize = [] (const qint64 &a, const ItemInfo &b) {
-        return a + b.fileSize();
-    };
-    selectionFileSize = std::accumulate(selection.begin(), selection.end(), selectionFileSize, opAddFileSize);
-    listAllFileSize   = std::accumulate(listAll.begin(), listAll.end(), listAllFileSize, opAddFileSize);
+    foreach (const ItemInfo& info, selection)
+    {
+        selectionFileSize += info.fileSize();
+    }
+
+    foreach (const ItemInfo& info, listAll)
+    {
+        listAllFileSize += info.fileSize();
+    }
 
     Album* const album = d->view->currentAlbum();
 
