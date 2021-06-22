@@ -686,11 +686,12 @@ void ItemPropertiesSideBarDB::setImageSelectionPropertiesInformation()
 
     m_selectionPropertiesTab->setSelectionCount(QLocale().toString(d->currentInfos.count()));
 
-    auto opAddFileSize = [] (qlonglong a, const ItemInfo &b) {
-        return a + b.fileSize();
-    };
-    const auto currentInfos = d->currentInfos;
-    qint64 selectionFileSize = std::accumulate(currentInfos.begin(), currentInfos.end(), 0L, opAddFileSize);
+    qint64 selectionFileSize = 0;
+
+    foreach (const ItemInfo& info, d->currentInfos)
+    {
+        selectionFileSize += info.fileSize();
+    }
 
     m_selectionPropertiesTab->setSelectionSize(ItemPropertiesTab::humanReadableBytesCount(selectionFileSize));
 
@@ -698,10 +699,16 @@ void ItemPropertiesSideBarDB::setImageSelectionPropertiesInformation()
 
     m_selectionPropertiesTab->setTotalCount(QLocale().toString(d->allInfos.count()));
 
-    const auto allInfos = d->allInfos;
-    qint64 totalFileSize = std::accumulate(allInfos.begin(), allInfos.end(), 0L, opAddFileSize);
+    qint64 totalFileSize = 0;
+
+    foreach (const ItemInfo& info, d->allInfos)
+    {
+        totalFileSize += info.fileSize();
+    }
 
     m_selectionPropertiesTab->setTotalSize(ItemPropertiesTab::humanReadableBytesCount(totalFileSize));
+
+    return;
 }
 
 ItemPropertiesVersionsTab* ItemPropertiesSideBarDB::getFiltersHistoryTab() const
