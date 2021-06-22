@@ -456,8 +456,8 @@ ItemInfo TableView::previousInfo() const
 
 void TableView::slotSetCurrentUrlWhenAvailable(const QUrl& url)
 {
-    auto opCompUrl = [url] (const ItemInfo &itemInfo) {
-        return itemInfo.fileUrl() == url;
+    auto opCompUrl = [url] (const QUrl &u) {
+        return u == url;
     };
     const auto allItemsInfo = allItemInfos();
     const auto found = std::find_if(allItemsInfo.begin(), allItemsInfo.end(), opCompUrl);
