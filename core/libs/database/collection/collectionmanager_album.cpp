@@ -112,11 +112,15 @@ bool CollectionManager::isAlbumRoot(const QString& filePath)
 {
     QReadLocker locker(&d->lock);
 
-    auto opComp = [filePath] (const AlbumRootLocation *location) {
-        return filePath == location->albumRootPath();
-    };
-    const auto locations = d->locations;
-    return std::any_of(locations.begin(), locations.end(), opComp);
+    foreach (AlbumRootLocation* const location, d->locations)
+    {
+        if (filePath == location->albumRootPath())
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 QString CollectionManager::album(const QUrl& fileUrl)
