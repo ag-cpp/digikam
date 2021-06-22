@@ -515,14 +515,10 @@ bool CollectionManager::Private::checkIfExists(const QString& filePath, const QL
             (filePathUrl.isParentOf(locationPathUrl) ||
              locationPathUrl.isParentOf(filePathUrl)))
         {
-            auto opComp = [location] (const CollectionLocation &deletedLoc) {
+            auto op = [location] (const CollectionLocation &deletedLoc) {
                 return  deletedLoc.id() == location->id();
             };
-            bool isDeleted = std::any_of(assumeDeleted.begin(), assumeDeleted.end(), opComp);
-            if (!isDeleted)
-            {
-                return true;
-            }
+            return !std::any_of(assumeDeleted.begin(), assumeDeleted.end(), op);
         }
     }
 
