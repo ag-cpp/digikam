@@ -564,7 +564,7 @@ void DigikamApp::slotImageSelected(const ItemInfoList& selection, const ItemInfo
 
     ItemInfoList selectionWithoutGrouped = d->view->selectedInfoList(true, false);
 
-    auto opAddFileSize = [] (const qint64 &a, const ItemInfo &b) {
+    auto opAddFileSize = [] (qint64 a, const ItemInfo &b) {
         return a + b.fileSize();
     };
     selectionFileSize = std::accumulate(selection.begin(), selection.end(), selectionFileSize, opAddFileSize);
