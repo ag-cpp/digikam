@@ -131,7 +131,7 @@ void DigikamApp::slotImportAddFolders()
         return;
     }
 
-    const QList<QUrl> urls = dlg->selectedUrls();
+    QList<QUrl> urls = dlg->selectedUrls();
     delete dlg;
 
     QList<Album*> albumList = AlbumManager::instance()->currentAlbums();
@@ -164,19 +164,17 @@ void DigikamApp::slotImportAddFolders()
         return;
     }
 
-    auto opMatch = [pAlbum] (const QUrl &url) {
-        const auto &albumRootPath = pAlbum->albumRootPath();
-        const auto &localFile = url.toLocalFile();
-        return albumRootPath.contains(localFile) || localFile.contains(albumRootPath);
-    };
-    const auto found = std::find_if(urls.begin(), urls.end(), opMatch);
-    if (found != urls.end())
+    foreach (const QUrl& url, urls)
     {
-        QMessageBox::warning(this, qApp->applicationName(),
-                             i18n("The folder %1 is part of the album "
-                                  "path and cannot be imported recursively!",
-                                  QDir::toNativeSeparators(found->toLocalFile())));
-        return;
+        if (pAlbum->albumRootPath().contains(url.toLocalFile()) ||
+            url.toLocalFile().contains(pAlbum->albumRootPath()))
+        {
+            QMessageBox::warning(this, qApp->applicationName(),
+                                 i18n("The folder %1 is part of the album "
+                                      "path and cannot be imported recursively!",
+                                      QDir::toNativeSeparators(url.toLocalFile())));
+            return;
+        }
     }
 
     DIO::copy(urls, pAlbum);
