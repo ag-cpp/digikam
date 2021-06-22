@@ -52,12 +52,12 @@ public:
 
     explicit Private()
       : trackLoadFutureWatcher(nullptr),
-        trackLoadFuture(),
-        trackList(),
-        loadErrorFiles(),
-        nextTrackId(1),
-        nextTrackColor(0),
-        visibility(true)
+        trackLoadFuture       (),
+        trackList             (),
+        loadErrorFiles        (),
+        nextTrackId           (1),
+        nextTrackColor        (0),
+        visibility            (true)
     {
     }
 
@@ -74,7 +74,7 @@ public:
 
 TrackManager::TrackManager(QObject* const parent)
     : QObject(parent),
-      d(new Private)
+      d      (new Private)
 {
 }
 
@@ -201,7 +201,7 @@ TrackManager::Track TrackManager::getTrackById(const quint64 trackId) const
     foreach (const Track& track, d->trackList)
     {
         if (track.id == trackId)
-        {
+        {   // cppcheck-suppress useStlAlgorithm
             return track;
         }
     }

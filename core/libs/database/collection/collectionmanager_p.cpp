@@ -321,7 +321,7 @@ SolidVolumeInfo CollectionManager::Private::findVolumeForLocation(const AlbumRoo
         foreach (const SolidVolumeInfo& volume, volumes)
         {
             if (volume.uuid.compare(queryItem, Qt::CaseInsensitive) == 0)
-            {
+            {    // cppcheck-suppress useStlAlgorithm
                 return volume;
             }
         }
@@ -411,7 +411,7 @@ SolidVolumeInfo CollectionManager::Private::findVolumeForLocation(const AlbumRoo
         foreach (const SolidVolumeInfo& volume, volumes)
         {
             if (volume.isMounted && (volume.path == queryItem))
-            {
+            {    // cppcheck-suppress useStlAlgorithm
                 return volume;
             }
         }
@@ -520,7 +520,7 @@ bool CollectionManager::Private::checkIfExists(const QString& filePath, QList<Co
             foreach (const CollectionLocation& deletedLoc, assumeDeleted)
             {
                 if (deletedLoc.id() == location->id())
-                {
+                {   // cppcheck-suppress useStlAlgorithm
                     isDeleted = true;
                     break;
                 }

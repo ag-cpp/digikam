@@ -92,7 +92,7 @@ SearchField* SearchFieldGroup::fieldForName(const QString& fieldName) const
     foreach (SearchField* const field, m_fields)
     {
         if (field->supportsField(fieldName))
-        {
+        {    // cppcheck-suppress useStlAlgorithm
             return field;
         }
     }
@@ -151,6 +151,7 @@ QList<QRect> SearchFieldGroup::areaOfMarkedFields() const
     {
         if (field->isVisible())
         {
+            // cppcheck-suppress useStlAlgorithm
             rects += field->widgetRects(SearchField::ValueWidgetRectsOnly);
         }
     }

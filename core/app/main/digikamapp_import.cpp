@@ -102,7 +102,7 @@ void DigikamApp::slotImportAddImages()
 
 void DigikamApp::slotImportAddFolders()
 {
-    // NOTE: QFileDialog don't have an option to permit multiple selection of directories.
+    // NOTE: QFileDialog don't have an option to allow multiple selection of directories.
     // This work around is inspired from https://www.qtcentre.org/threads/34226-QFileDialog-select-multiple-directories
     // Check Later Qt 5.4 if a new native Qt way have been introduced.
 
@@ -125,9 +125,7 @@ void DigikamApp::slotImportAddFolders()
         t->setSelectionMode(QAbstractItemView::MultiSelection);
     }
 
-    dlg->exec();
-
-    if (!dlg || dlg->selectedUrls().isEmpty())
+    if (dlg->exec() != QDialog::Accepted)
     {
         delete dlg;
         return;
@@ -170,7 +168,7 @@ void DigikamApp::slotImportAddFolders()
     {
         if (pAlbum->albumRootPath().contains(url.toLocalFile()) ||
             url.toLocalFile().contains(pAlbum->albumRootPath()))
-        {
+        {   // cppcheck-suppress useStlAlgorithm
             QMessageBox::warning(this, qApp->applicationName(),
                                  i18n("The folder %1 is part of the album "
                                       "path and cannot be imported recursively!",

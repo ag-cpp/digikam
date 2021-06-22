@@ -115,7 +115,7 @@ bool CollectionManager::isAlbumRoot(const QString& filePath)
     foreach (AlbumRootLocation* const location, d->locations)
     {
         if (filePath == location->albumRootPath())
-        {
+        {   // cppcheck-suppress useStlAlgorithm
             return true;
         }
     }
@@ -204,7 +204,7 @@ QString CollectionManager::oneAlbumRootPath()
     foreach (AlbumRootLocation* const location, d->locations)
     {
         if (location->status() == CollectionLocation::LocationAvailable)
-        {
+        {   // cppcheck-suppress useStlAlgorithm
             return location->albumRootPath();
         }
     }
@@ -242,7 +242,7 @@ void CollectionManager::slotAlbumRootChange(const AlbumRootChangeset& changeset)
                     foreach (const AlbumRootInfo& info, infos)
                     {
                         if (info.id == location->id())
-                        {
+                        {    // cppcheck-suppress useStlAlgorithm
                             location->setLabel(info.label);
                             toBeEmitted = *location;
                             break;

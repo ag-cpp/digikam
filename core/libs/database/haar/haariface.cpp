@@ -27,6 +27,8 @@
 
 #include "haariface_p.h"
 
+// C++ includes
+
 #include <functional>
 
 namespace Digikam
@@ -461,9 +463,6 @@ bool HaarIface::fulfillsRestrictions(qlonglong imageId, int albumId,
     }
 }
 
-/**
- * This method is the core functionality: It assigns a score to every image in the database.
- */
 QMap<qlonglong, double> HaarIface::searchDatabase(Haar::SignatureData* const querySig,
                                                   SketchType type, const QList<int>& targetAlbums,
                                                   DuplicatesSearchRestrictions searchResultRestriction,
@@ -838,7 +837,7 @@ HaarIface::DuplicatesResultsMap HaarIface::findDuplicates(const QSet<qlonglong>&
 
 double HaarIface::calculateScore(const Haar::SignatureData& querySig,
                                  const Haar::SignatureData& targetSig,
-                                 Haar::Weights& weights,
+                                 const Haar::Weights& weights,
                                  std::reference_wrapper<Haar::SignatureMap>* const queryMaps)
 {
     double score = 0.0;

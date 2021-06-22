@@ -469,7 +469,7 @@ bool MapWidget::setBackend(const QString& backendName)
     foreach (MapBackend* const backend, d->loadedBackends)
     {
         if (backend->backendName() == backendName)
-        {
+        {   // cppcheck-suppress useStlAlgorithm
             qCDebug(DIGIKAM_GEOIFACE_LOG) << QString::fromLatin1("setting backend %1").arg(backendName);
             d->currentBackend     = backend;
             d->currentBackendName = backendName;
@@ -980,7 +980,7 @@ void MapWidget::slotUpdateActionsEnabled()
     foreach (QAction* const action, mouseModeActions)
     {
         if (action->data().value<GeoMouseModes>() == s->currentMouseMode)
-        {
+        {   // cppcheck-suppress useStlAlgorithm
             action->setChecked(true);
             break;
         }
@@ -1071,11 +1071,11 @@ void MapWidget::getColorInfos(const GeoGroupState groupState,
     {
         *labelText = QString::number(nMarkers);
     }
-    else if ((nMarkers >= 1000) && (nMarkers <= 1950))
+    else if ((nMarkers >= 1000) && (nMarkers <= 1950))      // cppcheck-suppress knownConditionTrueFalse
     {
         *labelText = QString::fromLatin1("%L1k").arg(qreal(nMarkers)/1000.0, 0, 'f', 1);
     }
-    else if ((nMarkers >= 1951) && (nMarkers < 19500))
+    else if ((nMarkers >= 1951) && (nMarkers < 19500))      // cppcheck-suppress knownConditionTrueFalse
     {
         *labelText = QString::fromLatin1("%L1k").arg(qreal(nMarkers)/1000.0, 0, 'f', 0);
     }

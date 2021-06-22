@@ -299,7 +299,7 @@ void SearchGroup::read(SearchXmlCachingReader& reader)
             foreach (fieldGroup, m_fieldGroups)
             {
                 if ((field = fieldGroup->fieldForName(name)))
-                {
+                {   // cppcheck-suppress useStlAlgorithm
                     break;
                 }
             }
@@ -384,6 +384,7 @@ QList<QRect> SearchGroup::startupAnimationArea() const
 
     foreach (SearchFieldGroup* fieldGroup, m_fieldGroups)
     {
+        // cppcheck-suppress useStlAlgorithm
         rects += fieldGroup->areaOfMarkedFields();
     }
 

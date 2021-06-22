@@ -543,7 +543,7 @@ void ItemPropertiesSideBarDB::setImagePropertiesInformation(const QUrl& url)
     foreach (const ItemInfo& info, d->currentInfos)
     {
         if (info.fileUrl() == url)
-        {
+        {   // cppcheck-suppress useStlAlgorithm
             QString str;
             QString unavailable(QString::fromUtf8("<i>%1</i>").arg(i18nc("@info: item properties", "unavailable")));
             QFileInfo fileInfo(url.toLocalFile());
@@ -690,6 +690,7 @@ void ItemPropertiesSideBarDB::setImageSelectionPropertiesInformation()
 
     foreach (const ItemInfo& info, d->currentInfos)
     {
+        // cppcheck-suppress useStlAlgorithm
         selectionFileSize += info.fileSize();
     }
 
@@ -703,6 +704,7 @@ void ItemPropertiesSideBarDB::setImageSelectionPropertiesInformation()
 
     foreach (const ItemInfo& info, d->allInfos)
     {
+        // cppcheck-suppress useStlAlgorithm
         totalFileSize += info.fileSize();
     }
 
