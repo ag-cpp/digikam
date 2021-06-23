@@ -67,7 +67,10 @@ public:
             case SVM:
             {
                 svm = cv::ml::SVM::create();
-                svm->setKernel(cv::ml::SVM::LINEAR);
+                svm->setType(cv::ml::SVM::NU_SVC);
+                svm->setNu(0.1);
+                svm->setKernel(cv::ml::SVM::RBF);
+                svm->setC(10);
                 break;
             }
 

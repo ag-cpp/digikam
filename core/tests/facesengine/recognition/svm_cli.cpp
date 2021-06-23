@@ -21,6 +21,7 @@
  *
  * ============================================================ */
 
+#include <memory>
 #include <QCoreApplication>
 #include <QCommandLineParser>
 #include <QString>
@@ -32,14 +33,14 @@
 
 // --------------------------------------------------------
 
-QCommandLineParser* parseOptions(const QCoreApplication& app)
+std::shared_ptr<QCommandLineParser> parseOptions(const QCoreApplication& app)
 {
     QCommandLineParser* const parser = new QCommandLineParser();
     parser->addOption(QCommandLineOption(QLatin1String("data"), QLatin1String("Data file"), QLatin1String("path relative to data file")));
     parser->addHelpOption();
     parser->process(app);
 
-    return parser;
+    return std::shared_ptr<QCommandLineParser>(parser);
 }
 
 /**
@@ -117,7 +118,7 @@ std::vector<cv::Ptr<cv::ml::SVM>> oneclassClassifiers(cv::Mat samples, cv::Mat l
 
 double testClassification(cv::Ptr<cv::ml::TrainData> data)
 {
-    data->setTrainTestSplitRatio(0.8);
+    data->setTrainTestSplitRatio(0.2);
 
     cv::Ptr<cv::ml::SVM> svm = cv::ml::SVM::create();
     svm->setType(cv::ml::SVM::NU_SVC);
@@ -142,7 +143,7 @@ double testClassification(cv::Ptr<cv::ml::TrainData> data)
 
 double testNoveltyDetection(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::TrainData> leftout)
 {
-    data->setTrainTestSplitRatio(0.8);
+    data->setTrainTestSplitRatio(0.2);
 
     cv::Ptr<cv::ml::SVM> svm = cv::ml::SVM::create();
     svm->setType(cv::ml::SVM::ONE_CLASS);
@@ -179,7 +180,7 @@ double testNoveltyDetection(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::Tra
 
 double testMultipleClassifiers(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::TrainData> leftout)
 {
-    data->setTrainTestSplitRatio(0.8);
+    data->setTrainTestSplitRatio(0.2);
     std::vector<cv::Ptr<cv::ml::SVM>> noveltyClassifiers = oneclassClassifiers(data->getTrainSamples(), data->getTrainResponses());
 
     cv::Ptr<cv::ml::SVM> classifier = cv::ml::SVM::create();
@@ -220,7 +221,7 @@ double testMultipleClassifiers(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::
 
 double test2Classifiers(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::TrainData> leftout)
 {
-    data->setTrainTestSplitRatio(0.8);
+    data->setTrainTestSplitRatio(0.2);
 
     cv::Ptr<cv::ml::SVM> classifier = cv::ml::SVM::create();
     classifier->setType(cv::ml::SVM::NU_SVC);
@@ -271,7 +272,7 @@ int main(int argc, char** argv)
 {
     QCoreApplication app(argc, argv);
     app.setApplicationName(QString::fromLatin1("digikam"));
-    QCommandLineParser* parser = parseOptions(app);
+    std::shared_ptr<QCommandLineParser> parser = parseOptions(app);
 
     std::pair<cv::Ptr<cv::ml::TrainData>, cv::Ptr<cv::ml::TrainData>> data = loadData(parser->value(QLatin1String("data")));
 
@@ -279,8 +280,6 @@ int main(int argc, char** argv)
     qDebug() << "Novelty detection Error rate" << testNoveltyDetection(data.first, data.second);
     qDebug() << "Multiple classifier Error rate" << testMultipleClassifiers(data.first, data.second);
     qDebug() << "2 classifiers Error rate" << test2Classifiers(data.first, data.second);
-
-    delete parser;
 
     return 0;
 }

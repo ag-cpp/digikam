@@ -70,7 +70,7 @@ FacialRecognitionWrapper::Private::Private()
         qCDebug(DIGIKAM_FACESENGINE_LOG) << "Failed to initialize face database";
     }
 
-    recognizer = new OpenCVDNNFaceRecognizer(OpenCVDNNFaceRecognizer::Tree);
+    recognizer = new OpenCVDNNFaceRecognizer(OpenCVDNNFaceRecognizer::SVM);
 }
 
 FacialRecognitionWrapper::Private::~Private()
