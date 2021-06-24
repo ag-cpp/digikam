@@ -1220,7 +1220,7 @@ int PresentationWidget::effectMeltdown(bool aInit)
 
         d->pdone = false;
 
-        if (((int)randomGenerator->generate() & 15) < 6)
+        if (randomGenerator->bounded(16U) < 6)
         {
             continue;
         }
