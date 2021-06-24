@@ -119,7 +119,7 @@ void PresentationMngr::slotSlideShow()
 
         for (uint i = 0 ; i < (uint) m_sharedData->urlList.size() ; ++i)
         {
-            int inc = (int) (float(m_sharedData->urlList.count()) * QRandomGenerator::global()->generate() / (RAND_MAX + 1.0));
+            int inc = QRandomGenerator::global()->bounded(m_sharedData->urlList.count());
 
             it1  = m_sharedData->urlList.begin();
             it1 += inc;
