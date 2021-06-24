@@ -61,7 +61,7 @@ int TransitionMngr::Private::transitionMeltdown(bool aInit)
 
         eff_pdone = false;
 
-        if ((randomGenerator->generate() & 15) < 6)
+        if (randomGenerator->bounded(16U) < 6)
         {
             continue;
         }
