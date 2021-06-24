@@ -43,7 +43,6 @@
 #include <QApplication>
 #include <QScreen>
 #include <QWindow>
-#include <QRandomGenerator>
 
 // KDE includes
 
