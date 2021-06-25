@@ -877,7 +877,7 @@ bool WaterMark::toolOperations()
                 {
                     int number = (denseRepetition) ? 2 : 3;
 
-                    if (randomGenerator->generate() % number == 0)
+                    if (randomGenerator->bounded(number) == 0)
                     {
                         if (randomizeRotation)
                         {
