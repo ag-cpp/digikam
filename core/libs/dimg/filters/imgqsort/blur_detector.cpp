@@ -32,6 +32,7 @@
 // Local includes
 
 #include "digikam_debug.h"
+#include "focuspoints_extractor.h"
 #include "exiftoolparser.h"
 
 namespace Digikam
@@ -41,7 +42,7 @@ class Q_DECL_HIDDEN BlurDetector::Private
 public:
     explicit Private()
       : min_abs(1),
-        ordre_log_filtrer(100),
+        ordre_log_filtrer(80),
         sigma_smooth_image(5),
         filtrer_defocus(50),
 
@@ -74,7 +75,7 @@ public:
     float                           max_stddev;
 
     bool                            have_focus_region;
-    ExifToolParser::ListAFPoints    AFPoints;
+    FocusPointsExtractor::ListAFPoints    AFPoints;
 
 };
 
@@ -254,10 +255,19 @@ bool BlurDetector::haveFocusRegion(const DImg& image)              const
 
     exiftool->load(image.originalFilePath());
 
-    // qInfo()<< "get here" << exiftool->currentData();
-    d->AFPoints = exiftool->getAFInfo();
+    qInfo()<< "get here" << exiftool->currentData();
+    
+    qInfo()<<exiftool->currentData();
+    
+    FocusPointsExtractor* const extractor = new FocusPointsExtractor(nullptr, image.originalFilePath());
 
-    return !d->AFPoints.isEmpty();
+    d->AFPoints = extractor->af_selected();
+    
+    qInfo()<<"nb points "<<d->AFPoints.count();
+    
+    
+    // return !d->AFPoints.isEmpty();
+    return false;
 }
 
 cv::Mat BlurDetector::getWeightMap()                               const
@@ -266,6 +276,7 @@ cv::Mat BlurDetector::getWeightMap()                               const
     // use infomation of focus region to construct matrix of weight
     if (d->have_focus_region)
     {
+        qInfo()<<"have focus region";
         int nb_AF_points = d->AFPoints.count();
         
         /**
@@ -273,25 +284,25 @@ cv::Mat BlurDetector::getWeightMap()                               const
          * Size of the focus region is propotional to the size of image but inverse ratio
          * to the number of focus point
          */
-        cv::Size focus_region_size = cv::Size(static_cast<int>(d->image.size().width  / (nb_AF_points + 4)),
-                                              static_cast<int>(d->image.size().height / (nb_AF_points + 4)));
+        cv::Size focus_region_size = cv::Size(static_cast<int>(d->image.size().width  / (nb_AF_points + 3)),
+                                              static_cast<int>(d->image.size().height / (nb_AF_points + 3)));
 
         cv::Mat res = cv::Mat::zeros(d->image.size(), CV_8U);
                               
-        for (const auto AFPoint : d->AFPoints)
-        {
-            qInfo()<<"AF point"<< AFPoint << "focus region size "<<focus_region_size.width << focus_region_size.height;
-            cv::Rect rect{static_cast<int>(AFPoint.first  * d->image.size().width  - focus_region_size.width / 2),
-                          static_cast<int>(AFPoint.second * d->image.size().height - focus_region_size.height  / 2), 
-                          focus_region_size.width,focus_region_size.height};
+        // for (const auto AFPoint : d->AFPoints)
+        // {
+        //     cv::Rect rect{static_cast<int>(AFPoint.first  * d->image.size().width  - focus_region_size.width / 2),
+        //                   static_cast<int>(AFPoint.second * d->image.size().height - focus_region_size.height  / 2), 
+        //                   focus_region_size.width,focus_region_size.height};
 
-            res(rect).setTo(1);
-        }
+        //     res(rect).setTo(1);
+        // }
         return res;
 
     }
     else
     {
+        qInfo()<<"dont have focus region";
         cv::Mat res = detectBackgroundRegion(d->image);
         
         cv::threshold(res,res,0.5,1,cv::THRESH_BINARY_INV);
