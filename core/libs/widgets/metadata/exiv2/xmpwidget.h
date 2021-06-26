@@ -3,10 +3,10 @@
  * This file is a part of digiKam project
  * https://www.digikam.org
  *
- * Date        : 2006-02-20
- * Description : a widget to display Standard Exif metadata
+ * Date        : 2007-07-19
+ * Description : A widget to display XMP metadata
  *
- * Copyright (C) 2006-2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
+ * Copyright (C) 2007-2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -21,12 +21,8 @@
  *
  * ============================================================ */
 
-#ifndef DIGIKAM_EXIF_WIDGET_H
-#define DIGIKAM_EXIF_WIDGET_H
-
-// Qt includes
-
-#include <QString>
+#ifndef DIGIKAM_XMP_WIDGET_H
+#define DIGIKAM_XMP_WIDGET_H
 
 // Local includes
 
@@ -36,21 +32,22 @@
 namespace Digikam
 {
 
-class DIGIKAM_EXPORT ExifWidget : public MetadataWidget
+class DIGIKAM_EXPORT XmpWidget : public MetadataWidget
 {
     Q_OBJECT
 
 public:
 
-    explicit ExifWidget(QWidget* const parent, const QString& name = QString());
-    ~ExifWidget()                                   override;
+    explicit XmpWidget(QWidget* const parent,
+                       const QString& name = QString());
+    ~XmpWidget()                                    override;
 
     bool loadFromURL(const QUrl& url)               override;
 
     QString getTagDescription(const QString& key)   override;
     QString getTagTitle(const QString& key)         override;
 
-    QString getMetadataTitle()                      override;
+    QString getMetadataTitle() const                override;
 
 protected Q_SLOTS:
 
@@ -68,4 +65,4 @@ private:
 
 } // namespace Digikam
 
-#endif // DIGIKAM_EXIF_WIDGET_H
+#endif // DIGIKAM_XMP_WIDGET_H

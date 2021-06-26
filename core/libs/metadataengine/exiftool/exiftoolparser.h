@@ -64,14 +64,14 @@ public:
      * value = the Exiv2 metadata container (QByteArray).
      *
      * With applyChanges() method, the container is used as argument to
-     * store tupple of ExifTool tag name as key and Tag value:
+     * store tupple of ExifTool tag name as key and tag value:
      * key   = ExifTool tag name            (QString).
      * value = ExifTool Tag value           (QString).
      *
      * With readableFormats() method, the container is used to get
      * a list of upper-case file format extensions supported by ExifTool for reading.
      * key   = "READ_FORMAT"                (QString).
-     * value = list of pairs (ext,desc)      (QStringList)
+     * value = list of pairs (ext,desc)     (QStringList)
      *
      * With writableFormats() method, the container is used to get
      * a list of upper-case file format extensions supported by ExifTool for writing.
@@ -83,6 +83,13 @@ public:
      * key   = "TRANSLATIONS_LIST"          (QString).
      * value = list of languages as strings
      *         (aka fr, en, de, es, etc.)   (QStringList).
+     *
+     * With tagsDatabase() method, the container is used as argument to
+     * store tupple of ExifTool tag name as key and tag description:
+     * key    = ExifTool tag name            (QString).
+     * values = ExifTool Tag description     (QString).
+     *          ExifTool Tag type            (QString).
+     *          ExifTool Tag writable        (QString).
      */
     typedef QHash<QString, QVariantList> ExifToolData;
 
@@ -118,7 +125,7 @@ public:
      * Load all metadata with ExifTool from a file.
      * Use currentData() to get the ExifTool map.
      */
-    bool load(const QString& path);
+    bool load(const QString& path, bool async = false);
 
     /**
      * Load Exif, Iptc, and Xmp chunk as Exiv2 EXV bytearray from a file.
@@ -130,16 +137,16 @@ public:
      * Apply tag changes to a target file with ExifTool with a list of tag properties.
      * Tags can already exists in target file or new ones can be created.
      * To remove a tag, pass an empty string as value.
-     * 'path' is the target files to change.
-     * 'newTags' is the list of tag properties.
+     * @param path is the target files to change.
+     * @param newTags is the list of tag properties.
      */
     bool applyChanges(const QString& path, const ExifToolData& newTags);
 
     /**
      * Apply tag changes to a target file with ExifTool with a EXV container.
      * Tags can already exists in target file or new ones can be created.
-     * 'path' is the target files to change.
-     * 'exvTempFile' is the list of changes embedded in EXV constainer.
+     * @param path is the target files to change.
+     * @param exvTempFile is the list of changes embedded in EXV constainer.
      */
     bool applyChanges(const QString& path, const QString& exvTempFile);
 
@@ -156,17 +163,30 @@ public:
     bool writableFormats();
 
     /**
-     * Return a list of avaialble translations.
+     * Return a list of available translations.
      * Use currentData() to get the container as QStringList.
      */
     bool translationsList();
 
     /**
+     * Return a list of all tags from ExifTool database.
+     * Use currentData() to get the container.
+     * Warning: This method get whole ExifTool database in XML format and take age.
+     */
+    bool tagsDatabase();
+
+    /**
+     * Return the xurrent version of ExifTool.
+     * Use currentData() to get the container as QString.
+     */
+    bool version();
+
+    /**
      * Copy group of tags from one source file to a destination file, following copy operations defined by 'copyOps'.
-     * 'copyOps' is a OR combination of ExifToolProcess::CopyTagsSource values.
-     * 'transOps' is a OR combination of ExifToolProcess::TranslateTagsOps values.
-     * 'writeModes' is a OR combaniation of ExifToolProcess::WritingTagsMode values.
-     * 'dst' must be a writable file format supported by ExifTool.
+     * @param copyOps is a OR combination of ExifToolProcess::CopyTagsSource values.
+     * @param transOps is a OR combination of ExifToolProcess::TranslateTagsOps values.
+     * @param writeModes is a OR combaniation of ExifToolProcess::WritingTagsMode values.
+     * @param dst must be a writable file format supported by ExifTool.
      */
     bool copyTags(const QString& src, const QString& dst,
                   unsigned char copyOps,
@@ -174,26 +194,16 @@ public:
 
     /**
      * Translate group of tags in file.
-     * 'transOps' is a OR combination of ExifToolProcess::TranslateTagsOps values.
+     * @param transOps is a OR combination of ExifToolProcess::TranslateTagsOps values.
      */
     bool translateTags(const QString& path, unsigned char transOps);
 
     //@}
 
-public : // focus region helper 
+Q_SIGNALS:
 
-    /**
-     * A list of point defines auto focus point of an image
-     */
-    typedef QList<QPair<float,float>> ListAFPoints;
+    void signalExifToolDataAvailable();
 
-    /**
-     * Read infomation about AF points (focus region)
-     */
-    
-    ListAFPoints        getAFInfo();
-    ListAFPoints        getAFInfo_Nikon();
-    ListAFPoints        getAFInfo_Canon();
 
 private Q_SLOTS:
 
