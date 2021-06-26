@@ -33,7 +33,7 @@ namespace Digikam
 {
 
 
-void FocusPointsExtractor::getAFPoints_Canon()
+void FocusPointsExtractor::getAFPoints_canon()
 {
     QString TagNameRoot = QLatin1String("MakerNotes.Canon.Camera");
 

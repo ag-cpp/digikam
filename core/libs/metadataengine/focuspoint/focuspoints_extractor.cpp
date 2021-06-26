@@ -128,22 +128,16 @@ void FocusPointsExtractor::findAFPoints()
     }
     if (model == QLatin1String("CANON"))
     {   
-        return getAFPoints_Canon();
+        return getAFPoints_canon();
     }
     if (model == QLatin1String("NIKON"))
     {
-        return getAFPoints_Nikon();
+        return getAFPoints_nikon();
     }
     return;
 }
 
 void FocusPointsExtractor::getAFPoints_defauts()
-{
-
-}
-
-
-void FocusPointsExtractor::getAFPoints_Nikon()
 {
 
 }

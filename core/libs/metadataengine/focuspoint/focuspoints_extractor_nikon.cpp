@@ -42,7 +42,7 @@ void FocusPointsExtractor::getAFPoints_nikon()
 
     if (!model.contains(QLatin1String("nikon z"), Qt::CaseInsensitive))
     {
-        return getAFPoints_defauts();
+        return;
     }
 
     
@@ -82,7 +82,7 @@ void FocusPointsExtractor::getAFPoints_nikon()
     QVariant af_x_position = findValue(TagNameRoot,QLatin1String("AFAreaXPosition")) ;
     QVariant af_y_position = findValue(TagNameRoot,QLatin1String("AFAreaYPosition")) ;
 
-    if (af_x_positions.isEmpty() || af_y_positions.isEmpty())
+    if (af_x_position.isNull() || af_y_position.isNull())
     {
         qInfo()<<"return by lack of point";
         return;

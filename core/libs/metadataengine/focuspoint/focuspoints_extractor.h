@@ -97,8 +97,8 @@ private:
     void findAFPoints();
     
     void getAFPoints_defauts();
-    void getAFPoints_Canon();
-    void getAFPoints_Nikon();
+    void getAFPoints_canon();
+    void getAFPoints_nikon();
 
 private:
 

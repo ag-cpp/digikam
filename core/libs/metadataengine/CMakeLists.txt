@@ -82,6 +82,7 @@ set(libdmetadata_SRCS
 
     ${CMAKE_CURRENT_SOURCE_DIR}/focuspoint/focuspoints_extractor.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/focuspoint/focuspoints_extractor_canon.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/focuspoint/focuspoints_extractor_nikon.cpp
 )
 
 include_directories(
