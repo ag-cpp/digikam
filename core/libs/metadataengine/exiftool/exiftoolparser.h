@@ -38,6 +38,7 @@
 
 #include "digikam_export.h"
 #include "exiftoolprocess.h"
+#include "metaengine.h"
 
 namespace Digikam
 {
@@ -86,10 +87,10 @@ public:
      *
      * With tagsDatabase() method, the container is used as argument to
      * store tupple of ExifTool tag name as key and tag description:
-     * key    = ExifTool tag name            (QString).
-     * values = ExifTool Tag description     (QString).
-     *          ExifTool Tag type            (QString).
-     *          ExifTool Tag writable        (QString).
+     * key    = ExifTool tag name           (QString).
+     * values = ExifTool Tag description    (QString).
+     *          ExifTool Tag type           (QString).
+     *          ExifTool Tag writable       (QString).
      */
     typedef QHash<QString, QVariantList> ExifToolData;
 
@@ -222,10 +223,17 @@ private Q_SLOTS:
 
 public:
 
-    /// Unit-test method to check ExifTool stream parsing.
+    /**
+     * Unit-test method to check ExifTool stream parsing.
+     */
     void setOutputStream(int cmdAction,
                          const QByteArray& cmdOutputChannel,
                          const QByteArray& cmdErrorChannel);
+
+    /**
+     * Helper conversion method to translate unordered tags database hash-table to ordered map.
+     */
+    static MetaEngine::TagsMap tagsDbToOrderedMap(const ExifToolData& tagsDb);
 
 private:
 
