@@ -181,7 +181,7 @@ void AuthenticationDialog::start()
         .arg(appPermissionsToStringList(d->permissions).join(QLatin1String(",")))
         .arg(d->displayMode);
 
-    //qCDebug(DIGIKAM_WEBSERVICES_LOG) << "Showing" << url;
+    qCDebug(DIGIKAM_WEBSERVICES_LOG) << "Showing" << url;
     d->webView->setUrl(QUrl::fromUserInput(url));
     show();
 }
@@ -199,7 +199,7 @@ void AuthenticationDialog::showErrorDialog()
 
 void AuthenticationDialog::urlChanged(const QUrl& url)
 {
-    //qCDebug(DIGIKAM_WEBSERVICES_LOG) << "Navigating to" << url;
+    qCDebug(DIGIKAM_WEBSERVICES_LOG) << "Navigating to" << url;
 
     if ((url.host() == QLatin1String("oauth.vk.com")) &&
         (url.path() == QLatin1String("/blank.html")))

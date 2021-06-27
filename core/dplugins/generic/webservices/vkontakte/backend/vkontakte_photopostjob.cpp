@@ -68,7 +68,7 @@ void PhotoPostJob::handleError(const QJsonValue& data)
 
     if (data.isUndefined())
     {
-        //qCWarning(DIGIKAM_WEBSERVICES_LOG) << "Response from server has unexpected format";
+        qCWarning(DIGIKAM_WEBSERVICES_LOG) << "Response from server has unexpected format";
     }
     else
     {
@@ -76,7 +76,7 @@ void PhotoPostJob::handleError(const QJsonValue& data)
         error_code                 = errorMap[QLatin1String("error_code")].toInt();
         error_msg                  = errorMap[QLatin1String("error_msg")].toString();
 
-        //qCWarning(DIGIKAM_WEBSERVICES_LOG) << "An error of type" << error_code << "occurred:" << error_msg;
+        qCWarning(DIGIKAM_WEBSERVICES_LOG) << "An error of type" << error_code << "occurred:" << error_msg;
     }
 
     setError(KJob::UserDefinedError);
@@ -190,7 +190,7 @@ void PhotoPostJob::start()
     connect(manager, SIGNAL(finished(QNetworkReply*)),
             this, SLOT(parseNetworkResponse(QNetworkReply*)));
 
-    //qCDebug(DIGIKAM_WEBSERVICES_LOG) << "Starting POST request" << m_url;
+    qCDebug(DIGIKAM_WEBSERVICES_LOG) << "Starting POST request" << m_url;
     QNetworkReply* const reply = manager->post(QNetworkRequest(m_url), multiPart);
     multiPart->setParent(reply); // delete the multiPart with the reply
 }
@@ -207,7 +207,7 @@ void PhotoPostJob::parseNetworkResponse(QNetworkReply *reply)
     else
     {
         QByteArray ba      = reply->readAll();
-        //qCDebug(DIGIKAM_WEBSERVICES_LOG) << "Got data:" << ba;
+        qCDebug(DIGIKAM_WEBSERVICES_LOG) << "Got data:" << ba;
 
         QJsonParseError parseError;
         QJsonDocument data = QJsonDocument::fromJson(ba, &parseError);
@@ -233,7 +233,7 @@ void PhotoPostJob::parseNetworkResponse(QNetworkReply *reply)
         }
         else
         {
-            //qCWarning(DIGIKAM_WEBSERVICES_LOG) << "Unable to parse JSON data:" << ba;
+            qCWarning(DIGIKAM_WEBSERVICES_LOG) << "Unable to parse JSON data:" << ba;
             setError(KJob::UserDefinedError);
             setErrorText(
                 i18n("Unable to parse data returned by the VKontakte server: %1",

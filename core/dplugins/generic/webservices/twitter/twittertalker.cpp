@@ -932,11 +932,11 @@ void TwTalker::parseResponseListFolders(const QByteArray& data)
 
     QJsonObject jsonObject = doc.object();
 
-    //qCDebug(DIGIKAM_WEBSERVICES_LOG) << "Json: " << doc;
+    qCDebug(DIGIKAM_WEBSERVICES_LOG) << "Json: " << doc;
 
     QJsonArray jsonArray   = jsonObject[QLatin1String("value")].toArray();
 
-    //qCDebug(DIGIKAM_WEBSERVICES_LOG) << "Json response: " << jsonArray;
+    qCDebug(DIGIKAM_WEBSERVICES_LOG) << "Json response: " << jsonArray;
 
     QList<QPair<QString, QString> > list;
     list.append(qMakePair(QLatin1String(""), QLatin1String("root")));
