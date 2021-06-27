@@ -151,11 +151,6 @@ void FocusPointsExtractor::findAFPoints()
     return;
 }
 
-void FocusPointsExtractor::getAFPoints_defauts()
-{
-
-}
-
 FocusPointsExtractor::ListAFPoints FocusPointsExtractor::af_infocus()
 {
     ListAFPoints points = ListAFPoints();
