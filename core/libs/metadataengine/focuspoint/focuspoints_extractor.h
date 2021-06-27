@@ -99,6 +99,8 @@ private:
     void getAFPoints_defauts();
     void getAFPoints_canon();
     void getAFPoints_nikon();
+    void getAFPoints_panasonic();
+    void getAFPoints_sony();
 
 private:
 

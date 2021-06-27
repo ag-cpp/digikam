@@ -120,12 +120,14 @@ QVariant FocusPointsExtractor::findValueFirstMatch(const QString& tagNameRoot,co
 
 void FocusPointsExtractor::findAFPoints()
 {
-    QString model = findValue(QLatin1String("EXIF.IFD0.Camera.Make"), true).toStringList()[0].toUpper();
+    QString model = findValue(QLatin1String("EXIF.IFD0.Camera.Make")).toString();
 
     if (model.isNull())
     {
         return;
     }
+    model = model.split(QLatin1String(" "))[0].toUpper();
+    
     if (model == QLatin1String("CANON"))
     {   
         return getAFPoints_canon();
@@ -133,6 +135,18 @@ void FocusPointsExtractor::findAFPoints()
     if (model == QLatin1String("NIKON"))
     {
         return getAFPoints_nikon();
+    }
+    if (model == QLatin1String("NIKON"))
+    {
+        return getAFPoints_nikon();
+    }
+    if (model == QLatin1String("PANASONIC"))
+    {
+        return getAFPoints_panasonic();
+    }
+    if (model == QLatin1String("SONY"))
+    {
+        return getAFPoints_sony();
     }
     return;
 }

@@ -91,9 +91,11 @@ void FocusPointsExtractor::getAFPoints_nikon()
     FocusPoint point;
 
     point.x_position = af_x_position.toFloat() / imageWidth.toFloat();
-    point.x_position = af_y_position.toFloat() / imageHeight.toFloat();
+    point.y_position = af_y_position.toFloat() / imageHeight.toFloat();
     point.width      = afPointWidth.toFloat()  / imageWidth.toFloat();
     point.height     = afPointHeight.toFloat() / imageHeight.toFloat();
+
+    qInfo()<<"point info"<<point.x_position<<point.y_position<<point.width<<point.height;
     
     point.type = TypePoint::SelectedInFocus;
     

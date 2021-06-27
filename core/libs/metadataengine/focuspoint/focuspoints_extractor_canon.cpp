@@ -45,26 +45,23 @@ void FocusPointsExtractor::getAFPoints_canon()
     if (model.toLower() == QLatin1String("canon eos 5d"))
     {
         imageWidth = findValueFirstMatch(QStringList()
-                                        <<QLatin1String("File.File.Image.CanonImageWidth")
-                                        <<QLatin1String("File.File.Image.ExifImageWidth")
+                                        <<QLatin1String("MakerNotes.Canon.Image.CanonImageWidth")
+                                        <<QLatin1String("EXIF.ExifIFD.Image.ExifImageWidth")
                                         );
         imageHeight = findValueFirstMatch(QStringList()
-                                        <<QLatin1String("File.File.Image.CanonImageHeigth")
-                                        <<QLatin1String("File.File.Image.ExifImageHeight")
+                                        <<QLatin1String("MakerNotes.Canon.Image.CanonImageHeight")
+                                        <<QLatin1String("EXIF.ExifIFD.Image.ExifImageHeight")
                                         );
     }
     else
     {
-        qInfo()<<"get here";
         imageWidth = findValueFirstMatch(QStringList()
-                                        <<QLatin1String("File.File.Image.ImageWidth")
-                                        <<QLatin1String("File.File.Image.AFImageWidth")
-                                        <<QLatin1String("File.File.Image.ExifImageWidth")
+                                        <<QLatin1String("MakerNotes.Canon.Camera.AFImageWidth")
+                                        <<QLatin1String("EXIF.ExifIFD.Image.ExifImageWidth")
                                         );
         imageHeight = findValueFirstMatch(QStringList()
-                                        <<QLatin1String("File.File.Image.ImageHeight")
-                                        <<QLatin1String("File.File.Image.AFImageHeight")
-                                        <<QLatin1String("File.File.Image.ExifImageHeight")
+                                        <<QLatin1String("MakerNotes.Canon.Camera.AFImageHeight")
+                                        <<QLatin1String("EXIF.ExifIFD.Image.ExifImageHeight")
                                         );
     }
     
@@ -73,6 +70,7 @@ void FocusPointsExtractor::getAFPoints_canon()
         qInfo()<<"return by lack of size image";
         return;
     }
+    qInfo()<<"image size in metadata"<<imageWidth<<imageHeight;
     
 
     // Get size of af points
@@ -109,7 +107,7 @@ void FocusPointsExtractor::getAFPoints_canon()
 
     QVariant cameraType = findValue(TagNameRoot,QLatin1String("CameraType"));
 
-    int yDirection = (cameraType.toString().toUpper() == QLatin1String("COMPACT")) ? 1 : -1;
+    int yDirection = (cameraType.toString().toUpper() == QLatin1String("COMPACT")) ? -1 : 1;
 
     int nb_points = af_x_positions.count();
 
@@ -117,8 +115,8 @@ void FocusPointsExtractor::getAFPoints_canon()
     {
         qInfo()<<"study one point";
         FocusPoint point;
-        point.x_position = float(1/2) + af_x_positions[i].toFloat() /  imageWidth.toFloat();
-        point.y_position = float(1/2) + af_y_positions[i].toFloat() * yDirection /  imageHeight.toFloat();
+        point.x_position = 0.5 + af_x_positions[i].toFloat() /  imageWidth.toFloat();
+        point.y_position = 0.5 + af_y_positions[i].toFloat() * yDirection /  imageHeight.toFloat();
         
         point.width = (afPointWidths[i].isEmpty()) ?  afPointWidth.toFloat() : afPointWidths[i].toFloat();
         point.height = (afPointHeights[i].isEmpty()) ?  afPointHeight.toFloat() : afPointHeights[i].toFloat();
@@ -146,6 +144,7 @@ void FocusPointsExtractor::getAFPoints_canon()
         }
 
         addPoint(point);
+        qInfo()<<"point info"<<point.x_position<<point.y_position<<point.width<<point.height;
     }
 
 }

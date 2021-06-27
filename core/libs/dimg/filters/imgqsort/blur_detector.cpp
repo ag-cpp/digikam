@@ -42,9 +42,9 @@ class Q_DECL_HIDDEN BlurDetector::Private
 public:
     explicit Private()
       : min_abs(1),
-        ordre_log_filtrer(80),
+        ordre_log_filtrer(120),
         sigma_smooth_image(5),
-        filtrer_defocus(50),
+        filtrer_defocus(100),
 
         part_size(40),
         edges_filtrer(10),
@@ -61,21 +61,21 @@ public:
 
     cv::Mat image;
 
-    float                           min_abs;
-    int                             ordre_log_filtrer;
-    int                             sigma_smooth_image;
-    int                             filtrer_defocus;
+    float                               min_abs;
+    int                                 ordre_log_filtrer;
+    int                                 sigma_smooth_image;
+    int                                 filtrer_defocus;
     
-    int                             part_size;
-    float                           edges_filtrer;
-    double                          theta_resolution;
-    double                          min_line_length; 
-    float                           threshold_hough;
-    int                             min_nb_lines;
-    float                           max_stddev;
+    int                                 part_size;
+    float                               edges_filtrer;
+    double                              theta_resolution;
+    double                              min_line_length; 
+    float                               threshold_hough;
+    int                                 min_nb_lines;
+    float                               max_stddev;
 
-    bool                            have_focus_region;
-    FocusPointsExtractor::ListAFPoints    AFPoints;
+    bool                                have_focus_region;
+    FocusPointsExtractor::ListAFPoints  AFPoints;
 
 };
 
@@ -135,6 +135,8 @@ float BlurDetector::detect()
     int totalPixels = cv::countNonZero(weightsMat);
     
     int blurPixel = cv::countNonZero(res);
+
+    qInfo()<<"total blur pixel"<<blurPixel<<"total pixel consider"<<totalPixels;
 
     float percentBlur = float(blurPixel) / float(totalPixels);
 
@@ -265,38 +267,42 @@ bool BlurDetector::haveFocusRegion(const DImg& image)              const
     
     qInfo()<<"nb points "<<d->AFPoints.count();
     
+    delete extractor;
     
-    // return !d->AFPoints.isEmpty();
-    return false;
+    return !d->AFPoints.isEmpty();
+    // return false;
 }
 
 cv::Mat BlurDetector::getWeightMap()                               const
 {
-    // FIXME : not implemented yet
     // use infomation of focus region to construct matrix of weight
+    qInfo()<<"image size"<<d->image.size().width<<d->image.size().height;
+    
     if (d->have_focus_region)
     {
-        qInfo()<<"have focus region";
-        int nb_AF_points = d->AFPoints.count();
-        
+        qInfo()<<"have focus region";     
         /**
          * We consider auto focus point (AFPoint) is center of the focus region.
          * Size of the focus region is propotional to the size of image but inverse ratio
          * to the number of focus point
          */
-        cv::Size focus_region_size = cv::Size(static_cast<int>(d->image.size().width  / (nb_AF_points + 3)),
-                                              static_cast<int>(d->image.size().height / (nb_AF_points + 3)));
 
         cv::Mat res = cv::Mat::zeros(d->image.size(), CV_8U);
                               
-        // for (const auto AFPoint : d->AFPoints)
-        // {
-        //     cv::Rect rect{static_cast<int>(AFPoint.first  * d->image.size().width  - focus_region_size.width / 2),
-        //                   static_cast<int>(AFPoint.second * d->image.size().height - focus_region_size.height  / 2), 
-        //                   focus_region_size.width,focus_region_size.height};
+        for (const auto point : d->AFPoints)
+        {
+            
+            qInfo()<<"point.size"<<point.width<<point.height;
+            qInfo()<<"region size"<<static_cast<int>(point.width * d->image.size().width) <<static_cast<int>(point.height * d->image.size().height);
+            qInfo()<<"corner point"<<static_cast<int>((point.x_position - point.width  / 2 )*d->image.size().width) 
+                                   <<static_cast<int>((point.y_position - point.height / 2 )*d->image.size().height);
+            cv::Rect rect{static_cast<int>((point.x_position - point.width  / 2 )*d->image.size().width),
+                          static_cast<int>((point.y_position - point.height / 2 )*d->image.size().height), 
+                          static_cast<int>(point.width  * d->image.size().width),
+                          static_cast<int>(point.height * d->image.size().height) };
 
-        //     res(rect).setTo(1);
-        // }
+            res(rect).setTo(1);
+        }
         return res;
 
     }
@@ -335,7 +341,7 @@ cv::Mat BlurDetector::detectBackgroundRegion(const cv::Mat& image)    const
             cv::meanStdDev(subImg,mean,stddev);
             // qInfo()<<"stddev color "<<stddev[0];
 
-            if (stddev[0] < 15) {
+            if (stddev[0] < 10) {
                 res(rect).setTo(1);
             }
         }
