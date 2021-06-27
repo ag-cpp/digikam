@@ -7,7 +7,7 @@ import umap.umap_ as umap
 
 sns.set(style='white', context='notebook', rc={'figure.figsize':(14,10)})
 
-faceData = pd.read_csv('../data/face_data.txt',header=None)
+faceData = pd.read_csv('../data/keras.txt',header=None)
 
 embeddingIndex = set(faceData.columns)
 embeddingIndex.remove(0)
@@ -21,7 +21,7 @@ reducedEmbedding = reducer.transform(faceEmbeddings)
 reducedData = pd.DataFrame({'label':labels, 'X1': reducedEmbedding[:, 0], 'X2': reducedEmbedding[:, 1]})
 reducedData.to_csv('../data/projected_data.txt', index=False, header=False)
 
-plt.scatter(reducedEmbedding[:, 0], reducedEmbedding[:, 1], c=y_test, cmap='Spectral', s=5)
+plt.scatter(reducedEmbedding[:, 0], reducedEmbedding[:, 1], c=labels, cmap='Spectral', s=5)
 plt.gca().set_aspect('equal', 'datalim')
 plt.colorbar(boundaries=np.arange(11)-0.5).set_ticks(np.arange(10))
 plt.title('UMAP projection of the face embedding from Extended Yale B dataset', fontsize=24);
