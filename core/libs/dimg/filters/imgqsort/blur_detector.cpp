@@ -54,6 +54,8 @@ public:
         min_nb_lines(1),
         max_stddev(0.15),
 
+        mono_color_threshold(10),
+
         have_focus_region(false)
     {
 
@@ -73,6 +75,8 @@ public:
     float                               threshold_hough;
     int                                 min_nb_lines;
     float                               max_stddev;
+
+    float                               mono_color_threshold;
 
     bool                                have_focus_region;
     FocusPointsExtractor::ListAFPoints  AFPoints;
@@ -301,9 +305,9 @@ cv::Mat BlurDetector::getWeightMap()                               const
 cv::Mat BlurDetector::detectBackgroundRegion(const cv::Mat& image)    const
 {
     qCDebug(DIGIKAM_DIMG_LOG) << "Divide image to small parts";
-    int part_size = 40;
-    int nb_parts_row = static_cast<int>(image.size().height / part_size);
-    int nb_parts_col = static_cast<int>(image.size().width / part_size);
+
+    int nb_parts_row = static_cast<int>(image.size().height / d->part_size);
+    int nb_parts_col = static_cast<int>(image.size().width / d->part_size);
     
     cv::Mat res = cv::Mat::zeros(image.size(), CV_8U);
 
@@ -321,7 +325,7 @@ cv::Mat BlurDetector::detectBackgroundRegion(const cv::Mat& image)    const
 
             cv::meanStdDev(subImg,mean,stddev);
 
-            if (stddev[0] < 10) {
+            if (stddev[0] < d->mono_color_threshold) {
                 res(rect).setTo(1);
             }
         }
