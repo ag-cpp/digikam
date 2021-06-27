@@ -70,9 +70,9 @@ using DataTestCases = QMultiMap<QString, PairImageQuality> ;
 
 DataTestCases const dataTestCases = 
     {   
-        {QLatin1String("blurDetection"), PairImageQuality(QLatin1String("test_blurred_1.jpg"),3)},
-        {QLatin1String("blurDetection"), PairImageQuality(QLatin1String("test_blurred_2.jpg"),3)},
-        {QLatin1String("blurDetection"), PairImageQuality(QLatin1String("test_blurred_5.jpg"),2)},
+        {QLatin1String("blurDetection"), PairImageQuality(QLatin1String("test_blurred_1.jpg"),2)},
+        {QLatin1String("blurDetection"), PairImageQuality(QLatin1String("test_blurred_2.jpg"),2)},
+        {QLatin1String("blurDetection"), PairImageQuality(QLatin1String("test_blurred_5.jpg"),1)},
         {QLatin1String("blurDetection"), PairImageQuality(QLatin1String("test_blurred_9.jpg"),1)},
 
         {QLatin1String("noiseDetection"), PairImageQuality(QLatin1String("test_noised_1.jpg"),3)},
