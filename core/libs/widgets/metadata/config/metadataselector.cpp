@@ -46,7 +46,8 @@ namespace Digikam
 
 MetadataSelectorItem::MetadataSelectorItem(MdKeyListViewItem* const parent,
                                            const QString& key,
-                                           const QString& title, const QString& desc)
+                                           const QString& title,
+                                           const QString& desc)
     : QTreeWidgetItem(parent),
       m_key          (key),
       m_parent       (parent)
@@ -283,7 +284,7 @@ MetadataSelectorView::MetadataSelectorView(QWidget* const parent)
     : QWidget(parent),
       d      (new Private)
 {
-    const int spacing = QApplication::style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing);
+    const int spacing       = QApplication::style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing);
 
     QGridLayout* const grid = new QGridLayout(this);
     d->selector             = new MetadataSelector(this);
