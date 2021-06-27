@@ -144,7 +144,11 @@ bool DNNFaceExtractor::loadModels()
 
 #else
 
-            d->net = cv::dnn::readNetFromTorch(nnmodel.toStdString());
+            //d->net = cv::dnn::readNetFromTorch(nnmodel.toStdString());
+            d->net  = cv::dnn::readNetFromTensorflow(
+                "/home/minhnghiaduong/Documents/Projects/digikam/core/tests/facesengine/scripts/facenet_opencv_dnn/models/graph_final.pb",
+                "/home/minhnghiaduong/Documents/Projects/digikam/core/tests/facesengine/scripts/facenet_opencv_dnn/models/graph_final.pbtxt"
+            );
 
 #endif
 

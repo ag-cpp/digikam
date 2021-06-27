@@ -88,6 +88,16 @@ target_link_libraries(svm_cli
 
 # -----------------------------------------------------------------------------
 
+set(extract_data_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/extract_data.cpp)
+add_executable(extract_data ${svm_cli_SRCS})
+
+target_link_libraries(extract_data
+                      opencv_ml
+                      ${COMMON_TEST_LINK}
+)
+
+# -----------------------------------------------------------------------------
+
 set(recognition_gui_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/recognition_gui.cpp)
 add_executable(recognition_gui ${recognition_gui_SRCS})
 
