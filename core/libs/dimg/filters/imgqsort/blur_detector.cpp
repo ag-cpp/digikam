@@ -46,10 +46,10 @@ public:
         sigma_smooth_image(5),
         filtrer_defocus(75),
 
-        part_size(40),
-        edges_filtrer(10),
+        part_size(30),
+        edges_filtrer(5),
         theta_resolution(CV_PI/600),
-        min_line_length(15),
+        min_line_length(10),
         threshold_hough(20),
         min_nb_lines(1),
         max_stddev(0.3),
@@ -140,7 +140,6 @@ float BlurDetector::detect()
     
     int blurPixel = cv::countNonZero(res);
 
-
     float percentBlur = float(blurPixel) / float(totalPixels);
 
     qCDebug(DIGIKAM_DIMG_LOG) << "percentage of blur" << percentBlur;
@@ -204,10 +203,10 @@ cv::Mat BlurDetector::detectMotionBlurMap(const cv::Mat& edgesMap) const
             cv::Mat subImg = edgesMap(rect);
             
             qCDebug(DIGIKAM_DIMG_LOG) << "Detect if each part is motion blur";
-            if(isMotionBlur(subImg)) {
+            if(isMotionBlur(subImg)) 
+            {
                 res(rect).setTo(1);
             }
-
         }
     } 
 
@@ -225,7 +224,7 @@ bool    BlurDetector::isMotionBlur(const cv::Mat& frag) const
     std::vector<cv::Vec4i> lines;
     HoughLinesP(tmp, lines, 1, d->theta_resolution, d->threshold_hough, d->min_line_length,10 );
 
-    // detect if region is motion blurred by number of paralle lines
+    // Detect if region is motion blurred by number of paralle lines
     if (static_cast<int>(lines.size()) > d->min_nb_lines )
     {
         std::vector<float> list_theta; 
@@ -240,11 +239,12 @@ bool    BlurDetector::isMotionBlur(const cv::Mat& frag) const
             list_theta.push_back(theta);
         }
 
-        // calculate Standard Deviation         
+        // Calculate Standard Deviation         
         cv::Scalar mean, stddev;
 
         cv::meanStdDev(list_theta,mean,stddev);
 
+        qInfo()<< "Standard Deviation for group of lines " << stddev[0];
         qCDebug(DIGIKAM_DIMG_LOG) << "Standard Deviation for group of lines " << stddev[0];
 
         return stddev[0] < d->max_stddev;
@@ -254,7 +254,6 @@ bool    BlurDetector::isMotionBlur(const cv::Mat& frag) const
 
 bool BlurDetector::haveFocusRegion(const DImg& image)              const
 {
-    // FIXME : not implmented yet
     // initialate reader metadata to extract information of focus region  
     FocusPointsExtractor* const extractor = new FocusPointsExtractor(nullptr, image.originalFilePath());
 
@@ -263,7 +262,6 @@ bool BlurDetector::haveFocusRegion(const DImg& image)              const
     delete extractor;
     
     return !d->AFPoints.isEmpty();
-    // return false;
 }
 
 cv::Mat BlurDetector::getWeightMap()                               const
