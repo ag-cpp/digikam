@@ -273,9 +273,7 @@ cv::Mat BlurDetector::getWeightMap()                               const
     if (d->have_focus_region)
     {
         /**
-         * We consider auto focus point (AFPoint) is center of the focus region.
-         * Size of the focus region is propotional to the size of image but inverse ratio
-         * to the number of focus point
+         * Only focus point and its region is considered in blur detection
          */
 
         cv::Mat res = cv::Mat::zeros(d->image.size(), CV_8U);
@@ -285,7 +283,7 @@ cv::Mat BlurDetector::getWeightMap()                               const
             cv::Rect rect{static_cast<int>((point.x_position - point.width  / 2 )*d->image.size().width),
                           static_cast<int>((point.y_position - point.height / 2 )*d->image.size().height), 
                           static_cast<int>(point.width  * d->image.size().width),
-                          static_cast<int>(point.height * d->image.size().height) };
+                          static_cast<int>(point.height * d->image.size().height)};
 
             res(rect).setTo(1);
         }
@@ -325,7 +323,8 @@ cv::Mat BlurDetector::detectBackgroundRegion(const cv::Mat& image)    const
 
             cv::meanStdDev(subImg,mean,stddev);
 
-            if (stddev[0] < d->mono_color_threshold) {
+            if (stddev[0] < d->mono_color_threshold) 
+            {
                 res(rect).setTo(1);
             }
         }
