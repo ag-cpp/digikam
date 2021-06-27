@@ -29,9 +29,7 @@
 // Local includes
 
 #include "dimg.h"
-
 #include "digikam_opencv.h"
-
 
 namespace Digikam
 {

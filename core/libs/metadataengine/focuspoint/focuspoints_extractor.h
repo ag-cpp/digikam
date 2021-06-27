@@ -84,7 +84,6 @@ public:
     ListAFPoints af_selected();
     ListAFPoints af_infocus_selected();
     
-
 private:
     
     QVariant findValue(const QString& tagName,bool isList = false);

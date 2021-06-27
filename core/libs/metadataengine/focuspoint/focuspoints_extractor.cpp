@@ -69,7 +69,6 @@ QVariant FocusPointsExtractor::findValue(const QString& tagName,bool isList)
 {
     QVariantList result = d->metadata.value(tagName);
     
-
     if (result.empty())
     {
         return QVariant();
@@ -82,7 +81,6 @@ QVariant FocusPointsExtractor::findValue(const QString& tagName,bool isList)
     {
         return result[0];
     }
-    
 }
 
 QVariant FocusPointsExtractor::findValue(const QString& tagNameRoot, const QString& key,bool isList)
