@@ -44,7 +44,7 @@ public:
       : min_abs(1),
         ordre_log_filtrer(120),
         sigma_smooth_image(5),
-        filtrer_defocus(100),
+        filtrer_defocus(80),
 
         part_size(40),
         edges_filtrer(10),
@@ -52,7 +52,7 @@ public:
         min_line_length(20),
         threshold_hough(20),
         min_nb_lines(1),
-        max_stddev(0.15),
+        max_stddev(0.3),
 
         mono_color_threshold(10),
 
@@ -313,7 +313,7 @@ cv::Mat BlurDetector::detectBackgroundRegion(const cv::Mat& image)    const
     {
         for (int j = 0; j < nb_parts_col; j++)
         {
-            cv::Rect rect{j*part_size, i*part_size, part_size,part_size};
+            cv::Rect rect{j*d->part_size, i*d->part_size, d->part_size,d->part_size};
 
             cv::Mat subImg = image(rect);
             
