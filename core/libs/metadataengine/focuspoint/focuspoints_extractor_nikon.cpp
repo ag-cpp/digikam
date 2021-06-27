@@ -61,7 +61,6 @@ void FocusPointsExtractor::getAFPoints_nikon()
     
     if (imageWidth.isNull() || imageHeight.isNull())
     {
-        qInfo()<<"return by lack of size image";
         return;
     }
     
@@ -73,7 +72,6 @@ void FocusPointsExtractor::getAFPoints_nikon()
     
     if ((afPointWidth.isNull()) || (afPointHeight.isNull()))
     {
-        qInfo()<<"return by lack of size point";
         return;
     }
         
@@ -84,7 +82,6 @@ void FocusPointsExtractor::getAFPoints_nikon()
 
     if (af_x_position.isNull() || af_y_position.isNull())
     {
-        qInfo()<<"return by lack of point";
         return;
     }
 
@@ -94,8 +91,6 @@ void FocusPointsExtractor::getAFPoints_nikon()
     point.y_position = af_y_position.toFloat() / imageHeight.toFloat();
     point.width      = afPointWidth.toFloat()  / imageWidth.toFloat();
     point.height     = afPointHeight.toFloat() / imageHeight.toFloat();
-
-    qInfo()<<"point info"<<point.x_position<<point.y_position<<point.width<<point.height;
     
     point.type = TypePoint::SelectedInFocus;
     

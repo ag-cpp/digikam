@@ -67,10 +67,8 @@ void FocusPointsExtractor::getAFPoints_canon()
     
     if (imageWidth.isNull() || imageHeight.isNull())
     {
-        qInfo()<<"return by lack of size image";
         return;
     }
-    qInfo()<<"image size in metadata"<<imageWidth<<imageHeight;
     
 
     // Get size of af points
@@ -82,8 +80,6 @@ void FocusPointsExtractor::getAFPoints_canon()
     if (((afPointWidth.isNull()) || (afPointHeight.isNull())) && 
         ((afPointWidths.isEmpty()) || (afPointHeights.isEmpty())))
     {
-        qInfo()<<!afPointWidths.isEmpty()<< !afPointHeights.isEmpty();
-        qInfo()<<"return by lack of size point";
         return;
     }
         
@@ -94,7 +90,6 @@ void FocusPointsExtractor::getAFPoints_canon()
 
     if (af_x_positions.isEmpty() || af_y_positions.isEmpty())
     {
-        qInfo()<<"return by lack of point";
         return;
     }
 
@@ -113,7 +108,6 @@ void FocusPointsExtractor::getAFPoints_canon()
 
     for (int i=0; i< nb_points; i++)
     {
-        qInfo()<<"study one point";
         FocusPoint point;
         point.x_position = 0.5 + af_x_positions[i].toFloat() /  imageWidth.toFloat();
         point.y_position = 0.5 + af_y_positions[i].toFloat() * yDirection /  imageHeight.toFloat();
@@ -144,7 +138,6 @@ void FocusPointsExtractor::getAFPoints_canon()
         }
 
         addPoint(point);
-        qInfo()<<"point info"<<point.x_position<<point.y_position<<point.width<<point.height;
     }
 
 }

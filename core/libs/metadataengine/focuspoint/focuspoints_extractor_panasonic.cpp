@@ -64,7 +64,6 @@ void FocusPointsExtractor::getAFPoints_panasonic()
     point.width      = imageWidth.toFloat()  / 3;
     point.height     = imageHeight.toFloat() / 3;
 
-    qInfo()<<"point info"<<point.x_position<<point.y_position<<point.width<<point.height;
     
     point.type = TypePoint::SelectedInFocus;
     

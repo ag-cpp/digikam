@@ -68,7 +68,6 @@ void FocusPointsExtractor::getAFPoints_sony()
     point.width      = afPointWidth;
     point.height     = afPointHeight;
 
-    qInfo()<<"point info"<<point.x_position<<point.y_position<<point.width<<point.height;
     
     point.type = TypePoint::SelectedInFocus;
     

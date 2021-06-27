@@ -136,12 +136,11 @@ float BlurDetector::detect()
     
     int blurPixel = cv::countNonZero(res);
 
-    qInfo()<<"total blur pixel"<<blurPixel<<"total pixel consider"<<totalPixels;
 
     float percentBlur = float(blurPixel) / float(totalPixels);
 
-    qCDebug(DIGIKAM_DIMG_LOG) << "percentage of blur bla bla " << percentBlur;
-    qInfo() <<  "percentage of blur bla bla bla bla " << percentBlur;
+    qCDebug(DIGIKAM_DIMG_LOG) << "percentage of blur" << percentBlur;
+    
     return percentBlur;
 }
 
@@ -213,7 +212,7 @@ cv::Mat BlurDetector::detectMotionBlurMap(const cv::Mat& edgesMap) const
 
 bool    BlurDetector::isMotionBlur(const cv::Mat& frag) const
 {
-    //convert to 8u
+    // Convert to 8u
     cv::Mat tmp;
 
     cv::threshold(frag,tmp,d->edges_filtrer,255,cv::THRESH_BINARY);
@@ -252,21 +251,11 @@ bool    BlurDetector::isMotionBlur(const cv::Mat& frag) const
 bool BlurDetector::haveFocusRegion(const DImg& image)              const
 {
     // FIXME : not implmented yet
-    // initialate reader metadata to extract information of focus region
-    ExifToolParser* const exiftool = new ExifToolParser(nullptr);
-
-    exiftool->load(image.originalFilePath());
-
-    qInfo()<< "get here" << exiftool->currentData();
-    
-    qInfo()<<exiftool->currentData();
-    
+    // initialate reader metadata to extract information of focus region  
     FocusPointsExtractor* const extractor = new FocusPointsExtractor(nullptr, image.originalFilePath());
 
     d->AFPoints = extractor->af_selected();
-    
-    qInfo()<<"nb points "<<d->AFPoints.count();
-    
+        
     delete extractor;
     
     return !d->AFPoints.isEmpty();
@@ -276,11 +265,9 @@ bool BlurDetector::haveFocusRegion(const DImg& image)              const
 cv::Mat BlurDetector::getWeightMap()                               const
 {
     // use infomation of focus region to construct matrix of weight
-    qInfo()<<"image size"<<d->image.size().width<<d->image.size().height;
     
     if (d->have_focus_region)
     {
-        qInfo()<<"have focus region";     
         /**
          * We consider auto focus point (AFPoint) is center of the focus region.
          * Size of the focus region is propotional to the size of image but inverse ratio
@@ -291,11 +278,6 @@ cv::Mat BlurDetector::getWeightMap()                               const
                               
         for (const auto point : d->AFPoints)
         {
-            
-            qInfo()<<"point.size"<<point.width<<point.height;
-            qInfo()<<"region size"<<static_cast<int>(point.width * d->image.size().width) <<static_cast<int>(point.height * d->image.size().height);
-            qInfo()<<"corner point"<<static_cast<int>((point.x_position - point.width  / 2 )*d->image.size().width) 
-                                   <<static_cast<int>((point.y_position - point.height / 2 )*d->image.size().height);
             cv::Rect rect{static_cast<int>((point.x_position - point.width  / 2 )*d->image.size().width),
                           static_cast<int>((point.y_position - point.height / 2 )*d->image.size().height), 
                           static_cast<int>(point.width  * d->image.size().width),
@@ -308,7 +290,6 @@ cv::Mat BlurDetector::getWeightMap()                               const
     }
     else
     {
-        qInfo()<<"dont have focus region";
         cv::Mat res = detectBackgroundRegion(d->image);
         
         cv::threshold(res,res,0.5,1,cv::THRESH_BINARY_INV);
@@ -339,7 +320,6 @@ cv::Mat BlurDetector::detectBackgroundRegion(const cv::Mat& image)    const
             cv::Scalar mean, stddev;
 
             cv::meanStdDev(subImg,mean,stddev);
-            // qInfo()<<"stddev color "<<stddev[0];
 
             if (stddev[0] < 10) {
                 res(rect).setTo(1);
