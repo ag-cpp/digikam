@@ -75,7 +75,6 @@ set(libdmetadata_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/exiftool/exiftoolparser.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/exiftool/exiftoolparser_command.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/exiftool/exiftoolparser_output.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/exiftool/exiftoolparser_iqs.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/exiftool/exiftoolparser_p.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/exiftool/exiftoolprocess.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/exiftool/exiftoolprocess_p.cpp

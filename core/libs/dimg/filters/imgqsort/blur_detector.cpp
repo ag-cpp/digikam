@@ -76,8 +76,7 @@ public:
 
     bool        have_focus_region;
 
-    bool                                have_focus_region;
-
+    float       mono_color_threshold;
 };
 
 BlurDetector::BlurDetector(const DImg& image)
