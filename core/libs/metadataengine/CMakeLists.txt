@@ -78,6 +78,12 @@ set(libdmetadata_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/exiftool/exiftoolparser_p.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/exiftool/exiftoolprocess.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/exiftool/exiftoolprocess_p.cpp
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/focuspoint/focuspoints_extractor.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/focuspoint/focuspoints_extractor_canon.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/focuspoint/focuspoints_extractor_nikon.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/focuspoint/focuspoints_extractor_panasonic.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/focuspoint/focuspoints_extractor_sony.cpp
 )
 
 include_directories(
