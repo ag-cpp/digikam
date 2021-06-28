@@ -66,10 +66,12 @@ public:
          *  is identical. Else returns a null QString.
          */
         ReturnMatchingLanguageOnly,
+
         /**
          * If no matching language as above is found, return the default language.
          */
         ReturnMatchingOrDefaultLanguage,
+
         /**
          * If no matching or default language is found, return the first comment.
          * Returns a null string only if no comment is available.
@@ -83,6 +85,7 @@ public:
          * Allow only one comment per language. Default setting.
          */
         UniquePerLanguage,
+
         /**
          * Allow multiple comments per language, each with a different author
          */
@@ -105,7 +108,7 @@ public:
      * Create a ItemComments object for the image with the specified id.
      * The existing CoreDbAccess object will be used to access the database.
      */
-    ItemComments(CoreDbAccess& access, qlonglong imageid);
+    ItemComments(const CoreDbAccess& access, qlonglong imageid);
 
     ItemComments(const ItemComments& other);
     ~ItemComments();
@@ -127,10 +130,7 @@ public:
      * as the default value, when you just want to have one string.
      * Optionally also returns the index with which you can access further information about the comment.
      */
-    QString defaultComment(Digikam::DatabaseComment::Type type = DatabaseComment::Comment)                      const
-    {
-        return defaultComment(nullptr, type);
-    }
+    QString defaultComment(DatabaseComment::Type type = DatabaseComment::Comment)                               const;
 
     QString defaultComment(int* const index, Digikam::DatabaseComment::Type type = DatabaseComment::Comment)    const;
 
@@ -151,10 +151,12 @@ public:
      * Access individual properties. Please ensure that the specified index is a valid index
      */
     DatabaseComment::Type type(int index)                                                                       const;
-    
-    /// RFC 3066 notation, or "x-default"
+
+    /**
+     * RFC 3066 notation, or "x-default"
+     */
     QString language(int index)                                                                                 const;
-    
+
     QString author(int index)                                                                                   const;
     QDateTime date(int index)                                                                                   const;
     QString comment(int index)                                                                                  const;

@@ -88,7 +88,7 @@ XmpWidget::~XmpWidget()
 {
 }
 
-QString XmpWidget::getMetadataTitle()
+QString XmpWidget::getMetadataTitle() const
 {
     return i18n("XMP Schema");
 }
@@ -141,16 +141,22 @@ void XmpWidget::buildView()
     switch (getMode())
     {
         case CUSTOM:
+        {
             setIfdList(getMetadataMap(), m_keysFilter, getTagsFilter());
             break;
+        }
 
         case PHOTO:
+        {
             setIfdList(getMetadataMap(), m_keysFilter, QStringList() << QLatin1String("FULL"));
             break;
+        }
 
         default: // NONE
+        {
             setIfdList(getMetadataMap(), QStringList());
             break;
+        }
     }
 
     MetadataWidget::buildView();

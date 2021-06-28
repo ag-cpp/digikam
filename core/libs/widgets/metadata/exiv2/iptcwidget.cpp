@@ -4,8 +4,7 @@
  * https://www.digikam.org
  *
  * Date        : 2006-02-20
- * Description : a widget to display non standard Exif metadata
- *               used by camera makers
+ * Description : A widget to display IPTC metadata
  *
  * Copyright (C) 2006-2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
  *
@@ -22,7 +21,7 @@
  *
  * ============================================================ */
 
-#include "makernotewidget.h"
+#include "iptcwidget.h"
 
 // Qt includes
 
@@ -38,49 +37,44 @@
 
 #include "dmetadata.h"
 
-namespace Digikam
-{
-
 namespace
 {
 
-static const char* ExifEntryListToIgnore[] =
+static const char* StandardIptcEntryList[] =
 {
-    "GPSInfo",
-    "Iop",
-    "Thumbnail",
-    "SubImage1",
-    "SubImage2",
-    "Image",
-    "Photo",
+    "Envelope",
+    "Application2",
     "-1"
 };
 
 }
 
-MakerNoteWidget::MakerNoteWidget(QWidget* const parent, const QString& name)
+namespace Digikam
+{
+
+IptcWidget::IptcWidget(QWidget* const parent, const QString& name)
     : MetadataWidget(parent, name)
 {
     setup();
 
-    for (int i = 0 ; QLatin1String(ExifEntryListToIgnore[i]) != QLatin1String("-1") ; ++i)
+    for (int i = 0 ; QLatin1String(StandardIptcEntryList[i]) != QLatin1String("-1") ; ++i)
     {
-        m_keysFilter << QLatin1String(ExifEntryListToIgnore[i]);
+        m_keysFilter << QLatin1String(StandardIptcEntryList[i]);
     }
 }
 
-MakerNoteWidget::~MakerNoteWidget()
+IptcWidget::~IptcWidget()
 {
 }
 
-QString MakerNoteWidget::getMetadataTitle()
+QString IptcWidget::getMetadataTitle() const
 {
-    return i18n("MakerNote Exif Tags");
+    return i18n("IPTC Records");
 }
 
-bool MakerNoteWidget::loadFromURL(const QUrl& url)
+bool IptcWidget::loadFromURL(const QUrl& url)
 {
-    setFileName(url.toLocalFile());
+    setFileName(url.fileName());
 
     if (url.isEmpty())
     {
@@ -91,7 +85,7 @@ bool MakerNoteWidget::loadFromURL(const QUrl& url)
     {
         QScopedPointer<DMetadata> metadata(new DMetadata(url.toLocalFile()));
 
-        if (!metadata->hasExif())
+        if (!metadata->hasIptc())
         {
             setMetadata();
             return false;
@@ -105,46 +99,52 @@ bool MakerNoteWidget::loadFromURL(const QUrl& url)
     return true;
 }
 
-bool MakerNoteWidget::decodeMetadata()
+bool IptcWidget::decodeMetadata()
 {
     QScopedPointer<DMetadata> data(new DMetadata(getMetadata()->data()));
 
-    if (!data->hasExif())
+    if (!data->hasIptc())
     {
         return false;
     }
 
     // Update all metadata contents.
 
-    setMetadataMap(data->getExifTagsDataList(m_keysFilter, true));
+    setMetadataMap(data->getIptcTagsDataList(m_keysFilter));
 
     return true;
 }
 
-void MakerNoteWidget::buildView()
+void IptcWidget::buildView()
 {
     switch (getMode())
     {
         case CUSTOM:
-            setIfdList(getMetadataMap(), getTagsFilter());
+        {
+            setIfdList(getMetadataMap(), m_keysFilter, getTagsFilter());
             break;
+        }
 
         case PHOTO:
-            setIfdList(getMetadataMap(), QStringList() << QLatin1String("FULL"));
+        {
+            setIfdList(getMetadataMap(), m_keysFilter, QStringList() << QLatin1String("FULL"));
             break;
+        }
 
         default: // NONE
+        {
             setIfdList(getMetadataMap(), QStringList());
             break;
+        }
     }
 
     MetadataWidget::buildView();
 }
 
-QString MakerNoteWidget::getTagTitle(const QString& key)
+QString IptcWidget::getTagTitle(const QString& key)
 {
     QScopedPointer<DMetadata> metadataIface(new DMetadata);
-    QString title = metadataIface->getExifTagTitle(key.toLatin1().constData());
+    QString title = metadataIface->getIptcTagTitle(key.toLatin1().constData());
 
     if (title.isEmpty())
     {
@@ -154,10 +154,10 @@ QString MakerNoteWidget::getTagTitle(const QString& key)
     return title;
 }
 
-QString MakerNoteWidget::getTagDescription(const QString& key)
+QString IptcWidget::getTagDescription(const QString& key)
 {
     QScopedPointer<DMetadata> metadataIface(new DMetadata);
-    QString desc = metadataIface->getExifTagDescription(key.toLatin1().constData());
+    QString desc = metadataIface->getIptcTagDescription(key.toLatin1().constData());
 
     if (desc.isEmpty())
     {
@@ -167,12 +167,11 @@ QString MakerNoteWidget::getTagDescription(const QString& key)
     return desc;
 }
 
-void MakerNoteWidget::slotSaveMetadataToFile()
+void IptcWidget::slotSaveMetadataToFile()
 {
-    QUrl url = saveMetadataToFile(i18n("EXIF File to Save"),
-                                  QString(QLatin1String("*.exif|") + i18n("EXIF binary Files (*.exif)")));
-
-    storeMetadataToFile(url, getMetadata()->getExifEncoded());
+    QUrl url = saveMetadataToFile(i18n("IPTC File to Save"),
+                                  QString(QLatin1String("*.iptc|") + i18n("IPTC binary Files (*.iptc)")));
+    storeMetadataToFile(url, getMetadata()->getIptc());
 }
 
 } // namespace Digikam

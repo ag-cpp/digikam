@@ -39,8 +39,10 @@ void ExifToolParser::slotCmdCompleted(int cmdAction,
                                       const QByteArray& stdOut,
                                       const QByteArray& /*stdErr*/)
 {
-    qCDebug(DIGIKAM_METAENGINE_LOG) << "ExifTool complete command for action" << d->actionString(cmdAction)
-                                    << "with elasped time (ms):" << execTime;
+    qCDebug(DIGIKAM_METAENGINE_LOG) << "ExifTool complete command for action"
+                                    << d->actionString(cmdAction)
+                                    << "with elasped time (ms):"
+                                    << execTime;
 
     switch (cmdAction)
     {
@@ -56,6 +58,8 @@ void ExifToolParser::slotCmdCompleted(int cmdAction,
             if (jsonArray.size() == 0)
             {
                 d->manageEventLoop(cmdAction);
+
+                emit signalExifToolDataAvailable();
 
                 return;
             }
@@ -249,6 +253,105 @@ void ExifToolParser::slotCmdCompleted(int cmdAction,
             break;
         }
 
+        case ExifToolProcess::TAGS_DATABASE:
+        {
+            QString xml = QString::fromUtf8(stdOut);
+
+            QDomDocument doc;
+
+            if (doc.setContent(xml))
+            {
+                QDomElement docElem = doc.documentElement();
+
+                if (docElem.tagName() == QLatin1String("taginfo"))
+                {
+                    for (QDomNode n1 = docElem.firstChild() ; !n1.isNull() ; n1 = n1.nextSibling())
+                    {
+                        QDomElement e1 = n1.toElement();
+
+                        if (!e1.isNull())
+                        {
+                            if (e1.tagName() == QLatin1String("table"))                           // Top level group
+                            {
+                                QString g0       = e1.attribute(QLatin1String("g0"));
+                                QString g1       = e1.attribute(QLatin1String("g1"));
+                                QString g2       = e1.attribute(QLatin1String("g2"));
+                                QString type;
+                                QString writable;
+                                QString tag;
+                                QString mainDesc;
+                                QString desc;
+
+                                for (QDomNode n2 = e1.firstChild() ; !n2.isNull() ; n2 = n2.nextSibling())
+                                {
+                                    QDomElement e2 = n2.toElement();
+
+                                    if (!e2.isNull())
+                                    {
+                                        if      (e2.tagName() == QLatin1String("desc"))          // Main description of group
+                                        {
+                                            if (e2.attribute(QLatin1String("lang")) == QLatin1String("en"))
+                                            {
+                                                mainDesc = e2.text();
+                                            }
+
+                                            continue;
+                                        }
+                                        else if (e2.tagName() == QLatin1String("tag"))           // One tag from group
+                                        {
+                                            QString name = e2.attribute(QLatin1String("name"));
+                                            tag          = QString::fromLatin1("%1.%2.%3.%4").arg(g0).arg(g1).arg(g2).arg(name);
+                                            type         = e2.attribute(QLatin1String("type"));
+                                            writable     = e2.attribute(QLatin1String("writable"));
+
+                                            for (QDomNode n3 = e2.firstChild() ; !n3.isNull() ; n3 = n3.nextSibling())
+                                            {
+                                                QDomElement e3 = n3.toElement();
+
+                                                if (!e3.isNull())
+                                                {
+                                                    if (e3.tagName() == QLatin1String("desc"))  // Description of tag
+                                                    {
+                                                        if (e3.attribute(QLatin1String("lang")) == QLatin1String("en"))
+                                                        {
+                                                            desc = e3.text();
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    d->exifToolData.insert(tag,
+                                                           QVariantList()
+                                                                << QString::fromLatin1("%1 - %2").arg(mainDesc).arg(desc)
+                                                                << type
+                                                                << writable
+                                    );
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            break;
+        }
+
+        case ExifToolProcess::VERSION_STRING:
+        {
+            QString out       = QString::fromUtf8(stdOut);
+            QStringList lines = out.split(QLatin1Char('\n'), QString::SkipEmptyParts);
+
+            if (!lines.isEmpty())
+            {
+                d->exifToolData.insert(QLatin1String("VERSION_STRING"), QVariantList() << lines.first());
+            }
+
+            break;
+        }
+
         default:
         {
             break;
@@ -256,6 +359,8 @@ void ExifToolParser::slotCmdCompleted(int cmdAction,
     }
 
     d->manageEventLoop(cmdAction);
+
+    emit signalExifToolDataAvailable();
 
     qCDebug(DIGIKAM_METAENGINE_LOG) << "ExifTool parsed command for action" << d->actionString(cmdAction);
     qCDebug(DIGIKAM_METAENGINE_LOG) << d->exifToolData.count() << "properties decoded";
@@ -267,6 +372,8 @@ void ExifToolParser::slotErrorOccurred(int cmdAction, QProcess::ProcessError err
                                       << "exited with error:" << error;
 
     d->manageEventLoop(cmdAction);
+
+    emit signalExifToolDataAvailable();
 }
 
 void ExifToolParser::slotFinished(int cmdAction, int exitCode, QProcess::ExitStatus exitStatus)
@@ -276,6 +383,8 @@ void ExifToolParser::slotFinished(int cmdAction, int exitCode, QProcess::ExitSta
                                     << "and status" << exitStatus;
 
     d->manageEventLoop(cmdAction);
+
+    emit signalExifToolDataAvailable();
 }
 
 void ExifToolParser::setOutputStream(int cmdAction,

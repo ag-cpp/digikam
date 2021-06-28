@@ -4,7 +4,8 @@
  * https://www.digikam.org
  *
  * Date        : 2006-02-20
- * Description : a widget to display Standard Exif metadata
+ * Description : a widget to display non standard Exif metadata
+ *               used by camera makers
  *
  * Copyright (C) 2006-2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
  *
@@ -21,7 +22,7 @@
  *
  * ============================================================ */
 
-#include "exifwidget.h"
+#include "makernotewidget.h"
 
 // Qt includes
 
@@ -36,52 +37,48 @@
 // Local includes
 
 #include "dmetadata.h"
-#include "metadatalistview.h"
+
+namespace Digikam
+{
 
 namespace
 {
 
-/**
- * Standard Exif Entry list from to less important to the most important for photograph.
- */
-static const char* StandardExifEntryList[] =
+static const char* ExifEntryListToIgnore[] =
 {
+    "GPSInfo",
     "Iop",
     "Thumbnail",
     "SubImage1",
     "SubImage2",
     "Image",
     "Photo",
-    "GPSInfo",
     "-1"
 };
 
 }
 
-namespace Digikam
-{
-
-ExifWidget::ExifWidget(QWidget* const parent, const QString& name)
+MakerNoteWidget::MakerNoteWidget(QWidget* const parent, const QString& name)
     : MetadataWidget(parent, name)
 {
     setup();
 
-    for (int i = 0 ; QLatin1String(StandardExifEntryList[i]) != QLatin1String("-1") ; ++i)
+    for (int i = 0 ; QLatin1String(ExifEntryListToIgnore[i]) != QLatin1String("-1") ; ++i)
     {
-        m_keysFilter << QLatin1String(StandardExifEntryList[i]);
+        m_keysFilter << QLatin1String(ExifEntryListToIgnore[i]);
     }
 }
 
-ExifWidget::~ExifWidget()
+MakerNoteWidget::~MakerNoteWidget()
 {
 }
 
-QString ExifWidget::getMetadataTitle()
+QString MakerNoteWidget::getMetadataTitle() const
 {
-    return i18n("Standard Exif Tags");
+    return i18n("MakerNote Exif Tags");
 }
 
-bool ExifWidget::loadFromURL(const QUrl& url)
+bool MakerNoteWidget::loadFromURL(const QUrl& url)
 {
     setFileName(url.toLocalFile());
 
@@ -108,7 +105,7 @@ bool ExifWidget::loadFromURL(const QUrl& url)
     return true;
 }
 
-bool ExifWidget::decodeMetadata()
+bool MakerNoteWidget::decodeMetadata()
 {
     QScopedPointer<DMetadata> data(new DMetadata(getMetadata()->data()));
 
@@ -119,32 +116,40 @@ bool ExifWidget::decodeMetadata()
 
     // Update all metadata contents.
 
-    setMetadataMap(data->getExifTagsDataList(QStringList()));
+    setMetadataMap(data->getExifTagsDataList(m_keysFilter,
+                                             true,
+                                             false)); // Do not extract binary data which can introduce time latency in GUI.
 
     return true;
 }
 
-void ExifWidget::buildView()
+void MakerNoteWidget::buildView()
 {
     switch (getMode())
     {
         case CUSTOM:
-            setIfdList(getMetadataMap(), m_keysFilter, getTagsFilter());
+        {
+            setIfdList(getMetadataMap(), getTagsFilter());
             break;
+        }
 
         case PHOTO:
-            setIfdList(getMetadataMap(), m_keysFilter, QStringList() << QLatin1String("FULL"));
+        {
+            setIfdList(getMetadataMap(), QStringList() << QLatin1String("FULL"));
             break;
+        }
 
         default: // NONE
-            setIfdList(getMetadataMap(), m_keysFilter, QStringList());
+        {
+            setIfdList(getMetadataMap(), QStringList());
             break;
+        }
     }
 
     MetadataWidget::buildView();
 }
 
-QString ExifWidget::getTagTitle(const QString& key)
+QString MakerNoteWidget::getTagTitle(const QString& key)
 {
     QScopedPointer<DMetadata> metadataIface(new DMetadata);
     QString title = metadataIface->getExifTagTitle(key.toLatin1().constData());
@@ -157,7 +162,7 @@ QString ExifWidget::getTagTitle(const QString& key)
     return title;
 }
 
-QString ExifWidget::getTagDescription(const QString& key)
+QString MakerNoteWidget::getTagDescription(const QString& key)
 {
     QScopedPointer<DMetadata> metadataIface(new DMetadata);
     QString desc = metadataIface->getExifTagDescription(key.toLatin1().constData());
@@ -170,7 +175,7 @@ QString ExifWidget::getTagDescription(const QString& key)
     return desc;
 }
 
-void ExifWidget::slotSaveMetadataToFile()
+void MakerNoteWidget::slotSaveMetadataToFile()
 {
     QUrl url = saveMetadataToFile(i18n("EXIF File to Save"),
                                   QString(QLatin1String("*.exif|") + i18n("EXIF binary Files (*.exif)")));

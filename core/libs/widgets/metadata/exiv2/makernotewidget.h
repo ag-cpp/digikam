@@ -4,7 +4,8 @@
  * https://www.digikam.org
  *
  * Date        : 2006-02-20
- * Description : A widget to display IPTC metadata
+ * Description : a widget to display non standard Exif metadata
+ *               used by camera makers
  *
  * Copyright (C) 2006-2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
  *
@@ -21,8 +22,8 @@
  *
  * ============================================================ */
 
-#ifndef DIGIKAM_IPTC_WIDGET_H
-#define DIGIKAM_IPTC_WIDGET_H
+#ifndef DIGIKAM_MAKER_NOTE_WIDGET_H
+#define DIGIKAM_MAKER_NOTE_WIDGET_H
 
 // Local includes
 
@@ -32,22 +33,22 @@
 namespace Digikam
 {
 
-class DIGIKAM_EXPORT IptcWidget : public MetadataWidget
+class DIGIKAM_EXPORT MakerNoteWidget : public MetadataWidget
 {
     Q_OBJECT
 
 public:
 
-    explicit IptcWidget(QWidget* const parent,
-                        const QString& name = QString());
-    ~IptcWidget()                                   override;
+    explicit MakerNoteWidget(QWidget* const parent,
+                             const QString& name = QString());
+    ~MakerNoteWidget()                              override;
 
     bool loadFromURL(const QUrl& url)               override;
 
     QString getTagDescription(const QString& key)   override;
     QString getTagTitle(const QString& key)         override;
 
-    QString getMetadataTitle()                      override;
+    QString getMetadataTitle() const                override;
 
 protected Q_SLOTS:
 
@@ -65,4 +66,4 @@ private:
 
 } // namespace Digikam
 
-#endif // DIGIKAM_IPTC_WIDGET_H
+#endif // DIGIKAM_MAKER_NOTE_WIDGET_H

@@ -3,10 +3,10 @@
  * This file is a part of digiKam project
  * https://www.digikam.org
  *
- * Date        : 2007-07-19
- * Description : A widget to display XMP metadata
+ * Date        : 2006-02-20
+ * Description : A widget to display IPTC metadata
  *
- * Copyright (C) 2007-2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
+ * Copyright (C) 2006-2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -21,8 +21,8 @@
  *
  * ============================================================ */
 
-#ifndef DIGIKAM_XMP_WIDGET_H
-#define DIGIKAM_XMP_WIDGET_H
+#ifndef DIGIKAM_IPTC_WIDGET_H
+#define DIGIKAM_IPTC_WIDGET_H
 
 // Local includes
 
@@ -32,22 +32,22 @@
 namespace Digikam
 {
 
-class DIGIKAM_EXPORT XmpWidget : public MetadataWidget
+class DIGIKAM_EXPORT IptcWidget : public MetadataWidget
 {
     Q_OBJECT
 
 public:
 
-    explicit XmpWidget(QWidget* const parent,
-                       const QString& name = QString());
-    ~XmpWidget()                                    override;
+    explicit IptcWidget(QWidget* const parent,
+                        const QString& name = QString());
+    ~IptcWidget()                                   override;
 
     bool loadFromURL(const QUrl& url)               override;
 
     QString getTagDescription(const QString& key)   override;
     QString getTagTitle(const QString& key)         override;
 
-    QString getMetadataTitle()                      override;
+    QString getMetadataTitle() const                override;
 
 protected Q_SLOTS:
 
@@ -65,4 +65,4 @@ private:
 
 } // namespace Digikam
 
-#endif // DIGIKAM_XMP_WIDGET_H
+#endif // DIGIKAM_IPTC_WIDGET_H

@@ -4,7 +4,7 @@
  * https://www.digikam.org
  *
  * Date        : 2006-02-20
- * Description : A widget to display IPTC metadata
+ * Description : a widget to display Standard Exif metadata
  *
  * Copyright (C) 2006-2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
  *
@@ -21,7 +21,7 @@
  *
  * ============================================================ */
 
-#include "iptcwidget.h"
+#include "exifwidget.h"
 
 // Qt includes
 
@@ -36,14 +36,23 @@
 // Local includes
 
 #include "dmetadata.h"
+#include "metadatalistview.h"
 
 namespace
 {
 
-static const char* StandardIptcEntryList[] =
+/**
+ * Standard Exif Entry list from to less important to the most important for photograph.
+ */
+static const char* StandardExifEntryList[] =
 {
-    "Envelope",
-    "Application2",
+    "Iop",
+    "Thumbnail",
+    "SubImage1",
+    "SubImage2",
+    "Image",
+    "Photo",
+    "GPSInfo",
     "-1"
 };
 
@@ -52,29 +61,29 @@ static const char* StandardIptcEntryList[] =
 namespace Digikam
 {
 
-IptcWidget::IptcWidget(QWidget* const parent, const QString& name)
+ExifWidget::ExifWidget(QWidget* const parent, const QString& name)
     : MetadataWidget(parent, name)
 {
     setup();
 
-    for (int i = 0 ; QLatin1String(StandardIptcEntryList[i]) != QLatin1String("-1") ; ++i)
+    for (int i = 0 ; QLatin1String(StandardExifEntryList[i]) != QLatin1String("-1") ; ++i)
     {
-        m_keysFilter << QLatin1String(StandardIptcEntryList[i]);
+        m_keysFilter << QLatin1String(StandardExifEntryList[i]);
     }
 }
 
-IptcWidget::~IptcWidget()
+ExifWidget::~ExifWidget()
 {
 }
 
-QString IptcWidget::getMetadataTitle()
+QString ExifWidget::getMetadataTitle() const
 {
-    return i18n("IPTC Records");
+    return i18n("Standard Exif Tags");
 }
 
-bool IptcWidget::loadFromURL(const QUrl& url)
+bool ExifWidget::loadFromURL(const QUrl& url)
 {
-    setFileName(url.fileName());
+    setFileName(url.toLocalFile());
 
     if (url.isEmpty())
     {
@@ -85,7 +94,7 @@ bool IptcWidget::loadFromURL(const QUrl& url)
     {
         QScopedPointer<DMetadata> metadata(new DMetadata(url.toLocalFile()));
 
-        if (!metadata->hasIptc())
+        if (!metadata->hasExif())
         {
             setMetadata();
             return false;
@@ -99,46 +108,54 @@ bool IptcWidget::loadFromURL(const QUrl& url)
     return true;
 }
 
-bool IptcWidget::decodeMetadata()
+bool ExifWidget::decodeMetadata()
 {
     QScopedPointer<DMetadata> data(new DMetadata(getMetadata()->data()));
 
-    if (!data->hasIptc())
+    if (!data->hasExif())
     {
         return false;
     }
 
     // Update all metadata contents.
 
-    setMetadataMap(data->getIptcTagsDataList(m_keysFilter));
+    setMetadataMap(data->getExifTagsDataList(QStringList(),
+                                             false,
+                                             false)); // Do not extract binary data which can introduce time latency in GUI.
 
     return true;
 }
 
-void IptcWidget::buildView()
+void ExifWidget::buildView()
 {
     switch (getMode())
     {
         case CUSTOM:
+        {
             setIfdList(getMetadataMap(), m_keysFilter, getTagsFilter());
             break;
+        }
 
         case PHOTO:
+        {
             setIfdList(getMetadataMap(), m_keysFilter, QStringList() << QLatin1String("FULL"));
             break;
+        }
 
         default: // NONE
-            setIfdList(getMetadataMap(), QStringList());
+        {
+            setIfdList(getMetadataMap(), m_keysFilter, QStringList());
             break;
+        }
     }
 
     MetadataWidget::buildView();
 }
 
-QString IptcWidget::getTagTitle(const QString& key)
+QString ExifWidget::getTagTitle(const QString& key)
 {
     QScopedPointer<DMetadata> metadataIface(new DMetadata);
-    QString title = metadataIface->getIptcTagTitle(key.toLatin1().constData());
+    QString title = metadataIface->getExifTagTitle(key.toLatin1().constData());
 
     if (title.isEmpty())
     {
@@ -148,10 +165,10 @@ QString IptcWidget::getTagTitle(const QString& key)
     return title;
 }
 
-QString IptcWidget::getTagDescription(const QString& key)
+QString ExifWidget::getTagDescription(const QString& key)
 {
     QScopedPointer<DMetadata> metadataIface(new DMetadata);
-    QString desc = metadataIface->getIptcTagDescription(key.toLatin1().constData());
+    QString desc = metadataIface->getExifTagDescription(key.toLatin1().constData());
 
     if (desc.isEmpty())
     {
@@ -161,11 +178,12 @@ QString IptcWidget::getTagDescription(const QString& key)
     return desc;
 }
 
-void IptcWidget::slotSaveMetadataToFile()
+void ExifWidget::slotSaveMetadataToFile()
 {
-    QUrl url = saveMetadataToFile(i18n("IPTC File to Save"),
-                                  QString(QLatin1String("*.iptc|") + i18n("IPTC binary Files (*.iptc)")));
-    storeMetadataToFile(url, getMetadata()->getIptc());
+    QUrl url = saveMetadataToFile(i18n("EXIF File to Save"),
+                                  QString(QLatin1String("*.exif|") + i18n("EXIF binary Files (*.exif)")));
+
+    storeMetadataToFile(url, getMetadata()->getExifEncoded());
 }
 
 } // namespace Digikam
