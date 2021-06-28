@@ -201,10 +201,6 @@ public:
 
     //@}
 
-Q_SIGNALS:
-
-    void signalExifToolDataAvailable();
-
 private Q_SLOTS:
 
     //---------------------------------------------------------------------------------------------

@@ -32,8 +32,6 @@
 // Local includes
 
 #include "digikam_debug.h"
-#include "focuspoints_extractor.h"
-#include "exiftoolparser.h"
 
 namespace Digikam
 {
@@ -63,20 +61,20 @@ public:
 
     cv::Mat image;
 
-    float                               min_abs;
-    int                                 ordre_log_filtrer;
-    int                                 sigma_smooth_image;
-    int                                 filtrer_defocus;
+    float       min_abs;
+    int         ordre_log_filtrer;
+    int         sigma_smooth_image;
+    int         filtrer_defocus;
     
-    int                                 part_size;
-    float                               edges_filtrer;
-    double                              theta_resolution;
-    double                              min_line_length; 
-    float                               threshold_hough;
-    int                                 min_nb_lines;
-    float                               max_stddev;
+    int         part_size;
+    float       edges_filtrer;
+    double      theta_resolution;
+    double      min_line_length; 
+    float       threshold_hough;
+    int         min_nb_lines;
+    float       max_stddev;
 
-    float                               mono_color_threshold;
+    bool        have_focus_region;
 
     bool                                have_focus_region;
     FocusPointsExtractor::ListAFPoints  AFPoints;
@@ -129,14 +127,14 @@ float BlurDetector::detect()
     cv::Mat motionBlurMap = detectMotionBlurMap(edgesMap);
     motionBlurMap.convertTo(motionBlurMap,CV_8U);
     
-    //Read metadata to find focus region here
+    //Read metadata to find focus region here ( dont implement yet )
     cv::Mat weightsMat = getWeightMap();
 
     cv::Mat blurMap = defocusMap + motionBlurMap;
 
     cv::Mat res = weightsMat.mul(blurMap);
             
-    int totalPixels = cv::countNonZero(weightsMat);
+    int totalPixels = res.total();
     
     int blurPixel = cv::countNonZero(res);
 
@@ -254,14 +252,9 @@ bool    BlurDetector::isMotionBlur(const cv::Mat& frag) const
 
 bool BlurDetector::haveFocusRegion(const DImg& image)              const
 {
-    // initialate reader metadata to extract information of focus region  
-    FocusPointsExtractor* const extractor = new FocusPointsExtractor(nullptr, image.originalFilePath());
-
-    d->AFPoints = extractor->af_selected();
-        
-    delete extractor;
-    
-    return !d->AFPoints.isEmpty();
+    // FIXME : not implmented yet
+    // initialate reader metadata to extract information of focus region
+    return false;
 }
 
 cv::Mat BlurDetector::getWeightMap()                               const
@@ -270,30 +263,12 @@ cv::Mat BlurDetector::getWeightMap()                               const
     
     if (d->have_focus_region)
     {
-        /**
-         * Only focus point and its region is considered in blur detection
-         */
-
-        cv::Mat res = cv::Mat::zeros(d->image.size(), CV_8U);
-                              
-        for (const auto point : d->AFPoints)
-        {
-            cv::Rect rect{static_cast<int>((point.x_position - point.width  / 2 )*d->image.size().width),
-                          static_cast<int>((point.y_position - point.height / 2 )*d->image.size().height), 
-                          static_cast<int>(point.width  * d->image.size().width),
-                          static_cast<int>(point.height * d->image.size().height)};
-
-            res(rect).setTo(1);
-        }
-        return res;
-
+        return cv::Mat::ones(1,1,1);
     }
     else
     {
         cv::Mat res = detectBackgroundRegion(d->image);
-        
         cv::threshold(res,res,0.5,1,cv::THRESH_BINARY_INV);
-        
         return res;
     }
 }
