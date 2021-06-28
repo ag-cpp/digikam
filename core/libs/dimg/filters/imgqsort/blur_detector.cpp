@@ -77,7 +77,6 @@ public:
     bool        have_focus_region;
 
     bool                                have_focus_region;
-    FocusPointsExtractor::ListAFPoints  AFPoints;
 
 };
 
@@ -259,6 +258,7 @@ bool BlurDetector::haveFocusRegion(const DImg& image)              const
 
 cv::Mat BlurDetector::getWeightMap()                               const
 {
+    // FIXME : not implemented yet
     // use infomation of focus region to construct matrix of weight
     
     if (d->have_focus_region)
