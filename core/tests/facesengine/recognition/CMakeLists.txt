@@ -96,6 +96,7 @@ target_link_libraries(extract_cli
                       digikamgui
                       digikamfacesengine
                       digikamdatabase
+                      opencv_ml
                       ${COMMON_TEST_LINK}
 )
 

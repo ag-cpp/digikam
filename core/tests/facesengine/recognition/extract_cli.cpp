@@ -25,10 +25,10 @@
 #include <QCoreApplication>
 #include <QCommandLineParser>
 #include <QString>
-#include <QStringList>
 #include <QFile>
 #include <QDebug>
 #include <QImage>
+#include <QDir>
 #include <QElapsedTimer>
 #include "digikam_opencv.h"
 #include "recognitionpreprocessor.h"
@@ -76,7 +76,6 @@ QImage* Extractor::detect(const QImage& faceImg) const
     }
 
     QList<QRectF> faces = m_detector->detectFaces(faceImg);
-
     if (faces.isEmpty())
     {
         return nullptr;
@@ -93,7 +92,6 @@ cv::Mat Extractor::getFaceEmbedding(const cv::Mat& faceImage)
 {
     cv::Mat face_descriptors;
     cv::Mat alignedFace;
-
     QElapsedTimer timer;
 
     timer.start();
@@ -107,13 +105,63 @@ cv::Mat Extractor::getFaceEmbedding(const cv::Mat& faceImage)
     float scaleFactor = 1.0F / 255.0F;
 
     cv::Mat blob = cv::dnn::blobFromImage(alignedFace, scaleFactor, imageSize, cv::Scalar(), true, false);
-
     m_net.setInput(blob);
     face_descriptors = m_net.forward();
 
     qDebug() << "Finish computing face embedding in " << timer.elapsed() << " ms";
 
     return face_descriptors;
+}
+
+cv::Mat prepareForRecognition(QImage& inputImage)
+{
+    cv::Mat cvImage;    // = cv::Mat(image.height(), image.width(), CV_8UC3);
+    cv::Mat cvImageWrapper;
+
+    if (inputImage.format() != QImage::Format_ARGB32_Premultiplied)
+    {
+        inputImage = inputImage.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+    }
+
+    cvImageWrapper = cv::Mat(inputImage.height(), inputImage.width(), CV_8UC4, inputImage.scanLine(0), inputImage.bytesPerLine());
+    cv::cvtColor(cvImageWrapper, cvImage, CV_RGBA2RGB);
+
+    return cvImage;
+}
+
+cv::Ptr<cv::ml::TrainData> extract(const QDir& dataDir) {
+    cv::Mat predictors, labels;
+
+    Extractor extractor;
+    // Each subdirectory in data directory should match with a label
+    QFileInfoList subDirs = dataDir.entryInfoList(QDir::NoDotAndDotDot | QDir::Dirs, QDir::Name);
+
+    QElapsedTimer timer;
+    timer.start();
+
+    for (int i = 0 ; i < subDirs.size() ; ++i)
+    {
+        QDir subDir(subDirs[i].absoluteFilePath());
+        QFileInfoList filesInfo = subDir.entryInfoList(QDir::Files | QDir::Readable);       
+
+        for (int j = 0 ; j < filesInfo.size() ; ++j)
+        {
+            QImage img(filesInfo[j].absoluteFilePath());
+            QImage* const croppedFace = extractor.detect(img);
+
+            if (croppedFace && !croppedFace->isNull())
+            {
+                // extract face embedding
+                cv::Mat faceEmbedding = extractor.getFaceEmbedding(prepareForRecognition(*croppedFace)); 
+                labels.push_back(i);
+                predictors.push_back(faceEmbedding);
+            }
+
+            delete croppedFace;
+        }
+    }
+
+    return cv::ml::TrainData::create(predictors, 0, labels);
 }
 
 int main(int argc, char** argv)
