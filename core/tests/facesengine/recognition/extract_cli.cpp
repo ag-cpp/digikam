@@ -28,20 +28,63 @@
 #include <QStringList>
 #include <QFile>
 #include <QDebug>
+#include <QImage>
 #include "digikam_opencv.h"
+#include "recognitionpreprocessor.h"
+#include "opencvdnnfacedetector.h"
+#include "facedetector.h"
 
 // --------------------------------------------------------
 
 std::shared_ptr<QCommandLineParser> parseOptions(const QCoreApplication& app)
 {
     QCommandLineParser* const parser = new QCommandLineParser();
-    parser->addOption(QCommandLineOption(QLatin1String("data"), QLatin1String("Data file"), QLatin1String("path relative to data file")));
+    parser->addOption(QCommandLineOption(QLatin1String("data"), QLatin1String("Data directory"), QLatin1String("path relative to data directory")));
     parser->addHelpOption();
     parser->process(app);
 
     return std::shared_ptr<QCommandLineParser>(parser);
 }
 
+class Extractor {
+public:
+    explicit Extractor() {
+        m_preprocessor = new Digikam::RecognitionPreprocessor;
+        m_preprocessor->init(Digikam::PreprocessorSelection::OPENFACE);
+        m_net = cv::dnn::readNetFromTensorflow(
+                "/home/minhnghiaduong/Documents/Projects/digikam/core/tests/facesengine/scripts/facenet_opencv_dnn/models/graph_final.pb",
+                "/home/minhnghiaduong/Documents/Projects/digikam/core/tests/facesengine/scripts/facenet_opencv_dnn/models/graph_final.pbtxt"
+            );
+    }
+
+    QImage* detect(const QImage& faceImg) const;
+private:
+
+    Digikam::FaceDetector* m_detector;
+    Digikam::RecognitionPreprocessor* m_preprocessor;
+    cv::dnn::Net           m_net;
+};
+
+QImage* Extractor::detect(const QImage& faceImg) const
+{
+    if (faceImg.isNull())
+    {
+        return nullptr;
+    }
+
+    QList<QRectF> faces = m_detector->detectFaces(faceImg);
+
+    if (faces.isEmpty())
+    {
+        return nullptr;
+    }
+
+    QRect rect                = Digikam::FaceDetector::toAbsoluteRect(faces[0], faceImg.size());
+    QImage* const croppedFace = new QImage();
+    *croppedFace              = faceImg.copy(rect);
+
+    return croppedFace;
+}
 
 int main(int argc, char** argv)
 {

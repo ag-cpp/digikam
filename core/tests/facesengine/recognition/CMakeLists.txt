@@ -88,11 +88,14 @@ target_link_libraries(svm_cli
 
 # -----------------------------------------------------------------------------
 
-set(extract_data_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/extract_data.cpp)
-add_executable(extract_data ${svm_cli_SRCS})
+set(extract_cli_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/extract_cli.cpp)
+add_executable(extract_cli ${extract_cli_SRCS})
 
-target_link_libraries(extract_data
-                      opencv_ml
+target_link_libraries(extract_cli
+                      digikamcore
+                      digikamgui
+                      digikamfacesengine
+                      digikamdatabase
                       ${COMMON_TEST_LINK}
 )
 
