@@ -7,7 +7,7 @@ import umap.umap_ as umap
 
 sns.set(style='white', context='notebook', rc={'figure.figsize':(14,10)})
 
-faceData = pd.read_csv('../data/keras.txt',header=None)
+faceData = pd.read_csv('../data/facenet_data.txt',header=None)
 
 embeddingIndex = set(faceData.columns)
 embeddingIndex.remove(0)
@@ -19,7 +19,7 @@ reducer.fit(faceEmbeddings)
 reducedEmbedding = reducer.transform(faceEmbeddings)
 
 reducedData = pd.DataFrame({'label':labels, 'X1': reducedEmbedding[:, 0], 'X2': reducedEmbedding[:, 1]})
-reducedData.to_csv('../data/projected_data.txt', index=False, header=False)
+reducedData.to_csv('../data/facenet_projected_data.txt', index=False, header=False)
 
 plt.scatter(reducedEmbedding[:, 0], reducedEmbedding[:, 1], c=labels, cmap='Spectral', s=5)
 plt.gca().set_aspect('equal', 'datalim')
