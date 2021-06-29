@@ -29,6 +29,7 @@
 #include <QFile>
 #include <QDebug>
 #include <QImage>
+#include <QElapsedTimer>
 #include "digikam_opencv.h"
 #include "recognitionpreprocessor.h"
 #include "opencvdnnfacedetector.h"
@@ -58,6 +59,8 @@ public:
     }
 
     QImage* detect(const QImage& faceImg) const;
+    cv::Mat getFaceEmbedding(const cv::Mat& faceImage);
+
 private:
 
     Digikam::FaceDetector* m_detector;
@@ -84,6 +87,33 @@ QImage* Extractor::detect(const QImage& faceImg) const
     *croppedFace              = faceImg.copy(rect);
 
     return croppedFace;
+}
+
+cv::Mat Extractor::getFaceEmbedding(const cv::Mat& faceImage)
+{
+    cv::Mat face_descriptors;
+    cv::Mat alignedFace;
+
+    QElapsedTimer timer;
+
+    timer.start();
+    alignedFace = m_preprocessor->preprocess(faceImage);
+
+    qDebug() << "Finish aligning face in " << timer.elapsed() << " ms";
+    qDebug() << "Start neural network";
+
+    timer.start();
+    cv::Size imageSize = cv::Size(96, 96);
+    float scaleFactor = 1.0F / 255.0F;
+
+    cv::Mat blob = cv::dnn::blobFromImage(alignedFace, scaleFactor, imageSize, cv::Scalar(), true, false);
+
+    m_net.setInput(blob);
+    face_descriptors = m_net.forward();
+
+    qDebug() << "Finish computing face embedding in " << timer.elapsed() << " ms";
+
+    return face_descriptors;
 }
 
 int main(int argc, char** argv)
