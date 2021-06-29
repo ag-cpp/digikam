@@ -24,6 +24,11 @@
 
 #include "imagequalityparser_p.h"
 
+
+// Local includes 
+
+#include "noise_detection.h"
+
 namespace Digikam
 {
 
@@ -126,8 +131,8 @@ void ImageQualityParser::startAnalyse()
     {
         // Some images give very low noise value. Assign NoPickLabel in that case.
         // Returns noise value between 0 and 1.
-
-        noise = noiseDetector();
+        qInfo()<<"detect noise case";
+        noise = NoiseDetector(d->image).detect();
         qCDebug(DIGIKAM_DIMG_LOG) << "Amount of Noise present in image is:" << noise;
     }
 
