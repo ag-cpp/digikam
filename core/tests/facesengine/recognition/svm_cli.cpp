@@ -46,7 +46,7 @@ std::shared_ptr<QCommandLineParser> parseOptions(const QCoreApplication& app)
 /**
  * @brief loadData: load data from csv file into a train dataset and a leftout dataset to simulate unknown label
  */ 
-std::pair<cv::Ptr<cv::ml::TrainData>, cv::Ptr<cv::ml::TrainData>> loadData(QString fileName) 
+std::pair<cv::Ptr<cv::ml::TrainData>, cv::Ptr<cv::ml::TrainData>> loadData(const QString& fileName) 
 {
     cv::Mat predictors, labels;
     cv::Mat leftoutPredictors, leftoutLabels;

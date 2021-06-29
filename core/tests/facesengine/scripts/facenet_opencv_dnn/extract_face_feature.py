@@ -39,10 +39,7 @@ cvNet = load_model(model_path)
 
 """ Forward """
 cvNet.setInput(input_face_img)
-stime = time.time()
 cvOut = cvNet.forward()
-etime = time.time()
 
-dur = etime - stime
-print('face feature extract dur: %f' % dur)
+print(len(cvOut[0]))
 

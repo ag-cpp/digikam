@@ -25,6 +25,8 @@
 #include <QCoreApplication>
 #include <QCommandLineParser>
 #include <QString>
+#include <QChar>
+#include <QStringList>
 #include <QFile>
 #include <QDebug>
 #include <QImage>
@@ -50,12 +52,10 @@ std::shared_ptr<QCommandLineParser> parseOptions(const QCoreApplication& app)
 class Extractor {
 public:
     explicit Extractor() {
+        m_detector = new Digikam::FaceDetector();
         m_preprocessor = new Digikam::RecognitionPreprocessor;
         m_preprocessor->init(Digikam::PreprocessorSelection::OPENFACE);
-        m_net = cv::dnn::readNetFromTensorflow(
-                "/home/minhnghiaduong/Documents/Projects/digikam/core/tests/facesengine/scripts/facenet_opencv_dnn/models/graph_final.pb",
-                "/home/minhnghiaduong/Documents/Projects/digikam/core/tests/facesengine/scripts/facenet_opencv_dnn/models/graph_final.pbtxt"
-            );
+        m_net = cv::dnn::readNetFromTensorflow("../scripts/facenet_opencv_dnn/models/graph_final.pb");
     }
 
     QImage* detect(const QImage& faceImg) const;
@@ -92,30 +92,56 @@ cv::Mat Extractor::getFaceEmbedding(const cv::Mat& faceImage)
 {
     cv::Mat face_descriptors;
     cv::Mat alignedFace;
-    QElapsedTimer timer;
 
-    timer.start();
     alignedFace = m_preprocessor->preprocess(faceImage);
 
-    qDebug() << "Finish aligning face in " << timer.elapsed() << " ms";
-    qDebug() << "Start neural network";
-
-    timer.start();
-    cv::Size imageSize = cv::Size(96, 96);
+    cv::Size imageSize = cv::Size(160, 160);
     float scaleFactor = 1.0F / 255.0F;
-
+    /*
+    cv::Mat cvImage; 
+    cv::Mat whitenMat;
+    cv::resize(faceImage, cvImage, cv::Size(160, 160), 0.0, 0.0, CV_INTER_LINEAR);
+    cvImage = preWhiten(cvImage);
+    hwc_to_chw(cvImage, whitenMat);
+    */
     cv::Mat blob = cv::dnn::blobFromImage(alignedFace, scaleFactor, imageSize, cv::Scalar(), true, false);
     m_net.setInput(blob);
     face_descriptors = m_net.forward();
-
-    qDebug() << "Finish computing face embedding in " << timer.elapsed() << " ms";
-
     return face_descriptors;
+}
+
+void hwc_to_chw(cv::InputArray src, cv::OutputArray dst) {
+    const int src_h = src.rows();
+    const int src_w = src.cols();
+    const int src_c = src.channels();
+
+    cv::Mat hw_c = src.getMat().reshape(1, src_h * src_w);
+
+    const std::array<int,3> dims = {src_c, src_h, src_w};                         
+    dst.create(3, &dims[0], CV_MAKETYPE(src.depth(), 1));                         
+    cv::Mat dst_1d = dst.getMat().reshape(1, {src_c, src_h, src_w});              
+
+    cv::transpose(hw_c, dst_1d);                                                  
+}  
+
+
+
+cv::Mat preWhiten(cv::Mat image)
+{
+    cv::Mat mu, sigma;
+    cv::meanStdDev(image, mu, sigma);
+
+    std::vector<cv::Mat> channels;
+    cv::split(image, channels);
+    for (int i = 0; i < channels.size(); ++i)
+        channels[i] = (channels[i] - mu.at<double>(i, 0)) / sigma.at<double>(i, 0);
+    cv::merge(channels, image);
+
+    return image;
 }
 
 cv::Mat prepareForRecognition(QImage& inputImage)
 {
-    cv::Mat cvImage;    // = cv::Mat(image.height(), image.width(), CV_8UC3);
     cv::Mat cvImageWrapper;
 
     if (inputImage.format() != QImage::Format_ARGB32_Premultiplied)
@@ -124,7 +150,8 @@ cv::Mat prepareForRecognition(QImage& inputImage)
     }
 
     cvImageWrapper = cv::Mat(inputImage.height(), inputImage.width(), CV_8UC4, inputImage.scanLine(0), inputImage.bytesPerLine());
-    cv::cvtColor(cvImageWrapper, cvImage, CV_RGBA2RGB);
+    cv::Mat cvImage;    // = cv::Mat(image.height(), image.width(), CV_8UC3);
+    cv::cvtColor(cvImageWrapper, cvImage, CV_BGR2RGB);
 
     return cvImage;
 }
@@ -135,9 +162,6 @@ cv::Ptr<cv::ml::TrainData> extract(const QDir& dataDir) {
     Extractor extractor;
     // Each subdirectory in data directory should match with a label
     QFileInfoList subDirs = dataDir.entryInfoList(QDir::NoDotAndDotDot | QDir::Dirs, QDir::Name);
-
-    QElapsedTimer timer;
-    timer.start();
 
     for (int i = 0 ; i < subDirs.size() ; ++i)
     {
@@ -164,11 +188,42 @@ cv::Ptr<cv::ml::TrainData> extract(const QDir& dataDir) {
     return cv::ml::TrainData::create(predictors, 0, labels);
 }
 
+
+void save(cv::Ptr<cv::ml::TrainData> data, const QString& fileName) {
+    QFile file(fileName);
+    if (!file.open(QIODevice::WriteOnly)) {
+        qDebug() << file.errorString();
+        return;
+    }
+
+    QTextStream streamOut(&file);
+
+    cv::Mat samples = data->getSamples();
+    cv::Mat labels = data->getResponses();
+
+    for (int i = 0; i < samples.rows; ++i) 
+    {
+        QStringList line;
+        line << QString::number(labels.row(i).at<int>(0));
+
+        for(int j=0; j<samples.row(i).cols; ++j)
+        {
+            line << QString::number(double(samples.row(i).at<float>(j)));
+        } 
+
+        streamOut << line.join(QLatin1Char(',')) << "\n"; 
+    }
+}
+
 int main(int argc, char** argv)
 {
     QCoreApplication app(argc, argv);
     app.setApplicationName(QString::fromLatin1("digikam"));
     std::shared_ptr<QCommandLineParser> parser = parseOptions(app);
+
+    QDir dataset(parser->value(QLatin1String("data")));
+
+    save(extract(dataset), QLatin1String("../data/facenet_data.txt"));
 
     return 0;
 }
