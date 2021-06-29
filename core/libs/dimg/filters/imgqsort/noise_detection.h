@@ -37,6 +37,8 @@ namespace Digikam
 class NoiseDetector 
 {
 public:
+    typedef QList<cv::mat> Mat3D;
+public:
 
     explicit NoiseDetector(const DImg& image);
     ~NoiseDetector();
@@ -44,6 +46,7 @@ public:
     float detect();
 
 private:
+    Mat3D get_haarMat();
 
 private:
 
