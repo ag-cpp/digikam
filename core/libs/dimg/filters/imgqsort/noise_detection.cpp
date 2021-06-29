@@ -146,7 +146,7 @@ float NoiseDetector::detect()
     // Get raw moments
     
     cv::Mat mu1 = raw_moment(channels,1) / (d->image.size().width * d->image.size().height);
-    std::cout<<"mu1"<<mu1;
+    //std::cout<<"mu1"<<mu1;
     cv::Mat mu2 = raw_moment(channels,2) / (d->image.size().width * d->image.size().height);
     cv::Mat mu3 = raw_moment(channels,3) / (d->image.size().width * d->image.size().height);
     cv::Mat mu4 = raw_moment(channels,4) / (d->image.size().width * d->image.size().height);
@@ -164,8 +164,8 @@ float NoiseDetector::detect()
 
     cv::Scalar mean, stddev;
     
-    std::cout<<"noiV"<<noiV;
-    std::cout<<"noiK"<<noiK;
+    //std::cout<<"noiV"<<noiV;
+    //std::cout<<"noiK"<<noiK;
 
     //Calculate noise variance
     cv::meanStdDev(sqrt_noiK,mean,stddev);
@@ -211,7 +211,7 @@ cv::Mat NoiseDetector::raw_moment(NoiseDetector::Mat3D mat,int ordre)
 
     std::memcpy(res.data, list, mat.count() * sizeof(float));
 
-    std::cout<<res; 
+    //std::cout<<res; 
     
     return res;
 }
