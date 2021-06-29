@@ -134,10 +134,6 @@ void FocusPointsExtractor::findAFPoints()
     {
         return getAFPoints_nikon();
     }
-    if (model == QLatin1String("NIKON"))
-    {
-        return getAFPoints_nikon();
-    }
     if (model == QLatin1String("PANASONIC"))
     {
         return getAFPoints_panasonic();
