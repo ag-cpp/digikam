@@ -239,7 +239,7 @@ void SearchesDBJobsThread::searchesListing(const SearchesDBJobInfo& info)
         const int images2ScanPerThread = m_totalImages2Scan / threadsCount;
 
         QSet<qlonglong>::const_iterator begin = info.imageIds().constBegin();
-        QSet<qlonglong>::const_iterator end = info.imageIds().constBegin();
+        QSet<qlonglong>::const_iterator end   = info.imageIds().constBegin();
 
         for (int i = 0; i < threadsCount; ++i)
         {
