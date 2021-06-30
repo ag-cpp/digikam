@@ -250,6 +250,7 @@ void SearchesDBJobsThread::searchesListing(const SearchesDBJobInfo& info)
             }
             else
             {
+                // TODO: port to std::advance https://en.cppreference.com/w/cpp/iterator/advance
                 for (int j = 0; end != info.imageIds().constEnd() && j < images2ScanPerThread; ++j, ++end);
             }
 
