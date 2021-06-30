@@ -93,7 +93,7 @@ cv::Mat Extractor::getFaceEmbedding(const cv::Mat& faceImage)
     cv::Mat face_descriptors;
     cv::Mat alignedFace;
 
-    alignedFace = m_preprocessor->preprocess(faceImage);
+    //alignedFace = m_preprocessor->preprocess(faceImage);
 
     cv::Size imageSize = cv::Size(160, 160);
     float scaleFactor = 1.0F / 255.0F;
@@ -104,7 +104,7 @@ cv::Mat Extractor::getFaceEmbedding(const cv::Mat& faceImage)
     cvImage = preWhiten(cvImage);
     hwc_to_chw(cvImage, whitenMat);
     */
-    cv::Mat blob = cv::dnn::blobFromImage(alignedFace, scaleFactor, imageSize, cv::Scalar(), true, false);
+    cv::Mat blob = cv::dnn::blobFromImage(faceImage, scaleFactor, imageSize, cv::Scalar(), true, false);
     m_net.setInput(blob);
     face_descriptors = m_net.forward();
     return face_descriptors;
@@ -122,9 +122,7 @@ void hwc_to_chw(cv::InputArray src, cv::OutputArray dst) {
     cv::Mat dst_1d = dst.getMat().reshape(1, {src_c, src_h, src_w});              
 
     cv::transpose(hw_c, dst_1d);                                                  
-}  
-
-
+}
 
 cv::Mat preWhiten(cv::Mat image)
 {

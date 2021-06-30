@@ -29,7 +29,7 @@ for i in range(10,60,5):
                                                         random_state=42)
 
     print(i*2)
-    CC = [0.001,0.01,0.1,1,10,100,1000]
+    CC = [0.001,0.01,0.1,1,10,100,1000, 10000]
     scores = np.array([])
     for C in CC:
         svc = svm.SVC(C=C, kernel='rbf', gamma='auto').fit(reduced_X_train, y_train)
