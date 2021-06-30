@@ -59,7 +59,7 @@ public:
     }
 
     QImage* detect(const QImage& faceImg) const;
-    cv::Mat getFaceEmbedding(const cv::Mat& faceImage);
+    cv::Mat getFaceEmbedding(cv::Mat faceImage);
 
 private:
 
@@ -88,22 +88,17 @@ QImage* Extractor::detect(const QImage& faceImg) const
     return croppedFace;
 }
 
-cv::Mat Extractor::getFaceEmbedding(const cv::Mat& faceImage)
+cv::Mat Extractor::getFaceEmbedding(cv::Mat faceImage)
 {
     cv::Mat face_descriptors;
     cv::Mat alignedFace;
 
+    // TODO: fix alignment, which cause recognition error
     //alignedFace = m_preprocessor->preprocess(faceImage);
 
     cv::Size imageSize = cv::Size(160, 160);
     float scaleFactor = 1.0F / 255.0F;
-    /*
-    cv::Mat cvImage; 
-    cv::Mat whitenMat;
-    cv::resize(faceImage, cvImage, cv::Size(160, 160), 0.0, 0.0, CV_INTER_LINEAR);
-    cvImage = preWhiten(cvImage);
-    hwc_to_chw(cvImage, whitenMat);
-    */
+
     cv::Mat blob = cv::dnn::blobFromImage(faceImage, scaleFactor, imageSize, cv::Scalar(), true, false);
     m_net.setInput(blob);
     face_descriptors = m_net.forward();
@@ -122,20 +117,6 @@ void hwc_to_chw(cv::InputArray src, cv::OutputArray dst) {
     cv::Mat dst_1d = dst.getMat().reshape(1, {src_c, src_h, src_w});              
 
     cv::transpose(hw_c, dst_1d);                                                  
-}
-
-cv::Mat preWhiten(cv::Mat image)
-{
-    cv::Mat mu, sigma;
-    cv::meanStdDev(image, mu, sigma);
-
-    std::vector<cv::Mat> channels;
-    cv::split(image, channels);
-    for (int i = 0; i < channels.size(); ++i)
-        channels[i] = (channels[i] - mu.at<double>(i, 0)) / sigma.at<double>(i, 0);
-    cv::merge(channels, image);
-
-    return image;
 }
 
 cv::Mat prepareForRecognition(QImage& inputImage)
