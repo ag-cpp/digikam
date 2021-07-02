@@ -51,10 +51,10 @@ void FocusPointsExtractor::getAFPoints_sony()
 
     // Get size of af points
 
-    float focusLacationSize = 120; // this is a guess
+    float focusLocationSize = 120; // this is a guess
 
-    float afPointWidth = imageWidth / focusLacationSize;
-    float afPointHeight = imageHeight / focusLacationSize;
+    float afPointWidth = imageWidth / focusLocationSize;
+    float afPointHeight = imageHeight / focusLocationSize;
 
     // Get coordinate of af points
     float af_x_position = af_info[3].toFloat();
@@ -71,7 +71,6 @@ void FocusPointsExtractor::getAFPoints_sony()
     point.type = TypePoint::SelectedInFocus;
 
     addPoint(point);
-
 }
 
 }

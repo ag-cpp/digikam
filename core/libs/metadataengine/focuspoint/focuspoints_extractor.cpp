@@ -47,7 +47,7 @@ FocusPointsExtractor::FocusPointsExtractor(QObject* const parent,const QString& 
     :  QObject(parent),
        d(new Private)
 {
-    ExifToolParser* const exiftool = new ExifToolParser(this);
+    QScopedPointer<ExifToolParser> const exiftool (new ExifToolParser(this));
 
     exiftool->load(image_path);
 
@@ -56,8 +56,6 @@ FocusPointsExtractor::FocusPointsExtractor(QObject* const parent,const QString& 
     d->af_points = ListAFPoints();
 
     findAFPoints();
-
-    delete exiftool;
 }
 
 FocusPointsExtractor::~FocusPointsExtractor()
@@ -83,7 +81,7 @@ QVariant FocusPointsExtractor::findValue(const QString& tagName,bool isList)
     }
 }
 
-QVariant FocusPointsExtractor::findValue(const QString& tagNameRoot, const QString& key,bool isList)
+QVariant FocusPointsExtractor::findValue(const QString& tagNameRoot, const QString& key, bool isList)
 {
     return findValue(tagNameRoot + QLatin1String(".") + key,isList);
 }
@@ -122,7 +120,7 @@ void FocusPointsExtractor::findAFPoints()
 
     if (model.isNull())
     {
-        return;
+        return ;
     }
     model = model.split(QLatin1String(" "))[0].toUpper();
     
@@ -142,46 +140,35 @@ void FocusPointsExtractor::findAFPoints()
     {
         return getAFPoints_sony();
     }
-    return;
+    return ;
 }
 
-FocusPointsExtractor::ListAFPoints FocusPointsExtractor::af_infocus()
+FocusPointsExtractor::ListAFPoints FocusPointsExtractor::get_af_points(FocusPointsExtractor::TypePoint type)
 {
-    ListAFPoints points = ListAFPoints();
+    ListAFPoints points;
     for (const auto point : d->af_points)
     {
-        if (point.type == TypePoint::Infocus || point.type == TypePoint::SelectedInFocus)
+        if (type == TypePoint::Infocus)
         {
-            points.push_back(point);
+            if (!static_cast<bool>(point.type))
+            {
+                points.push_back(point);
+            }
+        }
+        else
+        {
+            if (static_cast<bool>(point.type) & static_cast<bool>(type))
+            {
+                points.push_back(point);
+            }
         }
     }
     return points;
 }
 
-FocusPointsExtractor::ListAFPoints FocusPointsExtractor::af_selected()
+FocusPointsExtractor::ListAFPoints FocusPointsExtractor::get_af_points()
 {
-    ListAFPoints points = ListAFPoints();
-    for (const auto point : d->af_points)
-    {
-        if (point.type == TypePoint::Selected || point.type == TypePoint::SelectedInFocus)
-        {
-            points.push_back(point);
-        }
-    }
-    return points;
-}
-
-FocusPointsExtractor::ListAFPoints FocusPointsExtractor::af_infocus_selected()
-{
-    ListAFPoints points = ListAFPoints();
-    for (const auto point : d->af_points)
-    {
-        if (point.type == TypePoint::SelectedInFocus)
-        {
-            points.push_back(point);
-        }
-    }
-    return points;
+    return d->af_points;
 }
 
 void FocusPointsExtractor::addPoint(const FocusPoint& point)

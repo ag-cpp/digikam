@@ -46,7 +46,7 @@ class DIGIKAM_EXPORT FocusPointsExtractor : public QObject
 
 public:
 
-    enum TypePoint
+    enum class TypePoint
     {
         Inactive            = 0,
         Infocus             = 1,
@@ -71,7 +71,7 @@ public:
      * relative centers coordinate and relative size. Each point has own 
      * type (Inactive, Infocus, Selected, SelectedInFocus)
      */
-    typedef QList<FocusPoint> ListAFPoints;
+    using ListAFPoints = QList<FocusPoint>;
 
 public:
 
@@ -80,10 +80,9 @@ public:
 
 public:
 
-    ListAFPoints af_infocus();
-    ListAFPoints af_selected();
-    ListAFPoints af_infocus_selected();
-    
+    ListAFPoints get_af_points();
+    ListAFPoints get_af_points(FocusPointsExtractor::TypePoint type);
+        
 private:
     
     QVariant findValue(const QString& tagName,bool isList = false);
