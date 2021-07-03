@@ -146,9 +146,9 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::get_af_points(FocusPoin
     ListAFPoints points;
     for (const auto point : d->af_points)
     {
-        if (type == TypePoint::Infocus)
+        if ((type == TypePoint::Inactive) || (type == TypePoint::SelectedInFocus))
         {
-            if (!static_cast<int>(point.type))
+            if (point.type == type)
             {
                 points.push_back(point);
             }
