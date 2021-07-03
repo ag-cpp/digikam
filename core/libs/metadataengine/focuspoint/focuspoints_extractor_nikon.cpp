@@ -33,7 +33,7 @@ namespace Digikam
 {
 
 
-void FocusPointsExtractor::getAFPoints_nikon()
+FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_nikon()
 {
     QString TagNameRoot = QLatin1String("MakerNotes.Nikon.Camera");
 
@@ -42,7 +42,7 @@ void FocusPointsExtractor::getAFPoints_nikon()
 
     if (!model.contains(QLatin1String("nikon z"), Qt::CaseInsensitive))
     {
-        return;
+        return ListAFPoints();
     }
 
     
@@ -57,14 +57,11 @@ void FocusPointsExtractor::getAFPoints_nikon()
                                     <<QLatin1String("EXIF.ExifIFD.Image.ExifImageHeight")
                                     );
 
-
-    
     if (imageWidth.isNull() || imageHeight.isNull())
     {
-        return;
+        return ListAFPoints();
     }
     
-
     // Get size of af points
     QVariant afPointWidth = findValue(TagNameRoot,QLatin1String("AFAreaWidth"));
     QVariant afPointHeight = findValue(TagNameRoot,QLatin1String("AFAreaHeight"));
@@ -72,7 +69,7 @@ void FocusPointsExtractor::getAFPoints_nikon()
     
     if ((afPointWidth.isNull()) || (afPointHeight.isNull()))
     {
-        return;
+        return ListAFPoints();
     }
         
 
@@ -82,7 +79,7 @@ void FocusPointsExtractor::getAFPoints_nikon()
 
     if (af_x_position.isNull() || af_y_position.isNull())
     {
-        return;
+        return ListAFPoints();
     }
 
     FocusPoint point;
@@ -94,7 +91,7 @@ void FocusPointsExtractor::getAFPoints_nikon()
     
     point.type = TypePoint::SelectedInFocus;
     
-    addPoint(point);
+    return ListAFPoints() << point;
     
 }
 

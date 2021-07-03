@@ -53,9 +53,7 @@ FocusPointsExtractor::FocusPointsExtractor(QObject* const parent,const QString& 
 
     d->metadata = exiftool->currentData();
 
-    d->af_points = ListAFPoints();
-
-    findAFPoints();
+    d->af_points = findAFPoints();
 }
 
 FocusPointsExtractor::~FocusPointsExtractor()
@@ -114,13 +112,13 @@ QVariant FocusPointsExtractor::findValueFirstMatch(const QString& tagNameRoot,co
     return QVariant();
 }
 
-void FocusPointsExtractor::findAFPoints()
+FocusPointsExtractor::ListAFPoints FocusPointsExtractor::findAFPoints()
 {
     QString model = findValue(QLatin1String("EXIF.IFD0.Camera.Make")).toString();
 
     if (model.isNull())
     {
-        return ;
+        return ListAFPoints();
     }
     model = model.split(QLatin1String(" "))[0].toUpper();
     
@@ -140,7 +138,7 @@ void FocusPointsExtractor::findAFPoints()
     {
         return getAFPoints_sony();
     }
-    return ;
+    return ListAFPoints();
 }
 
 FocusPointsExtractor::ListAFPoints FocusPointsExtractor::get_af_points(FocusPointsExtractor::TypePoint type)
@@ -148,16 +146,13 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::get_af_points(FocusPoin
     ListAFPoints points;
     for (const auto point : d->af_points)
     {
-        if (type == TypePoint::Infocus)
+        if (point.type == type)
         {
-            if (!static_cast<bool>(point.type))
-            {
-                points.push_back(point);
-            }
+            points.push_back(point);
         }
         else
         {
-            if (static_cast<bool>(point.type) & static_cast<bool>(type))
+            if (type == TypePoint::Infocus || type == TypePoint::Selected)
             {
                 points.push_back(point);
             }
@@ -169,11 +164,6 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::get_af_points(FocusPoin
 FocusPointsExtractor::ListAFPoints FocusPointsExtractor::get_af_points()
 {
     return d->af_points;
-}
-
-void FocusPointsExtractor::addPoint(const FocusPoint& point)
-{
-    d->af_points.push_back(point);
 }
 
 }

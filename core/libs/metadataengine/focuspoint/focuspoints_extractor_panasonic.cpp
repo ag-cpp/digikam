@@ -33,7 +33,7 @@ namespace Digikam
 {
 
 
-void FocusPointsExtractor::getAFPoints_panasonic()
+FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_panasonic()
 {
     QString TagNameRoot = QLatin1String("MakerNotes.Panasonic.Camera");
 
@@ -43,7 +43,7 @@ void FocusPointsExtractor::getAFPoints_panasonic()
 
     if (imageWidth.isNull() || imageHeight.isNull())
     {
-        return;
+        return ListAFPoints();
     }
 
     // Get af point
@@ -51,7 +51,7 @@ void FocusPointsExtractor::getAFPoints_panasonic()
 
     if (af_position.isEmpty())
     {
-        return;
+        return ListAFPoints();
     }
     float position_x = af_position[0].toFloat();
     float position_y = af_position[1].toFloat();
@@ -66,7 +66,7 @@ void FocusPointsExtractor::getAFPoints_panasonic()
 
     point.type = TypePoint::SelectedInFocus;
 
-    addPoint(point);
+    return ListAFPoints() << point;
 
 }
 

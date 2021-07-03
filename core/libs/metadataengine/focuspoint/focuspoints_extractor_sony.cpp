@@ -33,7 +33,7 @@ namespace Digikam
 {
 
 
-void FocusPointsExtractor::getAFPoints_sony()
+FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_sony()
 {
     QString TagNameRoot = QLatin1String("MakerNotes.Sony.Camera");
 
@@ -42,7 +42,7 @@ void FocusPointsExtractor::getAFPoints_sony()
 
     if (af_info.isEmpty())
     {
-        return;
+        return ListAFPoints();
     }
 
     // Get size image
@@ -70,7 +70,7 @@ void FocusPointsExtractor::getAFPoints_sony()
 
     point.type = TypePoint::SelectedInFocus;
 
-    addPoint(point);
+    return ListAFPoints() << point;
 }
 
 }

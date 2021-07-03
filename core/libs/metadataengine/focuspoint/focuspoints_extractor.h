@@ -89,15 +89,13 @@ private:
     QVariant findValue(const QString& tagNameRoot, const QString& key,bool isList = false);
     QVariant findValueFirstMatch(const QStringList& listTagNames,bool isList = false);
     QVariant findValueFirstMatch(const QString& tagNameRoot,const QStringList& keys, bool isList= false);
+        
+    ListAFPoints findAFPoints();
     
-    void addPoint(const FocusPoint& point);
-    
-    void findAFPoints();
-    
-    void getAFPoints_canon();
-    void getAFPoints_nikon();
-    void getAFPoints_panasonic();
-    void getAFPoints_sony();
+    ListAFPoints getAFPoints_canon();
+    ListAFPoints getAFPoints_nikon();
+    ListAFPoints getAFPoints_panasonic();
+    ListAFPoints getAFPoints_sony();
 
 private:
 

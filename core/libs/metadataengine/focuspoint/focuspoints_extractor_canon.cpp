@@ -32,8 +32,17 @@
 namespace Digikam
 {
 
+//namespace canon_internal
+//{
 
-void FocusPointsExtractor::getAFPoints_canon()
+// void FocusPointsExtractor::check_point_type(float af_x_position, float af_y_position,)
+// {
+
+// }
+
+//}
+
+FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_canon()
 {
     QString TagNameRoot = QLatin1String("MakerNotes.Canon.Camera");
 
@@ -67,7 +76,7 @@ void FocusPointsExtractor::getAFPoints_canon()
     
     if (imageWidth.isNull() || imageHeight.isNull())
     {
-        return;
+        return ListAFPoints();
     }
     
 
@@ -80,7 +89,7 @@ void FocusPointsExtractor::getAFPoints_canon()
     if (((afPointWidth.isNull()) || (afPointHeight.isNull())) && 
         ((afPointWidths.isEmpty()) || (afPointHeights.isEmpty())))
     {
-        return;
+        return ListAFPoints();
     }
         
 
@@ -90,7 +99,7 @@ void FocusPointsExtractor::getAFPoints_canon()
 
     if (af_x_positions.isEmpty() || af_y_positions.isEmpty())
     {
-        return;
+        return ListAFPoints();
     }
 
     // Get type of af points
@@ -106,6 +115,8 @@ void FocusPointsExtractor::getAFPoints_canon()
 
     int nb_points = af_x_positions.count();
 
+    ListAFPoints points;
+
     for (int i=0; i< nb_points; i++)
     {
         FocusPoint point;
@@ -120,7 +131,7 @@ void FocusPointsExtractor::getAFPoints_canon()
 
         point.type = TypePoint::Inactive;
         
-        bool isSelected = af_selected.contains(QString::number(i)); // durty trick 
+        bool isSelected = af_selected.contains(QString::number(i));
         
         bool isInfocus  = af_infocus.contains(QString::number(i));
         
@@ -137,8 +148,10 @@ void FocusPointsExtractor::getAFPoints_canon()
             point.type = TypePoint::Infocus;
         }
 
-        addPoint(point);
+        points.append(point);
     }
+
+    return points;
 
 }
 
