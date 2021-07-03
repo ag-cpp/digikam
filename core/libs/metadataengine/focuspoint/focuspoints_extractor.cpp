@@ -155,12 +155,11 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::get_af_points(FocusPoin
         }
         else
         {
-            if (static_cast<int>(point.type) & static_cast<int>(type))
+            if (static_cast<int>(point.type) | static_cast<int>(type))
             {
                 points.push_back(point);
             }
         }
-
     }
     return points;
 }
