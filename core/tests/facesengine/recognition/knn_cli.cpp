@@ -86,7 +86,6 @@ std::pair<cv::Ptr<cv::ml::TrainData>, cv::Ptr<cv::ml::TrainData>> loadData(const
 
 Digikam::KDTree* trainKNN(cv::Mat samples, cv::Mat labels) 
 {
-    qDebug() << samples.cols;
     Digikam::KDTree* tree = new Digikam::KDTree(samples.cols);
     for (int i = 0; i < samples.rows; ++i) 
     {
@@ -98,7 +97,7 @@ Digikam::KDTree* trainKNN(cv::Mat samples, cv::Mat labels)
 
 int predict(std::shared_ptr<Digikam::KDTree> knn, cv::Mat predictors) 
 {
-    QMap<double, QVector<int> > closestNeighbors = knn->getClosestNeighbors(predictors, 1.0, 0.8, 5);
+    QMap<double, QVector<int> > closestNeighbors = knn->getClosestNeighbors(predictors, 1.0, 0.0, 5);
     QMap<int, QVector<double> > votingGroups;
 
     for (QMap<double, QVector<int> >::const_iterator iter  = closestNeighbors.cbegin();
@@ -149,7 +148,7 @@ double testClassification(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::Train
     {
         if (predict(knn, data->getTestSamples().row(i)) != data->getTestResponses().row(i).at<int>(0)) 
         {
-            ++falseNegative;
+            ++falsePositive;
         }
     }
 
@@ -157,7 +156,7 @@ double testClassification(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::Train
     {
         if (predict(knn, leftout->getSamples().row(i)) != -1) 
         {
-            ++falsePositive;
+            ++falseNegative;
         }
     }
 
