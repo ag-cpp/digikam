@@ -26,11 +26,12 @@
 // Local includes
 
 #include "kd_node.h"
+#include "digikam_export.h"
 
 namespace Digikam
 {
 
-class KDTree
+class DIGIKAM_GUI_EXPORT KDTree
 {
 
 public:

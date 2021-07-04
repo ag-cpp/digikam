@@ -43,6 +43,7 @@ std::shared_ptr<QCommandLineParser> parseOptions(const QCoreApplication& app)
 {
     QCommandLineParser* const parser = new QCommandLineParser();
     parser->addOption(QCommandLineOption(QLatin1String("data"), QLatin1String("Data directory"), QLatin1String("path relative to data directory")));
+    parser->addOption(QCommandLineOption(QLatin1String("out"), QLatin1String("Output file"), QLatin1String("path relative to output file")));
     parser->addHelpOption();
     parser->process(app);
 
@@ -202,7 +203,7 @@ int main(int argc, char** argv)
 
     QDir dataset(parser->value(QLatin1String("data")));
 
-    save(extract(dataset), QLatin1String("../data/facenet_data.txt"));
+    save(extract(dataset), parser->value(QLatin1String("out")));
 
     return 0;
 }

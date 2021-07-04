@@ -88,6 +88,17 @@ target_link_libraries(svm_cli
 
 # -----------------------------------------------------------------------------
 
+set(knn_cli_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/knn_cli.cpp)
+add_executable(knn_cli ${knn_cli_SRCS})
+
+target_link_libraries(knn_cli
+                      digikamgui
+                      opencv_ml
+                      ${COMMON_TEST_LINK}
+)
+
+# -----------------------------------------------------------------------------
+
 set(extract_cli_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/extract_cli.cpp)
 add_executable(extract_cli ${extract_cli_SRCS})
 
