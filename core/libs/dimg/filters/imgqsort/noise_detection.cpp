@@ -8,8 +8,9 @@
  *
  * Copyright (C) 2013-2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
  *
- * References  : 
- *
+ * References  : https://cse.buffalo.edu/~siweilyu/papers/ijcv14.pdf
+ * 
+ * 
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation;
@@ -83,6 +84,8 @@ cv::Mat NoiseDetector::prepareForDetection(const DImg& inputImage) const
 
     cv::cvtColor( cvImage, cvImage, cv::COLOR_BGR2GRAY );
 
+    cvImage.convertTo(cvImage,CV_32F);
+
     return cvImage;
 }
 
@@ -124,65 +127,81 @@ NoiseDetector::Mat3D NoiseDetector::get_haarMat()
 float NoiseDetector::detect()
 { 
     qInfo()<<"start detection";
+    
     Mat3D fltrs = get_haarMat();
 
-    // Decompose to kernel
-    
-    cv::Mat image = d->image;
-    image.convertTo(image,CV_32F);
+    // Decompose to channels
 
-    Mat3D channels;
+    Mat3D channels = decompose_by_filter(fltrs);
     
-    for (int k =1; k < d->size_filter * d->size_filter; k ++)
+    // Calculate variance and kurtosis
+
+    cv::Mat variance, kurtosis ;
+
+    calculate_variance_kurtosis(channels, variance, kurtosis);
+
+    // Calculate variance
+
+    float V =  noise_variance(variance,kurtosis) ;
+
+    qInfo()<<"variance noise"<<V;
+
+    return V;
+}
+
+NoiseDetector::Mat3D NoiseDetector::decompose_by_filter(const Mat3D& filters)
+{
+    Mat3D channels;
+
+    Mat3D filtersUsed = filters.mid(1); // do not use first filter
+    
+    for (const auto filter: filtersUsed)
     {
         cv::Mat tmp = cv::Mat(d->image.size().width, d->image.size().height, CV_32FC1 );
+
+        std::cout<<"kernel "<< filter;
         
-        cv::filter2D(image, tmp, -1, fltrs.at(k-1), cv::Point(-1,-1), 0.0, cv::BORDER_REPLICATE);
+        cv::filter2D(d->image, tmp, -1, filter, cv::Point(-1,-1), 0.0, cv::BORDER_REPLICATE);
         
         channels.push_back(tmp);
         // std::cout<<tmp;
     }
 
+    return channels;
+}
+
+void NoiseDetector::calculate_variance_kurtosis(const Mat3D& channels, cv::Mat& variance, cv::Mat& kurtosis)
+{
     // Get raw moments
     
-    cv::Mat mu1 = raw_moment(channels,1) / (d->image.size().width * d->image.size().height);
-    //std::cout<<"mu1"<<mu1;
-    cv::Mat mu2 = raw_moment(channels,2) / (d->image.size().width * d->image.size().height);
-    cv::Mat mu3 = raw_moment(channels,3) / (d->image.size().width * d->image.size().height);
-    cv::Mat mu4 = raw_moment(channels,4) / (d->image.size().width * d->image.size().height);
+    cv::Mat mu1 = raw_moment(channels,1) ;
+    cv::Mat mu2 = raw_moment(channels,2) ;
+    cv::Mat mu3 = raw_moment(channels,3) ;
+    cv::Mat mu4 = raw_moment(channels,4) ;
     
 
-    // Calculate kurtoisis projesction
+    // Calculate variance and kurtosis projection
     
-    cv::Mat noiV = mu2 - mat_pow(mu1,2);
+    variance = mu2 - pow_mat(mu1,2);
 
-    cv::Mat noiK = (mu4 - 4*mu1.mul(mu3) + 6*mat_pow(mu1,2).mul(mu2) - 3*mat_pow(mu1,4))/(mat_pow(noiV,2))-3;
+    kurtosis = (mu4 - 4.0*mu1.mul(mu3) + 6.0*pow_mat(mu1,2).mul(mu2) - 3.0*pow_mat(mu1,4)) / pow_mat(variance,2)-3.0;
+}
 
-    cv::Mat sqrt_noiK;
+float NoiseDetector::noise_variance(const cv::Mat& variance, const cv::Mat& kurtosis)
+{
+    cv::Mat sqrt_kurtosis;
     
-    cv::sqrt(noiK, sqrt_noiK);
+    cv::sqrt(kurtosis, sqrt_kurtosis);
 
     cv::Scalar mean, stddev;
     
-    //std::cout<<"noiV"<<noiV;
-    //std::cout<<"noiK"<<noiK;
+    float a = mean_mat(sqrt_kurtosis);
 
-    //Calculate noise variance
-    cv::meanStdDev(sqrt_noiK,mean,stddev);
-    float a = mean[0];
-    qInfo()<<"variance a"<<a;
+    float b = mean_mat(pow_mat(variance,-1));
 
-    cv::meanStdDev(mat_pow(noiV,-1),mean,stddev);
-    float b = mean[0];
-    qInfo()<<"variance b"<<b;
+    float c = mean_mat(pow_mat(variance,-2));
 
-    cv::meanStdDev(mat_pow(noiV,-2),mean,stddev);
-    float c = mean[0];
-    qInfo()<<"variance c"<<c;
-
-    cv::meanStdDev(sqrt_noiK.mul(mat_pow(noiV,-1)),mean,stddev);
-    float d = mean[0];
-    qInfo()<<"variance d"<<d;
+    float d = mean_mat(sqrt_kurtosis.mul(pow_mat(variance,-1)));
 
     float sqrtK = (a*c - b*d)/(c-b*b);
 
@@ -193,40 +212,38 @@ float NoiseDetector::detect()
     return V;
 }
 
-cv::Mat NoiseDetector::raw_moment(NoiseDetector::Mat3D mat,int ordre)
+cv::Mat NoiseDetector::raw_moment(const NoiseDetector::Mat3D& mat,int ordre)
 {
     qInfo()<<"get raw moment";
-    float list[mat.count()];
-    // std::list<float> list;
-    int index = 0;
+    
+    std::vector<float> vec;
     
     for (const auto mat2d : mat)
     {
-        list[index] = cv::sum(mat_pow(mat2d,ordre))[0] / (d->image.size().width * d->image.size().height);
-
-        index++;
+        vec.push_back(cv::sum(pow_mat(mat2d,ordre))[0] / (d->image.size().width * d->image.size().height));
     }
 
-    cv::Mat res = cv::Mat(mat.count(), 1, CV_32FC1);
-
-    std::memcpy(res.data, list, mat.count() * sizeof(float));
-
-    //std::cout<<res; 
+    qInfo()<< "vec" << vec;
     
+    return cv::Mat(vec, true);
+}
+
+cv::Mat NoiseDetector::pow_mat(const cv::Mat& mat, float ordre)
+{
+    cv::Mat res = cv::Mat(d->image.size().width, d->image.size().height, CV_32FC1 );
+    
+    cv::pow(mat, ordre, res);
+
     return res;
 }
 
-cv::Mat NoiseDetector::mat_pow(const cv::Mat mat, float ordre)
+float NoiseDetector::mean_mat(const cv::Mat& mat)
 {
-    cv::Mat res =  cv::Mat(d->image.size().width, d->image.size().height, CV_32FC1 );
+    cv::Scalar mean, stddev;
     
-    // mat.convertTo(mat,CV_32F);
+    cv::meanStdDev(mat,mean,stddev);
 
-    cv::pow(mat, ordre, res);
-
-    // std::cout<<res;
-
-    return res;
+    return mean[0];
 }
 
 }
