@@ -58,7 +58,7 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_nikon()
 {
     QString TagNameRoot = QLatin1String("MakerNotes.Nikon.Camera");
 
-    // Get size image 
+    // Filter model
     QString model = findValue(QLatin1String("EXIF.IFD0.Camera.Model")).toString().toLower();
 
     if (!model.contains(QLatin1String("nikon z"), Qt::CaseInsensitive))
@@ -66,7 +66,7 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_nikon()
         return ListAFPoints();
     }
 
-    
+    // Get image size
     QVariant imageWidth, imageHeight;
     
     imageWidth = findValueFirstMatch(QStringList()
@@ -83,7 +83,7 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_nikon()
         return ListAFPoints();
     }
     
-    // Get size of af points
+    // Get size of point
     QVariant afPointWidth = findValue(TagNameRoot,QLatin1String("AFAreaWidth"));
     QVariant afPointHeight = findValue(TagNameRoot,QLatin1String("AFAreaHeight"));
 
