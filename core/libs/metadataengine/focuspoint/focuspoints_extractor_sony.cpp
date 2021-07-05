@@ -34,6 +34,28 @@ namespace Digikam
 
 const float FOCUS_REGION_SIZE = 120; // this is a guess
 
+// Internal function to create af point from meta data
+namespace SonyInternal
+{
+
+FocusPointsExtractor::FocusPoint create_af_point(float imageWidth, float imageHeight, 
+                                                 float afPointWidth, float afPointHeight, 
+                                                 float af_x_position, float af_y_position)
+{    
+    FocusPointsExtractor::FocusPoint point;
+
+    point.x_position = af_x_position / imageWidth;
+    point.y_position = af_y_position / imageHeight;
+    point.width      = afPointWidth;
+    point.height     = afPointHeight;
+    
+    point.type = FocusPointsExtractor::TypePoint::SelectedInFocus;
+
+    return point;
+}
+
+}
+
 FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_sony()
 {
     QString TagNameRoot = QLatin1String("MakerNotes.Sony.Camera");
@@ -60,16 +82,11 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_sony()
     float af_y_position = af_info[4].toFloat();
 
     // Add point
-    FocusPoint point;
+    
 
-    point.x_position = af_x_position / imageWidth;
-    point.y_position = af_y_position / imageHeight;
-    point.width      = afPointWidth;
-    point.height     = afPointHeight;
-
-    point.type = TypePoint::SelectedInFocus;
-
-    return ListAFPoints() << point;
+    return ListAFPoints() << SonyInternal::create_af_point(imageWidth, imageHeight,
+                                                           afPointWidth, afPointHeight,
+                                                           af_x_position, af_y_position);
 }
 
 }
