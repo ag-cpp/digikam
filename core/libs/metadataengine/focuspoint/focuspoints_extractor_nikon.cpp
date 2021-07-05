@@ -36,22 +36,23 @@ namespace Digikam
 namespace NikonInternal
 {
 
-FocusPointsExtractor::FocusPoint* create_af_point(float imageWidth, float imageHeight, 
-                                                  float afPointWidth, float afPointHeight, 
-                                                  float af_x_position, float af_y_position)
+FocusPointsExtractor::FocusPoint create_af_point(float imageWidth, float imageHeight, 
+                                                 float afPointWidth, float afPointHeight, 
+                                                 float af_x_position, float af_y_position)
 {    
-    FocusPoint point;
+    FocusPointsExtractor::FocusPoint point;
 
     point.x_position = af_x_position / imageWidth;
     point.y_position = af_y_position / imageHeight;
     point.width      = afPointWidth  / imageWidth;
     point.height     = afPointHeight / imageHeight;
     
-    point.type = TypePoint::SelectedInFocus;
+    point.type = FocusPointsExtractor::TypePoint::SelectedInFocus;
+
+    return point;
 }
 
 }
-
 
 
 FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_nikon()

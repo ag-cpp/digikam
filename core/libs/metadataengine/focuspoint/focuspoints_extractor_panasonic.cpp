@@ -32,6 +32,7 @@
 namespace Digikam
 {
 
+const float RATIO_POINT_IMAGE = 1/3; // this is a guess
 
 FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_panasonic()
 {
@@ -61,8 +62,8 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_panasonic()
 
     point.x_position = position_x;
     point.y_position = position_y;
-    point.width      = imageWidth.toFloat()  / 3;
-    point.height     = imageHeight.toFloat() / 3;
+    point.width      = imageWidth.toFloat()  * RATIO_POINT_IMAGE;
+    point.height     = imageHeight.toFloat() * RATIO_POINT_IMAGE;
 
     point.type = TypePoint::SelectedInFocus;
 
