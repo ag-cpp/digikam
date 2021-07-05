@@ -158,13 +158,10 @@ NoiseDetector::Mat3D NoiseDetector::decompose_by_filter(const Mat3D& filters)
     for (const auto filter: filtersUsed)
     {
         cv::Mat tmp = cv::Mat(d->image.size().width, d->image.size().height, CV_32FC1 );
-
-        std::cout<<"kernel "<< filter;
         
         cv::filter2D(d->image, tmp, -1, filter, cv::Point(-1,-1), 0.0, cv::BORDER_REPLICATE);
         
         channels.push_back(tmp);
-        // std::cout<<tmp;
     }
 
     return channels;
@@ -205,9 +202,7 @@ float NoiseDetector::noise_variance(const cv::Mat& variance, const cv::Mat& kurt
 
     float sqrtK = (a*c - b*d)/(c-b*b);
 
-    float V = (1 - a/sqrtK)/b;
-
-    qInfo()<<"variance noise"<<V;
+    float V = (1.0 - a/sqrtK)/b;
 
     return V;
 }
@@ -215,15 +210,15 @@ float NoiseDetector::noise_variance(const cv::Mat& variance, const cv::Mat& kurt
 cv::Mat NoiseDetector::raw_moment(const NoiseDetector::Mat3D& mat,int ordre)
 {
     qInfo()<<"get raw moment";
+
+    float taille_image = d->image.size().width * d->image.size().height;
     
     std::vector<float> vec;
     
     for (const auto mat2d : mat)
     {
-        vec.push_back(cv::sum(pow_mat(mat2d,ordre))[0] / (d->image.size().width * d->image.size().height));
+        vec.push_back(cv::sum(pow_mat(mat2d,ordre))[0] / taille_image);
     }
-
-    qInfo()<< "vec" << vec;
     
     return cv::Mat(vec, true);
 }
