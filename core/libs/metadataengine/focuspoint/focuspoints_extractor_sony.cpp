@@ -56,6 +56,7 @@ FocusPointsExtractor::FocusPoint create_af_point(float imageWidth, float imageHe
 
 }
 
+// Main function to extract af point
 FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_sony()
 {
     QString TagNameRoot = QLatin1String("MakerNotes.Sony.Camera");
@@ -80,9 +81,6 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_sony()
     // Get coordinate of af points
     float af_x_position = af_info[3].toFloat();
     float af_y_position = af_info[4].toFloat();
-
-    // Add point
-    
 
     return ListAFPoints() << SonyInternal::create_af_point(imageWidth, imageHeight,
                                                            afPointWidth, afPointHeight,
