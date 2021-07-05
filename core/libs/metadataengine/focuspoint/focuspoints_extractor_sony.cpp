@@ -32,7 +32,7 @@
 namespace Digikam
 {
 
-const float FOCUS_REGION_SIZE = 120; // this is a guess
+const float RATIO_POINT_IMAGE = 120; // this is a guess
 
 // Internal function to create af point from meta data
 namespace SonyInternal
@@ -75,8 +75,8 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_sony()
 
     // Get size of af points
 
-    float afPointWidth = imageWidth / FOCUS_REGION_SIZE;
-    float afPointHeight = imageHeight / FOCUS_REGION_SIZE;
+    float afPointWidth = imageWidth * RATIO_POINT_IMAGE;
+    float afPointHeight = imageHeight * RATIO_POINT_IMAGE;
 
     // Get coordinate of af points
     float af_x_position = af_info[3].toFloat();
