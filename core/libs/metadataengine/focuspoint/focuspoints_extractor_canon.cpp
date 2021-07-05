@@ -95,6 +95,7 @@ FocusPointsExtractor::FocusPoint* create_af_point(float imageWidth, float imageH
 
 }
 
+// Main function to extract af point
 FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_canon()
 {
     QString TagNameRoot = QLatin1String("MakerNotes.Canon.Camera");

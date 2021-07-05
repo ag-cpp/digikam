@@ -32,6 +32,27 @@
 namespace Digikam
 {
 
+// Internal function to create af point from meta data
+namespace NikonInternal
+{
+
+FocusPointsExtractor::FocusPoint* create_af_point(float imageWidth, float imageHeight, 
+                                                  float afPointWidth, float afPointHeight, 
+                                                  float af_x_position, float af_y_position)
+{    
+    FocusPoint point;
+
+    point.x_position = af_x_position / imageWidth;
+    point.y_position = af_y_position / imageHeight;
+    point.width      = afPointWidth  / imageWidth;
+    point.height     = afPointHeight / imageHeight;
+    
+    point.type = TypePoint::SelectedInFocus;
+}
+
+}
+
+
 
 FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_nikon()
 {
@@ -82,17 +103,9 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_nikon()
         return ListAFPoints();
     }
 
-    FocusPoint point;
-
-    point.x_position = af_x_position.toFloat() / imageWidth.toFloat();
-    point.y_position = af_y_position.toFloat() / imageHeight.toFloat();
-    point.width      = afPointWidth.toFloat()  / imageWidth.toFloat();
-    point.height     = afPointHeight.toFloat() / imageHeight.toFloat();
-    
-    point.type = TypePoint::SelectedInFocus;
-    
-    return ListAFPoints() << point;
-    
+    return ListAFPoints() << NikonInternal::create_af_point(imageWidth.toFloat(), imageHeight.toFloat(),
+                                                            afPointWidth.toFloat(), afPointHeight.toFloat(),
+                                                            af_x_position.toFloat(), af_y_position.toFloat());
 }
 
 }
