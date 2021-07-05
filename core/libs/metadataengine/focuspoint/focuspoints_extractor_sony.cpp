@@ -32,6 +32,7 @@
 namespace Digikam
 {
 
+const float FOCUS_REGION_SIZE = 120; // this is a guess
 
 FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_sony()
 {
@@ -51,10 +52,8 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_sony()
 
     // Get size of af points
 
-    float focusLocationSize = 120; // this is a guess
-
-    float afPointWidth = imageWidth / focusLocationSize;
-    float afPointHeight = imageHeight / focusLocationSize;
+    float afPointWidth = imageWidth / FOCUS_REGION_SIZE;
+    float afPointHeight = imageHeight / FOCUS_REGION_SIZE;
 
     // Get coordinate of af points
     float af_x_position = af_info[3].toFloat();

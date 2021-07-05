@@ -32,15 +32,68 @@
 namespace Digikam
 {
 
-//namespace canon_internal
-//{
+// Internal function to create af point from meta data
+namespace CanonInternal
+{
 
-// void FocusPointsExtractor::check_point_type(float af_x_position, float af_y_position,)
-// {
+void set_point_position(FocusPointsExtractor::FocusPoint* point, float imageWidth, float imageHeight,
+                  float af_x_position, float af_y_position, int yDirection)
+{
+    point->x_position = 0.5 + af_x_position /  imageWidth;
+    point->y_position = 0.5 + af_y_position * yDirection /  imageHeight;
+}
 
-// }
+void set_point_size(FocusPointsExtractor::FocusPoint* point,
+                    float imageWidth, float imageHeight,
+                    float afPointWidth, float afPointHeight)
+{
+    point->width = afPointWidth / imageWidth ;
+    point->height = afPointHeight / imageHeight ;
+}
 
-//}
+void set_point_type(FocusPointsExtractor::FocusPoint* point,
+                    QStringList af_selected, QStringList af_infocus,
+                    int index)
+{
+    point->type = FocusPointsExtractor::TypePoint::Inactive;
+    
+    bool isSelected = af_selected.contains(QString::number(index + 1));
+    
+    bool isInfocus  = af_infocus.contains(QString::number(index + 1));
+    
+    if (isSelected && isInfocus)
+    {
+        point->type = FocusPointsExtractor::TypePoint::SelectedInFocus;
+    }
+    else if (isSelected)
+    {
+        point->type = FocusPointsExtractor::TypePoint::Selected;
+    }
+    else if (isInfocus)
+    {
+        point->type = FocusPointsExtractor::TypePoint::Infocus;
+    }
+}
+
+FocusPointsExtractor::FocusPoint* create_af_point(float imageWidth, float imageHeight, 
+                                                  float afPointWidth, float afPointHeight, 
+                                                  float af_x_position, float af_y_position,
+                                                  QStringList af_selected, QStringList af_infocus,
+                                                  int yDirection, int index)
+{    
+    FocusPointsExtractor::FocusPoint* point = new FocusPointsExtractor::FocusPoint;
+
+    set_point_position(point, imageWidth, imageHeight, 
+                       af_x_position, af_y_position, yDirection);
+
+    set_point_size(point, imageWidth, imageHeight, afPointWidth, afPointHeight);
+
+    set_point_type(point, af_selected, af_infocus, index);
+
+    return point;
+}
+
+}
 
 FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_canon()
 {
@@ -90,8 +143,7 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_canon()
         ((afPointWidths.isEmpty()) || (afPointHeights.isEmpty())))
     {
         return ListAFPoints();
-    }
-        
+    }   
 
     // Get coordinate of af points
     QStringList af_x_positions = findValue(TagNameRoot,QLatin1String("AFAreaXPositions"), true).toStringList() ;
@@ -109,51 +161,31 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_canon()
                                                 true).toStringList();
     QStringList af_infocus  = findValue(TagNameRoot,QLatin1String("AFPointsInFocus"),  true).toStringList();
 
-    QVariant cameraType = findValue(TagNameRoot,QLatin1String("CameraType"));
+    // Get direction
+    QString cameraType = findValue(TagNameRoot,QLatin1String("CameraType")).toString();
 
-    int yDirection = (cameraType.toString().toUpper() == QLatin1String("COMPACT")) ? -1 : 1;
+    int yDirection = (cameraType.toUpper() == QLatin1String("COMPACT")) ? -1 : 1;
 
-    int nb_points = af_x_positions.count();
 
     ListAFPoints points;
 
-    for (int i=0; i< nb_points; i++)
+    for (int i=0; i < af_x_positions.count(); i++)
     {
-        FocusPoint point;
-        point.x_position = 0.5 + af_x_positions[i].toFloat() /  imageWidth.toFloat();
-        point.y_position = 0.5 + af_y_positions[i].toFloat() * yDirection /  imageHeight.toFloat();
+        float afPointWidthUsed = (afPointWidths.isEmpty()) ?  afPointWidth.toFloat() : afPointWidths[i].toFloat();
         
-        point.width = (afPointWidths[i].isEmpty()) ?  afPointWidth.toFloat() : afPointWidths[i].toFloat();
-        point.height = (afPointHeights[i].isEmpty()) ?  afPointHeight.toFloat() : afPointHeights[i].toFloat();
+        float afPointHeightUsed = (afPointWidths.isEmpty()) ?  afPointHeight.toFloat() : afPointWidths[i].toFloat();
 
-        point.width /= imageWidth.toFloat();
-        point.height /= imageHeight.toFloat();
+        FocusPoint* point = CanonInternal::create_af_point(imageWidth.toFloat(), imageHeight.toFloat(), 
+                                                           afPointWidthUsed, afPointHeightUsed,
+                                                           af_x_positions[i].toFloat(), af_y_positions[i].toFloat(), 
+                                                           af_selected, af_infocus,
+                                                           yDirection, i);
+        points.append(*point);
 
-        point.type = TypePoint::Inactive;
-        
-        bool isSelected = af_selected.contains(QString::number(i));
-        
-        bool isInfocus  = af_infocus.contains(QString::number(i));
-        
-        if (isSelected && isInfocus)
-        {
-            point.type = TypePoint::SelectedInFocus;
-        }
-        else if (isSelected)
-        {
-            point.type = TypePoint::Selected;
-        }
-        else if (isInfocus)
-        {
-            point.type = TypePoint::Infocus;
-        }
-
-        points.append(point);
+        delete point;
     }
 
     return points;
-
 }
-
 
 }
