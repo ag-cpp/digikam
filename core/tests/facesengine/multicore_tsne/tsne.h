@@ -14,13 +14,21 @@
 
 #include <cstddef>
 
-class DataPoint;
+void tsne_run_double(double* X, int N, int D, double* Y,
+                                int no_dims = 2, double perplexity = 30, double theta = .5,
+                                int num_threads = 1, int max_iter = 1000, int n_iter_early_exag = 250,
+                                int random_state = -1, bool init_from_Y = false, int verbose = 0,
+                                double early_exaggeration = 12, double learning_rate = 200,
+                                double *final_error = NULL, int distance = 1);
+
 
 static inline double sign(double x) { return (x == .0 ? .0 : (x < .0 ? -1.0 : 1.0)); }
 
+class DataPoint;
+
 template <class treeT, double (*dist_fn)( const DataPoint&, const DataPoint&)>
 class TSNE
-{
+{ 
 public:
     void run(double* X, int N, int D, double* Y,
                int no_dims = 2, double perplexity = 30, double theta = .5,

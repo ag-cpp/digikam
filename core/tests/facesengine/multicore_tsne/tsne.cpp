@@ -17,21 +17,43 @@
 #include <iostream>
 
 #ifdef _OPENMP
-#include <omp.h>
-#endif
-
-// #include "quadtree.h"
-#include "splittree.h"
-#include "vptree.h"
-#include "tsne.h"
-
-
-#ifdef _OPENMP
+    #include <omp.h>
     #define NUM_THREADS(N) ((N) >= 0 ? (N) : omp_get_num_procs() + (N) + 1)
 #else
     #define NUM_THREADS(N) (1)
 #endif
 
+
+// #include "quadtree.h"
+#include "vptree.h"
+#include "splittree.h"
+#include "tsne.h"
+
+
+void tsne_run_double(double* X, int N, int D, double* Y,
+                    int no_dims, double perplexity, double theta,
+                    int num_threads, int max_iter, int n_iter_early_exag,
+                    int random_state, bool init_from_Y, int verbose,
+                    double early_exaggeration, double learning_rate,
+                    double *final_error, int distance)
+{
+    if (verbose)
+    {
+        fprintf(stderr, "Performing t-SNE using %d cores.\n", NUM_THREADS(num_threads));
+    }
+    if (distance == 0) 
+    {
+        TSNE<SplitTree, euclidean_distance> tsne;
+        tsne.run(X, N, D, Y, no_dims, perplexity, theta, num_threads, max_iter, n_iter_early_exag,
+                random_state, init_from_Y, verbose, early_exaggeration, learning_rate, final_error);
+    }
+    else 
+    {
+        TSNE<SplitTree, euclidean_distance_squared> tsne;
+        tsne.run(X, N, D, Y, no_dims, perplexity, theta, num_threads, max_iter, n_iter_early_exag,
+                 random_state, init_from_Y, verbose, early_exaggeration, learning_rate, final_error);
+    }
+}
 
 /*  
     Perform t-SNE
@@ -592,31 +614,4 @@ double TSNE<treeT, dist_fn>::randn() {
     radius = sqrt(-2 * log(radius) / radius);
     x *= radius;
     return x;
-}
-
-extern "C"
-{
-    #ifdef _WIN32
-    __declspec(dllexport)
-    #endif
-    extern void tsne_run_double(double* X, int N, int D, double* Y,
-                                int no_dims = 2, double perplexity = 30, double theta = .5,
-                                int num_threads = 1, int max_iter = 1000, int n_iter_early_exag = 250,
-                                int random_state = -1, bool init_from_Y = false, int verbose = 0,
-                                double early_exaggeration = 12, double learning_rate = 200,
-                                double *final_error = NULL, int distance = 1)
-    {
-        if (verbose)
-            fprintf(stderr, "Performing t-SNE using %d cores.\n", NUM_THREADS(num_threads));
-        if (distance == 0) {
-            TSNE<SplitTree, euclidean_distance> tsne;
-            tsne.run(X, N, D, Y, no_dims, perplexity, theta, num_threads, max_iter, n_iter_early_exag,
-                     random_state, init_from_Y, verbose, early_exaggeration, learning_rate, final_error);
-        }
-        else {
-            TSNE<SplitTree, euclidean_distance_squared> tsne;
-            tsne.run(X, N, D, Y, no_dims, perplexity, theta, num_threads, max_iter, n_iter_early_exag,
-                     random_state, init_from_Y, verbose, early_exaggeration, learning_rate, final_error);
-        }
-    }
 }
