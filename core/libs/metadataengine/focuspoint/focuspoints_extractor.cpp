@@ -169,4 +169,10 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::get_af_points()
     return d->af_points;
 }
 
+FocusPointsExtractor::TypePoint& operator|=(FocusPointsExtractor::TypePoint& type, const bool b)
+{
+    return type = static_cast<FocusPointsExtractor::TypePoint>(static_cast<int>(type) + 
+                                                        static_cast<int>(b) );
+}
+
 }

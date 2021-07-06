@@ -101,8 +101,9 @@ private:
 
     class Private;
     Private* const d;
-
 };
+
+FocusPointsExtractor::TypePoint& operator|=(FocusPointsExtractor::TypePoint& type, const bool b);
 
 } // namespace Digikam
 
