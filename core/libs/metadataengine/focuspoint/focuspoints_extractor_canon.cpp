@@ -57,9 +57,14 @@ void set_point_type(FocusPointsExtractor::FocusPoint& point,
 {
     point.type = FocusPointsExtractor::TypePoint::Inactive;
 
-    point.type |= af_selected.contains(QString::number(index + 1));
-
-    point.type |= af_infocus.contains(QString::number(index + 1));
+    if (af_selected.contains(QString::number(index + 1)))
+    {
+        point.type |= FocusPointsExtractor::TypePoint::Selected;
+    }
+    if (af_infocus.contains(QString::number(index + 1)))
+    {
+        point.type |= FocusPointsExtractor::TypePoint::Selected;
+    }
 }
 
 FocusPointsExtractor::FocusPoint create_af_point(float imageWidth, float imageHeight, 

@@ -103,7 +103,25 @@ private:
     Private* const d;
 };
 
-FocusPointsExtractor::TypePoint& operator|=(FocusPointsExtractor::TypePoint& type, const bool b);
+inline FocusPointsExtractor::TypePoint operator|(FocusPointsExtractor::TypePoint type1, FocusPointsExtractor::TypePoint type2)
+{
+    return static_cast<FocusPointsExtractor::TypePoint>(static_cast<int>(type1) | static_cast<int>(type2) );
+}
+
+inline FocusPointsExtractor::TypePoint operator&(FocusPointsExtractor::TypePoint type1, FocusPointsExtractor::TypePoint type2)
+{
+    return static_cast<FocusPointsExtractor::TypePoint>(static_cast<int>(type1) & static_cast<int>(type2) );
+}
+
+inline FocusPointsExtractor::TypePoint& operator|=(FocusPointsExtractor::TypePoint& type1, FocusPointsExtractor::TypePoint type2)
+{
+    return type1 = type1 | type2;
+}
+
+inline FocusPointsExtractor::TypePoint& operator&=(FocusPointsExtractor::TypePoint& type1, FocusPointsExtractor::TypePoint type2)
+{
+    return type1 = type1 & type2;
+}
 
 } // namespace Digikam
 
