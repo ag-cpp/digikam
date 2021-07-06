@@ -38,12 +38,12 @@ std::shared_ptr<QCommandLineParser> parseOptions(const QCoreApplication& app)
 {
     QCommandLineParser* const parser = new QCommandLineParser();
     parser->addOption(QCommandLineOption(QLatin1String("data"), QLatin1String("Data file"), QLatin1String("path relative to data file")));
+    parser->addOption(QCommandLineOption(QLatin1String("threshold"), QLatin1String("Recognition threshold"), QLatin1String("Threshold of KNN")));
     parser->addHelpOption();
     parser->process(app);
 
     return std::shared_ptr<QCommandLineParser>(parser);
 }
-
 
 /**
  * @brief loadData: load data from csv file into a train dataset and a leftout dataset to simulate unknown label
@@ -95,9 +95,9 @@ Digikam::KDTree* trainKNN(cv::Mat samples, cv::Mat labels)
     return tree;
 }
 
-int predict(std::shared_ptr<Digikam::KDTree> knn, cv::Mat predictors) 
+int predict(std::shared_ptr<Digikam::KDTree> knn, cv::Mat predictors, double threshold) 
 {
-    QMap<double, QVector<int> > closestNeighbors = knn->getClosestNeighbors(predictors, 1.0, 0.0, 5);
+    QMap<double, QVector<int> > closestNeighbors = knn->getClosestNeighbors(predictors, threshold, 0.0, 5);
     QMap<int, QVector<double> > votingGroups;
 
     for (QMap<double, QVector<int> >::const_iterator iter  = closestNeighbors.cbegin();
@@ -124,7 +124,7 @@ int predict(std::shared_ptr<Digikam::KDTree> knn, cv::Mat predictors)
 
         for (int i = 0 ; i < group.value().size() ; ++i)
         {
-            score += (1.0 - group.value()[i]);
+            score += (threshold - group.value()[i]);
         }
 
         if (score > maxScore)
@@ -138,23 +138,26 @@ int predict(std::shared_ptr<Digikam::KDTree> knn, cv::Mat predictors)
 }
 
 
-double testClassification(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::TrainData> leftout)
+double testClassification(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::TrainData> leftout, double threshold)
 {
     data->setTrainTestSplitRatio(0.2);
     std::shared_ptr<Digikam::KDTree> knn = std::shared_ptr<Digikam::KDTree>(trainKNN(data->getTrainSamples(), data->getTrainResponses()));
 
     double falseNegative = 0, falsePositive = 0;
     for (int i = 0; i < data->getTestSamples().rows; ++i) 
-    {
-        if (predict(knn, data->getTestSamples().row(i)) != data->getTestResponses().row(i).at<int>(0)) 
+    {   
+        int pred = predict(knn, data->getTestSamples().row(i), threshold);
+        if (pred != data->getTestResponses().row(i).at<int>(0)) 
         {
+            qDebug() << pred << "!=" << data->getTestResponses().row(i).at<int>(0);
+
             ++falsePositive;
         }
     }
 
     for (int i = 0; i < leftout->getSamples().rows; ++i) 
     {
-        if (predict(knn, leftout->getSamples().row(i)) != -1) 
+        if (predict(knn, leftout->getSamples().row(i), threshold) != -1) 
         {
             ++falseNegative;
         }
@@ -173,7 +176,13 @@ int main(int argc, char** argv)
 
     std::pair<cv::Ptr<cv::ml::TrainData>, cv::Ptr<cv::ml::TrainData>> data = loadData(parser->value(QLatin1String("data")));
 
-    qDebug() << "Classification Error rate" << testClassification(data.first, data.second);
+    float threshold = 10;
+    if (parser->isSet(QLatin1String("threshold")))
+    {
+        threshold = parser->value(QLatin1String("threshold")).toDouble();
+    }
+
+    qDebug() << "Classification Error rate" << testClassification(data.first, data.second, threshold);
     return 0;
 }
 
