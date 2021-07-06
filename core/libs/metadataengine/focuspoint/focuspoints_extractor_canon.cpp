@@ -125,7 +125,6 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_canon()
         return ListAFPoints();
     }
     
-
     // Get size of af points
     QVariant afPointWidth = findValue(TagNameRoot,QLatin1String("AFAreaWidth"));
     QVariant afPointHeight = findValue(TagNameRoot,QLatin1String("AFAreaHeight"));
