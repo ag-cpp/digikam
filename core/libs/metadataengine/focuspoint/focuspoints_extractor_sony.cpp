@@ -82,9 +82,9 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_sony()
     float af_x_position = af_info[3].toFloat();
     float af_y_position = af_info[4].toFloat();
 
-    return ListAFPoints() << SonyInternal::create_af_point(imageWidth, imageHeight,
-                                                           afPointWidth, afPointHeight,
-                                                           af_x_position, af_y_position);
+    return ListAFPoints{SonyInternal::create_af_point(imageWidth, imageHeight,
+                                                      afPointWidth, afPointHeight,
+                                                      af_x_position, af_y_position)};
 }
 
 }
