@@ -32,7 +32,29 @@
 namespace Digikam
 {
 
-const float RATIO_POINT_IMAGE = 1/3; // this is a guess
+const float RATIO_POINT_IMAGE = 1 / 120; // this is a guess
+
+// Internal function to create af point from meta data
+namespace PanasonicInternal
+{
+
+FocusPointsExtractor::FocusPoint create_af_point(float af_x_position, float af_y_position,
+                                                 float afPointWidth,  float afPointHeight)
+{    
+    FocusPointsExtractor::FocusPoint point;
+
+    point.x_position = af_x_position;
+    point.y_position = af_y_position;
+    point.width      = afPointWidth  * RATIO_POINT_IMAGE;
+    point.height     = afPointHeight * RATIO_POINT_IMAGE;
+    
+    point.type = FocusPointsExtractor::TypePoint::SelectedInFocus;
+
+    return point;
+}
+
+}
+
 
 FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_panasonic()
 {
@@ -54,20 +76,18 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_panasonic()
     {
         return ListAFPoints();
     }
-    float position_x = af_position[0].toFloat();
-    float position_y = af_position[1].toFloat();
+    float af_x_position = af_position[0].toFloat();
+    float af_y_position = af_position[1].toFloat();
+
+    // Get size of af points
+
+    float afPointWidth = imageWidth.toFloat() * RATIO_POINT_IMAGE;
+    float afPointHeight = imageHeight.toFloat() * RATIO_POINT_IMAGE;
     
     // Add point
-    FocusPoint point;
-
-    point.x_position = position_x;
-    point.y_position = position_y;
-    point.width      = imageWidth.toFloat()  * RATIO_POINT_IMAGE;
-    point.height     = imageHeight.toFloat() * RATIO_POINT_IMAGE;
-
-    point.type = TypePoint::SelectedInFocus;
-
-    return ListAFPoints() << point;
+    
+    return ListAFPoints{PanasonicInternal::create_af_point(af_x_position, af_y_position,
+                                                           afPointWidth, afPointHeight)};
 
 }
 

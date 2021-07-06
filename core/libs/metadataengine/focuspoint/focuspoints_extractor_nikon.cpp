@@ -104,9 +104,9 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_nikon()
         return ListAFPoints();
     }
 
-    return ListAFPoints() << NikonInternal::create_af_point(imageWidth.toFloat(), imageHeight.toFloat(),
-                                                            afPointWidth.toFloat(), afPointHeight.toFloat(),
-                                                            af_x_position.toFloat(), af_y_position.toFloat());
+    return ListAFPoints{NikonInternal::create_af_point(imageWidth.toFloat(), imageHeight.toFloat(),
+                                                       afPointWidth.toFloat(), afPointHeight.toFloat(),
+                                                       af_x_position.toFloat(), af_y_position.toFloat())};
 }
 
 }
