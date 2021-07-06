@@ -116,7 +116,7 @@ NoiseDetector::Mat3D NoiseDetector::get_haarMat()
             }
             cv::Mat filter_i = cv::Mat(d->size_filter,d->size_filter,CV_32FC1);
             
-            std::memcpy(filter_i.data, tmp, size * size * sizeof(float));
+            std::memcpy(filter_i.data, tmp, d->size_filter * d->size_filter * sizeof(float));
             
             res.push_back(filter_i);
         }   
