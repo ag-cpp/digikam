@@ -56,7 +56,7 @@ void save(const std::pair<std::vector<int>, std::vector<std::vector<float>>>& da
 
         for (size_t j = 0; j < data.second[i].size(); ++j) 
         {
-            myfile << data.second[i][j] << ",";
+            myfile << data.second[i][j];
             if(j != data.second[i].size() - 1) 
             {
                 myfile << ","; 
@@ -105,7 +105,7 @@ int main()
     double* Y = new double[data.second.size() * 2];
 
     tsne_run_double(flatten(data.second), data.second.size(), data.second[0].size(), Y, 2, 30, 0.5, 4);
-    std::vector<std::vector<float>> reducedData = reshape(Y, 2, data.second.size());
+    data.second = reshape(Y, 2, data.second.size());
 
-
+    save(data, "facenet_tsne_data.txt");
 }
