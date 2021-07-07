@@ -278,6 +278,7 @@ cv::Mat BlurDetector::getWeightMap()                               const
 
     if (d->have_focus_region)
     {
+        qInfo()<<"get here";
         for (const auto point : d->af_points)
         {
             cv::Rect rect{static_cast<int>((point.x_position - point.width * 0.5) * d->image.size().width ),
