@@ -22,6 +22,7 @@
  * ============================================================ */
 
 #include <memory>
+#include <algorithm> 
 #include <QCoreApplication>
 #include <QCommandLineParser>
 #include <QString>
@@ -92,32 +93,29 @@ QImage* Extractor::detect(const QImage& faceImg) const
 cv::Mat Extractor::getFaceEmbedding(cv::Mat faceImage)
 {
     cv::Mat face_descriptors;
-    cv::Mat alignedFace;
 
-    // TODO: fix alignment, which cause recognition error
-    //alignedFace = m_preprocessor->preprocess(faceImage);
+    // TODO try out Z-score normalization
 
     cv::Size imageSize = cv::Size(160, 160);
-    float scaleFactor = 1.0F / 255.0F;
+    cv::Mat resizedImage;
+    cv::resize(faceImage.clone(), resizedImage, imageSize, 0, 0, cv::INTER_LINEAR);
 
-    cv::Mat blob = cv::dnn::blobFromImage(faceImage, scaleFactor, imageSize, cv::Scalar(), true, false);
+    cv::Mat flatten = resizedImage.reshape(1, 160*160*3);   
+
+    cv::Mat mean, std;
+    cv::meanStdDev(flatten, mean, std);
+
+    float adjustStd = std::max(std.row(0).at<double>(0), (1.0/std::sqrt(flatten.rows)));
+    if (std::isnan(adjustStd)) {
+        adjustStd = float(1.0/std::sqrt(flatten.rows));
+    }
+
+    qDebug() << "Mean" << mean.row(0).at<double>(0) << "std" << adjustStd << "size" << flatten.rows;
+
+    cv::Mat blob = cv::dnn::blobFromImage(faceImage, 1.0/adjustStd, imageSize, mean.row(0).at<double>(0), true, false);
     m_net.setInput(blob);
     face_descriptors = m_net.forward();
     return face_descriptors;
-}
-
-void hwc_to_chw(cv::InputArray src, cv::OutputArray dst) {
-    const int src_h = src.rows();
-    const int src_w = src.cols();
-    const int src_c = src.channels();
-
-    cv::Mat hw_c = src.getMat().reshape(1, src_h * src_w);
-
-    const std::array<int,3> dims = {src_c, src_h, src_w};                         
-    dst.create(3, &dims[0], CV_MAKETYPE(src.depth(), 1));                         
-    cv::Mat dst_1d = dst.getMat().reshape(1, {src_c, src_h, src_w});              
-
-    cv::transpose(hw_c, dst_1d);                                                  
 }
 
 cv::Mat prepareForRecognition(QImage& inputImage)

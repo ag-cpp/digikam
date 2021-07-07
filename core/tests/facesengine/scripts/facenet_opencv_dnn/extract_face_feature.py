@@ -8,7 +8,7 @@ import os
 import pdb
 
 
-face_image_path = './images/20191207105221-face_bbox.jpg'
+face_image_path = './images/yaleB11_P01A+000E-35.pgm'
 model_path = './models/graph_final.pb'
 
 
