@@ -47,7 +47,6 @@ public:
 
 private:
 
-    Mat3D   get_haarMat();
     cv::Mat prepareForDetection(const DImg& inputImage) const;
     
     Mat3D decompose_by_filter(const Mat3D& filters);
@@ -58,13 +57,37 @@ private:
     cv::Mat pow_mat(const cv::Mat& mat, float ordre);
     float mean_mat(const cv::Mat& mat);
     
-    
-
-
 private:
 
     class Private;
     Private* const d;
+};
+
+// class singleton for filter haar
+class MatrixFilterHaar : public QObject
+{
+    Q_OBJECT
+
+public:
+    
+    explicit MatrixFilterHaar();
+    
+    ~MatrixFilterHaar() override;
+    
+    /**
+     * @return MatrixFilterHaar global instance
+     */
+    static MatrixFilterHaar* instance();
+
+    void init();
+
+    NoiseDetector::Mat3D get_data();
+
+private:
+    
+    NoiseDetector::Mat3D m_data;
+
+    bool m_isInit;
 };
 
 } // namespace Digikam

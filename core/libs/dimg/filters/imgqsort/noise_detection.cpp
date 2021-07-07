@@ -36,6 +36,71 @@
 
 namespace Digikam
 {
+
+const int SIZE_FILTER = 4;
+
+MatrixFilterHaar::MatrixFilterHaar()
+    : QObject(),
+      m_isInit(false)
+{
+}
+
+MatrixFilterHaar::~MatrixFilterHaar()
+{
+}
+
+void MatrixFilterHaar::init()
+{
+    if (!m_isInit)
+    {
+        NoiseDetector::Mat3D res;
+
+        const int size = SIZE_FILTER;
+
+        float mat_base[size][size] = {{0.5, 0.5, 0.5, 0.5},
+                                {0.5, 0.5, -0.5, -0.5},
+                                {0.70711,-0.70711, 0., 0.},
+                                {0.0, 0., 0.70711, -0.70711}}; 
+        
+        for (int i = 0; i < SIZE_FILTER; i++)
+        {
+            for (int j = 0; j < SIZE_FILTER; j++)
+            {
+                float tmp[SIZE_FILTER][SIZE_FILTER];
+                
+                for (int h = 0; h < SIZE_FILTER; h++)
+                {
+                    for (int l = 0; l < SIZE_FILTER; l++)
+                    {
+                        tmp[h][l] = mat_base[i][h] * mat_base[j][l];
+                    }
+                }
+                cv::Mat filter_i = cv::Mat(SIZE_FILTER,SIZE_FILTER,CV_32FC1);
+                
+                std::memcpy(filter_i.data, tmp, SIZE_FILTER * SIZE_FILTER * sizeof(float));
+                
+                res.push_back(filter_i);
+            }   
+        }
+        m_data = res;
+
+        m_isInit = true;
+    }
+}
+
+MatrixFilterHaar* MatrixFilterHaar::instance()
+{
+    static MatrixFilterHaar* instance = new MatrixFilterHaar();
+
+    return instance;
+}
+
+NoiseDetector::Mat3D MatrixFilterHaar::get_data()
+{
+    qInfo()<<"get data";
+    return m_data;
+}
+
 class Q_DECL_HIDDEN NoiseDetector::Private
 {
 public:
@@ -54,7 +119,10 @@ NoiseDetector::NoiseDetector(const DImg& image)
     :  d(new Private)
 {
     qInfo()<<"prepare for detection";
+
     d->image = prepareForDetection(image);
+
+    MatrixFilterHaar::instance()->init();
 }
 
 NoiseDetector::~NoiseDetector()
@@ -89,46 +157,11 @@ cv::Mat NoiseDetector::prepareForDetection(const DImg& inputImage) const
     return cvImage;
 }
 
-NoiseDetector::Mat3D NoiseDetector::get_haarMat()
-{
-    qInfo()<<"get base haar";
-    Mat3D res;
-
-    const int size = d->size_filter;
-
-    float mat_base[4][4] = {{0.5, 0.5, 0.5, 0.5},
-                            {0.5, 0.5, -0.5, -0.5},
-                            {0.70711,-0.70711, 0., 0.},
-                            {0.0, 0., 0.70711, -0.70711}}; 
-    
-    for (int i = 0; i < d->size_filter; i++)
-    {
-        for (int j = 0; j < d->size_filter; j++)
-        {
-            float tmp[size][size];
-            
-            for (int h = 0; h < d->size_filter; h++)
-            {
-                for (int l = 0; l < d->size_filter; l++)
-                {
-                    tmp[h][l] = mat_base[i][h] * mat_base[j][l];
-                }
-            }
-            cv::Mat filter_i = cv::Mat(d->size_filter,d->size_filter,CV_32FC1);
-            
-            std::memcpy(filter_i.data, tmp, d->size_filter * d->size_filter * sizeof(float));
-            
-            res.push_back(filter_i);
-        }   
-    }
-    return res;
-}
-
 float NoiseDetector::detect()
 { 
     qInfo()<<"start detection";
     
-    Mat3D fltrs = get_haarMat();
+    Mat3D fltrs = MatrixFilterHaar::instance()->get_data();
 
     // Decompose to channels
 
