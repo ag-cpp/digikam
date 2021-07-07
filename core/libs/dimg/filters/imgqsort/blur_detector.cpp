@@ -41,16 +41,16 @@ class Q_DECL_HIDDEN BlurDetector::Private
 public:
     explicit Private()
       : min_abs(1),
-        ordre_log_filtrer(100),
+        ordre_log_filtrer(29),
         sigma_smooth_image(5),
-        filtrer_defocus(95),
+        filtrer_defocus(160),
 
         part_size_motion_blur(20),
         edges_filtrer(10),
         theta_resolution(CV_PI/600),
         min_line_length(12),
         threshold_hough(10),
-        min_nb_lines(2),
+        min_nb_lines(3),
         max_stddev(0.6),
 
         part_size_mono_color(40),
@@ -280,10 +280,10 @@ cv::Mat BlurDetector::getWeightMap()                               const
     {
         for (const auto point : d->af_points)
         {
-            cv::Rect rect{static_cast<int>((point.x_position  - 0.5 * point.width) * d->image.size().width),
-                          static_cast<int>((point.y_position  - 0.5 * point.height)* d->image.size().height),
-                          static_cast<int>(point.width * d->image.size().width),
-                          static_cast<int>(point.height * d->image.size().height)};
+            cv::Rect rect{static_cast<int>(point.x_position * d->image.size().width - d->image.size().width * 0.3 * 0.5),
+                          static_cast<int>(point.y_position * d->image.size().height - d->image.size().height* 0.3 * 0.5),
+                          static_cast<int>(d->image.size().width * 0.3),
+                          static_cast<int>(d->image.size().height* 0.3)};
 
             res(rect).setTo(1);
         }
