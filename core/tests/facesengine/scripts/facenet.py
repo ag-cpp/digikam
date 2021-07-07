@@ -6,6 +6,7 @@ def extractFaces(dataDir):
     labels = []
     faceEmbeddings = []
     embedder = FaceNet()
+    print(embedder.metadata['fixed_image_standardization'])
     subDirs = [x[0] for x in os.walk(dataDir)]
     
     for i in range(1, len(subDirs)):
