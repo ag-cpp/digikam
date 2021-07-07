@@ -25,6 +25,9 @@ def prewhiten(x):
     y = np.multiply(np.subtract(x, mean), 1 / std_adj)
     return y
 
+def fix_normalize(x):
+    return (np.float32(x) - 127.5) / 127.5
+
 
 # ------------------------------------------------------
 #""" Preprocess """
@@ -33,7 +36,7 @@ def prewhiten(x):
 
 def extract(cvNet, image): 
     resized = cv2.resize(image, (160, 160), interpolation=cv2.INTER_LINEAR)
-    prewhitened = prewhiten(resized)
+    prewhitened = fix_normalize(resized)
     # HWC -> CHW
     input_face_img = prewhitened.transpose([2, 0, 1])
     # CHW -> NCHW
@@ -75,4 +78,4 @@ def saveEmbedding(dataDir, targetFile):
     df = extractFaces(dataDir)
     df.to_csv(targetFile, index=False, header=False)
 
-saveEmbedding('/home/minhnghiaduong/Documents/Projects/ExtendedYaleB', 'facenet_data.txt')
+saveEmbedding('/home/minhnghiaduong/Documents/Projects/ExtendedYaleB', 'facenet_py_data.txt')
