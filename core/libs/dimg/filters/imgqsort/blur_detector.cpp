@@ -32,6 +32,7 @@
 // Local includes
 
 #include "digikam_debug.h"
+#include "focuspoints_extractor.h"
 
 namespace Digikam
 {
@@ -42,16 +43,17 @@ public:
       : min_abs(1),
         ordre_log_filtrer(100),
         sigma_smooth_image(5),
-        filtrer_defocus(75),
+        filtrer_defocus(95),
 
-        part_size(30),
-        edges_filtrer(5),
+        part_size_motion_blur(20),
+        edges_filtrer(10),
         theta_resolution(CV_PI/600),
-        min_line_length(10),
-        threshold_hough(20),
-        min_nb_lines(1),
-        max_stddev(0.3),
+        min_line_length(12),
+        threshold_hough(10),
+        min_nb_lines(2),
+        max_stddev(0.6),
 
+        part_size_mono_color(40),
         mono_color_threshold(10),
 
         have_focus_region(false)
@@ -61,22 +63,24 @@ public:
 
     cv::Mat image;
 
-    float       min_abs;
-    int         ordre_log_filtrer;
-    int         sigma_smooth_image;
-    int         filtrer_defocus;
+    float                               min_abs;
+    float                               ordre_log_filtrer;
+    float                               sigma_smooth_image;
+    float                               filtrer_defocus;
     
-    int         part_size;
-    float       edges_filtrer;
-    double      theta_resolution;
-    double      min_line_length; 
-    float       threshold_hough;
-    int         min_nb_lines;
-    float       max_stddev;
+    int                                 part_size_motion_blur;
+    float                               edges_filtrer;
+    double                              theta_resolution;
+    double                              min_line_length; 
+    float                               threshold_hough;
+    int                                 min_nb_lines;
+    float                               max_stddev;
 
-    bool        have_focus_region;
-
-    float       mono_color_threshold;
+    int                                 part_size_mono_color;
+    float                               mono_color_threshold;
+    
+    bool                                have_focus_region;
+    FocusPointsExtractor::ListAFPoints  af_points;
 };
 
 BlurDetector::BlurDetector(const DImg& image)
@@ -102,7 +106,9 @@ cv::Mat BlurDetector::prepareForDetection(const DImg& inputImage) const
     }
 
     cv::Mat cvImage;
+    
     int type               = inputImage.sixteenBit() ? CV_16UC4 : CV_8UC4;
+    
     cv::Mat cvImageWrapper = cv::Mat(inputImage.height(), inputImage.width(), type, inputImage.bits());
 
     cv::cvtColor(cvImageWrapper, cvImage, cv::COLOR_RGBA2BGR);
@@ -125,14 +131,15 @@ float BlurDetector::detect()
     cv::Mat motionBlurMap = detectMotionBlurMap(edgesMap);
     motionBlurMap.convertTo(motionBlurMap,CV_8U);
     
-    //Read metadata to find focus region here ( dont implement yet )
     cv::Mat weightsMat = getWeightMap();
 
     cv::Mat blurMap = defocusMap + motionBlurMap;
 
     cv::Mat res = weightsMat.mul(blurMap);
             
-    int totalPixels = res.total();
+    int totalPixels = cv::countNonZero(weightsMat);
+
+    qInfo()<<"number pixels considered" << totalPixels << "tota pixels"<< weightsMat.total();
     
     int blurPixel = cv::countNonZero(res);
 
@@ -175,7 +182,9 @@ cv::Mat BlurDetector::detectDefocusMap(const cv::Mat& edgesMap)    const
     cv::medianBlur(abs_map, abs_map, d->sigma_smooth_image);
     
     // Mask blurred pixel as 1 and sharp pixel 0
+
     cv::Mat res = abs_map * 255;
+    
     cv::threshold(res,res,d->filtrer_defocus,1,cv::THRESH_BINARY_INV);
         
     return res;
@@ -185,8 +194,9 @@ cv::Mat BlurDetector::detectMotionBlurMap(const cv::Mat& edgesMap) const
 {
     // Divide image
     qCDebug(DIGIKAM_DIMG_LOG) << "Divide image to small parts";
-    int nb_parts_row = static_cast<int>(edgesMap.size().height / d->part_size);
-    int nb_parts_col = static_cast<int>(edgesMap.size().width / d->part_size);
+    
+    int nb_parts_row = static_cast<int>(edgesMap.size().height / d->part_size_motion_blur);
+    int nb_parts_col = static_cast<int>(edgesMap.size().width / d->part_size_motion_blur);
     
     cv::Mat res = cv::Mat::zeros(edgesMap.size(), CV_8U);
 
@@ -194,7 +204,8 @@ cv::Mat BlurDetector::detectMotionBlurMap(const cv::Mat& edgesMap) const
     {
         for (int j = 0; j < nb_parts_col; j++)
         {
-            cv::Rect rect{j*d->part_size, i*d->part_size, d->part_size,d->part_size};
+            cv::Rect rect{j*d->part_size_motion_blur, i*d->part_size_motion_blur, 
+                          d->part_size_motion_blur,d->part_size_motion_blur};
 
             cv::Mat subImg = edgesMap(rect);
             
@@ -204,7 +215,7 @@ cv::Mat BlurDetector::detectMotionBlurMap(const cv::Mat& edgesMap) const
                 res(rect).setTo(1);
             }
         }
-    } 
+    }
 
     return res;
 }
@@ -221,16 +232,20 @@ bool    BlurDetector::isMotionBlur(const cv::Mat& frag) const
     HoughLinesP(tmp, lines, 1, d->theta_resolution, d->threshold_hough, d->min_line_length,10 );
 
     // Detect if region is motion blurred by number of paralle lines
+    
+    // qInfo()<<"nb lines " << static_cast<int>(lines.size());
+
     if (static_cast<int>(lines.size()) > d->min_nb_lines )
     {
         std::vector<float> list_theta; 
+        
         for (const auto line : lines)
         {
             float theta = (line[2] == line[0]) ? 0 : qAtan((line[3]-line[1])/(line[2] - line[0]));
 
             theta = (theta < 0) ? theta + CV_PI : theta;
 
-            theta = (theta < CV_PI/20) ?  CV_PI - theta : theta;
+            // theta = (theta < CV_PI/20) ?  CV_PI - theta : theta;
             
             list_theta.push_back(theta);
         }
@@ -240,7 +255,7 @@ bool    BlurDetector::isMotionBlur(const cv::Mat& frag) const
 
         cv::meanStdDev(list_theta,mean,stddev);
 
-        qInfo()<< "Standard Deviation for group of lines " << stddev[0];
+        // qInfo()<< "Standard Deviation for group of lines " << stddev[0];
         qCDebug(DIGIKAM_DIMG_LOG) << "Standard Deviation for group of lines " << stddev[0];
 
         return stddev[0] < d->max_stddev;
@@ -250,34 +265,45 @@ bool    BlurDetector::isMotionBlur(const cv::Mat& frag) const
 
 bool BlurDetector::haveFocusRegion(const DImg& image)              const
 {
-    // FIXME : not implmented yet
-    // initialate reader metadata to extract information of focus region
-    return false;
+    QScopedPointer<FocusPointsExtractor> const extractor (new FocusPointsExtractor(nullptr, image.originalFilePath()));
+
+    d->af_points = extractor->get_af_points(FocusPointsExtractor::TypePoint::Selected);
+    
+    return !d->af_points.isEmpty();
 }
 
 cv::Mat BlurDetector::getWeightMap()                               const
 {
-    // FIXME : not implemented yet
-    // use infomation of focus region to construct matrix of weight
-    
+    cv::Mat res = cv::Mat::zeros(d->image.size(), CV_8UC1);
+
     if (d->have_focus_region)
     {
-        return cv::Mat::ones(1,1,1);
+        for (const auto point : d->af_points)
+        {
+            cv::Rect rect{static_cast<int>((point.x_position  - 0.5 * point.width) * d->image.size().width),
+                          static_cast<int>((point.y_position  - 0.5 * point.height)* d->image.size().height),
+                          static_cast<int>(point.width * d->image.size().width),
+                          static_cast<int>(point.width * d->image.size().height)};
+
+            res(rect).setTo(1);
+        }
     }
     else
     {
-        cv::Mat res = detectBackgroundRegion(d->image);
-        cv::threshold(res,res,0.5,1,cv::THRESH_BINARY_INV);
-        return res;
+        res = detectBackgroundRegion(d->image);
+        
+        cv::threshold(res, res, 0.5, 1, cv::THRESH_BINARY_INV);
     }
+    
+    return res;
 }
 
 cv::Mat BlurDetector::detectBackgroundRegion(const cv::Mat& image)    const
 {
     qCDebug(DIGIKAM_DIMG_LOG) << "Divide image to small parts";
 
-    int nb_parts_row = static_cast<int>(image.size().height / d->part_size);
-    int nb_parts_col = static_cast<int>(image.size().width / d->part_size);
+    int nb_parts_row = static_cast<int>(image.size().height / d->part_size_mono_color);
+    int nb_parts_col = static_cast<int>(image.size().width / d->part_size_mono_color);
     
     cv::Mat res = cv::Mat::zeros(image.size(), CV_8U);
 
@@ -285,7 +311,8 @@ cv::Mat BlurDetector::detectBackgroundRegion(const cv::Mat& image)    const
     {
         for (int j = 0; j < nb_parts_col; j++)
         {
-            cv::Rect rect{j*d->part_size, i*d->part_size, d->part_size,d->part_size};
+            cv::Rect rect{j*d->part_size_mono_color, i*d->part_size_mono_color, 
+                          d->part_size_mono_color, d->part_size_mono_color};
 
             cv::Mat subImg = image(rect);
             

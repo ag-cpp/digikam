@@ -106,7 +106,7 @@ DataTestCases const dataTestCases =
         {QLatin1String("defocusImage"), PairImageQuality(QLatin1String("blur_street_3.jpg"),1)},
 
 
-        {QLatin1String("blurBackGroundImage"), PairImageQuality(QLatin1String("blur_blurbackground_1.jpg"),2)},
+        {QLatin1String("blurBackGroundImage"), PairImageQuality(QLatin1String("blur_blurbackground_1.jpg"),3)},
         {QLatin1String("blurBackGroundImage"), PairImageQuality(QLatin1String("blur_blurbackground_2.jpg"),3)},
         {QLatin1String("blurBackGroundImage"), PairImageQuality(QLatin1String("blur_blurbackground_3.jpg"),3)},
 
