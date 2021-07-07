@@ -280,10 +280,14 @@ cv::Mat BlurDetector::getWeightMap()                               const
     {
         for (const auto point : d->af_points)
         {
+            qInfo()<<"point postion "<< static_cast<int>((point.x_position  - 0.5 * point.width) * d->image.size().width)
+                   << static_cast<int>((point.y_position  - 0.5 * point.height) * d->image.size().height)
+                   <<"size point" << static_cast<int>(point.width * d->image.size().width )
+                   <<  static_cast<int>(point.height * d->image.size().height) ; 
             cv::Rect rect{static_cast<int>((point.x_position  - 0.5 * point.width) * d->image.size().width),
                           static_cast<int>((point.y_position  - 0.5 * point.height)* d->image.size().height),
                           static_cast<int>(point.width * d->image.size().width),
-                          static_cast<int>(point.width * d->image.size().height)};
+                          static_cast<int>(point.height * d->image.size().height)};
 
             res(rect).setTo(1);
         }
