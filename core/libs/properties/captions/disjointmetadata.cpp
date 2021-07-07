@@ -47,7 +47,7 @@ namespace Digikam
 {
 
 /**
- * This class was split from Private to be able to use the automatic C++ copy constructor
+ * This class was split from Private to allow to use the automatic C++ copy constructor
  * (Private contains a QMutex and is thus non-copyable)
  */
 class Q_DECL_HIDDEN DisjointMetadataDataFields
@@ -111,8 +111,6 @@ public:
     QMap<int, DisjointMetadata::Status> tags;
 
     QStringList                         tagList;
-
-    QMultiMap<QString, QVariant>        faceTagsList;
 
     DisjointMetadata::Status            dateTimeStatus;
     DisjointMetadata::Status            titlesStatus;
@@ -444,7 +442,7 @@ bool DisjointMetadata::write(ItemInfo info, WriteMode writeMode)
 {
     applyChangeNotifications();
 
-    bool changed = false;
+    bool changed        = false;
 
     // find out in advance if we have something to write - needed for FullWriteIfChanged mode
 
@@ -570,14 +568,14 @@ bool DisjointMetadata::willWriteMetadata(DisjointMetadata::WriteMode writeMode, 
     // This is the same logic as in write(DMetadata) but without actually writing.
     // Adapt if the method above changes
 
-    bool saveTitle      = (settings.saveComments   && d->titlesStatus     == MetadataAvailable);
-    bool saveComment    = (settings.saveComments   && d->commentsStatus   == MetadataAvailable);
-    bool saveDateTime   = (settings.saveDateTime   && d->dateTimeStatus   == MetadataAvailable);
-    bool savePickLabel  = (settings.savePickLabel  && d->pickLabelStatus  == MetadataAvailable);
-    bool saveColorLabel = (settings.saveColorLabel && d->colorLabelStatus == MetadataAvailable);
-    bool saveRating     = (settings.saveRating     && d->ratingStatus     == MetadataAvailable);
-    bool saveTemplate   = (settings.saveTemplate   && d->templateStatus   == MetadataAvailable);
-    bool saveTags       = settings.saveTags;
+    bool saveTitle      = (settings.saveComments   && (d->titlesStatus     == MetadataAvailable));
+    bool saveComment    = (settings.saveComments   && (d->commentsStatus   == MetadataAvailable));
+    bool saveDateTime   = (settings.saveDateTime   && (d->dateTimeStatus   == MetadataAvailable));
+    bool savePickLabel  = (settings.savePickLabel  && (d->pickLabelStatus  == MetadataAvailable));
+    bool saveColorLabel = (settings.saveColorLabel && (d->colorLabelStatus == MetadataAvailable));
+    bool saveRating     = (settings.saveRating     && (d->ratingStatus     == MetadataAvailable));
+    bool saveTemplate   = (settings.saveTemplate   && (d->templateStatus   == MetadataAvailable));
+    bool saveTags       = (settings.saveTags || settings.saveFaceTags);
 
     bool writeAllFields;
 
@@ -800,7 +798,6 @@ void DisjointMetadata::applyChangeNotifications()
     }
 }
 
-
 QDateTime DisjointMetadata::dateTime() const
 {
     return d->dateTime;
@@ -841,17 +838,25 @@ void DisjointMetadata::dateTimeInterval(QDateTime& lowest, QDateTime& highest) c
     switch (d->dateTimeStatus)
     {
         case MetadataInvalid:
-            lowest  = highest = QDateTime();
+        {
+            lowest  = QDateTime();
+            highest = QDateTime();
             break;
+        }
 
         case MetadataAvailable:
-            lowest  = highest = d->dateTime;
+        {
+            lowest  = d->dateTime;
+            highest = d->dateTime;
             break;
+        }
 
         case MetadataDisjoint:
+        {
             lowest  = d->dateTime;
             highest = d->lastDateTime;
             break;
+        }
     }
 }
 
@@ -860,17 +865,25 @@ void DisjointMetadata::pickLabelInterval(int& lowest, int& highest) const
     switch (d->pickLabelStatus)
     {
         case MetadataInvalid:
-            lowest  = highest = -1;
+        {
+            lowest  = -1;
+            highest = -1;
             break;
+        }
 
         case MetadataAvailable:
-            lowest  = highest = d->pickLabel;
+        {
+            lowest  = d->pickLabel;
+            highest = d->pickLabel;
             break;
+        }
 
         case MetadataDisjoint:
+        {
             lowest  = d->pickLabel;
             highest = d->highestPickLabel;
             break;
+        }
     }
 }
 
@@ -879,17 +892,25 @@ void DisjointMetadata::colorLabelInterval(int& lowest, int& highest) const
     switch (d->colorLabelStatus)
     {
         case MetadataInvalid:
-            lowest  = highest = -1;
+        {
+            lowest  = -1;
+            highest = -1;
             break;
+        }
 
         case MetadataAvailable:
-            lowest  = highest = d->colorLabel;
+        {
+            lowest  = d->colorLabel;
+            highest = d->colorLabel;
             break;
+        }
 
         case MetadataDisjoint:
+        {
             lowest  = d->colorLabel;
             highest = d->highestColorLabel;
             break;
+        }
     }
 }
 
@@ -898,19 +919,25 @@ void DisjointMetadata::ratingInterval(int& lowest, int& highest) const
     switch (d->ratingStatus)
     {
         case MetadataInvalid:
+        {
             lowest  = -1;
             highest = -1;
             break;
+        }
 
         case MetadataAvailable:
+        {
             lowest  = d->rating;
             highest = d->rating;
             break;
+        }
 
         case MetadataDisjoint:
+        {
             lowest  = d->rating;
             highest = d->highestRating;
             break;
+        }
     }
 }
 
@@ -944,12 +971,14 @@ template <class T> void DisjointMetadata::Private::loadSingleValue(const T& data
     switch (status)
     {
         case DisjointMetadata::MetadataInvalid:
+        {
             storage = data;
             status  = DisjointMetadata::MetadataAvailable;
             break;
+        }
 
         case DisjointMetadata::MetadataAvailable:
-
+        {
             // we have two values. If they are equal, status is unchanged
 
             if (data == storage)
@@ -961,9 +990,12 @@ template <class T> void DisjointMetadata::Private::loadSingleValue(const T& data
 
             status = DisjointMetadata::MetadataDisjoint;
             break;
+        }
 
         case DisjointMetadata::MetadataDisjoint:
+        {
             break;
+        }
     }
 }
 
