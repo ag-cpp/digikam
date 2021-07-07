@@ -102,10 +102,13 @@ std::vector<std::vector<float>> reshape(double* data, size_t ncols, size_t nrows
 int main() 
 {
     std::pair<std::vector<int>, std::vector<std::vector<float>>> data = loadData("facenet_data.txt");
+    double* flattenData = flatten(data.second);
     double* Y = new double[data.second.size() * 2];
 
-    tsne_run_double(flatten(data.second), data.second.size(), data.second[0].size(), Y, 2, 30, 0.5, 4);
+    tsne_run_double(flattenData, data.second.size(), data.second[0].size(), Y, 2, 30, 0.5, 4);
     data.second = reshape(Y, 2, data.second.size());
 
     save(data, "facenet_tsne_data.txt");
+    delete flattenData;
+    delete Y;
 }
