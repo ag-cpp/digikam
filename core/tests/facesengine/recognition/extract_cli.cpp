@@ -92,25 +92,18 @@ QImage* Extractor::detect(const QImage& faceImg) const
 
 cv::Mat Extractor::getFaceEmbedding(cv::Mat faceImage)
 {
-    // TODO try out Z-score normalization
-
+    
     cv::Size imageSize = cv::Size(160, 160);
+    /*
     cv::Mat resizedImage;
     cv::resize(faceImage.clone(), resizedImage, imageSize, 0, 0, cv::INTER_LINEAR);
-
-    //cv::Mat flatten = resizedImage.reshape(1, 160*160*3);   
 
     cv::Scalar mean, std;
     cv::meanStdDev(resizedImage, mean, std);
 
-    /*float adjustStd = std::max(std.row(0).at<double>(0), (1.0/std::sqrt(flatten.rows)));
-    if (std::isnan(adjustStd)) {
-        adjustStd = float(1.0/std::sqrt(flatten.rows));
-    }
-    */
-
     std::cout << "Mean " << mean << "std " << std << std::endl;
-    cv::Mat blob = cv::dnn::blobFromImage(faceImage, 1.0/std[0], imageSize, mean, true, false);
+    */
+    cv::Mat blob = cv::dnn::blobFromImage(faceImage, 1.0/127.5, imageSize, cv::Scalar(127.5,127.5,127.5), true, false);
     m_net.setInput(blob);
     cv::Mat face_descriptors = m_net.forward();
     return face_descriptors;
