@@ -41,9 +41,9 @@ class Q_DECL_HIDDEN BlurDetector::Private
 public:
     explicit Private()
       : min_abs(1),
-        ordre_log_filtrer(29),
+        ordre_log_filtrer(100),
         sigma_smooth_image(5),
-        filtrer_defocus(160),
+        filtrer_defocus(70),
 
         part_size_motion_blur(20),
         edges_filtrer(10),
@@ -278,13 +278,18 @@ cv::Mat BlurDetector::getWeightMap()                               const
 
     if (d->have_focus_region)
     {
-        qInfo()<<"get here";
         for (const auto point : d->af_points)
         {
-            cv::Rect rect{static_cast<int>((point.x_position - point.width * 0.5) * d->image.size().width ),
-                          static_cast<int>((point.y_position - point.height * 0.5) * d->image.size().height ),
-                          static_cast<int>(point.width * d->image.size().width),
-                          static_cast<int>(point.height * d->image.size().height)};
+            float expand = 33;
+
+            int x_position_corner = std::max(static_cast<int>((point.x_position - point.width * 0.5  *expand) * d->image.size().width), 0);
+            int y_position_corner = std::max(static_cast<int>((point.y_position - point.height * 0.5 *expand) * d->image.size().height), 0);
+
+            int width = std::min(d->image.size().width - x_position_corner, static_cast<int>(point.width * d->image.size().width * expand) );
+            int height = std::min(d->image.size().height - y_position_corner, static_cast<int>(point.height * d->image.size().height * expand) );
+
+            cv::Rect rect{x_position_corner, y_position_corner,
+                          width, height};
 
             res(rect).setTo(1);
         }
