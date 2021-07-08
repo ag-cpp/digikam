@@ -206,18 +206,12 @@ void ImageQualityParser::startAnalyse()
 
         // Assigning PickLabels
 
-        if      (finalQuality == 0.0)
-        {
-            // Algorithms have not been run. So return noPickLabel
-
-            *d->label = NoPickLabel;
-        }
-        else if ((int)finalQuality < d->imq.rejectedThreshold)
+        if ((int)finalQuality <= d->imq.rejectedThreshold)
         {
             *d->label = RejectedLabel;
         }
         else if (((int)finalQuality > d->imq.rejectedThreshold) &&
-                 ((int)finalQuality < d->imq.acceptedThreshold))
+                 ((int)finalQuality <= d->imq.acceptedThreshold))
         {
             *d->label = PendingLabel;
         }
