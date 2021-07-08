@@ -22,6 +22,9 @@
 #ifndef VPTREE_H
 #define VPTREE_H
 
+namespace TSNE
+{
+
 class DataPoint
 {
     int _D;
@@ -241,5 +244,7 @@ private:
         }
     }
 };
+
+} // namespace TSNE
 
 #endif

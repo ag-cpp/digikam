@@ -14,6 +14,9 @@
 #ifndef SPLITTREE_H
 #define SPLITREE_H
 
+namespace TSNE
+{
+
 static inline double min(double x, double y) { return (x <= y ? x : y); }
 static inline double max(double x, double y) { return (x <= y ? y : x); }
 static inline double abs_d(double x) { return (x <= 0 ? -x : x); }
@@ -69,5 +72,7 @@ private:
 	void init(SplitTree* inp_parent, double* inp_data, double* mean_Y, double* width_Y);
 	void fill(int N);
 };
+
+} // namespace TSNE
 
 #endif

@@ -105,7 +105,7 @@ int main()
     double* flattenData = flatten(data.second);
     double* Y = new double[data.second.size() * 2];
 
-    tsne_run_double(flattenData, data.second.size(), data.second[0].size(), Y, 2, 30, 0.5, 4);
+    TSNE::tsne_run_double(flattenData, data.second.size(), data.second[0].size(), Y, 2, 30, 0.5, 4);
     data.second = reshape(Y, 2, data.second.size());
 
     save(data, "facenet_tsne_data.txt");

@@ -29,6 +29,8 @@
 #include "splittree.h"
 #include "tsne.h"
 
+namespace TSNE
+{
 
 void tsne_run_double(double* X, int N, int D, double* Y,
                     int no_dims, double perplexity, double theta,
@@ -615,3 +617,5 @@ double TSNE<treeT, dist_fn>::randn() {
     x *= radius;
     return x;
 }
+
+} //namespace TSNE

@@ -5,6 +5,8 @@
 
 #include "splittree.h"
 
+namespace TSNE
+{
 
 // Checks whether a point lies in a cell
 bool Cell::containsPoint(double point[])
@@ -266,3 +268,5 @@ void SplitTree::computeNonEdgeForces(int point_index, double theta, double* neg_
         }
     }
 }
+
+} // namespace TSNE
