@@ -90,9 +90,23 @@ QImage* Extractor::detect(const QImage& faceImg) const
     return croppedFace;
 }
 
+cv::Mat normalize(cv::Mat mat) 
+{
+    cv::Mat floatMat;
+    mat.convertTo(floatMat, CV_32F);
+
+    cv::Mat subtractedMat;
+    cv::subtract(floatMat, cv::Scalar(127.5,127.5,127.5), subtractedMat);
+
+    cv::Mat normalizedMat;
+    cv::multiply(subtractedMat, cv::Scalar(1.0/127.5,1.0/127.5,1.0/127.5), normalizedMat);
+
+    return normalizedMat;
+}
+
+
 cv::Mat Extractor::getFaceEmbedding(cv::Mat faceImage)
 {
-    
     cv::Size imageSize = cv::Size(160, 160);
     /*
     cv::Mat resizedImage;

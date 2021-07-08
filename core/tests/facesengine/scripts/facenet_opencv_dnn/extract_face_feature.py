@@ -28,19 +28,28 @@ def prewhiten(x):
 def fix_normalize(x):
     return (np.float32(x) - 127.5) / 127.5
 
-
-# ------------------------------------------------------
-#""" Preprocess """
-#im = cv2.imread(face_image_path)
-#im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
-
-def extract(cvNet, image): 
+def np_blob(image):
     resized = cv2.resize(image, (160, 160), interpolation=cv2.INTER_LINEAR)
     prewhitened = fix_normalize(resized)
     # HWC -> CHW
     input_face_img = prewhitened.transpose([2, 0, 1])
     # CHW -> NCHW
     input_face_img = np.expand_dims(input_face_img, axis=0)
+
+    return input_face_img
+# ------------------------------------------------------
+#""" Preprocess """
+#image = cv2.imread(face_image_path)
+#image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+#dest = cv2.subtract(np.float32(resized), (127.5, 127.5, 127.5, 0)) 
+#cv2.multiply(dest, (1/127.5, 1/127.5, 1/127.5, 0), dest)  
+#blob = cv2.dnn.blobFromImage(resized, 1/127.5, (160, 160), (127.5, 127.5, 127.5), swapRB=False)
+#blob2 = cv2.dnn.blobFromImage(image, 1/127.5, (160, 160), (127.5, 127.5, 127.5), swapRB=False)
+
+# 0.00499203 error, same as keras facenet
+def extract(cvNet, image): 
+    #input_face_img = np_blob(image)
+    input_face_img = cv2.dnn.blobFromImage(image, 1/127.5, (160, 160), (127.5, 127.5, 127.5), swapRB=False)
 
     """ Forward """
     cvNet.setInput(input_face_img)
@@ -78,4 +87,4 @@ def saveEmbedding(dataDir, targetFile):
     df = extractFaces(dataDir)
     df.to_csv(targetFile, index=False, header=False)
 
-saveEmbedding('/home/minhnghiaduong/Documents/Projects/ExtendedYaleB', 'facenet_py_data.txt')
+saveEmbedding('/home/minhnghiaduong/Documents/Projects/ExtendedYaleB', 'facenet_blob_data.txt')

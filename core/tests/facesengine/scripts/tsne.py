@@ -6,7 +6,7 @@ import pandas as pd
 
 sns.set(style='white', context='notebook', rc={'figure.figsize':(14,10)})
 
-faceData = pd.read_csv('../data/fix_normalize.txt',header=None)
+faceData = pd.read_csv('../data/facenet_blob_data.txt',header=None)
 
 embeddingIndex = set(faceData.columns)
 embeddingIndex.remove(0)
@@ -22,4 +22,4 @@ plt.title('T-SNE projection of the face embedding from Extended Yale B dataset',
 plt.show()
 
 reducedData = pd.DataFrame({'label':labels, 'X1': reducedEmbedding[:, 0], 'X2': reducedEmbedding[:, 1]})
-reducedData.to_csv('../data/fix_normalize_tsne.txt', index=False, header=False)
+reducedData.to_csv('../data/facenet_blob_tsne_data.txt', index=False, header=False)
