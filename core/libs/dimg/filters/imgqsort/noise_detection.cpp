@@ -86,7 +86,6 @@ MatrixFilterHaar* MatrixFilterHaar::instance()
 
 NoiseDetector::Mat3D MatrixFilterHaar::get_data()
 {
-    qInfo()<<"get data";
     return m_data;
 }
 
@@ -166,8 +165,8 @@ float NoiseDetector::detect()
 
     float V =  noise_variance(variance,kurtosis) ;
 
-    qInfo()<<"variance noise"<<V;
-    qInfo()<<"sigmoid "<<scale(V);
+    // qInfo()<<"variance noise"<<V;
+    // qInfo()<<"sigmoid "<<scale(V);
 
     return scale(V);
 }
@@ -232,8 +231,6 @@ float NoiseDetector::noise_variance(const cv::Mat& variance, const cv::Mat& kurt
 
 cv::Mat NoiseDetector::raw_moment(const NoiseDetector::Mat3D& mat,int ordre)
 {
-    qInfo()<<"get raw moment";
-
     float taille_image = d->image.size().width * d->image.size().height;
     
     std::vector<float> vec;
