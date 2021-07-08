@@ -4,7 +4,7 @@
  * https://www.digikam.org
  *
  * Date        : 
- * Description : Image Quality Parser - blur detection
+ * Description : Image Quality Parser - Noise detection
  *
  * Copyright (C) 2013-2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
  *
@@ -58,28 +58,17 @@ void MatrixFilterHaar::init()
         const int size = SIZE_FILTER;
 
         float mat_base[size][size] = {{0.5, 0.5, 0.5, 0.5},
-                                {0.5, 0.5, -0.5, -0.5},
-                                {0.70711,-0.70711, 0., 0.},
-                                {0.0, 0., 0.70711, -0.70711}}; 
+                                      {0.5, 0.5, -0.5, -0.5},
+                                      {sqrt(2.0)/2.0,-sqrt(2.0)/2.0, 0., 0.},
+                                      {0., 0., sqrt(2.0)/2.0, -sqrt(2.0)/2.0}}; 
         
+        cv::Mat mat_base_opencv = cv::Mat(SIZE_FILTER, SIZE_FILTER, CV_32FC1, &mat_base);
+
         for (int i = 0; i < SIZE_FILTER; i++)
         {
             for (int j = 0; j < SIZE_FILTER; j++)
             {
-                float tmp[SIZE_FILTER][SIZE_FILTER];
-                
-                for (int h = 0; h < SIZE_FILTER; h++)
-                {
-                    for (int l = 0; l < SIZE_FILTER; l++)
-                    {
-                        tmp[h][l] = mat_base[i][h] * mat_base[j][l];
-                    }
-                }
-                cv::Mat filter_i = cv::Mat(SIZE_FILTER,SIZE_FILTER,CV_32FC1);
-                
-                std::memcpy(filter_i.data, tmp, SIZE_FILTER * SIZE_FILTER * sizeof(float));
-                
-                res.push_back(filter_i);
+                res.push_back(mat_base_opencv.row(i).t() * mat_base_opencv.row(j));
             }   
         }
         m_data = res;
