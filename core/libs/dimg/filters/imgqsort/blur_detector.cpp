@@ -43,13 +43,13 @@ public:
       : min_abs(1),
         ordre_log_filtrer(100),
         sigma_smooth_image(5),
-        filtrer_defocus(70),
+        filtrer_defocus(90),
 
-        part_size_motion_blur(20),
-        edges_filtrer(10),
+        part_size_motion_blur(30),
+        edges_filtrer(5),
         theta_resolution(CV_PI/600),
-        min_line_length(12),
-        threshold_hough(10),
+        min_line_length(20),
+        threshold_hough(7),
         min_nb_lines(3),
         max_stddev(0.6),
 
@@ -280,7 +280,7 @@ cv::Mat BlurDetector::getWeightMap()                               const
     {
         for (const auto point : d->af_points)
         {
-            float expand = 33;
+            float expand = 2;
 
             int x_position_corner = std::max(static_cast<int>((point.x_position - point.width * 0.5  *expand) * d->image.size().width), 0);
             int y_position_corner = std::max(static_cast<int>((point.y_position - point.height * 0.5 *expand) * d->image.size().height), 0);
