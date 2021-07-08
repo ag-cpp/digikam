@@ -178,8 +178,9 @@ float NoiseDetector::detect()
     float V =  noise_variance(variance,kurtosis) ;
 
     qInfo()<<"variance noise"<<V;
+    qInfo()<<"sigmoid "<<scale(V);
 
-    return V;
+    return scale(V);
 }
 
 NoiseDetector::Mat3D NoiseDetector::decompose_by_filter(const Mat3D& filters)
@@ -272,6 +273,11 @@ float NoiseDetector::mean_mat(const cv::Mat& mat)
     cv::meanStdDev(mat,mean,stddev);
 
     return mean[0];
+}
+
+float NoiseDetector::scale(const float number)
+{
+    return 1.0 / (1.0 + qExp(-(number - 18.0)/7.0 ));
 }
 
 }
