@@ -24,6 +24,7 @@
 
 #include "imagequalityparser_p.h"
 
+#include "compression_detection.h"
 namespace Digikam
 {
 
@@ -100,7 +101,7 @@ void ImageQualityParser::startAnalyse()
     double blur             = 0.0;
     short  blur2            = 0;
     double noise            = 0.0;
-    int    compressionLevel = 0;
+    float  compressionLevel = 0;
     double finalQuality     = 0.0;
     double underLevel       = 0.0;
     double overLevel        = 0.0;
@@ -135,7 +136,8 @@ void ImageQualityParser::startAnalyse()
     {
         // Returns number of blocks in the image.
 
-        compressionLevel = compressionDetector();
+        compressionLevel = CompressionDetector(d->image).detect();
+        qInfo()<<"compressionLevel"<<compressionLevel;
         qCDebug(DIGIKAM_DIMG_LOG) << "Amount of compression artifacts present in image is:" << compressionLevel;
     }
 
@@ -190,15 +192,9 @@ void ImageQualityParser::startAnalyse()
     {
         // All the results to have a range of 1 to 100.
 
-        double finalBlur          = (blur * 100.0)  + ((blur2 / 32767) * 100.0);
-        double finalNoise         = noise * 100.0;
-        double finalCompression   = (compressionLevel / 1024.0) * 100.0;        // we are processing 1024 pixels size image
-        double finalExposure      = 100.0 - (underLevel + overLevel) * 100.0;
+        double finalCompression   = compressionLevel * 100.0;        
 
-        finalQuality            = finalBlur          * d->imq.blurWeight        +
-                                  finalNoise         * d->imq.noiseWeight       +
-                                  finalCompression   * d->imq.compressionWeight +
-                                  finalExposure;
+        finalQuality            =  finalCompression; 
 
         qCDebug(DIGIKAM_DIMG_LOG) << "Final Quality estimated: " << finalQuality;
 
