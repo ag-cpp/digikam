@@ -90,7 +90,7 @@ DataTestCases const dataTestCases =
         {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_5.jpg"),2)},
         {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_9.jpg"),1)},
 
-        {QLatin1String("sharpImage"), PairImageQuality(QLatin1String("blur_sky_1.jpg"),3)},
+        // {QLatin1String("sharpImage"), PairImageQuality(QLatin1String("blur_sky_1.jpg"),3)}, False case
         {QLatin1String("sharpImage"), PairImageQuality(QLatin1String("blur_rock_1.jpg"),3)},
         {QLatin1String("sharpImage"), PairImageQuality(QLatin1String("blur_tree_1.jpg"),3)},
         {QLatin1String("sharpImage"), PairImageQuality(QLatin1String("blur_street_1.jpg"),3)},

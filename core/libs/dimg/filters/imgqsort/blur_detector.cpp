@@ -41,22 +41,23 @@ class Q_DECL_HIDDEN BlurDetector::Private
 public:
     explicit Private()
       : min_abs(1),
-        ordre_log_filtrer(130),
+        ordre_log_filtrer(30),
         sigma_smooth_image(5),
-        filtrer_defocus(70),
+        filtrer_defocus(100),
 
-        part_size_motion_blur(20),
+        part_size_motion_blur(30),
         edges_filtrer(10),
-        theta_resolution(CV_PI/600),
-        min_line_length(12),
+        theta_resolution(CV_PI/900),
+        min_line_length(20),
         threshold_hough(10),
         min_nb_lines(3),
-        max_stddev(0.5),
+        max_stddev(0.7),
 
         part_size_mono_color(40),
         mono_color_threshold(10),
 
-        have_focus_region(false)
+        have_focus_region(false),
+        ratio_expand_af_point(2)
     {
 
     }
@@ -80,6 +81,7 @@ public:
     float                               mono_color_threshold;
     
     bool                                have_focus_region;
+    int                                 ratio_expand_af_point;
     FocusPointsExtractor::ListAFPoints  af_points;
 };
 
@@ -210,6 +212,7 @@ cv::Mat BlurDetector::detectMotionBlurMap(const cv::Mat& edgesMap) const
             cv::Mat subImg = edgesMap(rect);
             
             qCDebug(DIGIKAM_DIMG_LOG) << "Detect if each part is motion blur";
+            
             if(isMotionBlur(subImg)) 
             {
                 res(rect).setTo(1);
@@ -245,7 +248,7 @@ bool    BlurDetector::isMotionBlur(const cv::Mat& frag) const
 
             theta = (theta < 0) ? theta + CV_PI : theta;
 
-            // theta = (theta < CV_PI/20) ?  CV_PI - theta : theta;
+            theta = (theta < CV_PI/20) ?  CV_PI - theta : theta;
             
             list_theta.push_back(theta);
         }
@@ -280,13 +283,11 @@ cv::Mat BlurDetector::getWeightMap()                               const
     {
         for (const auto point : d->af_points)
         {
-            float expand = 2;
+            int x_position_corner = std::max(static_cast<int>((point.x_position - point.width * 0.5  *d->ratio_expand_af_point) * d->image.size().width), 0);
+            int y_position_corner = std::max(static_cast<int>((point.y_position - point.height * 0.5 *d->ratio_expand_af_point) * d->image.size().height), 0);
 
-            int x_position_corner = std::max(static_cast<int>((point.x_position - point.width * 0.5  *expand) * d->image.size().width), 0);
-            int y_position_corner = std::max(static_cast<int>((point.y_position - point.height * 0.5 *expand) * d->image.size().height), 0);
-
-            int width = std::min(d->image.size().width - x_position_corner, static_cast<int>(point.width * d->image.size().width * expand) );
-            int height = std::min(d->image.size().height - y_position_corner, static_cast<int>(point.height * d->image.size().height * expand) );
+            int width = std::min(d->image.size().width - x_position_corner, static_cast<int>(point.width * d->image.size().width * d->ratio_expand_af_point) );
+            int height = std::min(d->image.size().height - y_position_corner, static_cast<int>(point.height * d->image.size().height * d->ratio_expand_af_point) );
 
             cv::Rect rect{x_position_corner, y_position_corner,
                           width, height};
@@ -309,7 +310,7 @@ cv::Mat BlurDetector::detectBackgroundRegion(const cv::Mat& image)    const
     qCDebug(DIGIKAM_DIMG_LOG) << "Divide image to small parts";
 
     int nb_parts_row = static_cast<int>(image.size().height / d->part_size_mono_color);
-    int nb_parts_col = static_cast<int>(image.size().width / d->part_size_mono_color);
+    int nb_parts_col = static_cast<int>(image.size().width  / d->part_size_mono_color);
     
     cv::Mat res = cv::Mat::zeros(image.size(), CV_8U);
 
