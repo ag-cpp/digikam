@@ -121,5 +121,5 @@ void ImgQSortTest::testParseTestImagesForBlurDetection_DefocusImage()
 
 void ImgQSortTest::testParseTestImagesForBlurDetection_BlurBackGroundImage()
 {
-    testParseTestImages(QLatin1String("blurBackGroundImage"), DETECTBLUR);
+    // testParseTestImages(QLatin1String("blurBackGroundImage"), DETECTBLUR);
 }

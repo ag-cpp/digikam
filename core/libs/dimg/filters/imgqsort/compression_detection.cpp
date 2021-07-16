@@ -45,8 +45,8 @@ public:
         part_size_mono_color(20),
         mono_color_threshold(10.0),
 
-        alpha(0.027),
-        beta(-0.0015)
+        alpha(0.026),
+        beta(-0.002)
     {
     }
 
