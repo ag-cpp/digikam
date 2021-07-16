@@ -50,6 +50,8 @@ private:
     cv::Mat checkVertical();
     cv::Mat checkHorizontal();
     cv::Mat detectMonoColorRegion();
+
+    float normalize(const float number);
     
 private:
 

@@ -41,9 +41,12 @@ class Q_DECL_HIDDEN CompressionDetector::Private
 {
 public:
     explicit Private()
-      : threshold(10),
-        part_size_mono_color(50),
-        mono_color_threshold(10.0)
+      : threshold(2),
+        part_size_mono_color(20),
+        mono_color_threshold(10.0),
+
+        alpha(0.027),
+        beta(-0.0015)
     {
     }
 
@@ -53,6 +56,8 @@ public:
     int part_size_mono_color;
     float mono_color_threshold;
 
+    float alpha;
+    float beta;
 };
 
 CompressionDetector::CompressionDetector(const DImg& image)
@@ -103,7 +108,9 @@ float CompressionDetector::detect()
 
     qInfo()<<"percent pixel block" <<static_cast<float> (cv::countNonZero(block_map)) / static_cast<float> (block_map.total());
 
-    return static_cast<float> (cv::countNonZero(block_map)) / static_cast<float> (block_map.total());
+    float precent_edges_block = static_cast<float> (cv::countNonZero(block_map)) / static_cast<float> (block_map.total());
+
+    return normalize(precent_edges_block);
 }
 
 cv::Mat CompressionDetector::checkVertical()
@@ -179,6 +186,11 @@ cv::Mat CompressionDetector::detectMonoColorRegion()
         }
     }
     return res;
+}
+
+float CompressionDetector::normalize(const float number)
+{
+    return 1.0 / (1.0 + qExp(-(number - d->alpha)/d->beta ));
 }
 
 }

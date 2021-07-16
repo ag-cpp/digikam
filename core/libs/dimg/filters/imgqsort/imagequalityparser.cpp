@@ -206,7 +206,7 @@ void ImageQualityParser::startAnalyse()
 
             *d->label = NoPickLabel;
         }
-        else if ((int)finalQuality < d->imq.rejectedThreshold)
+        else if ((int)finalQuality <= d->imq.rejectedThreshold)
         {
             *d->label = RejectedLabel;
         }
