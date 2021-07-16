@@ -128,7 +128,6 @@ float ExposureDetector::percent_overexposed()
 
     int normal_pixel = d->image.total() - over_exposed_pixel - demi_over_exposed_pixel;
 
-    qInfo()<<"over_exposed_pixel"<<over_exposed_pixel<<"demi_over_exposed_pixel"<<demi_over_exposed_pixel<<"normal_pixel"<<normal_pixel;
     return static_cast<float>(static_cast<float>(over_exposed_pixel * d->weight_over_exposure + demi_over_exposed_pixel * d->weight_demi_over_exposure) / 
                               static_cast<float>(normal_pixel + over_exposed_pixel * d->weight_over_exposure + demi_over_exposed_pixel * d->weight_demi_over_exposure));
 }
@@ -139,10 +138,8 @@ float ExposureDetector::percent_underexposed()
 
     int demi_under_exposed_pixel = count_by_condition(d->threshold_underexposed,d->threshold_demi_underexposed);
 
-    qInfo()<<"total pixels"<<d->image.total();
     int normal_pixel = d->image.total() - under_exposed_pixel - demi_under_exposed_pixel;
 
-    qInfo()<<"under_exposed_pixel"<<under_exposed_pixel<<"demi_under_exposed_pixel"<<demi_under_exposed_pixel<<"normal_pixel"<<normal_pixel;
     return static_cast<float>(static_cast<float>(under_exposed_pixel * d->weight_under_exposure + demi_under_exposed_pixel * d->weight_demi_under_exposure) / 
                               static_cast<float>(normal_pixel + under_exposed_pixel * d->weight_under_exposure + demi_under_exposed_pixel * d->weight_demi_under_exposure));
 }
