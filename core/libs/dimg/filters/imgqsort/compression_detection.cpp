@@ -102,7 +102,6 @@ float CompressionDetector::detect()
 
 cv::Mat CompressionDetector::checkVertical()
 {
-    qInfo()<<"checkVertical";
     cv::Mat res = cv::Mat::zeros(d->image.size(),CV_8UC1 );
 
     for (int i = 2; i < d->image.cols - 1; i ++)
@@ -123,7 +122,6 @@ cv::Mat CompressionDetector::checkVertical()
 
 cv::Mat CompressionDetector::checkHorizontal()
 {
-    qInfo()<<"checkHorizontal";
     cv::Mat res = cv::Mat::zeros(d->image.size(),CV_8UC1 );
 
     for (int i = 2; i < d->image.rows - 1; i ++)
