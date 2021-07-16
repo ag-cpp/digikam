@@ -49,6 +49,7 @@ private:
 
     cv::Mat checkVertical();
     cv::Mat checkHorizontal();
+    cv::Mat detectMonoColorRegion();
     
 private:
 

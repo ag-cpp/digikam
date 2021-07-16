@@ -41,21 +41,23 @@ class Q_DECL_HIDDEN CompressionDetector::Private
 {
 public:
     explicit Private()
-      :threshold(30)
+      : threshold(10),
+        part_size_mono_color(50),
+        mono_color_threshold(10.0)
     {
     }
 
     cv::Mat image;
 
     int threshold;
+    int part_size_mono_color;
+    float mono_color_threshold;
 
 };
 
 CompressionDetector::CompressionDetector(const DImg& image)
     :  d(new Private)
 {
-    qInfo()<<"prepare for detection";
-
     d->image = prepareForDetection(image);
 }
 
@@ -95,9 +97,13 @@ float CompressionDetector::detect()
 
     cv::Mat horizontalBlock = checkHorizontal();
 
-    qInfo()<<"percent pixel block" <<static_cast<float> (cv::countNonZero(verticalBlock + horizontalBlock)) / static_cast<float> (d->image.total());
+    cv::Mat mono_color_map = detectMonoColorRegion();
 
-    return static_cast<float>(cv::countNonZero(verticalBlock + horizontalBlock)) / static_cast<float>(d->image.total());
+    cv::Mat block_map = mono_color_map.mul(verticalBlock + horizontalBlock);
+
+    qInfo()<<"percent pixel block" <<static_cast<float> (cv::countNonZero(block_map)) / static_cast<float> (block_map.total());
+
+    return static_cast<float> (cv::countNonZero(block_map)) / static_cast<float> (block_map.total());
 }
 
 cv::Mat CompressionDetector::checkVertical()
@@ -139,6 +145,39 @@ cv::Mat CompressionDetector::checkHorizontal()
         row = check;
     }
 
+    return res;
+}
+
+cv::Mat CompressionDetector::detectMonoColorRegion()
+{
+    qCDebug(DIGIKAM_DIMG_LOG) << "Divide image to small parts";
+
+    int nb_parts_row = static_cast<int>(d->image.size().height / d->part_size_mono_color);
+    int nb_parts_col = static_cast<int>(d->image.size().width  / d->part_size_mono_color);
+    
+    cv::Mat res = cv::Mat::zeros(d->image.size(), CV_8U);
+
+    for (int i = 0; i < nb_parts_row; i++)
+    {
+        for (int j = 0; j < nb_parts_col; j++)
+        {
+            cv::Rect rect{j*d->part_size_mono_color, i*d->part_size_mono_color, 
+                          d->part_size_mono_color, d->part_size_mono_color};
+
+            cv::Mat subImg = d->image(rect);
+            
+            qCDebug(DIGIKAM_DIMG_LOG) << "Detect if each part is mono-color";
+            
+            cv::Scalar mean, stddev;
+
+            cv::meanStdDev(subImg,mean,stddev);
+
+            if (stddev[0] < d->mono_color_threshold) 
+            {
+                res(rect).setTo(1);
+            }
+        }
+    }
     return res;
 }
 
