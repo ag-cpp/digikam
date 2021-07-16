@@ -70,8 +70,6 @@ public:
 ExposureDetector::ExposureDetector(const DImg& image)
     :  d(new Private)
 {
-    qInfo()<<"prepare for detection";
-
     d->image = prepareForDetection(image);
 }
 
@@ -107,17 +105,13 @@ cv::Mat ExposureDetector::prepareForDetection(const DImg& inputImage) const
     return cvImage;
 }
 
-void ExposureDetector::detect(float& overexposed, float& underexposed)
-{ 
-    qInfo()<<"start detection";
-
-    overexposed = percent_overexposed();
+float ExposureDetector::detect()
+{
+    float overexposed = percent_overexposed();
     
-    qInfo()<<"overexposed"<<overexposed;
+    float underexposed = percent_underexposed();
 
-    underexposed = percent_underexposed();
-
-    qInfo()<<"underexposed"<<underexposed;
+    return std::max(overexposed, underexposed);
 }
 
 float ExposureDetector::percent_overexposed()
@@ -148,8 +142,15 @@ int ExposureDetector::count_by_condition(int minVal, int maxVal)
 {
     cv::Mat mat;
 
-    cv::threshold(d->image,mat,minVal, 0, cv::THRESH_TOZERO );
-    cv::threshold(mat     ,mat,maxVal, 0, cv::THRESH_TOZERO_INV );
+    if (minVal == 0)
+    {
+        cv::threshold(d->image,mat,maxVal, 1, cv::THRESH_BINARY_INV );
+    }
+    else
+    {
+        cv::threshold(d->image,mat,minVal, 0, cv::THRESH_TOZERO );
+        cv::threshold(mat     ,mat,maxVal, 0, cv::THRESH_TOZERO_INV );
+    }
 
     return cv::countNonZero(mat);
 }

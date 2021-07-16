@@ -41,7 +41,7 @@ public:
     explicit ExposureDetector(const DImg& image);
     ~ExposureDetector();
 
-    void detect(float& overexposed, float& underexposed);
+    float detect();
 
 private:
 

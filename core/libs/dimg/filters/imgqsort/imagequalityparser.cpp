@@ -104,8 +104,7 @@ void ImageQualityParser::startAnalyse()
     double noise            = 0.0;
     int    compressionLevel = 0;
     double finalQuality     = 0.0;
-    float underLevel       = 0.0;
-    float overLevel        = 0.0;
+    float exposedLevel      = 0.0;
 
     // If blur option is selected in settings, run the blur detection algorithms
 
@@ -145,9 +144,8 @@ void ImageQualityParser::startAnalyse()
     {
         // Returns percents of over-exposure in the image
 
-        ExposureDetector(d->image).detect(overLevel,underLevel);
-        qCDebug(DIGIKAM_DIMG_LOG) << "Under-exposure percents in image is: " << underLevel;
-        qCDebug(DIGIKAM_DIMG_LOG) << "Over-exposure percents in image is:  " << overLevel;
+        exposedLevel = ExposureDetector(d->image).detect();
+        qCDebug(DIGIKAM_DIMG_LOG) << "over/ under exposed level in image is: " << exposedLevel;
     }
 
 #ifdef TRACE
@@ -192,7 +190,7 @@ void ImageQualityParser::startAnalyse()
     {
         // All the results to have a range of 1 to 100.
 
-        float finalExposure      = max(underLevel,overLevel);
+        float finalExposure      = exposedLevel;
 
         finalQuality            = (1 - finalExposure )* 100;
 
