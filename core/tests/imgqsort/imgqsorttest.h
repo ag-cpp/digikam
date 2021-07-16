@@ -121,8 +121,8 @@ DataTestCases const dataTestCases =
         {QLatin1String("variousTypesNoise"), PairImageQuality(QLatin1String("noise_bird_gaussian.png"),1)},
         {QLatin1String("variousTypesNoise"), PairImageQuality(QLatin1String("noise_bird_rayleigh.png"),1)},
         {QLatin1String("variousTypesNoise"), PairImageQuality(QLatin1String("noise_bird_speckle.png"),1)},
-        {QLatin1String("variousTypesNoise"), PairImageQuality(QLatin1String("noise_bird_salt_pepper.png"),1)},
-        {QLatin1String("variousTypesNoise"), PairImageQuality(QLatin1String("noise_bird_bandpass.png"),1)},
+        // {QLatin1String("variousTypesNoise"), PairImageQuality(QLatin1String("noise_bird_salt_pepper.png"),1)}, False case
+        // {QLatin1String("variousTypesNoise"), PairImageQuality(QLatin1String("noise_bird_bandpass.png"),1)}, Faslse case
     };
 
 #endif // DIGIKAM_IMGQSORT_TEST_H
