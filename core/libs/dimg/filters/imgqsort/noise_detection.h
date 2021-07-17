@@ -47,16 +47,16 @@ public:
 
 private:
 
-    cv::Mat prepareForDetection(const DImg& inputImage) const;
+    cv::Mat prepareForDetection(const DImg& inputImage)                         const;
     
-    Mat3D   decompose_by_filter(const Mat3D& filters);
+    Mat3D   decompose_by_filter(const Mat3D& filters);                          const
     void    calculate_variance_kurtosis(const Mat3D& channels, cv::Mat& variance, cv::Mat& kurtosis);
-    float   noise_variance(const cv::Mat& variance, const cv::Mat& kurtosis);
-    float   normalize(const float number); // scale result to interval [0 100]
+    float   noise_variance(const cv::Mat& variance, const cv::Mat& kurtosis)    const;
+    float   normalize(const float number)                                       const;
 
-    cv::Mat raw_moment(const NoiseDetector::Mat3D& mat,int ordre);
-    cv::Mat pow_mat(const cv::Mat& mat, float ordre);
-    float   mean_mat(const cv::Mat& mat);
+    cv::Mat raw_moment(const NoiseDetector::Mat3D& mat,int ordre)               const;
+    cv::Mat pow_mat(const cv::Mat& mat, float ordre)                            const;
+    float   mean_mat(const cv::Mat& mat)                                        const;
     
 private:
 
