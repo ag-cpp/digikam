@@ -21,7 +21,7 @@
  *
  * ============================================================ */
 
-#include "imgqsorttest.h"
+#include "detectblur_utest.h"
 
 // Qt includes
 
@@ -40,14 +40,14 @@
 
 using namespace Digikam;
 
-QTEST_MAIN(ImgQSortTest)
+QTEST_MAIN(ImgQSortTestDetectBlur)
 
 
-ImgQSortTest::ImgQSortTest(QObject* const)
+ImgQSortTestDetectBlur::ImgQSortTestDetectBlur(QObject* const)
 {
 }
 
-void ImgQSortTest::testParseTestImages(const QString& testcase_name, DetectionType mode)
+void ImgQSortTestDetectBlur::testParseTestImages(const QString& testcase_name, DetectionType mode)
 {
     QStringList imageNames;
     QList<PairImageQuality> dataTest = dataTestCases.values(testcase_name);
@@ -67,60 +67,45 @@ void ImgQSortTest::testParseTestImages(const QString& testcase_name, DetectionTy
     }
 }
 
-void ImgQSortTest::initTestCase()
+void ImgQSortTestDetectBlur::initTestCase()
 {
     QDir dir(QFINDTESTDATA("../../dplugins/dimg"));
     qputenv("DK_PLUGIN_PATH", dir.canonicalPath().toUtf8());
     DPluginLoader::instance()->init();
 }
 
-void ImgQSortTest::cleanupTestCase()
+void ImgQSortTestDetectBlur::cleanupTestCase()
 {
 }
 
-QDir ImgQSortTest::imageDir() const
+QDir ImgQSortTestDetectBlur::imageDir() const
 {
     QDir dir(QFINDTESTDATA("data/"));
     qCDebug(DIGIKAM_TESTS_LOG) << "Images Directory:" << dir;
     return dir;
 }
 
-void ImgQSortTest::testParseTestImagesForExposureDetection()
-{
-    testParseTestImages(QLatin1String("exposureDetection"), DETECTEXPOSURE);
-}
-
-void ImgQSortTest::testParseTestImagesForNoiseDetection()
-{
-    testParseTestImages(QLatin1String("noiseDetection"), DETECTNOISE);
-}
-
-void ImgQSortTest::testParseTestImagesForBlurDetection()
+void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection()
 {
     testParseTestImages(QLatin1String("blurDetection"), DETECTBLUR);
 }
 
-void ImgQSortTest::testParseTestImagesForCompressionDetection()
-{
-    testParseTestImages(QLatin1String("compressionDetection"), DETECTCOMPRESSION);
-}
-
-void ImgQSortTest::testParseTestImagesForBlurDetection_SharpImage()
+void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection_SharpImage()
 {
     testParseTestImages(QLatin1String("sharpImage"), DETECTBLUR);
 }
 
-void ImgQSortTest::testParseTestImagesForBlurDetection_MotionBlurImage()
+void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection_MotionBlurImage()
 {
     testParseTestImages(QLatin1String("motionBlurImage"), DETECTBLUR);
 }
 
-void ImgQSortTest::testParseTestImagesForBlurDetection_DefocusImage()
+void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection_DefocusImage()
 {
     testParseTestImages(QLatin1String("defocusImage"), DETECTBLUR);
 }
 
-void ImgQSortTest::testParseTestImagesForBlurDetection_BlurBackGroundImage()
+void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection_BlurBackGroundImage()
 {
     testParseTestImages(QLatin1String("blurBackGroundImage"), DETECTBLUR);
 }
