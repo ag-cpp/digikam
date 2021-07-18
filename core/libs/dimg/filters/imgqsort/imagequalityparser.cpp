@@ -24,10 +24,7 @@
 
 #include "imagequalityparser_p.h"
 
-
-// Local includes 
-
-#include "noise_detection.h"
+#include "exposure_detection.h"
 
 namespace Digikam
 {
@@ -107,8 +104,8 @@ void ImageQualityParser::startAnalyse()
     double noise            = 0.0;
     int    compressionLevel = 0;
     double finalQuality     = 0.0;
-    double underLevel       = 0.0;
-    double overLevel        = 0.0;
+    float underLevel       = 0.0;
+    float overLevel        = 0.0;
 
     // If blur option is selected in settings, run the blur detection algorithms
 
@@ -131,7 +128,8 @@ void ImageQualityParser::startAnalyse()
     {
         // Some images give very low noise value. Assign NoPickLabel in that case.
         // Returns noise value between 0 and 1.
-        noise = NoiseDetector(d->image).detect();
+
+        noise = noiseDetector();
         qCDebug(DIGIKAM_DIMG_LOG) << "Amount of Noise present in image is:" << noise;
     }
 
@@ -147,7 +145,7 @@ void ImageQualityParser::startAnalyse()
     {
         // Returns percents of over-exposure in the image
 
-        exposureAmount(underLevel, overLevel);
+        ExposureDetector(d->image).detect(overLevel,underLevel);
         qCDebug(DIGIKAM_DIMG_LOG) << "Under-exposure percents in image is: " << underLevel;
         qCDebug(DIGIKAM_DIMG_LOG) << "Over-exposure percents in image is:  " << overLevel;
     }
@@ -194,14 +192,10 @@ void ImageQualityParser::startAnalyse()
     {
         // All the results to have a range of 1 to 100.
 
-        // double finalBlur          = (blur * 100.0)  + ((blur2 / 32767) * 100.0);
-        double finalNoise         = noise * 100.0;
-        // double finalCompression   = (compressionLevel / 1024.0) * 100.0;        // we are processing 1024 pixels size image
-        // double finalExposure      = 100.0 - (underLevel + overLevel) * 100.0;
+        float finalExposure      = max(underLevel,overLevel);
 
-        finalQuality            = 100 - finalNoise;
+        finalQuality            = (1 - finalExposure )* 100;
 
-        qInfo()<< "Final Quality estimated: " << finalQuality;
         qCDebug(DIGIKAM_DIMG_LOG) << "Final Quality estimated: " << finalQuality;
 
         // Assigning PickLabels

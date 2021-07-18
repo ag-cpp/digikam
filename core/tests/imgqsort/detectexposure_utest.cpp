@@ -83,7 +83,7 @@ QDir ImgQSortTestDetecteExposure::imageDir() const
     return dir;
 }
 
-void ImgQSortTest::testParseTestImagesForExposureDetection()
+void ImgQSortTestDetecteExposure::testParseTestImagesForExposureDetection()
 {
     testParseTestImages(QLatin1String("exposureDetection"), DETECTEXPOSURE);
 }
