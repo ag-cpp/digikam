@@ -36,6 +36,7 @@
 #include "digikam_globals.h"
 #include "imagequalitycontainer.h"
 #include "dpluginloader.h"
+#include "digikam_debug.h"
 
 using namespace Digikam;
 
@@ -79,7 +80,7 @@ void ImgQSortTestDetecteExposure::cleanupTestCase()
 QDir ImgQSortTestDetecteExposure::imageDir() const
 {
     QDir dir(QFINDTESTDATA("data/"));
-    qDebug() << "Images Directory:" << dir;
+    qDebug(DIGIKAM_TESTS_LOG) << "Images Directory:" << dir;
     return dir;
 }
 
