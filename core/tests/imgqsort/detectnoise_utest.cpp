@@ -70,7 +70,6 @@ void ImgQSortTestDetectNoise::initTestCase()
     QDir dir(QFINDTESTDATA("../../dplugins/dimg"));
     qputenv("DK_PLUGIN_PATH", dir.canonicalPath().toUtf8());
     DPluginLoader::instance()->init();
-    qDebug()<<"get here";
 }
 
 void ImgQSortTestDetectNoise::cleanupTestCase()
