@@ -43,14 +43,14 @@ public:
     explicit NoiseDetector(const DImg& image);
     ~NoiseDetector();
 
-    float detect();
+    float detect()                                                              const;
 
 private:
 
     cv::Mat prepareForDetection(const DImg& inputImage)                         const;
     
-    Mat3D   decompose_by_filter(const Mat3D& filters);                          const
-    void    calculate_variance_kurtosis(const Mat3D& channels, cv::Mat& variance, cv::Mat& kurtosis);
+    Mat3D   decompose_by_filter(const Mat3D& filters)                           const;                          
+    void    calculate_variance_kurtosis(const Mat3D& channels, cv::Mat& variance, cv::Mat& kurtosis) const;
     float   noise_variance(const cv::Mat& variance, const cv::Mat& kurtosis)    const;
     float   normalize(const float number)                                       const;
 

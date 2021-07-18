@@ -69,3 +69,4 @@ macro(IMGQSORT_BUILD_UNITTEST)
 endmacro()
 
 IMGQSORT_BUILD_UNITTEST(imgqsorttest.cpp)
+IMGQSORT_BUILD_UNITTEST(detectnoise_utest.cpp)

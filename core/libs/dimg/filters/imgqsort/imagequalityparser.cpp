@@ -111,6 +111,7 @@ void ImageQualityParser::startAnalyse()
     double overLevel        = 0.0;
 
     // If blur option is selected in settings, run the blur detection algorithms
+    qInfo()<<d->running<<d->imq.detectNoise;
 
     if (d->running && d->imq.detectBlur)
     {
