@@ -47,9 +47,9 @@ private:
 
     cv::Mat prepareForDetection(const DImg& inputImage) const;
 
-    cv::Mat checkVertical();
-    cv::Mat checkHorizontal();
-    cv::Mat detectMonoColorRegion();
+    cv::Mat checkVertical(const cv::Mat& gray_image) const;
+    cv::Mat checkHorizontal(const cv::Mat& gray_image) const;
+    cv::Mat detectMonoColorRegion()     const;
 
     float normalize(const float number);
     

@@ -63,8 +63,8 @@ using DataTestCases = QMultiMap<QString, PairImageQuality> ;
 
 DataTestCases const dataTestCases = 
     {   
-        {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_1.jpg"),1)},
-        {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_2.jpg"),1)},
+        // {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_1.jpg"),1)},
+        {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_2.jpg"),2)},
         {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_4.jpg"),2)},
         {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_9.jpg"),3)},
     };

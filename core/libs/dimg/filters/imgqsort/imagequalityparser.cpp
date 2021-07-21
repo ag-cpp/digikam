@@ -192,7 +192,7 @@ void ImageQualityParser::startAnalyse()
     {
         // All the results to have a range of 1 to 100.
 
-        double finalCompression   = compressionLevel * 100.0;        
+        double finalCompression   = (1 - compressionLevel) * 100.0;        
 
         finalQuality            =  finalCompression; 
 

@@ -41,9 +41,11 @@ class Q_DECL_HIDDEN CompressionDetector::Private
 {
 public:
     explicit Private()
-      : threshold(2),
-        part_size_mono_color(20),
-        mono_color_threshold(10.0),
+      : threshold_edges_block(2),
+        weight_edges_block(120.0),
+
+        weight_mono_color(10.0),
+        threshold_mono_color(0.1),
 
         alpha(0.026),
         beta(-0.002)
@@ -52,9 +54,14 @@ public:
 
     cv::Mat image;
 
-    int threshold;
+    int threshold_edges_block;
+    float weight_edges_block;
+
     int part_size_mono_color;
     float mono_color_threshold;
+
+    float weight_mono_color;
+    float threshold_mono_color;
 
     float alpha;
     float beta;
@@ -91,40 +98,51 @@ cv::Mat CompressionDetector::prepareForDetection(const DImg& inputImage) const
         cvImage.convertTo(cvImage, CV_8UC3, 1 / 256.0);
     }
 
-    cv::cvtColor(cvImage, cvImage, cv::COLOR_BGR2GRAY);
-
     return cvImage;
 }
 
 float CompressionDetector::detect()
 {
-    cv::Mat verticalBlock = checkVertical();
+    cv::Mat gray_image;
 
-    cv::Mat horizontalBlock = checkHorizontal();
+    cv::cvtColor(d->image, gray_image, cv::COLOR_BGR2GRAY);
+
+    cv::Mat verticalBlock = checkVertical(gray_image);
+
+    cv::Mat horizontalBlock = checkHorizontal(gray_image);
 
     cv::Mat mono_color_map = detectMonoColorRegion();
 
     cv::Mat block_map = mono_color_map.mul(verticalBlock + horizontalBlock);
 
-    qInfo()<<"percent pixel block" <<static_cast<float> (cv::countNonZero(block_map)) / static_cast<float> (block_map.total());
+    int nb_pixels_edge_block = cv::countNonZero(block_map);
 
-    float precent_edges_block = static_cast<float> (cv::countNonZero(block_map)) / static_cast<float> (block_map.total());
+    int nb_pixels_mono_color = cv::countNonZero(mono_color_map);
 
-    return normalize(precent_edges_block);
+    int nb_pixels_normal = d->image.total() - nb_pixels_edge_block - nb_pixels_edge_block;
+
+    qInfo()<<"nb_pixels_edge_block"<<nb_pixels_edge_block<<"nb_pixels_mono_color"<<nb_pixels_mono_color<<"total pixel"<<d->image.total();
+
+    float res = static_cast<float>((nb_pixels_mono_color * d->weight_mono_color + nb_pixels_edge_block * d->threshold_edges_block) /
+                                   (nb_pixels_mono_color * d->weight_mono_color + nb_pixels_edge_block * d->threshold_edges_block + nb_pixels_normal));
+
+    qInfo()<<"res"<<res;
+
+    return res;
 }
 
-cv::Mat CompressionDetector::checkVertical()
-{
-    cv::Mat res = cv::Mat::zeros(d->image.size(),CV_8UC1 );
+cv::Mat CompressionDetector::checkVertical(const cv::Mat& gray_image) const
+{    
+    cv::Mat res = cv::Mat::zeros(gray_image.size(),CV_8UC1 );
 
-    for (int i = 2; i < d->image.cols - 1; i ++)
+    for (int i = 2; i < gray_image.cols - 1; i ++)
     {
-        cv::Mat a = (d->image.col(i) - d->image.col(i + 1)) - (d->image.col(i - 1) - d->image.col(i));
+        cv::Mat a = (gray_image.col(i) - gray_image.col(i + 1)) - (gray_image.col(i - 1) - gray_image.col(i));
         
-        cv::Mat b = (d->image.col(i) - d->image.col(i + 1)) - (d->image.col(i + 1) - d->image.col(i - 2));
+        cv::Mat b = (gray_image.col(i) - gray_image.col(i + 1)) - (gray_image.col(i + 1) - gray_image.col(i - 2));
 
-        cv::threshold(a, a, d->threshold, 1, cv::THRESH_BINARY);
-        cv::threshold(b, b, d->threshold, 1, cv::THRESH_BINARY);
+        cv::threshold(a, a, d->threshold_edges_block, 1, cv::THRESH_BINARY);
+        cv::threshold(b, b, d->threshold_edges_block, 1, cv::THRESH_BINARY);
 
         auto col = res.col(i);
         col = a & b;
@@ -133,18 +151,18 @@ cv::Mat CompressionDetector::checkVertical()
     return res;
 }
 
-cv::Mat CompressionDetector::checkHorizontal()
+cv::Mat CompressionDetector::checkHorizontal(const cv::Mat& gray_image) const
 {
-    cv::Mat res = cv::Mat::zeros(d->image.size(),CV_8UC1 );
+    cv::Mat res = cv::Mat::zeros(gray_image.size(),CV_8UC1 );
 
-    for (int i = 2; i < d->image.rows - 1; i ++)
+    for (int i = 2; i < gray_image.rows - 1; i ++)
     {
-        cv::Mat a = (d->image.row(i) - d->image.row(i + 1)) - (d->image.row(i - 1) - d->image.row(i));
+        cv::Mat a = (gray_image.row(i) - gray_image.row(i + 1)) - (gray_image.row(i - 1) - gray_image.row(i));
         
-        cv::Mat b = (d->image.row(i) - d->image.row(i + 1)) - (d->image.row(i + 1) - d->image.row(i - 2));
+        cv::Mat b = (gray_image.row(i) - gray_image.row(i + 1)) - (gray_image.row(i + 1) - gray_image.row(i - 2));
 
-        cv::threshold(a, a, d->threshold, 1, cv::THRESH_BINARY);
-        cv::threshold(b, b, d->threshold, 1, cv::THRESH_BINARY);
+        cv::threshold(a, a, d->threshold_edges_block, 1, cv::THRESH_BINARY);
+        cv::threshold(b, b, d->threshold_edges_block, 1, cv::THRESH_BINARY);
 
         cv::Mat check = a & b;
 
@@ -155,36 +173,22 @@ cv::Mat CompressionDetector::checkHorizontal()
     return res;
 }
 
-cv::Mat CompressionDetector::detectMonoColorRegion()
+cv::Mat CompressionDetector::detectMonoColorRegion() const
 {
-    qCDebug(DIGIKAM_DIMG_LOG) << "Divide image to small parts";
+    cv::Mat median_image;
 
-    int nb_parts_row = static_cast<int>(d->image.size().height / d->part_size_mono_color);
-    int nb_parts_col = static_cast<int>(d->image.size().width  / d->part_size_mono_color);
+    cv::medianBlur(d->image, median_image, 5);
+
+    cv::Mat mat_subtraction = cv::abs(d->image - median_image);
+
+    std::vector<cv::Mat> rgbChannels(3);
     
-    cv::Mat res = cv::Mat::zeros(d->image.size(), CV_8U);
+    cv::split(mat_subtraction, rgbChannels);
 
-    for (int i = 0; i < nb_parts_row; i++)
-    {
-        for (int j = 0; j < nb_parts_col; j++)
-        {
-            cv::Rect rect{j*d->part_size_mono_color, i*d->part_size_mono_color, 
-                          d->part_size_mono_color, d->part_size_mono_color};
+    cv::Mat res = rgbChannels.at(0) + rgbChannels.at(1) + rgbChannels.at(2);
 
-            cv::Mat subImg = d->image(rect);
-            
-            qCDebug(DIGIKAM_DIMG_LOG) << "Detect if each part is mono-color";
-            
-            cv::Scalar mean, stddev;
+    cv::threshold(res,res,d->threshold_mono_color,1,cv::THRESH_BINARY_INV);
 
-            cv::meanStdDev(subImg,mean,stddev);
-
-            if (stddev[0] < d->mono_color_threshold) 
-            {
-                res(rect).setTo(1);
-            }
-        }
-    }
     return res;
 }
 
