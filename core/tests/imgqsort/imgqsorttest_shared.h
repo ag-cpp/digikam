@@ -49,6 +49,6 @@ struct CustomDetection
 
 QHash<QString, int> ImgQSortTest_ParseTestImagesDefautDetection(DetectionType type, const QFileInfoList& list); 
 
-QHash<QString, int> ImgQSortTest_ParseTestImagesCustomDetectios(const CustomDetection* customSetting, const QFileInfoList& list);
+QHash<QString, int> ImgQSortTest_ParseTestImagesCustomDetection(const CustomDetection* customSetting, const QFileInfoList& list);
 
 #endif // DIGIKAM_IMGQSORT_TEST_SHARED_H

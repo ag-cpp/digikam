@@ -139,7 +139,7 @@ QHash<QString, int> ImgQSortTest_ParseTestImagesDefautDetection(DetectionType ty
     return ImgQSortTest_ParseTestImagesCore(settings, list);
 }
 
-QHash<QString, int> ImgQSortTest_ParseTestImagesCustomDetectios(const CustomDetection* customSetting, const QFileInfoList& list)
+QHash<QString, int> ImgQSortTest_ParseTestImagesCustomDetection(const CustomDetection* customSetting, const QFileInfoList& list)
 {
     ImageQualityContainer settings = ImgQSortTest_ArrangeCustomSettings(customSetting);
 
