@@ -61,6 +61,8 @@ private Q_SLOTS:
     void testParseTestImagesForGeneralQuiteGoodImage();
     void testParseTestImagesForGeneralGoodImage();
 
+    void testParseTestImagesForSunImage();
+
 };
 
 // pair name image - quality expected
@@ -113,6 +115,10 @@ DataTestCases const dataTestCases =
         {QLatin1String("goodImage"), PairImageQuality(QLatin1String("general_good_image_6.jpg"),3)},
         {QLatin1String("goodImage"), PairImageQuality(QLatin1String("general_good_image_7.jpg"),3)},
         {QLatin1String("goodImage"), PairImageQuality(QLatin1String("general_good_image_8.jpg"),3)},
+
+        {QLatin1String("sunImage"), PairImageQuality(QLatin1String("exposure_sun_1.jpg"),3)},
+        {QLatin1String("sunImage"), PairImageQuality(QLatin1String("exposure_sun_2.jpg"),3)},
+        {QLatin1String("sunImage"), PairImageQuality(QLatin1String("exposure_sun_3.jpg"),3)},
     };
 
 #endif // DIGIKAM_IMGQSORT_TEST_GENERAL_H

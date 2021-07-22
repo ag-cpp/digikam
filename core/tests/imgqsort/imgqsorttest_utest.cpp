@@ -127,3 +127,13 @@ void ImgQSortTestGeneral::testParseTestImagesForGeneralGoodImage()
 {
     testParseTestImages(QLatin1String("goodImage"), DETECTIONGENERAL);
 }
+
+void ImgQSortTestGeneral::testParseTestImagesForSunImage()
+{
+    // Dont detect exposure
+    CustomDetection* customSettings = new CustomDetection{true,true,false,true};
+
+    testParseTestImages(QLatin1String("sunImage"), customSettings);
+
+    delete customSettings;
+}
