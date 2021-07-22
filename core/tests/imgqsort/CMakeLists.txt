@@ -36,7 +36,7 @@ endmacro()
 
 IMGQSORT_BUILD_STANDALONE(detectblur.cpp)
 IMGQSORT_BUILD_STANDALONE(detectcompression.cpp)
-IMGQSORT_BUILD_STANDALONE(detectnoise.cpp)
+IMGQSORT_BUILD_STANDALONE(detectnoise_cli.cpp)
 IMGQSORT_BUILD_STANDALONE(detectexposure.cpp)
 
 # --------------------------------------------------------------
