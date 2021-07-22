@@ -4,7 +4,7 @@
  * https://www.digikam.org
  *
  * Date        : 2009-02-04
- * Description : a command line tool to detect image exposure level
+ * Description : a command line tool to detect image noise level
  *
  * Copyright (C) 2011-2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
  *
@@ -37,7 +37,7 @@ int main(int argc, char** argv)
 {
     if (argc != 2)
     {
-        qDebug() << "detectexposure - Parse image data to detect over exposure level";
+        qDebug() << "detect all quality - Parse image data to detect general level";
         qDebug() << "Usage: <image file>";
         return -1;
     }
@@ -48,7 +48,7 @@ int main(int argc, char** argv)
 
     QString path                = QString::fromUtf8(argv[1]);
     QFileInfoList list          = QFileInfoList() << QFileInfo(path);
-    ImgQSortTest_ParseTestImagesDefautDetection(DETECTEXPOSURE, list);
+    ImgQSortTest_ParseTestImagesDefautDetection(DETECTIONGENERAL, list);
 
     return 0;
 }

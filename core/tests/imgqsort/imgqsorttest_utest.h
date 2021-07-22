@@ -48,6 +48,7 @@ private:
 
     QDir imageDir() const;
     void testParseTestImages(const QString& testcase_name, DetectionType mode);
+    void testParseTestImages(const QString& testcase_name, const CustomDetection* customSetting);
 
 private Q_SLOTS:
 

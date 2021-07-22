@@ -58,7 +58,7 @@ void ImgQSortTest::testParseTestImages(const QString& testcase_name, DetectionTy
 
     QFileInfoList list = imageDir().entryInfoList(imageNames,QDir::Files, QDir::Name);
 
-    QHash<QString, int> results = ImgQSortTest_ParseTestImages(mode, list);
+    QHash<QString, int> results = ImgQSortTest_ParseTestImagesDefautDetection(mode, list);
 
     for (const auto& image_refQuality : dataTest)
     {

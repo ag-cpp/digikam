@@ -57,7 +57,27 @@ void ImgQSortTestGeneral::testParseTestImages(const QString& testcase_name, Dete
 
     QFileInfoList list = imageDir().entryInfoList(imageNames,QDir::Files, QDir::Name);
 
-    QHash<QString, int> results = ImgQSortTest_ParseTestImages(mode, list);
+    QHash<QString, int> results = ImgQSortTest_ParseTestImagesDefautDetection(mode, list);
+
+    for (const auto& image_refQuality : dataTest)
+    {
+        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
+    }
+}
+
+void ImgQSortTestGeneral::testParseTestImages(const QString& testcase_name, const CustomDetection* customSetting)
+{
+    QStringList imageNames;
+    QList<PairImageQuality> dataTest = dataTestCases.values(testcase_name);
+    
+    for (const auto& image_refQuality : dataTest)
+    {
+        imageNames << image_refQuality.first;
+    }
+
+    QFileInfoList list = imageDir().entryInfoList(imageNames,QDir::Files, QDir::Name);
+
+    QHash<QString, int> results = ImgQSortTest_ParseTestImagesCustomDetection(customSetting, list);
 
     for (const auto& image_refQuality : dataTest)
     {
