@@ -39,16 +39,24 @@ class Q_DECL_HIDDEN ImageQualityCalculator::Private
 public:
 
     explicit Private()
+      : deltaWeight(10.o)
     {
-
     }
+
+    float deltaWeight;
 
     QList<resultDetection> detectionResults;
 };
 
+bool resultLessThan(const ImageQualityCalculator::resultDetection& r1, const ImageQualityCalculator::resultDetection& r2) const
+{
+    return r1.score < r2.score;
+}
+
 ImageQualityCalculator::ImageQualityCalculator()
     : d(new Private)
 {
+    d->detectionResults = QList<resultDetection>();
 }
 
 void ImageQualityCalculator::addDetectionResult(const QString& name, const float score, const float weight) const
@@ -79,6 +87,10 @@ void ImageQualityCalculator::normalizeWeight() const
 
 float ImageQualityCalculator::calculateQuality() const
 {
+    sortDetectionResults();
+
+    adjustWeightByQualityLevel();
+
     normalizeWeight();
 
     float damage;
@@ -96,9 +108,28 @@ int ImageQualityCalculator::numberDetectors() const
     return d->detectionResults.count();
 }
 
+void ImageQualityCalculator::sortDetectionResults() const
+{
+    qSort(d->detectionResults.begin(), d->detectionResults.end(), resultLessThan);
+}
+
 void ImageQualityCalculator::adjustWeightByQualityLevel() const
 {
-    
+    const int nb_detectors = numberDetectors();
+
+    if (!nb_detectors)
+    {
+        return;
+    }
+
+    for (int i = 0; i < nb_detectors ; i++)
+    {
+        qInfo()<<"coef adjust"<<i - nb_detectors/2;
+
+        d->detectionResults.at(i).weight += d->deltaWeight * (i - nb_detectors/2);
+
+        qInfo()<<"weight after ajdust and score"<<d->detectionResults.at(i).weight << d->detectionResults.at(i).score;
+    }
 }
 
 }

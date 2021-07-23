@@ -58,6 +58,9 @@ public:
 private:
 
     void normalizeWeight() const;
+    void adjustWeightByQualityLevel() const;
+    void sortDetectionResults() const;
+    void numberDetectors() const;
 
 private:
 
@@ -65,7 +68,7 @@ private:
     Private* const d;
 };
 
-
+bool resultLessThan(const ImageQualityCalculator::resultDetection& r1, const ImageQualityCalculator::resultDetection& r2) const;
 
 } 
 
