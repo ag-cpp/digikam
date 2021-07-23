@@ -27,9 +27,7 @@
 
 // Local includes 
 
-#include "dimg.h"
 #include "digikam_globals.h"
-#include "imagequalitycontainer.h"
 
 // Qt includes
 
@@ -48,23 +46,27 @@ public:
         QString detetionType;
         float weight;
         float score;    
-    }
+    };
 
 public:
 
-    explicit ImageQualityCalculator(const ImageQualityContainer& settings);
+    explicit ImageQualityCalculator();
 
     float calculateQuality()  const;
-public:
-
     void addDetectionResult(const QString& name, const float score, const float weight) const;
+
+private:
+
+    void normalizeWeight() const;
 
 private:
 
     class Private;
     Private* const d;
-    
-
 };
 
-} // DIGIKAM_IMAGE_QUALITY_CALCULATOR_H
+
+
+} 
+
+#endif // DIGIKAM_IMAGE_QUALITY_CALCULATOR_H
