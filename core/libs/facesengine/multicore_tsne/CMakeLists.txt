@@ -27,7 +27,7 @@ INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 
 
 set(tsne_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/tsne.cpp
-                ${CMAKE_CURRENT_SOURCE_DIR}/splittree.cpp
+              ${CMAKE_CURRENT_SOURCE_DIR}/splittree.cpp
 )
 
 ADD_LIBRARY(tsne_multicore STATIC ${tsne_SRCS})
