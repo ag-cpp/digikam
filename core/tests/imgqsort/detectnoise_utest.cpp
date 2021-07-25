@@ -97,3 +97,10 @@ void ImgQSortTestDetectNoise::testParseTestImagesForVariousTypeNoise()
 {
     testParseTestImages(QLatin1String("variousTypesNoise"), DETECTNOISE);
 }
+
+void ImgQSortTestDetectNoise::testParseTestImagesForVariousTypeNoiseFailCase()
+{
+    QEXPECT_FAIL("", "Will fix in the next release", Continue);
+
+    testParseTestImages(QLatin1String("variousTypesNoiseFailCase"), DETECTNOISE);
+}

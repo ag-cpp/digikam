@@ -204,6 +204,8 @@ void NoiseDetector::calculate_variance_kurtosis(const Mat3D& channels, cv::Mat& 
     variance = mu2 - pow_mat(mu1,2);
 
     kurtosis = (mu4 - 4.0*mu1.mul(mu3) + 6.0*pow_mat(mu1,2).mul(mu2) - 3.0*pow_mat(mu1,4)) / pow_mat(variance,2)-3.0;
+
+    cv::threshold(kurtosis,kurtosis,0, 0, cv::THRESH_TOZERO);
 }
 
 float NoiseDetector::noise_variance(const cv::Mat& variance, const cv::Mat& kurtosis) const

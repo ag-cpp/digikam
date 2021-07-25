@@ -56,6 +56,7 @@ private Q_SLOTS:
     void testParseTestImagesForNoiseDetection();
     void testParseTestImagesForImageHighSO();
     void testParseTestImagesForVariousTypeNoise();
+    void testParseTestImagesForVariousTypeNoiseFailCase();
 };
 
 // pair name image - quality expected
@@ -78,8 +79,9 @@ DataTestCases const dataTestCases =
         {QLatin1String("variousTypesNoise"), PairImageQuality(QLatin1String("noise_bird_gaussian.png"),1)},
         {QLatin1String("variousTypesNoise"), PairImageQuality(QLatin1String("noise_bird_rayleigh.png"),1)},
         {QLatin1String("variousTypesNoise"), PairImageQuality(QLatin1String("noise_bird_speckle.png"),1)},
-        // {QLatin1String("variousTypesNoise"), PairImageQuality(QLatin1String("noise_bird_salt_pepper.png"),1)}, False case
-        // {QLatin1String("variousTypesNoise"), PairImageQuality(QLatin1String("noise_bird_bandpass.png"),1)}, Faslse case
+        
+        {QLatin1String("variousTypesNoiseFailCase"), PairImageQuality(QLatin1String("noise_bird_salt_pepper.png"),1)},
+        {QLatin1String("variousTypesNoiseFailCase"), PairImageQuality(QLatin1String("noise_bird_bandpass.png"),1)},
     };
 
 #endif // DIGIKAM_IMGQSORT_TEST_DETECT_NOISE_H
