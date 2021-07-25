@@ -1,29 +1,47 @@
+#include <memory>
+
 #include <QFile>
 #include <QString>
 #include <QStringList>
 #include <QDebug>
-
+#include <QCoreApplication>
+#include <QCommandLineParser>
 
 #include "dimension_reducer.h"
+
+// --------------------------------------------------------
+
+std::shared_ptr<QCommandLineParser> parseOptions(const QCoreApplication& app)
+{
+    QCommandLineParser* const parser = new QCommandLineParser();
+    parser->addOption(QCommandLineOption(QLatin1String("in"), QLatin1String("Data file"), QLatin1String("path relative to data file")));
+    parser->addOption(QCommandLineOption(QLatin1String("out"), QLatin1String("Output file"), QLatin1String("path relative to output file")));
+    parser->addHelpOption();
+    parser->process(app);
+
+    return std::shared_ptr<QCommandLineParser>(parser);
+}
 
 /**
  * @brief loadData: load data from csv file into a train dataset
  */ 
-cv::Ptr<cv::ml::TrainData> loadData(const QString& fileName) 
+std::pair<cv::Mat, cv::Mat> loadData(const QString& fileName) 
 {
     cv::Mat predictors, labels;
 
     QFile file(fileName);
-    if (!file.open(QIODevice::ReadOnly)) {
+    if (!file.open(QIODevice::ReadOnly)) 
+    {
         qDebug() << file.errorString();
-        return cv::ml::TrainData::create(predictors, 0, labels);
+        return std::make_pair(predictors, labels);
     }
 
-    while (!file.atEnd()) {
+    while (!file.atEnd())
+    {
         QByteArray line = file.readLine();
         QList<QByteArray> data = line.split(',');
 
-        cv::Mat predictor(1, data.size()-1, CV_32F);
+        cv::Mat predictor(1, data.size()-1, CV_64F);
         for (int i = 1; i < data.size(); ++i) 
         {
             predictor.at<float>(i-1) = data[i].toFloat();
@@ -33,20 +51,22 @@ cv::Ptr<cv::ml::TrainData> loadData(const QString& fileName)
         predictors.push_back(predictor);
     }
 
-    return cv::ml::TrainData::create(predictors, 0, labels);
+    return std::make_pair(predictors, labels);
 }
 
-void save(cv::Ptr<cv::ml::TrainData> data, const QString& fileName) {
+void save(std::pair<cv::Mat, cv::Mat> data, const QString& fileName) 
+{
     QFile file(fileName);
-    if (!file.open(QIODevice::WriteOnly)) {
+    if (!file.open(QIODevice::WriteOnly)) 
+    {
         qDebug() << file.errorString();
         return;
     }
 
     QTextStream streamOut(&file);
 
-    cv::Mat samples = data->getSamples();
-    cv::Mat labels = data->getResponses();
+    cv::Mat samples = data.first;
+    cv::Mat labels = data.second;
 
     for (int i = 0; i < samples.rows; ++i) 
     {
@@ -62,12 +82,26 @@ void save(cv::Ptr<cv::ml::TrainData> data, const QString& fileName) {
     }
 }
 
-int main() 
+int main(int argc, char** argv) 
 {
+    QCoreApplication app(argc, argv);
+    app.setApplicationName(QString::fromLatin1("digikam"));
+    std::shared_ptr<QCommandLineParser> parser = parseOptions(app);
+
     Digikam::DimensionReducer reducer;
-    cv::Ptr<cv::ml::TrainData> data = loadData(QLatin1String("facenet_data.txt"));
+    std::pair<cv::Mat, cv::Mat> data = loadData(parser->value(QLatin1String("in")));
 
-    cv::Mat projectedData = reducer.project(data->getSamples(), 2);
+    cv::Mat samples = data.first;
 
-    save(cv::ml::TrainData::create(projectedData, 0, data->getResponses()), QLatin1String("facenet_tsne_data.txt"));
+    cv::Mat projectedData = reducer.project(samples, 2);
+
+    for (int i = 0; i < samples.rows; ++i) 
+    {
+        for (int j = 0; j < 2; ++j)
+        {
+            qDebug() << ((double*)(projectedData.data))[i*2 + j];
+        }
+    }
+
+    //save(cv::ml::TrainData::create(projectedData, 0, data->getResponses()),parser->value(QLatin1String("out")));
 }
