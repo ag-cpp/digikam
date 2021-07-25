@@ -176,7 +176,6 @@ void ImageQualityParser::startAnalyse()
 
         finalQuality            = (1 - finalBlur)          * d->imq.blurWeight;
 
-        qInfo()<< "Final Quality estimated: " << finalQuality;
         qCDebug(DIGIKAM_DIMG_LOG) << "Final Quality estimated: " << finalQuality;
 
         // Assigning PickLabels

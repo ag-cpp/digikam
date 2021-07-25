@@ -45,8 +45,8 @@ public:
         sigma_smooth_image(5),
         filtrer_defocus(115),
 
-        part_size_motion_blur(50),
-        edges_filtrer(10),
+        part_size_motion_blur(40),
+        edges_filtrer(8),
         theta_resolution(CV_PI/900),
         min_line_length(30),
         threshold_hough(15),
@@ -140,8 +140,6 @@ float BlurDetector::detect()
     cv::Mat res = weightsMat.mul(blurMap);
             
     int totalPixels = cv::countNonZero(weightsMat);
-
-    qInfo()<<"number pixels considered" << totalPixels << "tota pixels"<< weightsMat.total();
     
     int blurPixel = cv::countNonZero(res);
 
@@ -236,8 +234,6 @@ bool    BlurDetector::isMotionBlur(const cv::Mat& frag) const
 
     // Detect if region is motion blurred by number of paralle lines
     
-    // qInfo()<<"nb lines " << static_cast<int>(lines.size());
-
     if (static_cast<int>(lines.size()) > d->min_nb_lines )
     {
         std::vector<float> list_theta; 
@@ -258,7 +254,6 @@ bool    BlurDetector::isMotionBlur(const cv::Mat& frag) const
 
         cv::meanStdDev(list_theta,mean,stddev);
 
-        // qInfo()<< "Standard Deviation for group of lines " << stddev[0];
         qCDebug(DIGIKAM_DIMG_LOG) << "Standard Deviation for group of lines " << stddev[0];
 
         return stddev[0] < d->max_stddev;
