@@ -13,6 +13,7 @@
 #define TSNE_H
 
 #include <cstddef>
+#include "digikam_export.h"
 
 namespace TSNE
 {
@@ -24,7 +25,7 @@ namespace TSNE
  * Y -- array to fill with the result of size [N, no_dims]
  * no_dims -- target dimentionality
  */
-void tsne_run_double(double* X, int N, int D, double* Y,
+void DIGIKAM_GUI_EXPORT tsne_run_double(double* X, int N, int D, double* Y,
                     int no_dims = 2, double perplexity = 30, double theta = .5,
                     int num_threads = 1, int max_iter = 1000, int n_iter_early_exag = 250,
                     int random_state = -1, bool init_from_Y = false, int verbose = 0,

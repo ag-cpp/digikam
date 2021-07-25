@@ -140,3 +140,17 @@ target_link_libraries(traindb_cli
 
                       ${COMMON_TEST_LINK}
 )
+
+# -----------------------------------------------------------------------------
+
+set(tsne_cli_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/tsne_cli.cpp)
+add_executable(tsne_cli ${tsne_cli_SRCS})
+
+target_link_libraries(tsne_cli
+                      digikamcore
+                      digikamgui
+                      digikamdatabase
+                      digikamfacesengine
+                      opencv_ml
+                      ${COMMON_TEST_LINK}
+)

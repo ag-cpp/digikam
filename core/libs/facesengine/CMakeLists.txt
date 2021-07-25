@@ -32,7 +32,24 @@ include_directories($<TARGET_PROPERTY:Qt5::Xml,INTERFACE_INCLUDE_DIRECTORIES>
 
                     ${CMAKE_CURRENT_SOURCE_DIR}/recognition
                     ${CMAKE_CURRENT_SOURCE_DIR}/recognition/opencv-dnn
+                    ${CMAKE_CURRENT_SOURCE_DIR}/multicore_tsne
 )
+
+# ---------------------------------------------------------------------------
+
+if(MSVC)
+    SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /fp:fast /O2")
+else()
+    SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -fPIC -ffast-math -funroll-loops")
+endif()
+
+find_package(OpenMP 2)
+
+if(OPENMP_FOUND)
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+else()
+    MESSAGE(WARNING "Not using OpenMP. Performance will suffer.")
+endif()
 
 # ---------------------------------------------------------------------------
 
@@ -84,6 +101,10 @@ set(facesengine_database_LIB_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/recognition/recogn
                                   ${CMAKE_CURRENT_SOURCE_DIR}/recognition/opencv-dnn/kd_tree.cpp
                                   ${CMAKE_CURRENT_SOURCE_DIR}/recognition/opencv-dnn/opencvdnnfacerecognizer.cpp
                                   ${CMAKE_CURRENT_SOURCE_DIR}/recognition/opencv-dnn/dnnfaceextractor.cpp
+                                  
+                                  ${CMAKE_CURRENT_SOURCE_DIR}/multicore_tsne/tsne.cpp
+                                  ${CMAKE_CURRENT_SOURCE_DIR}/multicore_tsne/splittree.cpp
+                                  ${CMAKE_CURRENT_SOURCE_DIR}/multicore_tsne/dimension_reducer.cpp
 
                                   ${CMAKE_CURRENT_SOURCE_DIR}/facedb/facedbaccess.cpp
                                   ${CMAKE_CURRENT_SOURCE_DIR}/facedb/facedbbackend.cpp
@@ -103,6 +124,7 @@ add_library(gui_digikamfacesenginedatabase_obj
 
 target_compile_definitions(gui_digikamfacesenginedatabase_obj
                            PRIVATE
+                           tsne_multicore
                            digikamgui_EXPORTS
 )
 
