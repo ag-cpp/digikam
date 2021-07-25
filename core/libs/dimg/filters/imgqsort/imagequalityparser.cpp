@@ -201,7 +201,6 @@ void ImageQualityParser::startAnalyse()
 
         finalQuality            = 100 - finalNoise;
 
-        qInfo()<< "Final Quality estimated: " << finalQuality;
         qCDebug(DIGIKAM_DIMG_LOG) << "Final Quality estimated: " << finalQuality;
 
         // Assigning PickLabels

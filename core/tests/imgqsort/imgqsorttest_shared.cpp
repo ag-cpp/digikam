@@ -76,10 +76,7 @@ ImageQualityContainer ImgQSortTest_ArrangeSettings (DetectionType type)
 
 QHash<QString, int> ImgQSortTest_ParseTestImages(DetectionType type, const QFileInfoList& list)
 {
-    qInfo()<<"get hereeeeeeeeeeeeeeeeeeeeee";
     ImageQualityContainer settings = ImgQSortTest_ArrangeSettings(type);
-
-    qInfo()<<"settings"<<settings.detectNoise;
 
     qCDebug(DIGIKAM_TESTS_LOG) << "Quality Detection Settings:" << settings;
     qCInfo(DIGIKAM_TESTS_LOG)  << "Detection type (0:Blur, 1:Noise, 2:Compression, 3:Exposure, 4: General)";

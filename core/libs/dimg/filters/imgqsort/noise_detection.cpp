@@ -168,7 +168,6 @@ float NoiseDetector::detect() const
     // Calculate variance of noise
 
     float V =  noise_variance(variance,kurtosis) ;
-    qInfo()<<"V"<<V;
 
     return normalize(V);
 }
