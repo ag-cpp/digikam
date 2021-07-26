@@ -316,6 +316,8 @@ int ExifToolProcess::command(const QByteArrayList& args, Action ac)
     cmdStr.append(QByteArray("-echo4\n{ready}\n"));                     // Echo text to stderr after processing is complete
     cmdStr.append(QByteArray("-execute\n"));                            // Execute command and echo {ready} to stdout after processing is complete
 
+    qInfo()<<cmdStr;
+
     // TODO: if -binary user, {ready} can not be present in the new line
 
     // Add command to queue

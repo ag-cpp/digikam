@@ -61,12 +61,18 @@ int main(int argc, char** argv)
     ExifToolParser* const parser = new ExifToolParser(qApp);
 
     ExifToolParser::ExifToolData newTags;
-    newTags.insert(QLatin1String("EXIF:ImageDescription"),
-                   QVariantList() << QString()      // not used
-                                  << QString::fromUtf8("J'ai reçu cette photo par la poste en Février"));
+    newTags.insert(QLatin1String("EXIF:XPosition"),
+                   QVariantList() << QString::fromUtf8("20")
+                                  << QString()      // not used
+                                  << QString::fromUtf8("20"));
     newTags.insert(QLatin1String("xmp:city"),
-                   QVariantList() << QString()      // not used
+                   QVariantList() << QString::fromUtf8("Paris")
+                                  << QString()      // not used
                                   << QString::fromUtf8("Paris"));
+    newTags.insert(QLatin1String("xmp:digikam:FocalLengthX"),
+                   QVariantList() << QString::fromUtf8("20")
+                                  << QString()      // not used
+                                  << QString::fromUtf8("20"));
 
     // Read metadata from the file. Start ExifToolParser
 

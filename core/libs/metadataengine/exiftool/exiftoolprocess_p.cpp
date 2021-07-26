@@ -81,7 +81,9 @@ void ExifToolProcess::Private::execNextCmd()
     Command command = cmdQueue.takeFirst();
     cmdRunning      = command.id;
     cmdAction       = command.ac;
-
+    
+    qInfo()<<command.argsStr;
+    
     process->write(command.argsStr);
 }
 
