@@ -17,15 +17,15 @@
 namespace TSNE
 {
 
-static inline double min(double x, double y) { return (x <= y ? x : y); }
-static inline double max(double x, double y) { return (x <= y ? y : x); }
-static inline double abs_d(double x) { return (x <= 0 ? -x : x); }
+static inline float min(float x, float y) { return (x <= y ? x : y); }
+static inline float max(float x, float y) { return (x <= y ? y : x); }
+static inline float abs_d(float x) { return (x <= 0 ? -x : x); }
 
 class Cell {
 
 public:
-	double* center;
-	double* width;
+	float* center;
+	float* width;
 	int n_dims;
 	bool   containsPoint(float point[]);
 	~Cell() {
@@ -52,7 +52,7 @@ class SplitTree
 
 	// Indices in this quad tree node, corresponding center-of-mass, and list of all children
 	float* data;
-	double* center_of_mass;
+	float* center_of_mass;
 	int index[QT_NODE_CAPACITY];
 
 	int num_children;
@@ -61,15 +61,15 @@ public:
 	
 
 	SplitTree(float* inp_data, int N, int no_dims);
-	SplitTree(SplitTree* inp_parent, float* inp_data, double* mean_Y, double* width_Y);
+	SplitTree(SplitTree* inp_parent, float* inp_data, float* mean_Y, float* width_Y);
 	~SplitTree();
 	void construct(Cell boundary);
 	bool insert(int new_index);
 	void subdivide();
-	void computeNonEdgeForces(int point_index, double theta, double* neg_f, double* sum_Q);
+	void computeNonEdgeForces(int point_index, float theta, float* neg_f, float* sum_Q);
 private:
 	
-	void init(SplitTree* inp_parent, float* inp_data, double* mean_Y, double* width_Y);
+	void init(SplitTree* inp_parent, float* inp_data, float* mean_Y, float* width_Y);
 	void fill(int N);
 };
 

@@ -33,11 +33,11 @@ namespace TSNE
 {
 
 void tsne_run_float(float* X, int N, int D, float* Y,
-                    int no_dims, double perplexity, double theta,
+                    int no_dims, float perplexity, float theta,
                     int num_threads, int max_iter, int n_iter_early_exag,
                     int random_state, bool init_from_Y, int verbose,
-                    double early_exaggeration, double learning_rate,
-                    double *final_error, int distance)
+                    float early_exaggeration, float learning_rate,
+                    float *final_error, int distance)
 {
     if (verbose)
     {
@@ -64,13 +64,13 @@ void tsne_run_float(float* X, int N, int D, float* Y,
         Y -- array to fill with the result of size [N, no_dims]
         no_dims -- target dimentionality
 */
-template <class treeT, double (*dist_fn)( const DataPoint&, const DataPoint&)>
+template <class treeT, float (*dist_fn)( const DataPoint&, const DataPoint&)>
 void TSNE<treeT, dist_fn>::run(float* X, int N, int D, float* Y,
-               int no_dims, double perplexity, double theta ,
+               int no_dims, float perplexity, float theta ,
                int num_threads, int max_iter, int n_iter_early_exag,
                int random_state, bool init_from_Y, int verbose,
-               double early_exaggeration, double learning_rate,
-               double *final_error) {
+               float early_exaggeration, float learning_rate,
+               float *final_error) {
 
     if (N - 1 < 3 * perplexity) {
         perplexity = (N - 1) / 3;
@@ -98,13 +98,13 @@ void TSNE<treeT, dist_fn>::run(float* X, int N, int D, float* Y,
     float total_time = .0;
     time_t start, end;
     int stop_lying_iter = n_iter_early_exag, mom_switch_iter = n_iter_early_exag;
-    double momentum = .5, final_momentum = .8;
-    double eta = learning_rate;
+    float momentum = .5, final_momentum = .8;
+    float eta = learning_rate;
 
     // Allocate some memory
-    double* dY    = (double*) malloc(N * no_dims * sizeof(double));
-    double* uY    = (double*) calloc(N * no_dims , sizeof(double));
-    double* gains = (double*) malloc(N * no_dims * sizeof(double));
+    float* dY    = (float*) malloc(N * no_dims * sizeof(float));
+    float* uY    = (float*) calloc(N * no_dims , sizeof(float));
+    float* gains = (float*) malloc(N * no_dims * sizeof(float));
     if (dY == NULL || uY == NULL || gains == NULL) { fprintf(stderr, "Memory allocation failed!\n"); exit(1); }
     for (int i = 0; i < N * no_dims; i++) {
         gains[i] = 1.0;
@@ -116,7 +116,7 @@ void TSNE<treeT, dist_fn>::run(float* X, int N, int D, float* Y,
 
     start = time(0);
     zeroMean(X, N, D);
-    double max_X = .0;
+    float max_X = .0;
     for (int i = 0; i < N * D; i++) {
         if (X[i] > max_X) max_X = X[i];
     }
@@ -125,14 +125,14 @@ void TSNE<treeT, dist_fn>::run(float* X, int N, int D, float* Y,
     }
 
     // Compute input similarities
-    int* row_P; int* col_P; double* val_P;
+    int* row_P; int* col_P; float* val_P;
 
     // Compute asymmetric pairwise input similarities
     computeGaussianPerplexity(X, N, D, &row_P, &col_P, &val_P, perplexity, (int) (3 * perplexity), verbose);
 
     // Symmetrize input similarities
     symmetrizeMatrix(&row_P, &col_P, &val_P, N);
-    double sum_P = .0;
+    float sum_P = .0;
     for (int i = 0; i < row_P[N]; i++) {
         sum_P += val_P[i];
     }
@@ -142,7 +142,7 @@ void TSNE<treeT, dist_fn>::run(float* X, int N, int D, float* Y,
 
     end = time(0);
     if (verbose)
-        fprintf(stderr, "Done in %4.2f seconds (sparsity = %f)!\nLearning embedding...\n", (float)(end - start) , (double) row_P[N] / ((double) N * (double) N));
+        fprintf(stderr, "Done in %4.2f seconds (sparsity = %f)!\nLearning embedding...\n", (float)(end - start) , (float) row_P[N] / ((float) N * (float) N));
 
     /* 
         ======================
@@ -176,7 +176,7 @@ void TSNE<treeT, dist_fn>::run(float* X, int N, int D, float* Y,
         bool need_eval_error = (verbose && ((iter > 0 && iter % 50 == 0) || (iter == max_iter - 1)));
 
         // Compute approximate gradient
-        double error = computeGradient(row_P, col_P, val_P, Y, N, no_dims, dY, theta, need_eval_error);
+        float error = computeGradient(row_P, col_P, val_P, Y, N, no_dims, dY, theta, need_eval_error);
 
         for (int i = 0; i < N * no_dims; i++) {
             // Update gains
@@ -233,19 +233,19 @@ void TSNE<treeT, dist_fn>::run(float* X, int N, int D, float* Y,
 }
 
 // Compute gradient of the t-SNE cost function (using Barnes-Hut algorithm)
-template <class treeT, double (*dist_fn)( const DataPoint&, const DataPoint&)>
-double TSNE<treeT, dist_fn>::computeGradient(int* inp_row_P, int* inp_col_P, double* inp_val_P, float* Y, int N, int no_dims, double* dC, double theta, bool eval_error)
+template <class treeT, float (*dist_fn)( const DataPoint&, const DataPoint&)>
+float TSNE<treeT, dist_fn>::computeGradient(int* inp_row_P, int* inp_col_P, float* inp_val_P, float* Y, int N, int no_dims, float* dC, float theta, bool eval_error)
 {
     // Construct quadtree on current map
     treeT* tree = new treeT(Y, N, no_dims);
     
     // Compute all terms required for t-SNE gradient
-    double* Q = new double[N];
-    double* pos_f = new double[N * no_dims]();
-    double* neg_f = new double[N * no_dims]();
+    float* Q = new float[N];
+    float* pos_f = new float[N * no_dims]();
+    float* neg_f = new float[N * no_dims]();
 
-    double P_i_sum = 0.;
-    double C = 0.;
+    float P_i_sum = 0.;
+    float C = 0.;
 
     if (pos_f == NULL || neg_f == NULL) { 
         fprintf(stderr, "Memory allocation failed!\n"); exit(1); 
@@ -260,10 +260,10 @@ double TSNE<treeT, dist_fn>::computeGradient(int* inp_row_P, int* inp_col_P, dou
         for (int i = inp_row_P[n]; i < inp_row_P[n + 1]; i++) {
 
             // Compute pairwise distance and Q-value
-            double D = .0;
+            float D = .0;
             int ind2 = inp_col_P[i] * no_dims;
             for (int d = 0; d < no_dims; d++) {
-                double t = Y[ind1 + d] - Y[ind2 + d];
+                float t = Y[ind1 + d] - Y[ind2 + d];
                 D += t * t;
             }
             
@@ -281,12 +281,12 @@ double TSNE<treeT, dist_fn>::computeGradient(int* inp_row_P, int* inp_col_P, dou
         }
         
         // NoneEdge forces
-        double this_Q = .0;
+        float this_Q = .0;
         tree->computeNonEdgeForces(n, theta, neg_f + n * no_dims, &this_Q);
         Q[n] = this_Q;
     }
     
-    double sum_Q = 0.;
+    float sum_Q = 0.;
     for (int i = 0; i < N; i++) {
         sum_Q += Q[i];
     }
@@ -308,15 +308,15 @@ double TSNE<treeT, dist_fn>::computeGradient(int* inp_row_P, int* inp_col_P, dou
 
 
 // Evaluate t-SNE cost function (approximately)
-template <class treeT, double (*dist_fn)( const DataPoint&, const DataPoint&)>
-double TSNE<treeT, dist_fn>::evaluateError(int* row_P, int* col_P, double* val_P, float* Y, int N, int no_dims, double theta)
+template <class treeT, float (*dist_fn)( const DataPoint&, const DataPoint&)>
+float TSNE<treeT, dist_fn>::evaluateError(int* row_P, int* col_P, float* val_P, float* Y, int N, int no_dims, float theta)
 {
 
     // Get estimate of normalization term
     treeT* tree = new treeT(Y, N, no_dims);
 
-    double* buff = new double[no_dims]();
-    double sum_Q = .0;
+    float* buff = new float[no_dims];
+    float sum_Q = .0;
     for (int n = 0; n < N; n++) {
         tree->computeNonEdgeForces(n, theta, buff, &sum_Q);
     }
@@ -324,17 +324,17 @@ double TSNE<treeT, dist_fn>::evaluateError(int* row_P, int* col_P, double* val_P
     delete[] buff;
     
     // Loop over all edges to compute t-SNE error
-    double C = .0;
+    float C = .0;
 #ifdef _OPENMP
     #pragma omp parallel for reduction(+:C)
 #endif
     for (int n = 0; n < N; n++) {
         int ind1 = n * no_dims;
         for (int i = row_P[n]; i < row_P[n + 1]; i++) {
-            double Q = .0;
+            float Q = .0;
             int ind2 = col_P[i] * no_dims;
             for (int d = 0; d < no_dims; d++) {
-                double b  = Y[ind1 + d] - Y[ind2 + d];
+                float b  = Y[ind1 + d] - Y[ind2 + d];
                 Q += b * b;
             }
             Q = (1.0 / (1.0 + Q)) / sum_Q;
@@ -346,15 +346,15 @@ double TSNE<treeT, dist_fn>::evaluateError(int* row_P, int* col_P, double* val_P
 }
 
 // Compute input similarities with a fixed perplexity using ball trees (this function allocates memory another function should free)
-template <class treeT, double (*dist_fn)( const DataPoint&, const DataPoint&)>
-void TSNE<treeT, dist_fn>::computeGaussianPerplexity(float* X, int N, int D, int** _row_P, int** _col_P, double** _val_P, double perplexity, int K, int verbose) {
+template <class treeT, float (*dist_fn)( const DataPoint&, const DataPoint&)>
+void TSNE<treeT, dist_fn>::computeGaussianPerplexity(float* X, int N, int D, int** _row_P, int** _col_P, float** _val_P, float perplexity, int K, int verbose) {
 
     if (perplexity > K) fprintf(stderr, "Perplexity should be lower than K!\n");
 
     // Allocate the memory we need
     *_row_P = (int*)    malloc((N + 1) * sizeof(int));
     *_col_P = (int*)    calloc(N * K, sizeof(int));
-    *_val_P = (double*) calloc(N * K, sizeof(double));
+    *_val_P = (float*) calloc(N * K, sizeof(float));
     if (*_row_P == NULL || *_col_P == NULL || *_val_P == NULL) { fprintf(stderr, "Memory allocation failed!\n"); exit(1); }
 
     /*
@@ -365,7 +365,7 @@ void TSNE<treeT, dist_fn>::computeGaussianPerplexity(float* X, int N, int D, int
 
     int* row_P = *_row_P;
     int* col_P = *_col_P;
-    double* val_P = *_val_P;
+    float* val_P = *_val_P;
 
     row_P[0] = 0;
     for (int n = 0; n < N; n++) {
@@ -390,22 +390,22 @@ void TSNE<treeT, dist_fn>::computeGaussianPerplexity(float* X, int N, int D, int
 #endif
     for (int n = 0; n < N; n++)
     {
-        std::vector<double> cur_P(K);
+        std::vector<float> cur_P(K);
         std::vector<DataPoint> indices;
-        std::vector<double> distances;
+        std::vector<float> distances;
 
         // Find nearest neighbors
         tree->search(obj_X[n], K + 1, &indices, &distances);
 
         // Initialize some variables for binary search
         bool found = false;
-        double beta = 1.0;
-        double min_beta = -DBL_MAX;
-        double max_beta =  DBL_MAX;
-        double tol = 1e-5;
+        float beta = 1.0;
+        float min_beta = -FLT_MAX;
+        float max_beta =  FLT_MAX;
+        float tol = 1e-5;
 
         // Iterate until we found a good perplexity
-        int iter = 0; double sum_P;
+        int iter = 0; float sum_P;
         while (!found && iter < 200) {
 
             // Compute Gaussian kernel row
@@ -414,32 +414,32 @@ void TSNE<treeT, dist_fn>::computeGaussianPerplexity(float* X, int N, int D, int
             }
 
             // Compute entropy of current row
-            sum_P = DBL_MIN;
+            sum_P = FLT_MIN;
             for (int m = 0; m < K; m++) {
                 sum_P += cur_P[m];
             }
-            double H = .0;
+            float H = .0;
             for (int m = 0; m < K; m++) {
                 H += beta * (distances[m + 1] * cur_P[m]);
             }
             H = (H / sum_P) + log(sum_P);
 
             // Evaluate whether the entropy is within the tolerance level
-            double Hdiff = H - log(perplexity);
+            float Hdiff = H - log(perplexity);
             if (Hdiff < tol && -Hdiff < tol) {
                 found = true;
             }
             else {
                 if (Hdiff > 0) {
                     min_beta = beta;
-                    if (max_beta == DBL_MAX || max_beta == -DBL_MAX)
+                    if (max_beta == FLT_MAX || max_beta == -FLT_MAX)
                         beta *= 2.0;
                     else
                         beta = (beta + max_beta) / 2.0;
                 }
                 else {
                     max_beta = beta;
-                    if (min_beta == -DBL_MAX || min_beta == DBL_MAX)
+                    if (min_beta == -FLT_MAX || min_beta == FLT_MAX)
                         beta /= 2.0;
                     else
                         beta = (beta + min_beta) / 2.0;
@@ -479,13 +479,13 @@ void TSNE<treeT, dist_fn>::computeGaussianPerplexity(float* X, int N, int D, int
     delete tree;
 }
 
-template <class treeT, double (*dist_fn)( const DataPoint&, const DataPoint&)>
-void TSNE<treeT, dist_fn>::symmetrizeMatrix(int** _row_P, int** _col_P, double** _val_P, int N) {
+template <class treeT, float (*dist_fn)( const DataPoint&, const DataPoint&)>
+void TSNE<treeT, dist_fn>::symmetrizeMatrix(int** _row_P, int** _col_P, float** _val_P, int N) {
 
     // Get sparse matrix
     int* row_P = *_row_P;
     int* col_P = *_col_P;
-    double* val_P = *_val_P;
+    float* val_P = *_val_P;
 
     // Count number of elements and row counts of symmetric matrix
     int* row_counts = (int*) calloc(N, sizeof(int));
@@ -517,7 +517,7 @@ void TSNE<treeT, dist_fn>::symmetrizeMatrix(int** _row_P, int** _col_P, double**
     // Allocate memory for symmetrized matrix
     int*    sym_row_P = (int*)    malloc((N + 1) * sizeof(int));
     int*    sym_col_P = (int*)    malloc(no_elem * sizeof(int));
-    double* sym_val_P = (double*) malloc(no_elem * sizeof(double));
+    float* sym_val_P = (float*) malloc(no_elem * sizeof(float));
     if (sym_row_P == NULL || sym_col_P == NULL || sym_val_P == NULL) { fprintf(stderr, "Memory allocation failed!\n"); exit(1); }
 
     // Construct new row indices for symmetric matrix
@@ -579,11 +579,11 @@ void TSNE<treeT, dist_fn>::symmetrizeMatrix(int** _row_P, int** _col_P, double**
 
 
 // Makes data zero-mean
-template <class treeT, double (*dist_fn)( const DataPoint&, const DataPoint&)>
+template <class treeT, float (*dist_fn)( const DataPoint&, const DataPoint&)>
 void TSNE<treeT, dist_fn>::zeroMean(float* X, int N, int D) {
 
     // Compute data mean
-    double* mean = (double*) calloc(D, sizeof(double));
+    float* mean = (float*) calloc(D, sizeof(float));
     if (mean == NULL) { fprintf(stderr, "Memory allocation failed!\n"); exit(1); }
     for (int n = 0; n < N; n++) {
         for (int d = 0; d < D; d++) {
@@ -591,7 +591,7 @@ void TSNE<treeT, dist_fn>::zeroMean(float* X, int N, int D) {
         }
     }
     for (int d = 0; d < D; d++) {
-        mean[d] /= (double) N;
+        mean[d] /= (float) N;
     }
 
     // Subtract data mean
@@ -605,12 +605,12 @@ void TSNE<treeT, dist_fn>::zeroMean(float* X, int N, int D) {
 
 
 // Generates a Gaussian random number
-template <class treeT, double (*dist_fn)( const DataPoint&, const DataPoint&)>
-double TSNE<treeT, dist_fn>::randn() {
-    double x, radius;
+template <class treeT, float (*dist_fn)( const DataPoint&, const DataPoint&)>
+float TSNE<treeT, dist_fn>::randn() {
+    float x, radius;
     do {
-        x = 2 * (rand() / ((double) RAND_MAX + 1)) - 1;
-        double y = 2 * (rand() / ((double) RAND_MAX + 1)) - 1;
+        x = 2 * ((double)rand() / ((double) RAND_MAX + 1)) - 1;
+        float y = 2 * ((double)rand() / ((double) RAND_MAX + 1)) - 1;
         radius = (x * x) + (y * y);
     } while ((radius >= 1.0) || (radius == 0.0));
     radius = sqrt(-2 * log(radius) / radius);

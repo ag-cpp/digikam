@@ -41,7 +41,7 @@ std::pair<cv::Mat, cv::Mat> loadData(const QString& fileName)
         QByteArray line = file.readLine();
         QList<QByteArray> data = line.split(',');
 
-        cv::Mat predictor(1, data.size()-1, CV_64F);
+        cv::Mat predictor(1, data.size()-1, CV_32F);
         for (int i = 1; i < data.size(); ++i) 
         {
             predictor.at<float>(i-1) = data[i].toFloat();
@@ -99,9 +99,9 @@ int main(int argc, char** argv)
     {
         for (int j = 0; j < 2; ++j)
         {
-            qDebug() << ((double*)(projectedData.data))[i*2 + j];
+            qDebug() << ((float*)(projectedData.data))[i*2 + j];
         }
     }
 
-    //save(cv::ml::TrainData::create(projectedData, 0, data->getResponses()),parser->value(QLatin1String("out")));
+    save(std::make_pair(projectedData, data.second),parser->value(QLatin1String("out")));
 }
