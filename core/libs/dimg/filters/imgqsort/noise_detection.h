@@ -45,6 +45,10 @@ public:
 
     float detect()                                                              const;
 
+public:
+    
+    static const Mat3D filtersHaar;
+
 private:
 
     cv::Mat prepareForDetection(const DImg& inputImage)                         const;
@@ -54,7 +58,7 @@ private:
     float   noise_variance(const cv::Mat& variance, const cv::Mat& kurtosis)    const;
     float   normalize(const float number)                                       const;
 
-    cv::Mat raw_moment(const NoiseDetector::Mat3D& mat,int ordre)               const;
+    cv::Mat raw_moment(const NoiseDetector::Mat3D& mat, int order)              const;
     cv::Mat pow_mat(const cv::Mat& mat, float ordre)                            const;
     float   mean_mat(const cv::Mat& mat)                                        const;
     
@@ -62,33 +66,6 @@ private:
 
     class Private;
     Private* const d;
-};
-
-// class singleton for band pass filter haar
-class MatrixFilterHaar : public QObject
-{
-    Q_OBJECT
-
-public:
-    
-    explicit MatrixFilterHaar();
-    
-    ~MatrixFilterHaar() override;
-    
-    /**
-     * @return MatrixFilterHaar global instance
-     */
-    static MatrixFilterHaar* instance();
-
-    void init();
-
-    NoiseDetector::Mat3D get_data();
-
-private:
-    
-    NoiseDetector::Mat3D m_data;
-
-    bool m_isInit;
 };
 
 } // namespace Digikam
