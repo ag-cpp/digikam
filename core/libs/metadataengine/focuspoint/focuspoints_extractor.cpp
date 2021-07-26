@@ -36,9 +36,13 @@ namespace Digikam
 class Q_DECL_HIDDEN FocusPointsExtractor::Private
 {
 public:
-    explicit Private() {};
+    explicit Private() 
+      : exifToolAvailable(false)
+    {};
 
     ListAFPoints                    af_points;
+    
+    bool                            exifToolAvailable;
 
     ExifToolParser::ExifToolData    metadata;
 };
@@ -50,6 +54,8 @@ FocusPointsExtractor::FocusPointsExtractor(QObject* const parent,const QString& 
     QScopedPointer<ExifToolParser> const exiftool (new ExifToolParser(this));
 
     exiftool->load(image_path);
+
+    d->exifToolAvailable = exiftool->exifToolAvailable();
 
     d->metadata = exiftool->currentData();
 
@@ -116,7 +122,7 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::findAFPoints()
 {
     QString model = findValue(QLatin1String("EXIF.IFD0.Camera.Make")).toString();
 
-    if (model.isNull())
+    if (model.isNull() || !d->exifToolAvailable)
     {
         return ListAFPoints();
     }
