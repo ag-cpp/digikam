@@ -65,14 +65,14 @@ int main(int argc, char** argv)
                    QVariantList() << QString::fromUtf8("20")
                                   << QString()      // not used
                                   << QString::fromUtf8("20"));
-    newTags.insert(QLatin1String("xmp:city"),
-                   QVariantList() << QString::fromUtf8("Paris")
-                                  << QString()      // not used
-                                  << QString::fromUtf8("Paris"));
-    newTags.insert(QLatin1String("xmp:digikam:FocalLengthX"),
+    newTags.insert(QLatin1String("xmp:RegionBoundary:RbX"),
                    QVariantList() << QString::fromUtf8("20")
                                   << QString()      // not used
-                                  << QString::fromUtf8("20"));
+                                  << QString::fromUtf8("Paris"));
+    newTags.insert(QLatin1String("xmp:RbH"),
+                   QVariantList() << QString::fromUtf8("20")
+                                  << QString()      // not used
+                                  << QString::fromUtf8("Paris"));
 
     // Read metadata from the file. Start ExifToolParser
 
