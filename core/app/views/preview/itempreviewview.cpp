@@ -89,6 +89,7 @@ public:
         faceGroup(nullptr),
         peopleToggleAction(nullptr),
         addPersonAction(nullptr),
+        addAFPointAction(nullptr),
         forgetFacesAction(nullptr),
         fullscreenAction(nullptr),
         currAlbum(nullptr)
@@ -114,6 +115,7 @@ public:
     FaceGroup*             faceGroup;
     QAction*               peopleToggleAction;
     QAction*               addPersonAction;
+    QAction*               addAFPointAction;
     QAction*               forgetFacesAction;
 
     QAction*               fullscreenAction;
@@ -163,6 +165,8 @@ ItemPreviewView::ItemPreviewView(QWidget* const parent, Mode mode, Album* const 
     d->rotRightAction      = new QAction(QIcon::fromTheme(QLatin1String("object-rotate-right")),  i18nc("@info:tooltip", "Rotate Right"), this);
 
     d->addPersonAction     = new QAction(QIcon::fromTheme(QLatin1String("list-add-user")),        i18n("Add a Face Tag"),                 this);
+    d->addAFPointAction    = new QAction(QIcon::fromTheme(QLatin1String("list-add-af-point")),    i18n("Add a Af point"),                 this);
+
     d->forgetFacesAction   = new QAction(QIcon::fromTheme(QLatin1String("list-remove-user")),     i18n("Clear all faces on this image"),  this);
     d->peopleToggleAction  = new QAction(QIcon::fromTheme(QLatin1String("im-user")),              i18n("Show Face Tags"),                 this);
     d->peopleToggleAction->setCheckable(true);
@@ -182,6 +186,7 @@ ItemPreviewView::ItemPreviewView(QWidget* const parent, Mode mode, Album* const 
 
     d->toolBar->addAction(d->peopleToggleAction);
     d->toolBar->addAction(d->addPersonAction);
+    d->toolBar->addAction(d->addAFPointAction);
     d->toolBar->addAction(d->fullscreenAction);
 
     connect(d->prevAction, SIGNAL(triggered()),
@@ -204,6 +209,9 @@ ItemPreviewView::ItemPreviewView(QWidget* const parent, Mode mode, Album* const 
 
     connect(d->forgetFacesAction, SIGNAL(triggered()),
             d->faceGroup, SLOT(rejectAll()));
+
+    // connect(d->addAFPointAction, SIGNAL(triggered()),
+    //         d->afPointWriter, SLOT(addAFPoint()));
 
     connect(d->fullscreenAction, SIGNAL(triggered()),
             this, SLOT(slotSlideShowCurrent()));
@@ -347,6 +355,12 @@ void ItemPreviewView::slotShowContextMenu(QGraphicsSceneContextMenuEvent* event)
     cmHelper.addAction(d->peopleToggleAction, true);
     cmHelper.addAction(d->addPersonAction,    true);
     cmHelper.addAction(d->forgetFacesAction,  true);
+    cmHelper.addSeparator();
+
+    // -------------------------------------------------------
+
+    cmHelper.addAction(QLatin1String("image_add_af_point"));
+    cmHelper.addAction(d->addAFPointAction,  true);
     cmHelper.addSeparator();
 
     // --------------------------------------------------------
@@ -592,6 +606,7 @@ void ItemPreviewView::mousePressEvent(QMouseEvent* e)
 {
     if ((e->button() == Qt::LeftButton) && (QApplication::keyboardModifiers() == Qt::ControlModifier))
     {
+        qInfo()<<"run add face here";
         d->faceGroup->addFace();
     }
 
