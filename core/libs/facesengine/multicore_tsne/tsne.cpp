@@ -32,7 +32,7 @@
 namespace TSNE
 {
 
-void tsne_run_double(double* X, int N, int D, double* Y,
+void tsne_run_float(float* X, int N, int D, float* Y,
                     int no_dims, double perplexity, double theta,
                     int num_threads, int max_iter, int n_iter_early_exag,
                     int random_state, bool init_from_Y, int verbose,
@@ -65,7 +65,7 @@ void tsne_run_double(double* X, int N, int D, double* Y,
         no_dims -- target dimentionality
 */
 template <class treeT, double (*dist_fn)( const DataPoint&, const DataPoint&)>
-void TSNE<treeT, dist_fn>::run(double* X, int N, int D, double* Y,
+void TSNE<treeT, dist_fn>::run(float* X, int N, int D, float* Y,
                int no_dims, double perplexity, double theta ,
                int num_threads, int max_iter, int n_iter_early_exag,
                int random_state, bool init_from_Y, int verbose,
@@ -234,7 +234,7 @@ void TSNE<treeT, dist_fn>::run(double* X, int N, int D, double* Y,
 
 // Compute gradient of the t-SNE cost function (using Barnes-Hut algorithm)
 template <class treeT, double (*dist_fn)( const DataPoint&, const DataPoint&)>
-double TSNE<treeT, dist_fn>::computeGradient(int* inp_row_P, int* inp_col_P, double* inp_val_P, double* Y, int N, int no_dims, double* dC, double theta, bool eval_error)
+double TSNE<treeT, dist_fn>::computeGradient(int* inp_row_P, int* inp_col_P, double* inp_val_P, float* Y, int N, int no_dims, double* dC, double theta, bool eval_error)
 {
     // Construct quadtree on current map
     treeT* tree = new treeT(Y, N, no_dims);
@@ -309,7 +309,7 @@ double TSNE<treeT, dist_fn>::computeGradient(int* inp_row_P, int* inp_col_P, dou
 
 // Evaluate t-SNE cost function (approximately)
 template <class treeT, double (*dist_fn)( const DataPoint&, const DataPoint&)>
-double TSNE<treeT, dist_fn>::evaluateError(int* row_P, int* col_P, double* val_P, double* Y, int N, int no_dims, double theta)
+double TSNE<treeT, dist_fn>::evaluateError(int* row_P, int* col_P, double* val_P, float* Y, int N, int no_dims, double theta)
 {
 
     // Get estimate of normalization term
@@ -347,7 +347,7 @@ double TSNE<treeT, dist_fn>::evaluateError(int* row_P, int* col_P, double* val_P
 
 // Compute input similarities with a fixed perplexity using ball trees (this function allocates memory another function should free)
 template <class treeT, double (*dist_fn)( const DataPoint&, const DataPoint&)>
-void TSNE<treeT, dist_fn>::computeGaussianPerplexity(double* X, int N, int D, int** _row_P, int** _col_P, double** _val_P, double perplexity, int K, int verbose) {
+void TSNE<treeT, dist_fn>::computeGaussianPerplexity(float* X, int N, int D, int** _row_P, int** _col_P, double** _val_P, double perplexity, int K, int verbose) {
 
     if (perplexity > K) fprintf(stderr, "Perplexity should be lower than K!\n");
 
@@ -580,7 +580,7 @@ void TSNE<treeT, dist_fn>::symmetrizeMatrix(int** _row_P, int** _col_P, double**
 
 // Makes data zero-mean
 template <class treeT, double (*dist_fn)( const DataPoint&, const DataPoint&)>
-void TSNE<treeT, dist_fn>::zeroMean(double* X, int N, int D) {
+void TSNE<treeT, dist_fn>::zeroMean(float* X, int N, int D) {
 
     // Compute data mean
     double* mean = (double*) calloc(D, sizeof(double));

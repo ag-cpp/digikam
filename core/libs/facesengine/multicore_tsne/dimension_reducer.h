@@ -20,16 +20,16 @@
  *
  * ============================================================ */
 
-#ifndef DIGIKAM_FACESENGINE_DOMENSIONREDUCER_H
-#define DIGIKAM_FACESENGINE_DOMENSIONREDUCER_H
+#ifndef DIGIKAM_FACESENGINE_DIMENSIONREDUCER_H
+#define DIGIKAM_FACESENGINE_DIMENSIONREDUCER_H
 
-#include "digikam_export.h"
 #include "digikam_opencv.h"
+#include "digikam_export.h"
 
 namespace Digikam
 {
 
-class DIGIKAM_GUI_EXPORT DimensionReducer 
+class DIGIKAM_EXPORT DimensionReducer 
 {
 public:
 
@@ -39,4 +39,4 @@ public:
 
 } // namespace Digikam
 
-#endif // DIGIKAM_FACESENGINE_DOMENSIONREDUCER_H
+#endif // DIGIKAM_FACESENGINE_DIMENSIONREDUCER_H

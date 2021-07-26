@@ -9,7 +9,7 @@ namespace TSNE
 {
 
 // Checks whether a point lies in a cell
-bool Cell::containsPoint(double point[])
+bool Cell::containsPoint(float point[])
 {   
     for (int i = 0; i< n_dims; ++i) {
         if (abs_d(center[i] - point[i]) > width[i]) {
@@ -21,7 +21,7 @@ bool Cell::containsPoint(double point[])
 
 
 // Default constructor for quadtree -- build tree, too!
-SplitTree::SplitTree(double* inp_data, int N, int no_dims)
+SplitTree::SplitTree(float* inp_data, int N, int no_dims)
 {   
     QT_NO_DIMS = no_dims;
     num_children = 1 << no_dims;
@@ -63,7 +63,7 @@ SplitTree::SplitTree(double* inp_data, int N, int no_dims)
 }
 
 // Constructor for SplitTree with particular size and parent (do not fill the tree)
-SplitTree::SplitTree(SplitTree* inp_parent, double* inp_data, double* mean_Y, double* width_Y)
+SplitTree::SplitTree(SplitTree* inp_parent, float* inp_data, double* mean_Y, double* width_Y)
 {   
     QT_NO_DIMS = inp_parent->QT_NO_DIMS;
     num_children = 1 << QT_NO_DIMS;
@@ -73,7 +73,7 @@ SplitTree::SplitTree(SplitTree* inp_parent, double* inp_data, double* mean_Y, do
 
 
 // Main initialization function
-void SplitTree::init(SplitTree* inp_parent, double* inp_data, double* mean_Y, double* width_Y)
+void SplitTree::init(SplitTree* inp_parent, float* inp_data, double* mean_Y, double* width_Y)
 {   
     // parent = inp_parent;
     data = inp_data;
@@ -108,7 +108,7 @@ SplitTree::~SplitTree()
 bool SplitTree::insert(int new_index)
 {   
     // Ignore objects which do not belong in this quad tree
-    double* point = data + new_index * QT_NO_DIMS;
+    float* point = data + new_index * QT_NO_DIMS;
     if (!boundary.containsPoint(point)) {
         return false;
     }

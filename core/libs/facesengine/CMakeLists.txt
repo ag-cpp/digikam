@@ -102,8 +102,8 @@ set(facesengine_database_LIB_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/recognition/recogn
                                   ${CMAKE_CURRENT_SOURCE_DIR}/recognition/opencv-dnn/opencvdnnfacerecognizer.cpp
                                   ${CMAKE_CURRENT_SOURCE_DIR}/recognition/opencv-dnn/dnnfaceextractor.cpp
                                   
-                                  ${CMAKE_CURRENT_SOURCE_DIR}/multicore_tsne/tsne.cpp
                                   ${CMAKE_CURRENT_SOURCE_DIR}/multicore_tsne/splittree.cpp
+                                  ${CMAKE_CURRENT_SOURCE_DIR}/multicore_tsne/tsne.cpp
                                   ${CMAKE_CURRENT_SOURCE_DIR}/multicore_tsne/dimension_reducer.cpp
 
                                   ${CMAKE_CURRENT_SOURCE_DIR}/facedb/facedbaccess.cpp
@@ -124,7 +124,6 @@ add_library(gui_digikamfacesenginedatabase_obj
 
 target_compile_definitions(gui_digikamfacesenginedatabase_obj
                            PRIVATE
-                           tsne_multicore
                            digikamgui_EXPORTS
 )
 

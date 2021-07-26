@@ -31,13 +31,13 @@ class DataPoint
     int _ind;
 
 public:
-    double* _x;
+    float* _x;
     DataPoint() {
         _D = 1;
         _ind = -1;
         _x = NULL;
     }
-    DataPoint(int D, int ind, double* x) {
+    DataPoint(int D, int ind, float* x) {
         _D = D;
         _ind = ind;
         _x = x;

@@ -27,7 +27,7 @@ public:
 	double* center;
 	double* width;
 	int n_dims;
-	bool   containsPoint(double point[]);
+	bool   containsPoint(float point[]);
 	~Cell() {
 		delete[] center;
 		delete[] width;
@@ -51,7 +51,7 @@ class SplitTree
 	Cell boundary;
 
 	// Indices in this quad tree node, corresponding center-of-mass, and list of all children
-	double* data;
+	float* data;
 	double* center_of_mass;
 	int index[QT_NODE_CAPACITY];
 
@@ -60,8 +60,8 @@ class SplitTree
 public:
 	
 
-	SplitTree(double* inp_data, int N, int no_dims);
-	SplitTree(SplitTree* inp_parent, double* inp_data, double* mean_Y, double* width_Y);
+	SplitTree(float* inp_data, int N, int no_dims);
+	SplitTree(SplitTree* inp_parent, float* inp_data, double* mean_Y, double* width_Y);
 	~SplitTree();
 	void construct(Cell boundary);
 	bool insert(int new_index);
@@ -69,7 +69,7 @@ public:
 	void computeNonEdgeForces(int point_index, double theta, double* neg_f, double* sum_Q);
 private:
 	
-	void init(SplitTree* inp_parent, double* inp_data, double* mean_Y, double* width_Y);
+	void init(SplitTree* inp_parent, float* inp_data, double* mean_Y, double* width_Y);
 	void fill(int N);
 };
 
