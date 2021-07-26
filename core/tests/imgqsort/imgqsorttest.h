@@ -54,7 +54,6 @@ private Q_SLOTS:
     void cleanupTestCase();
 
     void testParseTestImagesForExposureDetection();
-    void testParseTestImagesForNoiseDetection();
     void testParseTestImagesForBlurDetection();
     void testParseTestImagesForCompressionDetection();
 
@@ -62,6 +61,10 @@ private Q_SLOTS:
     void testParseTestImagesForBlurDetection_MotionBlurImage();
     void testParseTestImagesForBlurDetection_DefocusImage();
     void testParseTestImagesForBlurDetection_BlurBackGroundImage();
+
+    void testParseTestImagesForNoiseDetection();
+    void testParseTestImagesForImageHighSO();
+    void testParseTestImagesForVariousTypeNoise();
 };
 
 // pair name image - quality expected
@@ -105,11 +108,21 @@ DataTestCases const dataTestCases =
         {QLatin1String("defocusImage"), PairImageQuality(QLatin1String("blur_caffe_3.jpg"),1)},
         {QLatin1String("defocusImage"), PairImageQuality(QLatin1String("blur_street_3.jpg"),1)},
 
-
         {QLatin1String("blurBackGroundImage"), PairImageQuality(QLatin1String("blur_blurbackground_1.jpg"),2)},
         {QLatin1String("blurBackGroundImage"), PairImageQuality(QLatin1String("blur_blurbackground_2.jpg"),3)},
         {QLatin1String("blurBackGroundImage"), PairImageQuality(QLatin1String("blur_blurbackground_3.jpg"),3)},
 
+        {QLatin1String("highISO"), PairImageQuality(QLatin1String("noise_book_1.jpg"),3)},
+        {QLatin1String("highISO"), PairImageQuality(QLatin1String("noise_book_2.jpg"),1)},
+        {QLatin1String("highISO"), PairImageQuality(QLatin1String("noise_graffi_1.jpg"),3)},
+        {QLatin1String("highISO"), PairImageQuality(QLatin1String("noise_graffi_2.jpg"),1)},
+
+        {QLatin1String("variousTypesNoise"), PairImageQuality(QLatin1String("noise_bird_nor.png"),3)},
+        {QLatin1String("variousTypesNoise"), PairImageQuality(QLatin1String("noise_bird_gaussian.png"),1)},
+        {QLatin1String("variousTypesNoise"), PairImageQuality(QLatin1String("noise_bird_rayleigh.png"),1)},
+        {QLatin1String("variousTypesNoise"), PairImageQuality(QLatin1String("noise_bird_speckle.png"),1)},
+        // {QLatin1String("variousTypesNoise"), PairImageQuality(QLatin1String("noise_bird_salt_pepper.png"),1)}, False case
+        // {QLatin1String("variousTypesNoise"), PairImageQuality(QLatin1String("noise_bird_bandpass.png"),1)}, Faslse case
     };
 
 #endif // DIGIKAM_IMGQSORT_TEST_H

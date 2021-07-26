@@ -24,6 +24,11 @@
 
 #include "imagequalityparser_p.h"
 
+
+// Local includes 
+
+#include "noise_detection.h"
+
 namespace Digikam
 {
 
@@ -126,8 +131,7 @@ void ImageQualityParser::startAnalyse()
     {
         // Some images give very low noise value. Assign NoPickLabel in that case.
         // Returns noise value between 0 and 1.
-
-        noise = noiseDetector();
+        noise = NoiseDetector(d->image).detect();
         qCDebug(DIGIKAM_DIMG_LOG) << "Amount of Noise present in image is:" << noise;
     }
 
@@ -190,32 +194,23 @@ void ImageQualityParser::startAnalyse()
     {
         // All the results to have a range of 1 to 100.
 
-        double finalBlur          = (blur * 100.0)  + ((blur2 / 32767) * 100.0);
+        // double finalBlur          = (blur * 100.0)  + ((blur2 / 32767) * 100.0);
         double finalNoise         = noise * 100.0;
-        double finalCompression   = (compressionLevel / 1024.0) * 100.0;        // we are processing 1024 pixels size image
-        double finalExposure      = 100.0 - (underLevel + overLevel) * 100.0;
+        // double finalCompression   = (compressionLevel / 1024.0) * 100.0;        // we are processing 1024 pixels size image
+        // double finalExposure      = 100.0 - (underLevel + overLevel) * 100.0;
 
-        finalQuality            = finalBlur          * d->imq.blurWeight        +
-                                  finalNoise         * d->imq.noiseWeight       +
-                                  finalCompression   * d->imq.compressionWeight +
-                                  finalExposure;
+        finalQuality            = 100 - finalNoise;
 
         qCDebug(DIGIKAM_DIMG_LOG) << "Final Quality estimated: " << finalQuality;
 
         // Assigning PickLabels
 
-        if      (finalQuality == 0.0)
-        {
-            // Algorithms have not been run. So return noPickLabel
-
-            *d->label = NoPickLabel;
-        }
-        else if ((int)finalQuality < d->imq.rejectedThreshold)
+        if ((int)finalQuality <= d->imq.rejectedThreshold)
         {
             *d->label = RejectedLabel;
         }
         else if (((int)finalQuality > d->imq.rejectedThreshold) &&
-                 ((int)finalQuality < d->imq.acceptedThreshold))
+                 ((int)finalQuality <= d->imq.acceptedThreshold))
         {
             *d->label = PendingLabel;
         }
