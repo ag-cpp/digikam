@@ -175,7 +175,7 @@ cv::Mat CompressionDetector::detectMonoColorRegion() const
 
     cv::medianBlur(d->image, median_image, 5);
 
-    cv::Mat mat_subtraction = cv::abs(d->image - median_image);
+    cv::Mat abs_difference = cv::abs(d->image - median_image);
 
     std::vector<cv::Mat> rgbChannels(3);
     
