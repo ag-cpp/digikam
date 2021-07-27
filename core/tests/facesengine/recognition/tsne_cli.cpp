@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QCoreApplication>
 #include <QCommandLineParser>
+#include <QElapsedTimer>
 
 #include "dimension_reducer.h"
 
@@ -92,16 +93,28 @@ int main(int argc, char** argv)
     std::pair<cv::Mat, cv::Mat> data = loadData(parser->value(QLatin1String("in")));
 
     cv::Mat samples = data.first;
+    cv::Mat projectedData;
 
-    cv::Mat projectedData = reducer.project(samples, 2);
-
-    for (int i = 0; i < samples.rows; ++i) 
+    int i = 0;
+    do
     {
-        for (int j = 0; j < 2; ++j)
-        {
-            qDebug() << ((float*)(projectedData.data))[i*2 + j];
-        }
-    }
+        QElapsedTimer timer;
+        timer.start();
 
+        cv::Mat window;
+        samples(cv::Range(i, std::min(i+1000, samples.rows)), cv::Range(0, samples.cols)).copyTo(window);
+        cv::Mat projectedWindow = reducer.project(window, 2);
+
+
+        cv::Mat newProjected;
+        projectedWindow(cv::Range(projectedWindow.rows-100, projectedWindow.rows), cv::Range(0, projectedWindow.cols)).copyTo(newProjected);
+
+        projectedData.push_back(newProjected);
+        
+        qDebug() << "Parse through" << window.rows << "in" << timer.elapsed();
+        i += 100;
+    }
+    while (i < samples.rows);
+    
     save(std::make_pair(projectedData, data.second),parser->value(QLatin1String("out")));
 }

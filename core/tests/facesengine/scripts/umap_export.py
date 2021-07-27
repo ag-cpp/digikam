@@ -7,7 +7,7 @@ import umap.umap_ as umap
 
 sns.set(style='white', context='notebook', rc={'figure.figsize':(14,10)})
 
-faceData = pd.read_csv('../data/fix_normalize.txt',header=None)
+faceData = pd.read_csv('facenet_tsne.txt',header=None)
 
 embeddingIndex = set(faceData.columns)
 embeddingIndex.remove(0)

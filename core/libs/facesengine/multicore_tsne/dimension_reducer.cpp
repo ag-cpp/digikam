@@ -15,7 +15,7 @@ cv::Mat DimensionReducer::project(cv::Mat data, int nbDimension)
                           nbDimension, 
                           30, 
                           0.5, 
-                          1);
+                          4);
 
     return projectedData;
 }
