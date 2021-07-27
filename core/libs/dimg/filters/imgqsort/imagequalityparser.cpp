@@ -24,6 +24,10 @@
 
 #include "imagequalityparser_p.h"
 
+// Local includes 
+#include "blur_detector.h"
+#include "noise_detection.h"
+
 namespace Digikam
 {
 
@@ -51,18 +55,6 @@ void ImageQualityParser::readImage() const
     d->img8 = d->image;
     d->img8.convertToEightBit();                        // Convert to 8 bits color depth.
 
-    // grayscale image creation for noise detector
-
-    d->src_gray = Mat(d->img8.numPixels(), 1, CV_8UC1); // Create a matrix containing the pixel values of grayscaled image
-
-    for (uint x = 0 ; d->running && (x < d->img8.width()) ; ++x)
-    {
-        for (uint y = 0 ; d->running && (y < d->img8.height()) ; ++y)
-        {
-            col                         = d->img8.getPixelColor(x, y);
-            d->src_gray.at<uchar>(x, y) = (col.red() + col.green() + col.blue()) / 3;
-        }
-    }
 
     // For Noise detection
 
@@ -98,7 +90,6 @@ void ImageQualityParser::startAnalyse()
     readImage();
 
     double blur             = 0.0;
-    short  blur2            = 0;
     double noise            = 0.0;
     int    compressionLevel = 0;
     double finalQuality     = 0.0;
@@ -112,22 +103,15 @@ void ImageQualityParser::startAnalyse()
         // Returns blur value between 0 and 1.
         // If NaN is returned just assign NoPickLabel
 
-        blur  = blurDetector();
+        blur  = BlurDetector(d->image).detect();
         qCDebug(DIGIKAM_DIMG_LOG) << "Amount of Blur present in image is:" << blur;
-
-        // Returns blur value between 1 and 32767.
-        // If 1 is returned just assign NoPickLabel
-
-        blur2 = blurDetector2();
-        qCDebug(DIGIKAM_DIMG_LOG) << "Amount of Blur present in image [using LoG Filter] is:" << blur2;
     }
 
     if (d->running && d->imq.detectNoise)
     {
         // Some images give very low noise value. Assign NoPickLabel in that case.
         // Returns noise value between 0 and 1.
-
-        noise = noiseDetector();
+        noise = NoiseDetector(d->image).detect();
         qCDebug(DIGIKAM_DIMG_LOG) << "Amount of Noise present in image is:" << noise;
     }
 
@@ -189,34 +173,31 @@ void ImageQualityParser::startAnalyse()
     if (d->running)
     {
         // All the results to have a range of 1 to 100.
+        if (d->imq.detectBlur)
+        {
+            float finalBlur          = blur;
 
-        double finalBlur          = (blur * 100.0)  + ((blur2 / 32767) * 100.0);
-        double finalNoise         = noise * 100.0;
-        double finalCompression   = (compressionLevel / 1024.0) * 100.0;        // we are processing 1024 pixels size image
-        double finalExposure      = 100.0 - (underLevel + overLevel) * 100.0;
+            finalQuality            = (1 - finalBlur)          * d->imq.blurWeight;
+        }
 
-        finalQuality            = finalBlur          * d->imq.blurWeight        +
-                                  finalNoise         * d->imq.noiseWeight       +
-                                  finalCompression   * d->imq.compressionWeight +
-                                  finalExposure;
+        if (d->imq.detectNoise)
+        {
+            double finalNoise         = noise * 100.0;
+
+            finalQuality            = 100 - finalNoise;
+        }
 
         qCDebug(DIGIKAM_DIMG_LOG) << "Final Quality estimated: " << finalQuality;
 
         // Assigning PickLabels
 
-        if      (finalQuality == 0.0)
-        {
-            // Algorithms have not been run. So return noPickLabel
-
-            *d->label = NoPickLabel;
-        }
-        else if ((int)finalQuality < d->imq.rejectedThreshold)
+        if ((int)finalQuality <= d->imq.rejectedThreshold)
         {
             *d->label = RejectedLabel;
         }
         else if (((int)finalQuality > d->imq.rejectedThreshold) &&
-                 ((int)finalQuality < d->imq.acceptedThreshold))
-        {
+                 ((int)finalQuality <= d->imq.acceptedThreshold))
+        {   
             *d->label = PendingLabel;
         }
         else

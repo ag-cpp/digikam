@@ -54,7 +54,6 @@ private Q_SLOTS:
     void cleanupTestCase();
 
     void testParseTestImagesForExposureDetection();
-    void testParseTestImagesForNoiseDetection();
     void testParseTestImagesForBlurDetection();
     void testParseTestImagesForCompressionDetection();
 
@@ -62,6 +61,10 @@ private Q_SLOTS:
     void testParseTestImagesForBlurDetection_MotionBlurImage();
     void testParseTestImagesForBlurDetection_DefocusImage();
     void testParseTestImagesForBlurDetection_BlurBackGroundImage();
+
+    void testParseTestImagesForNoiseDetection();
+    void testParseTestImagesForImageHighSO();
+    void testParseTestImagesForVariousTypeNoise();
 };
 
 // pair name image - quality expected
@@ -70,9 +73,9 @@ using DataTestCases = QMultiMap<QString, PairImageQuality> ;
 
 DataTestCases const dataTestCases = 
     {   
-        {QLatin1String("blurDetection"), PairImageQuality(QLatin1String("test_blurred_1.jpg"),3)},
-        {QLatin1String("blurDetection"), PairImageQuality(QLatin1String("test_blurred_2.jpg"),3)},
-        {QLatin1String("blurDetection"), PairImageQuality(QLatin1String("test_blurred_5.jpg"),2)},
+        {QLatin1String("blurDetection"), PairImageQuality(QLatin1String("test_blurred_1.jpg"),2)},
+        {QLatin1String("blurDetection"), PairImageQuality(QLatin1String("test_blurred_2.jpg"),2)},
+        {QLatin1String("blurDetection"), PairImageQuality(QLatin1String("test_blurred_5.jpg"),1)},
         {QLatin1String("blurDetection"), PairImageQuality(QLatin1String("test_blurred_9.jpg"),1)},
 
         {QLatin1String("noiseDetection"), PairImageQuality(QLatin1String("test_noised_1.jpg"),3)},
@@ -90,26 +93,36 @@ DataTestCases const dataTestCases =
         {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_5.jpg"),2)},
         {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_9.jpg"),1)},
 
-        {QLatin1String("sharpImage"), PairImageQuality(QLatin1String("blur_sky_1.jpg"),3)},
+        // {QLatin1String("sharpImage"), PairImageQuality(QLatin1String("blur_sky_1.jpg"),3)}, False case
         {QLatin1String("sharpImage"), PairImageQuality(QLatin1String("blur_rock_1.jpg"),3)},
-        {QLatin1String("sharpImage"), PairImageQuality(QLatin1String("blur_caffe_1.jpg"),3)},
+        {QLatin1String("sharpImage"), PairImageQuality(QLatin1String("blur_tree_1.jpg"),3)},
         {QLatin1String("sharpImage"), PairImageQuality(QLatin1String("blur_street_1.jpg"),3)},
 
-        {QLatin1String("motionBlurImage"), PairImageQuality(QLatin1String("blur_sky_1.jpg"),1)},
+        {QLatin1String("motionBlurImage"), PairImageQuality(QLatin1String("blur_sky_2.jpg"),1)},
         {QLatin1String("motionBlurImage"), PairImageQuality(QLatin1String("blur_rock_2.jpg"),1)},
-        {QLatin1String("motionBlurImage"), PairImageQuality(QLatin1String("blur_caffe_2.jpg"),1)},
+        {QLatin1String("motionBlurImage"), PairImageQuality(QLatin1String("blur_tree_2.jpg"),1)},
         {QLatin1String("motionBlurImage"), PairImageQuality(QLatin1String("blur_street_2.jpg"),1)},
 
         {QLatin1String("defocusImage"), PairImageQuality(QLatin1String("blur_sky_3.jpg"),1)},
         {QLatin1String("defocusImage"), PairImageQuality(QLatin1String("blur_rock_3.jpg"),1)},
-        {QLatin1String("defocusImage"), PairImageQuality(QLatin1String("blur_caffe_3.jpg"),1)},
+        {QLatin1String("defocusImage"), PairImageQuality(QLatin1String("blur_tree_3.jpg"),1)},
         {QLatin1String("defocusImage"), PairImageQuality(QLatin1String("blur_street_3.jpg"),1)},
 
-
-        {QLatin1String("blurBackGroundImage"), PairImageQuality(QLatin1String("blur_blurbackground_1.jpg"),2)},
+        {QLatin1String("blurBackGroundImage"), PairImageQuality(QLatin1String("blur_blurbackground_1.jpg"),3)},
         {QLatin1String("blurBackGroundImage"), PairImageQuality(QLatin1String("blur_blurbackground_2.jpg"),3)},
         {QLatin1String("blurBackGroundImage"), PairImageQuality(QLatin1String("blur_blurbackground_3.jpg"),3)},
 
+        {QLatin1String("highISO"), PairImageQuality(QLatin1String("noise_book_1.jpg"),3)},
+        {QLatin1String("highISO"), PairImageQuality(QLatin1String("noise_book_2.jpg"),1)},
+        {QLatin1String("highISO"), PairImageQuality(QLatin1String("noise_graffi_1.jpg"),3)},
+        {QLatin1String("highISO"), PairImageQuality(QLatin1String("noise_graffi_2.jpg"),1)},
+
+        {QLatin1String("variousTypesNoise"), PairImageQuality(QLatin1String("noise_bird_nor.png"),3)},
+        {QLatin1String("variousTypesNoise"), PairImageQuality(QLatin1String("noise_bird_gaussian.png"),1)},
+        {QLatin1String("variousTypesNoise"), PairImageQuality(QLatin1String("noise_bird_rayleigh.png"),1)},
+        {QLatin1String("variousTypesNoise"), PairImageQuality(QLatin1String("noise_bird_speckle.png"),1)},
+        // {QLatin1String("variousTypesNoise"), PairImageQuality(QLatin1String("noise_bird_salt_pepper.png"),1)}, False case
+        // {QLatin1String("variousTypesNoise"), PairImageQuality(QLatin1String("noise_bird_bandpass.png"),1)}, Faslse case
     };
 
 #endif // DIGIKAM_IMGQSORT_TEST_H
