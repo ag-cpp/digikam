@@ -152,7 +152,7 @@ cv::Mat CompressionDetector::checkHorizontal(const cv::Mat& gray_image) const
         cv::Mat a = (gray_image.row(i) - gray_image.row(i + 1)) - (gray_image.row(i - 1) - gray_image.row(i));
         
         cv::Mat b = (gray_image.row(i) - gray_image.row(i + 1)) - (gray_image.row(i + 1) - gray_image.row(i - 2));
-        
+
         res.row(i) = (a >= d->threshold_edges_block) & (b >= d->threshold_edges_block);
     }
 
@@ -171,7 +171,7 @@ cv::Mat CompressionDetector::detectMonoColorRegion() const
     
     cv::split(abs_difference, rgbChannels);
 
-    cv::Mat res = rgbChannels.at(0) + rgbChannels.at(1) + rgbChannels.at(2);
+    cv::Mat res = rgbChannels[0] + rgbChannels[1] + rgbChannels[2];
 
     cv::threshold(res,res,d->threshold_mono_color,1,cv::THRESH_BINARY_INV);
 
