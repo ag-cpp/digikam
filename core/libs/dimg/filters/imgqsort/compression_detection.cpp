@@ -160,10 +160,11 @@ cv::Mat CompressionDetector::checkHorizontal(const cv::Mat& gray_image) const
         cv::threshold(a, a, d->threshold_edges_block, 1, cv::THRESH_BINARY);
         cv::threshold(b, b, d->threshold_edges_block, 1, cv::THRESH_BINARY);
 
-        cv::Mat check = a & b;
+        // cv::Mat check = a & b;
 
-        auto row = res.row(i);
-        row = check;
+        // auto row = res.row(i);
+        // row = check;
+        res.row(i) = a & b;
     }
 
     return res;
@@ -179,7 +180,7 @@ cv::Mat CompressionDetector::detectMonoColorRegion() const
 
     std::vector<cv::Mat> rgbChannels(3);
     
-    cv::split(mat_subtraction, rgbChannels);
+    cv::split(abs_difference, rgbChannels);
 
     cv::Mat res = rgbChannels.at(0) + rgbChannels.at(1) + rgbChannels.at(2);
 
