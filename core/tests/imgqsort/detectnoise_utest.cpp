@@ -45,7 +45,7 @@ ImgQSortTestDetectNoise::ImgQSortTestDetectNoise(QObject* const)
 {
 }
 
-void ImgQSortTestDetectNoise::testParseTestImages(const QString& testcase_name, DetectionType mode)
+void ImgQSortTestDetectNoise::testParseTestImages(const QString& testcase_name, DetectionType mode, bool expectedFail)
 {
     QStringList imageNames;
     QList<PairImageQuality> dataTest = dataTestCases.values(testcase_name);
@@ -61,6 +61,10 @@ void ImgQSortTestDetectNoise::testParseTestImages(const QString& testcase_name, 
 
     for (const auto& image_refQuality : dataTest)
     {
+        if (expectedFail)
+        {
+            QEXPECT_FAIL("", "Will fix in the next release", Continue);
+        }
         QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
     }
 }
@@ -100,7 +104,5 @@ void ImgQSortTestDetectNoise::testParseTestImagesForVariousTypeNoise()
 
 void ImgQSortTestDetectNoise::testParseTestImagesForVariousTypeNoiseFailCase()
 {
-    QEXPECT_FAIL("", "Will fix in the next release", Continue);
-
-    testParseTestImages(QLatin1String("variousTypesNoiseFailCase"), DETECTNOISE);
+    testParseTestImages(QLatin1String("variousTypesNoiseFailCase"), DETECTNOISE, true);
 }
