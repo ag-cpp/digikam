@@ -89,32 +89,35 @@ int main(int argc, char** argv)
     app.setApplicationName(QString::fromLatin1("digikam"));
     std::shared_ptr<QCommandLineParser> parser = parseOptions(app);
 
-    Digikam::DimensionReducer reducer;
     std::pair<cv::Mat, cv::Mat> data = loadData(parser->value(QLatin1String("in")));
 
     cv::Mat samples = data.first;
-    cv::Mat projectedData;
+    
+    QElapsedTimer timer;
+    timer.start();
+    
+    cv::Mat projectedData = Digikam::DimensionReducer::reduceDimension(samples, 2, 4);
+
+    qDebug() << "Parse through" << samples.rows << "in" << timer.elapsed();
+    /*
+    Digikam::DimensionReducer reducer(1000, 2, 4);
 
     int i = 0;
-    do
+    while (i < samples.rows)
     {
         QElapsedTimer timer;
         timer.start();
 
         cv::Mat window;
-        samples(cv::Range(i, std::min(i+1000, samples.rows)), cv::Range(0, samples.cols)).copyTo(window);
-        cv::Mat projectedWindow = reducer.project(window, 2);
+        samples(cv::Range(i, std::min(i+100, samples.rows)), cv::Range(0, samples.cols)).copyTo(window);
+        cv::Mat projectedWindow = reducer.project(window);
 
-
-        cv::Mat newProjected;
-        projectedWindow(cv::Range(projectedWindow.rows-100, projectedWindow.rows), cv::Range(0, projectedWindow.cols)).copyTo(newProjected);
-
-        projectedData.push_back(newProjected);
+        projectedData.push_back(projectedWindow);
         
         qDebug() << "Parse through" << window.rows << "in" << timer.elapsed();
         i += 100;
     }
-    while (i < samples.rows);
+    */
     
     save(std::make_pair(projectedData, data.second),parser->value(QLatin1String("out")));
 }

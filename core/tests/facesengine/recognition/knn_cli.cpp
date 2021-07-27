@@ -28,6 +28,7 @@
 #include <QString>
 #include <QFile>
 #include <QDebug>
+#include <QElapsedTimer>
 
 #include "digikam_opencv.h"
 #include "kd_tree.h"
@@ -143,6 +144,9 @@ double testClassification(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::Train
     data->setTrainTestSplitRatio(0.2);
     std::shared_ptr<Digikam::KDTree> knn = std::shared_ptr<Digikam::KDTree>(trainKNN(data->getTrainSamples(), data->getTrainResponses()));
 
+    QElapsedTimer timer;
+    timer.start();
+    
     double falseNegative = 0, falsePositive = 0;
     for (int i = 0; i < data->getTestSamples().rows; ++i) 
     {   
@@ -164,6 +168,7 @@ double testClassification(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::Train
     }
 
     qDebug() << falseNegative << "false negative," << falsePositive << "false positive"; 
+    qDebug() << "Timer per face" << timer.elapsed() / (data->getTestSamples().rows + leftout->getSamples().rows);
 
     return (falseNegative + falsePositive) / (data->getTestSamples().rows + leftout->getSamples().rows);
 }

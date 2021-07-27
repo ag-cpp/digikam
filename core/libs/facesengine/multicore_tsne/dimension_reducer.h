@@ -32,9 +32,19 @@ namespace Digikam
 class DIGIKAM_EXPORT DimensionReducer 
 {
 public:
+    explicit DimensionReducer(int bufferCapacity, int targetNbDimension, int nbCore);
+    ~DimensionReducer();
 
-    cv::Mat project(cv::Mat data, int nbDimension);
+    cv::Mat project(cv::Mat data);
+
+public:
+
+    static cv::Mat reduceDimension(cv::Mat data, int outputDimension, int nbCore);
     
+private:
+
+    class Private;
+    Private* d;
 };
 
 } // namespace Digikam
