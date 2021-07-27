@@ -50,7 +50,7 @@ private:
     float percent_underexposed();
     float percent_overexposed();
 
-    int count_by_condition(int minVal = 0, int maxVal = 255);
+    int count_by_condition(int minVal, int maxVal);
     
 private:
 

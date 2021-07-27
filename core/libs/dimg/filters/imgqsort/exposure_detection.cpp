@@ -142,15 +142,7 @@ int ExposureDetector::count_by_condition(int minVal, int maxVal)
 {
     cv::Mat mat;
 
-    if (minVal == 0)
-    {
-        cv::threshold(d->image,mat,maxVal, 1, cv::THRESH_BINARY_INV );
-    }
-    else
-    {
-        cv::threshold(d->image,mat,minVal, 0, cv::THRESH_TOZERO );
-        cv::threshold(mat     ,mat,maxVal, 0, cv::THRESH_TOZERO_INV );
-    }
+    mat = (d->image >= minVal) & (d->image <= maxVal);
 
     return cv::countNonZero(mat);
 }
