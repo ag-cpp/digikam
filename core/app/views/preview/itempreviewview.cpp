@@ -186,7 +186,6 @@ ItemPreviewView::ItemPreviewView(QWidget* const parent, Mode mode, Album* const 
 
     d->toolBar->addAction(d->peopleToggleAction);
     d->toolBar->addAction(d->addPersonAction);
-    d->toolBar->addAction(d->addAFPointAction);
     d->toolBar->addAction(d->fullscreenAction);
 
     connect(d->prevAction, SIGNAL(triggered()),
