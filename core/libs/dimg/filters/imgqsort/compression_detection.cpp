@@ -137,10 +137,7 @@ cv::Mat CompressionDetector::checkVertical(const cv::Mat& gray_image) const
         
         cv::Mat b = (gray_image.col(i) - gray_image.col(i + 1)) - (gray_image.col(i + 1) - gray_image.col(i - 2));
 
-        cv::threshold(a, a, d->threshold_edges_block, 1, cv::THRESH_BINARY);
-        cv::threshold(b, b, d->threshold_edges_block, 1, cv::THRESH_BINARY);
-
-        res.col(i) = a & b;
+        res.col(i) = (a >= d->threshold_edges_block) & (b >= d->threshold_edges_block);
     }
 
     return res;
@@ -159,7 +156,7 @@ cv::Mat CompressionDetector::checkHorizontal(const cv::Mat& gray_image) const
         cv::threshold(a, a, d->threshold_edges_block, 1, cv::THRESH_BINARY);
         cv::threshold(b, b, d->threshold_edges_block, 1, cv::THRESH_BINARY);
 
-        res.row(i) = a & b;
+        res.row(i) = (a >= d->threshold_edges_block) & (b >= d->threshold_edges_block);
     }
 
     return res;
