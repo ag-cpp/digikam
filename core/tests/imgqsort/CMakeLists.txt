@@ -34,7 +34,7 @@ macro(IMGQSORT_BUILD_STANDALONE)
 
 endmacro()
 
-IMGQSORT_BUILD_STANDALONE(detectblur.cpp)
+IMGQSORT_BUILD_STANDALONE(detectblur_cli.cpp)
 IMGQSORT_BUILD_STANDALONE(detectcompression.cpp)
 IMGQSORT_BUILD_STANDALONE(detectnoise_cli.cpp)
 IMGQSORT_BUILD_STANDALONE(detectexposure.cpp)
@@ -70,3 +70,4 @@ endmacro()
 
 #IMGQSORT_BUILD_UNITTEST(imgqsorttest.cpp)
 IMGQSORT_BUILD_UNITTEST(detectnoise_utest.cpp)
+IMGQSORT_BUILD_UNITTEST(detectblur_utest.cpp)
