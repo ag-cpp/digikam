@@ -4,8 +4,4 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if (NOT MINGW AND NOT APPLE)
-
-    add_subdirectory(${ENABLE_QTVERSION})
-
-endif()
+add_subdirectory(5.14)

@@ -42,10 +42,6 @@ class DIGIKAM_EXPORT ItemMarkerTiler : public AbstractMarkerTiler
 {
     Q_OBJECT
 
-private:
-
-    class MyTile;
-
 public:
 
     explicit ItemMarkerTiler(GeoModelHelper* const modelHelper, QObject* const parent = nullptr);
@@ -53,6 +49,7 @@ public:
 
     TilerFlags tilerFlags()                                                                         const override;
     Tile* tileNew()                                                                                       override;
+    void tileDeleteInternal(Tile* const tile)                                                             override;
     void prepareTiles(const GeoCoordinates& upperLeft, const GeoCoordinates& lowerRight, int level)       override;
     void regenerateTiles()                                                                                override;
     Tile* getTile(const TileIndex& tileIndex, const bool stopIfEmpty)                                     override;
@@ -92,6 +89,8 @@ private:
     QList<QPersistentModelIndex> getTileMarkerIndices(const TileIndex& tileIndex);
 
 private:
+
+    class MyTile;
 
     class Private;
     Private* const d;

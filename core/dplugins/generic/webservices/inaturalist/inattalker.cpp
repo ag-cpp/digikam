@@ -1110,12 +1110,12 @@ void INatTalker::computerVision(const QUrl& localImage)
         WIDTH  = 299
     };
 
-    QString path = localImage.toLocalFile();
+    QString path = localImage.path();
 
     if (d->cachedImageScores.contains(path))
     {
         qCDebug(DIGIKAM_WEBSERVICES_LOG) << "Vision identification for"
-                                         << localImage.toLocalFile()
+                                         << localImage.path()
                                          << "found in cache.";
         emit signalComputerVisionResults(d->cachedImageScores.value(path));
 
@@ -1167,12 +1167,12 @@ void INatTalker::computerVision(const QUrl& localImage)
 
     QNetworkReply* const reply = d->netMngr->post(netRequest, multiPart);
     multiPart->setParent(reply);
-    d->pendingRequests.insert(reply, new ComputerVisionRequest(localImage.toLocalFile(), path));
+    d->pendingRequests.insert(reply, new ComputerVisionRequest(localImage.path(), path));
 }
 
 QString INatTalker::tmpFileName(const QString& path)
 {
-    QString suffix;
+    QString suffix(QLatin1String(""));
 
     for ( ; ; )
     {
@@ -1289,7 +1289,7 @@ void INatTalker::uploadNextPhoto(const PhotoUploadRequest& request)
     parameters << Parameter(QLatin1String("observation_photo[observation_id]"),
                             QString::number(request.m_observationId));
     QString tmpImage;
-    QString path = request.m_images.front().toLocalFile();
+    QString path = request.m_images.front().path();
 
     if (request.m_rescale)
     {

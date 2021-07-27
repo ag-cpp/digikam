@@ -75,23 +75,40 @@ public:
 
         explicit Tile();
 
-        virtual ~Tile();
+        /**
+         * NOTE: Tile is only deleted by AbstractMarkerTiler::tileDelete.
+         * All subclasses of AbstractMarkerTiler have to reimplement tileDelete
+         * to delete their Tile subclasses.
+         * This was done in order not to have any virtual functions
+         * in Tile and its subclasses in order to save memory, since there
+         * can be a lot of tiles in a MarkerTiler.
+         */
+        ~Tile();
 
         Tile* getChild(const int linearIndex);
 
-        Tile* addChild(const int linearIndex, Tile* tilePointer);
+        void addChild(const int linearIndex, Tile* const tilePointer);
 
         /**
-         * @brief Sets the pointer to a child tile to zero and deletes the child.
+         * @brief Sets the pointer to a child tile to zero, but you have to delete the tile by yourself!
          */
-        void deleteChild(Tile* const childTile, const int knownLinearIndex = -1);
+        void clearChild(const int linearIndex);
+
+        int indexOfChildTile(Tile* const tile);
 
         bool childrenEmpty() const;
 
-
-    private:
+        /**
+         * @brief Take away the list of children, only to be used for deleting them.
+         *
+         * @todo Make this function protected.
+         *
+         */
+        QVector<Tile*> takeChildren();
 
         static int maxChildCount();
+
+    private:
 
         void prepareForChildren();
 
@@ -137,9 +154,14 @@ public:
     explicit AbstractMarkerTiler(QObject* const parent = nullptr);
     ~AbstractMarkerTiler() override;
 
+    void tileDeleteChildren(Tile* const tile);
+    void tileDelete(Tile* const tile);
+    void tileDeleteChild(Tile* const parentTile, Tile* const childTile, const int knownLinearIndex = -1);
+
     /// these have to be implemented
     virtual TilerFlags tilerFlags() const;
-    virtual Tile* tileNew()                                                                                 = 0;
+    virtual Tile* tileNew();
+    virtual void tileDeleteInternal(Tile* const tile);
     virtual void prepareTiles(const GeoCoordinates& upperLeft, const GeoCoordinates& lowerRight, int level) = 0;
     virtual void regenerateTiles()                                                                          = 0;
     virtual Tile* getTile(const TileIndex& tileIndex, const bool stopIfEmpty)                               = 0;
@@ -164,12 +186,19 @@ public:
     bool indicesEqual(const QIntList& a, const QIntList& b, const int upToLevel) const;
     bool isDirty() const;
     void setDirty(const bool state = true);
-    void resetRootTile();
+    Tile* resetRootTile();
 
 Q_SIGNALS:
 
     void signalTilesOrSelectionChanged();
     void signalThumbnailAvailableForIndex(const QVariant& index, const QPixmap& pixmap);
+
+protected:
+
+    /**
+     * @brief Only used to safely delete all tiles in the desctructor
+     */
+    void clear();
 
 private:
 

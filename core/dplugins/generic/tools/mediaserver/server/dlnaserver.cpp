@@ -23,7 +23,7 @@
 
 #include "dlnaserver.h"
 
-namespace DigikamGenericMediaServerPlugin
+namespace Digikam
 {
 
 DLNAMediaServer::DLNAMediaServer(const char*  friendly_name,
@@ -110,4 +110,4 @@ QByteArray DLNAMediaServer::iconData(const QImage& img, int size, QString& uri, 
     return ba;
 }
 
-} // namespace DigikamGenericMediaServerPlugin
+} // namespace Digikam

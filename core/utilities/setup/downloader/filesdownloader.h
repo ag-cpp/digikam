@@ -95,7 +95,6 @@ private:
     void printDownloadInfo(const QUrl& url);
     bool downloadExists(const DownloadInfo& info) const;
 
-    QString getFacesEnginePath()                  const;
 
 private Q_SLOTS:
 

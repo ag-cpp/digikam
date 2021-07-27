@@ -125,7 +125,7 @@ CaptionsMap DMetadata::getItemComments(const DMetadataSettingsContainer& setting
                     {
                         if (xmpSupported)
                         {
-                            commentString = getXmpTagString(nameSpace, false);
+                            commentString = getXmpTagString("Xmp.acdsee.notes", false);
                         }
 
                         break;
@@ -217,6 +217,17 @@ bool DMetadata::setItemComments(const CaptionsMap& comments, const DMetadataSett
             return false;
         }
 
+        QString defaultAuthor  = comments.value(QLatin1String("x-default")).author;
+        removeXmpTag("Xmp.acdsee.author");
+
+        if (!defaultAuthor.isNull())
+        {
+            if (!setXmpTagString("Xmp.acdsee.author", defaultAuthor))
+            {
+                return false;
+            }
+        }
+
         if (!setXmpTagStringListLangAlt("Xmp.digiKam.CaptionsDateTimeStamps", comments.datesList()))
         {
             return false;
@@ -250,12 +261,15 @@ bool DMetadata::setItemComments(const CaptionsMap& comments, const DMetadataSett
                     continue;
                 }
 
+                if (entry.namespaceName.contains(QLatin1String("Xmp.")))
+                {
+                    removeXmpTag(nameSpace);
+                }
+
                 switch (entry.specialOpts)
                 {
                     case NamespaceEntry::COMMENT_ALTLANG:
                     {
-                        removeXmpTag(nameSpace);
-
                         if (!defaultComment.isNull())
                         {
                             if (!setXmpTagStringLangAlt(nameSpace, defaultComment, QString()))
@@ -270,8 +284,6 @@ bool DMetadata::setItemComments(const CaptionsMap& comments, const DMetadataSett
 
                     case NamespaceEntry::COMMENT_ATLLANGLIST:
                     {
-                        // NOTE : setXmpTagStringListLangAlt remove xmp tag before to add new values
-
                         if (!setXmpTagStringListLangAlt(nameSpace, comments.toAltLangMap()))
                         {
                             return false;
@@ -282,27 +294,11 @@ bool DMetadata::setItemComments(const CaptionsMap& comments, const DMetadataSett
 
                     case NamespaceEntry::COMMENT_XMP:
                     {
-                        removeXmpTag(nameSpace);
-
                         if (!defaultComment.isNull())
                         {
                             if (!setXmpTagString(nameSpace, defaultComment))
                             {
                                 return false;
-                            }
-                        }
-
-                        if (entry.namespaceName == QLatin1String("Xmp.acdsee.notes"))
-                        {
-                            QString defaultAuthor = comments.value(QLatin1String("x-default")).author;
-                            removeXmpTag("Xmp.acdsee.author");
-
-                            if (!defaultAuthor.isNull())
-                            {
-                                if (!setXmpTagString("Xmp.acdsee.author", defaultAuthor))
-                                {
-                                    return false;
-                                }
                             }
                         }
 
@@ -367,7 +363,7 @@ bool DMetadata::setItemComments(const CaptionsMap& comments, const DMetadataSett
     return true;
 }
 
-CaptionsMap DMetadata::getItemTitles(const DMetadataSettingsContainer& settings) const
+CaptionsMap DMetadata::getItemTitles() const
 {
     if (getFilePath().isEmpty())
     {
@@ -391,81 +387,37 @@ CaptionsMap DMetadata::getItemTitles(const DMetadataSettingsContainer& settings)
 
     // In first, we check XMP alternative language tags to create map of values.
 
-    bool xmpSupported  = hasXmp();
-    bool iptcSupported = hasIptc();
-
-    foreach (const NamespaceEntry& entry, settings.getReadMapping(NamespaceEntry::DM_TITLE_CONTAINER()))
+    if (hasXmp())
     {
-        if (entry.isDisabled)
+        titlesMap = getXmpTagStringListLangAlt("Xmp.dc.title", false);
+
+        if (!titlesMap.isEmpty())
         {
-            continue;
-        }
-
-        QString titleString;
-        const std::string myStr = entry.namespaceName.toStdString();
-        const char* nameSpace   = myStr.data();
-
-        switch (entry.subspace)
-        {
-            case NamespaceEntry::XMP:
-            {
-                switch (entry.specialOpts)
-                {
-                    case NamespaceEntry::COMMENT_ATLLANGLIST:
-                    {
-                        if (xmpSupported)
-                        {
-                            titlesMap = getXmpTagStringListLangAlt(nameSpace, false);
-                        }
-
-                        break;
-                    }
-
-                    case NamespaceEntry::COMMENT_XMP:
-                    {
-                        if (xmpSupported)
-                        {
-                            titleString = getXmpTagString(nameSpace, false);
-                        }
-
-                        break;
-                    }
-
-                    default:
-                    {
-                        break;
-                    }
-                }
-
-                break;
-            }
-
-            case NamespaceEntry::IPTC:
-            {
-                if (iptcSupported)
-                {
-                    titleString = getIptcTagString(nameSpace, false);
-                }
-
-                break;
-            }
-
-            default:
-            {
-                break;
-            }
-        }
-
-        if (!titleString.isEmpty() && !titleString.trimmed().isEmpty())
-        {
-            titlesMap.insert(QLatin1String("x-default"), titleString);
             captionsMap.setData(titlesMap, authorsMap, commonAuthor, datesMap);
 
             return captionsMap;
         }
 
-        if (!titlesMap.isEmpty())
+        QString xmpTitle = getXmpTagString("Xmp.acdsee.caption", false);
+
+        if (!xmpTitle.isEmpty() && !xmpTitle.trimmed().isEmpty())
         {
+            titlesMap.insert(QLatin1String("x-default"), xmpTitle);
+            captionsMap.setData(titlesMap, authorsMap, commonAuthor, datesMap);
+
+            return captionsMap;
+        }
+    }
+
+    // We trying to get IPTC title
+
+    if (hasIptc())
+    {
+        QString iptcTitle = getIptcTagString("Iptc.Application2.ObjectName", false);
+
+        if (!iptcTitle.isEmpty() && !iptcTitle.trimmed().isEmpty())
+        {
+            titlesMap.insert(QLatin1String("x-default"), iptcTitle);
             captionsMap.setData(titlesMap, authorsMap, commonAuthor, datesMap);
 
             return captionsMap;
@@ -475,114 +427,62 @@ CaptionsMap DMetadata::getItemTitles(const DMetadataSettingsContainer& settings)
     return captionsMap;
 }
 
-bool DMetadata::setItemTitles(const CaptionsMap& titles, const DMetadataSettingsContainer& settings) const
+bool DMetadata::setItemTitles(const CaptionsMap& titles) const
 {
     //qCDebug(DIGIKAM_METAENGINE_LOG) << getFilePath() << " ==> Title: " << titles;
 
-    QString defaultTitle          = titles[QLatin1String("x-default")].caption;
-    QList<NamespaceEntry> toWrite = settings.getReadMapping(NamespaceEntry::DM_TITLE_CONTAINER());
+    QString defaultTitle = titles[QLatin1String("x-default")].caption;
 
-    if (!settings.unifyReadWrite())
-    {
-        toWrite = settings.getWriteMapping(NamespaceEntry::DM_TITLE_CONTAINER());
-    }
+    // In First we write comments into XMP. Language Alternative rule is not yet used.
 
-    for (const NamespaceEntry& entry : qAsConst(toWrite))
+    if (supportXmp())
     {
-        if (entry.isDisabled)
+        // NOTE : setXmpTagStringListLangAlt remove xmp tag before to add new values
+
+        if (!setXmpTagStringListLangAlt("Xmp.dc.title", titles.toAltLangMap()))
         {
-            continue;
+            return false;
         }
 
-        const std::string myStr = entry.namespaceName.toStdString();
-        const char* nameSpace   = myStr.data();
+        removeXmpTag("Xmp.acdsee.caption");
 
-        switch (entry.subspace)
+        if (!defaultTitle.isEmpty())
         {
-            case NamespaceEntry::XMP:
+            if (!setXmpTagString("Xmp.acdsee.caption", defaultTitle))
             {
-                if (!supportXmp())
-                {
-                    continue;
-                }
+                return false;
+            }
+        }
+    }
 
-                switch (entry.specialOpts)
-                {
-                    case NamespaceEntry::COMMENT_ATLLANGLIST:
-                    {
-                        // NOTE : setXmpTagStringListLangAlt remove xmp tag before to add new values
+    // In Second we write comments into IPTC.
+    // Note that Caption IPTC tag is limited to 64 char and ASCII charset.
 
-                        if (!setXmpTagStringListLangAlt(nameSpace, titles.toAltLangMap()))
-                        {
-                            return false;
-                        }
+    removeIptcTag("Iptc.Application2.ObjectName");
 
-                        break;
-                    }
+    if (!defaultTitle.isNull())
+    {
+        defaultTitle.truncate(64);
 
-                    case NamespaceEntry::COMMENT_XMP:
-                    {
-                        removeXmpTag(nameSpace);
+        // See if we have any non printable chars in there. If so, skip IPTC
+        // to avoid confusing other apps and web services with invalid tags.
 
-                        if (!defaultTitle.isNull())
-                        {
-                            if (!setXmpTagString(nameSpace, defaultTitle))
-                            {
-                                return false;
-                            }
-                        }
+        bool hasInvalidChar = false;
 
-                        break;
-                    }
-
-                    default:
-                    {
-                        break;
-                    }
-                }
-
+        for (QString::const_iterator c = defaultTitle.constBegin() ; c != defaultTitle.constEnd() ; ++c)
+        {
+            if (!(*c).isPrint())
+            {
+                hasInvalidChar = true;
                 break;
             }
+        }
 
-            case NamespaceEntry::IPTC:
+        if (!hasInvalidChar)
+        {
+            if (!setIptcTagString("Iptc.Application2.ObjectName", defaultTitle))
             {
-                removeIptcTag(nameSpace);
-
-                if (!defaultTitle.isNull())
-                {
-                    // Note that Caption IPTC tag is limited to 64 char and ASCII charset.
-
-                    defaultTitle.truncate(64);
-
-                    // See if we have any non printable chars in there. If so, skip IPTC
-                    // to avoid confusing other apps and web services with invalid tags.
-
-                    bool hasInvalidChar = false;
-
-                    for (QString::const_iterator c = defaultTitle.constBegin() ; c != defaultTitle.constEnd() ; ++c)
-                    {
-                        if (!(*c).isPrint())
-                        {
-                            hasInvalidChar = true;
-                            break;
-                        }
-                    }
-
-                    if (!hasInvalidChar)
-                    {
-                        if (!setIptcTagString(nameSpace, defaultTitle))
-                        {
-                            return false;
-                        }
-                    }
-                }
-
-                break;
-            }
-
-            default:
-            {
-                break;
+                return false;
             }
         }
     }

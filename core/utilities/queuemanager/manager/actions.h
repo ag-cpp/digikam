@@ -53,8 +53,7 @@ public:
 public:
 
     explicit ActionData()
-        : status (None),
-          noWrite(false)
+        : status(None)
     {
     }
 
@@ -64,8 +63,6 @@ public:
 
     QUrl         fileUrl;
     QUrl         destUrl;
-
-    bool         noWrite;
 };
 
 } // namespace Digikam

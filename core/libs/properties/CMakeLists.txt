@@ -61,7 +61,6 @@ set(libitempropertiesdigikam_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/import/importitempropertiestab.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/captions/itemdescedittab.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/captions/disjointmetadata.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/captions/disjointmetadata_p.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/captions/captionedit.cpp
 )
 

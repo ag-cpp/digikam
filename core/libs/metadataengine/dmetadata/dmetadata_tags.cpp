@@ -99,8 +99,7 @@ bool DMetadata::getItemTagsPath(QStringList& tagsPath,
                     {
                         if (entry.separator != QLatin1String("/"))
                         {
-                            tagsPath.replaceInStrings(QLatin1String("/"), QLatin1String("\\"));
-                            tagsPath.replaceInStrings(entry.separator, QLatin1String("/"));
+                            tagsPath = tagsPath.replaceInStrings(entry.separator, QLatin1String("/"));
                         }
 
                         return true;
@@ -136,8 +135,6 @@ bool DMetadata::getItemTagsPath(QStringList& tagsPath,
                     // Work around to Imach tags path list hosted in IPTC with '.' as separator.
 
                     QStringList ntp = tagsPath.replaceInStrings(entry.separator, QLatin1String("/"));
-
-                    // FIXME: The QStringList are always identical -> ntp == tagsPath.
 
                     if (ntp != tagsPath)
                     {
@@ -225,9 +222,9 @@ bool DMetadata::setItemTagsPath(const QStringList& tagsPath, const DMetadataSett
                 {
                     newList = tagsPath;
 
-                    if (entry.separator != QLatin1String("/"))
+                    if (entry.separator.compare(QLatin1String("/")) != 0)
                     {
-                        newList.replaceInStrings(QLatin1String("/"), entry.separator);
+                        newList = newList.replaceInStrings(QLatin1String("/"), entry.separator);
                     }
                 }
 

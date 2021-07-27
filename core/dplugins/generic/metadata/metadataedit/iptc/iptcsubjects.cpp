@@ -108,23 +108,29 @@ IPTCSubjects::~IPTCSubjects()
 {
 }
 
-void IPTCSubjects::readMetadata(DMetadata& meta)
+void IPTCSubjects::readMetadata(QByteArray& iptcData)
 {
-    setSubjectsList(meta.getIptcSubjects());
+    QScopedPointer<DMetadata> meta(new DMetadata);
+    meta->setIptc(iptcData);
+    setSubjectsList(meta->getIptcSubjects());
 }
 
-void IPTCSubjects::applyMetadata(DMetadata& meta)
+void IPTCSubjects::applyMetadata(QByteArray& iptcData)
 {
+    QScopedPointer<DMetadata> meta(new DMetadata);
+    meta->setIptc(iptcData);
     QStringList newSubjects = subjectsList();
 
     if (m_subjectsCheck->isChecked())
     {
-        meta.setIptcSubjects(meta.getIptcSubjects(), newSubjects);
+        meta->setIptcSubjects(meta->getIptcSubjects(), newSubjects);
     }
     else
     {
-        meta.setIptcSubjects(meta.getIptcSubjects(), QStringList());
+        meta->setIptcSubjects(meta->getIptcSubjects(), QStringList());
     }
+
+    iptcData = meta->getIptc();
 }
 
 void IPTCSubjects::slotLineEditModified()

@@ -80,11 +80,10 @@ public:
     enum NamespaceType
     {
         TAGS       = 0,
-        TITLE      = 1,
-        RATING     = 2,
-        COMMENT    = 3,
-     // PICKLABEL  = 4,
-        COLORLABEL = 5
+        RATING     = 1,
+        COMMENT    = 2,
+     // PICKLABEL  = 3,
+        COLORLABEL = 4
     };
 
 public:
@@ -124,7 +123,6 @@ public:
 public:
 
     static QString DM_TAG_CONTAINER();
-    static QString DM_TITLE_CONTAINER();
     static QString DM_RATING_CONTAINER();
     static QString DM_COMMENT_CONTAINER();
     static QString DM_COLORLABEL_CONTAINER();
@@ -194,7 +192,6 @@ public:
 private:
 
     void defaultTagValues();
-    void defaultTitleValues();
     void defaultRatingValues();
     void defaultCommentValues();
     void defaultColorLabelValues();

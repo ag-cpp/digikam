@@ -69,8 +69,7 @@ private:
     void removeTempFiles(const QList<QUrl>& tmpList);
     void emitActionData(ActionData::ActionStatus st,
                         const QString& mess = QString(),
-                        const QUrl& dest = QUrl(),
-                        bool noWrite = false);
+                        const QUrl& dest = QUrl());
 
 private:
 

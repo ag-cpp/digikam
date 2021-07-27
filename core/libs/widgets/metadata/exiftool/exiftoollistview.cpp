@@ -92,7 +92,6 @@ ExifToolListView::~ExifToolListView()
 void ExifToolListView::loadFromUrl(const QUrl& url)
 {
     clear();
-    d->map.clear();
 
     if (!url.isValid())
     {

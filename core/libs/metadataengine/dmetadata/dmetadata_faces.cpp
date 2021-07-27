@@ -60,8 +60,6 @@ bool DMetadata::getItemFacesMap(QMultiMap<QString, QVariant>& faces) const
         QString person     = getXmpTagString(personPathTemplate.arg(i).toLatin1().constData(), false);
         QString rectString = getXmpTagString(rectPathTemplate.arg(i).toLatin1().constData(), false);
 
-        person.replace(QLatin1Char('/'), QLatin1Char('\\'));
-
         if (rectString.isEmpty() && person.isEmpty())
         {
             break;
@@ -110,8 +108,6 @@ bool DMetadata::getItemFacesMap(QMultiMap<QString, QVariant>& faces) const
     for (int i = 1 ; ; ++i)
     {
         QString person = getXmpTagString(mwg_personPathTemplate.arg(i).toLatin1().constData(), false);
-
-        person.replace(QLatin1Char('/'), QLatin1Char('\\'));
 
         // x and y is the center point
 

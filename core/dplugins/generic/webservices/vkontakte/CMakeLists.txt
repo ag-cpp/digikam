@@ -69,11 +69,6 @@ set(libvkontakte_SRCS
 # For unit-tests and plugin
 add_library(vkontaktebackend STATIC ${libvkontakte_SRCS})
 
-target_link_libraries(vkontaktebackend
-                      PRIVATE
-                      digikamcore
-)
-
 # --------------------------------------------------------------------------------
 
 set(vkontakteplugin_SRCS

@@ -38,7 +38,7 @@
 
 NPT_SET_LOCAL_LOGGER("digiKam.media.server.delegate")
 
-namespace DigikamGenericMediaServerPlugin
+namespace Digikam
 {
 
 class Q_DECL_HIDDEN DLNAMediaServerDelegate::Private
@@ -830,4 +830,4 @@ bool DLNAMediaServerDelegate::ProcessFile(const NPT_String&, const char*)
     return true;
 }
 
-} // namespace DigikamGenericMediaServerPlugin
+} // namespace Digikam

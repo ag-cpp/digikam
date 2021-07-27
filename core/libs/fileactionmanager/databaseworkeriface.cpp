@@ -74,11 +74,11 @@ void FileActionMngrDatabaseWorker::changeTags(const FileActionItemInfoList& info
             {
                 if (addOrRemove)
                 {
-                    hub.setTag(*tagIt, DisjointMetadataDataFields::MetadataAvailable);
+                    hub.setTag(*tagIt, DisjointMetadata::MetadataAvailable);
                 }
                 else
                 {
-                    hub.setTag(*tagIt, DisjointMetadataDataFields::MetadataInvalid);
+                    hub.setTag(*tagIt, DisjointMetadata::MetadataInvalid);
                 }
             }
 
@@ -332,8 +332,7 @@ void FileActionMngrDatabaseWorker::setExifOrientation(const FileActionItemInfoLi
     infos.dbFinished();
 }
 
-void FileActionMngrDatabaseWorker::applyMetadata(const FileActionItemInfoList& infos,
-                                                 DisjointMetadata* hub)
+void FileActionMngrDatabaseWorker::applyMetadata(const FileActionItemInfoList& infos, DisjointMetadata *hub)
 {
     {
         CoreDbOperationGroup group;

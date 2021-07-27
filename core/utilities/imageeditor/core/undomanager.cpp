@@ -74,7 +74,6 @@ UndoManager::UndoManager(EditorCore* const core)
 UndoManager::~UndoManager()
 {
     clear(true);
-
     delete d->undoCache;
     delete d;
 }
@@ -112,10 +111,7 @@ void UndoManager::addAction(UndoAction* const action)
         QVariant      originDataBeforeStep    = d->core->getImg()->fileOriginData();
         DImageHistory originHistoryBeforeStep = d->core->getResolvedInitialHistory();
 
-        if (action)
-        {
-            action->setFileOriginData(originDataBeforeStep, originHistoryBeforeStep);
-        }
+        action->setFileOriginData(originDataBeforeStep, originHistoryBeforeStep);
     }
 
     // if origin is at one of the redo action that are now invalid,
@@ -588,7 +584,7 @@ bool UndoManager::hasChanges() const
         }
         else
         {
-            return (currentHistory.actionCount() > initialHistory.actionCount());
+            return currentHistory.actionCount() > initialHistory.actionCount();
         }
     }
 }
@@ -602,10 +598,10 @@ DImageHistory UndoManager::getImageHistoryOfFullRedo() const
 {
     if (!d->redoActions.isEmpty())
     {
-        return (d->redoActions.first()->getMetadata().history);
+        return d->redoActions.first()->getMetadata().history;
     }
 
-    return (d->core->getItemHistory());
+    return d->core->getItemHistory();
 }
 
 } // namespace Digikam

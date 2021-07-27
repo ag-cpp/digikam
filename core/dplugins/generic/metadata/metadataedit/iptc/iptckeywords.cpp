@@ -38,6 +38,12 @@
 
 #include <klocalizedstring.h>
 
+// local includes
+
+#include "dmetadata.h"
+
+using namespace Digikam;
+
 namespace DigikamGenericMetadataEditPlugin
 {
 
@@ -252,11 +258,12 @@ void IPTCKeywords::slotLineEditModified()
                        ledit);
 }
 
-void IPTCKeywords::readMetadata(DMetadata& meta)
+void IPTCKeywords::readMetadata(QByteArray& iptcData)
 {
     blockSignals(true);
-
-    d->oldKeywords = meta.getIptcKeywords();
+    QScopedPointer<DMetadata> meta(new DMetadata);
+    meta->setIptc(iptcData);
+    d->oldKeywords = meta->getIptcKeywords();
 
     d->keywordsBox->clear();
     d->keywordsCheck->setChecked(false);
@@ -275,8 +282,10 @@ void IPTCKeywords::readMetadata(DMetadata& meta)
     blockSignals(false);
 }
 
-void IPTCKeywords::applyMetadata(DMetadata& meta)
+void IPTCKeywords::applyMetadata(QByteArray& iptcData)
 {
+    QScopedPointer<DMetadata> meta(new DMetadata);
+    meta->setIptc(iptcData);
     QStringList newKeywords;
 
     for (int i = 0 ; i < d->keywordsBox->count(); ++i)
@@ -286,9 +295,11 @@ void IPTCKeywords::applyMetadata(DMetadata& meta)
     }
 
     if (d->keywordsCheck->isChecked())
-        meta.setIptcKeywords(d->oldKeywords, newKeywords);
+        meta->setIptcKeywords(d->oldKeywords, newKeywords);
     else
-        meta.setIptcKeywords(d->oldKeywords, QStringList());
+        meta->setIptcKeywords(d->oldKeywords, QStringList());
+
+    iptcData = meta->getIptc();
 }
 
 } // namespace DigikamGenericMetadataEditPlugin

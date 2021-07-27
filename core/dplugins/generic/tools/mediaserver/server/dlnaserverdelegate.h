@@ -51,9 +51,7 @@
 #include "PltMediaServer.h"
 #include "PltMediaCache.h"
 
-using namespace Digikam;
-
-namespace DigikamGenericMediaServerPlugin
+namespace Digikam
 {
 
 /**
@@ -146,6 +144,6 @@ private:
     Q_DISABLE_COPY(DLNAMediaServerDelegate)
 };
 
-} // namespace DigikamGenericMediaServerPlugin
+} // namespace Digikam
 
 #endif // DIGIKAM_DLNA_SERVER_DELEGATE_H

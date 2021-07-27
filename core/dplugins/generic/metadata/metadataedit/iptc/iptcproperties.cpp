@@ -46,7 +46,10 @@
 #include "metadatacheckbox.h"
 #include "timezonecombobox.h"
 #include "objectattributesedit.h"
+#include "dmetadata.h"
 #include "dexpanderbox.h"
+
+using namespace Digikam;
 
 namespace DigikamGenericMetadataEditPlugin
 {
@@ -456,9 +459,11 @@ void IPTCProperties::slotLineEditModified()
                        ledit);
 }
 
-void IPTCProperties::readMetadata(DMetadata& meta)
+void IPTCProperties::readMetadata(QByteArray& iptcData)
 {
     blockSignals(true);
+    QScopedPointer<DMetadata> meta(new DMetadata);
+    meta->setIptc(iptcData);
 
     QString     data;
     QStringList list;
@@ -466,8 +471,8 @@ void IPTCProperties::readMetadata(DMetadata& meta)
     QTime       time;
     QString     dateStr, timeStr;
 
-    dateStr = meta.getIptcTagString("Iptc.Application2.ReleaseDate", false);
-    timeStr = meta.getIptcTagString("Iptc.Application2.ReleaseTime", false);
+    dateStr = meta->getIptcTagString("Iptc.Application2.ReleaseDate", false);
+    timeStr = meta->getIptcTagString("Iptc.Application2.ReleaseTime", false);
 
     d->dateReleasedSel->setDate(QDate::currentDate());
     d->dateReleasedCheck->setChecked(false);
@@ -504,8 +509,8 @@ void IPTCProperties::readMetadata(DMetadata& meta)
     d->timeReleasedSel->setEnabled(d->timeReleasedCheck->isChecked());
     d->zoneReleasedSel->setEnabled(d->timeReleasedCheck->isChecked());
 
-    dateStr = meta.getIptcTagString("Iptc.Application2.ExpirationDate", false);
-    timeStr = meta.getIptcTagString("Iptc.Application2.ExpirationTime", false);
+    dateStr = meta->getIptcTagString("Iptc.Application2.ExpirationDate", false);
+    timeStr = meta->getIptcTagString("Iptc.Application2.ExpirationTime", false);
 
     d->dateExpiredSel->setDate(QDate::currentDate());
     d->dateExpiredCheck->setChecked(false);
@@ -543,7 +548,7 @@ void IPTCProperties::readMetadata(DMetadata& meta)
     d->zoneExpiredSel->setEnabled(d->timeExpiredCheck->isChecked());
 
     d->languageCheck->setChecked(false);
-    data = meta.getIptcTagString("Iptc.Application2.Language", false);
+    data = meta->getIptcTagString("Iptc.Application2.Language", false);
 
     if (!data.isNull())
     {
@@ -563,7 +568,7 @@ void IPTCProperties::readMetadata(DMetadata& meta)
 
     d->priorityCB->setCurrentIndex(0);
     d->priorityCheck->setChecked(false);
-    data = meta.getIptcTagString("Iptc.Application2.Urgency", false);
+    data = meta->getIptcTagString("Iptc.Application2.Urgency", false);
 
     if (!data.isNull())
     {
@@ -584,7 +589,7 @@ void IPTCProperties::readMetadata(DMetadata& meta)
 
     d->objectCycleCB->setCurrentIndex(0);
     d->objectCycleCheck->setChecked(false);
-    data = meta.getIptcTagString("Iptc.Application2.ObjectCycle", false);
+    data = meta->getIptcTagString("Iptc.Application2.ObjectCycle", false);
 
     if (!data.isNull())
     {
@@ -612,7 +617,7 @@ void IPTCProperties::readMetadata(DMetadata& meta)
     d->objectTypeCB->setCurrentIndex(0);
     d->objectTypeDescEdit->clear();
     d->objectTypeCheck->setChecked(false);
-    data = meta.getIptcTagString("Iptc.Application2.ObjectType", false);
+    data = meta->getIptcTagString("Iptc.Application2.ObjectType", false);
 
     if (!data.isNull())
     {
@@ -638,12 +643,12 @@ void IPTCProperties::readMetadata(DMetadata& meta)
     d->objectTypeCB->setEnabled(d->objectTypeCheck->isChecked());
     d->objectTypeDescEdit->setEnabled(d->objectTypeCheck->isChecked());
 
-    list = meta.getIptcTagsStringList("Iptc.Application2.ObjectAttribute", false);
+    list = meta->getIptcTagsStringList("Iptc.Application2.ObjectAttribute", false);
     d->objectAttribute->setValues(list);
 
     d->originalTransEdit->clear();
     d->originalTransCheck->setChecked(false);
-    data = meta.getIptcTagString("Iptc.Application2.TransmissionReference", false);
+    data = meta->getIptcTagString("Iptc.Application2.TransmissionReference", false);
 
     if (!data.isNull())
     {
@@ -656,66 +661,69 @@ void IPTCProperties::readMetadata(DMetadata& meta)
     blockSignals(false);
 }
 
-void IPTCProperties::applyMetadata(DMetadata& meta)
+void IPTCProperties::applyMetadata(QByteArray& iptcData)
 {
+    QScopedPointer<DMetadata> meta(new DMetadata);
+    meta->setIptc(iptcData);
+
     if (d->dateReleasedCheck->isChecked())
     {
-        meta.setIptcTagString("Iptc.Application2.ReleaseDate",
+        meta->setIptcTagString("Iptc.Application2.ReleaseDate",
                                     d->dateReleasedSel->date().toString(Qt::ISODate));
     }
     else
     {
-        meta.removeIptcTag("Iptc.Application2.ReleaseDate");
+        meta->removeIptcTag("Iptc.Application2.ReleaseDate");
     }
 
     if (d->dateExpiredCheck->isChecked())
     {
-        meta.setIptcTagString("Iptc.Application2.ExpirationDate",
+        meta->setIptcTagString("Iptc.Application2.ExpirationDate",
                                     d->dateExpiredSel->date().toString(Qt::ISODate));
     }
     else
     {
-        meta.removeIptcTag("Iptc.Application2.ExpirationDate");
+        meta->removeIptcTag("Iptc.Application2.ExpirationDate");
     }
 
     if (d->timeReleasedCheck->isChecked())
     {
-        meta.setIptcTagString("Iptc.Application2.ReleaseTime",
+        meta->setIptcTagString("Iptc.Application2.ReleaseTime",
                                     d->timeReleasedSel->time().toString(Qt::ISODate) +
                                     d->zoneReleasedSel->getTimeZone());
     }
     else
     {
-        meta.removeIptcTag("Iptc.Application2.ReleaseTime");
+        meta->removeIptcTag("Iptc.Application2.ReleaseTime");
     }
 
     if (d->timeExpiredCheck->isChecked())
     {
-        meta.setIptcTagString("Iptc.Application2.ExpirationTime",
+        meta->setIptcTagString("Iptc.Application2.ExpirationTime",
                                     d->timeExpiredSel->time().toString(Qt::ISODate) +
                                     d->zoneExpiredSel->getTimeZone());
     }
     else
     {
-        meta.removeIptcTag("Iptc.Application2.ExpirationTime");
+        meta->removeIptcTag("Iptc.Application2.ExpirationTime");
     }
 
     if (d->languageCheck->isChecked())
     {
-        meta.setIptcTagString("Iptc.Application2.Language", d->languageBtn->currentData().toString());
+        meta->setIptcTagString("Iptc.Application2.Language", d->languageBtn->currentData().toString());
     }
     else if (d->languageCheck->isValid())
     {
-        meta.removeIptcTag("Iptc.Application2.Language");
+        meta->removeIptcTag("Iptc.Application2.Language");
     }
 
     if (d->priorityCheck->isChecked())
     {
-        meta.setIptcTagString("Iptc.Application2.Urgency", QString::number(d->priorityCB->currentIndex()));
+        meta->setIptcTagString("Iptc.Application2.Urgency", QString::number(d->priorityCB->currentIndex()));
     }
     else if (d->priorityCheck->isValid())
     {
-        meta.removeIptcTag("Iptc.Application2.Urgency");
+        meta->removeIptcTag("Iptc.Application2.Urgency");
     }
 
     if (d->objectCycleCheck->isChecked())
@@ -723,21 +731,21 @@ void IPTCProperties::applyMetadata(DMetadata& meta)
         switch (d->objectCycleCB->currentIndex())
         {
             case(0):
-                meta.setIptcTagString("Iptc.Application2.ObjectCycle", QLatin1String("a"));
+                meta->setIptcTagString("Iptc.Application2.ObjectCycle", QLatin1String("a"));
                 break;
 
             case(1):
-                meta.setIptcTagString("Iptc.Application2.ObjectCycle", QLatin1String("b"));
+                meta->setIptcTagString("Iptc.Application2.ObjectCycle", QLatin1String("b"));
                 break;
 
             case(2):
-                meta.setIptcTagString("Iptc.Application2.ObjectCycle", QLatin1String("c"));
+                meta->setIptcTagString("Iptc.Application2.ObjectCycle", QLatin1String("c"));
                 break;
         }
     }
     else if (d->objectCycleCheck->isValid())
     {
-        meta.removeIptcTag("Iptc.Application2.ObjectCycle");
+        meta->removeIptcTag("Iptc.Application2.ObjectCycle");
     }
 
     if (d->objectTypeCheck->isChecked())
@@ -745,24 +753,26 @@ void IPTCProperties::applyMetadata(DMetadata& meta)
         QString objectType;
         objectType = QString().asprintf("%2d", d->objectTypeCB->currentIndex()+1);
         objectType.append(QString::fromUtf8(":%1").arg(d->objectTypeDescEdit->text()));
-        meta.setIptcTagString("Iptc.Application2.ObjectType", objectType);
+        meta->setIptcTagString("Iptc.Application2.ObjectType", objectType);
     }
     else if (d->objectTypeCheck->isValid())
     {
-        meta.removeIptcTag("Iptc.Application2.ObjectType");
+        meta->removeIptcTag("Iptc.Application2.ObjectType");
     }
 
     QStringList oldList, newList;
 
     if (d->objectAttribute->getValues(oldList, newList))
-        meta.setIptcTagsStringList("Iptc.Application2.ObjectAttribute", 64, oldList, newList);
+        meta->setIptcTagsStringList("Iptc.Application2.ObjectAttribute", 64, oldList, newList);
     else if (d->objectAttribute->isValid())
-        meta.removeIptcTag("Iptc.Application2.ObjectAttribute");
+        meta->removeIptcTag("Iptc.Application2.ObjectAttribute");
 
     if (d->originalTransCheck->isChecked())
-        meta.setIptcTagString("Iptc.Application2.TransmissionReference", d->originalTransEdit->text());
+        meta->setIptcTagString("Iptc.Application2.TransmissionReference", d->originalTransEdit->text());
     else
-        meta.removeIptcTag("Iptc.Application2.TransmissionReference");
+        meta->removeIptcTag("Iptc.Application2.TransmissionReference");
+
+    iptcData = meta->getIptc();
 }
 
 } // namespace DigikamGenericMetadataEditPlugin

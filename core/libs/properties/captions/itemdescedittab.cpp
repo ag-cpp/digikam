@@ -545,11 +545,7 @@ void ItemDescEditTab::slotChangingItems()
     {
         // Open dialog via queued connection out-of-scope, see bug 302311
 
-        DisjointMetadata* const hub2 = new DisjointMetadata();
-        hub2->setDataFields(d->hub.dataFields());
-        
-        emit askToApplyChanges(d->currInfos, hub2);
-
+        emit askToApplyChanges(d->currInfos, new DisjointMetadata(d->hub));
         reset();
     }
     else
@@ -793,7 +789,7 @@ void ItemDescEditTab::setInfos(const ItemInfoList& infos)
 {
     if (infos.isEmpty())
     {
-        d->hub.reset();
+        d->hub = DisjointMetadata();
         d->captionsEdit->blockSignals(true);
         d->captionsEdit->reset();
         d->captionsEdit->blockSignals(false);
@@ -810,7 +806,7 @@ void ItemDescEditTab::setInfos(const ItemInfoList& infos)
     d->currInfos = infos;
     d->modified  = false;
     resetMetadataChangeInfo();
-    d->hub.reset();
+    d->hub       = DisjointMetadata();
     d->applyBtn->setEnabled(false);
     d->revertBtn->setEnabled(false);
 
@@ -985,7 +981,7 @@ void ItemDescEditTab::slotTagStateChanged(Album* album, Qt::CheckState checkStat
             break;
 
         default:
-            d->hub.setTag(tag->id(), DisjointMetadataDataFields::MetadataInvalid);
+            d->hub.setTag(tag->id(), DisjointMetadata::MetadataInvalid);
             break;
     }
 
@@ -1111,7 +1107,7 @@ void ItemDescEditTab::assignRating(int rating)
     d->ratingWidget->setRating(rating);
 }
 
-void ItemDescEditTab::setTagState(TAlbum* const tag, DisjointMetadataDataFields::Status status)
+void ItemDescEditTab::setTagState(TAlbum* const tag, DisjointMetadata::Status status)
 {
     if (!tag)
     {
@@ -1120,15 +1116,15 @@ void ItemDescEditTab::setTagState(TAlbum* const tag, DisjointMetadataDataFields:
 
     switch (status)
     {
-        case DisjointMetadataDataFields::MetadataDisjoint:
+        case DisjointMetadata::MetadataDisjoint:
             d->tagModel->setCheckState(tag, Qt::PartiallyChecked);
             break;
 
-        case DisjointMetadataDataFields::MetadataAvailable:
+        case DisjointMetadata::MetadataAvailable:
             d->tagModel->setChecked(tag, true);
             break;
 
-        case DisjointMetadataDataFields::MetadataInvalid:
+        case DisjointMetadata::MetadataInvalid:
             d->tagModel->setChecked(tag, false);
             break;
 
@@ -1154,9 +1150,9 @@ void ItemDescEditTab::updateTagsView()
 
     // Then update checked state for all tags of the currently selected images
 
-    const QMap<int, DisjointMetadataDataFields::Status> hubMap = d->hub.tags();
+    const QMap<int, DisjointMetadata::Status> hubMap = d->hub.tags();
 
-    for (QMap<int, DisjointMetadataDataFields::Status>::const_iterator it = hubMap.begin() ;
+    for (QMap<int, DisjointMetadata::Status>::const_iterator it = hubMap.begin() ;
          it != hubMap.end() ; ++it)
     {
         TAlbum* const tag = AlbumManager::instance()->findTAlbum(it.key());
@@ -1192,7 +1188,7 @@ void ItemDescEditTab::updatePickLabel()
 {
     d->pickLabelSelector->blockSignals(true);
 
-    if (d->hub.pickLabelStatus() == DisjointMetadataDataFields::MetadataDisjoint)
+    if (d->hub.pickLabelStatus() == DisjointMetadata::MetadataDisjoint)
     {
         d->pickLabelSelector->setPickLabel(NoPickLabel);
     }
@@ -1208,7 +1204,7 @@ void ItemDescEditTab::updateColorLabel()
 {
     d->colorLabelSelector->blockSignals(true);
 
-    if (d->hub.colorLabelStatus() == DisjointMetadataDataFields::MetadataDisjoint)
+    if (d->hub.colorLabelStatus() == DisjointMetadata::MetadataDisjoint)
     {
         d->colorLabelSelector->setColorLabel(NoColorLabel);
     }
@@ -1224,7 +1220,7 @@ void ItemDescEditTab::updateRating()
 {
     d->ratingWidget->blockSignals(true);
 
-    if (d->hub.ratingStatus() == DisjointMetadataDataFields::MetadataDisjoint)
+    if (d->hub.ratingStatus() == DisjointMetadata::MetadataDisjoint)
     {
         d->ratingWidget->setRating(0);
     }
@@ -1255,7 +1251,7 @@ void ItemDescEditTab::updateTemplate()
 
 void ItemDescEditTab::setMetadataWidgetStatus(int status, QWidget* const widget)
 {
-    if (status == DisjointMetadataDataFields::MetadataDisjoint)
+    if (status == DisjointMetadata::MetadataDisjoint)
     {
         // For text widgets: Set text color to color of disabled text.
 

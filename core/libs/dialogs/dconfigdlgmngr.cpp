@@ -45,8 +45,6 @@
 
 #include "digikam_debug.h"
 
-// clazy:skip
-
 namespace Digikam
 {
 
@@ -268,9 +266,7 @@ bool DConfigDlgMngr::parseChildren(const QWidget* widget, bool trackChanges)
     {
         if (!object->isWidgetType())
         {
-            // Skip non-widgets
-
-            continue;
+            continue;    // Skip non-widgets
         }
 
         QWidget* const childWidget = static_cast<QWidget*>(object);
@@ -336,8 +332,8 @@ bool DConfigDlgMngr::parseChildren(const QWidget* widget, bool trackChanges)
 
                                 if (notifySignal.isValid())
                                 {
-                                    connect(childWidget, notifySignal,
-                                            this, widgetModifiedSignal);
+                                    connect(childWidget, notifySignal,          // clazy:exclude=connect-non-signal
+                                            this, widgetModifiedSignal);        // clazy:exclude=connect-non-signal
 
                                     changeSignalFound = true;
                                 }
@@ -556,8 +552,7 @@ QByteArray DConfigDlgMngr::getCustomProperty(const QWidget* widget) const
     {
         if (!prop.canConvert(QVariant::ByteArray))
         {
-           qCWarning(DIGIKAM_GENERAL_LOG) << "Property on"
-                                          << widget->metaObject()->className()
+           qCWarning(DIGIKAM_GENERAL_LOG) << "Property on" << widget->metaObject()->className()
                                           << "is not of type ByteArray";
         }
         else
@@ -595,8 +590,7 @@ QByteArray DConfigDlgMngr::getCustomPropertyChangedSignal(const QWidget *widget)
     {
         if (!prop.canConvert(QVariant::ByteArray))
         {
-           qCWarning(DIGIKAM_GENERAL_LOG) << "PropertyNotify on"
-                                          << widget->metaObject()->className()
+           qCWarning(DIGIKAM_GENERAL_LOG) << "PropertyNotify on" << widget->metaObject()->className()
                                           << "is not of type ByteArray";
         }
         else
@@ -659,7 +653,7 @@ void DConfigDlgMngr::setProperty(QWidget* w, const QVariant& v)
 
     if (userproperty.isEmpty())
     {
-        qCWarning(DIGIKAM_GENERAL_LOG) << w->metaObject()->className() << "widget not handled!";
+        qCWarning(DIGIKAM_GENERAL_LOG) << w->metaObject()->className() << " widget not handled!";
         return;
     }
 
@@ -709,7 +703,7 @@ QVariant DConfigDlgMngr::property(QWidget* w) const
 
     if (userproperty.isEmpty())
     {
-        qCWarning(DIGIKAM_GENERAL_LOG) << w->metaObject()->className() << "widget not handled!";
+        qCWarning(DIGIKAM_GENERAL_LOG) << w->metaObject()->className() << " widget not handled!";
         return QVariant();
     }
 

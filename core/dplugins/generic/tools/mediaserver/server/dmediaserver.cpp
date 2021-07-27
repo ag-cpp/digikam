@@ -46,8 +46,6 @@
 #include "PltDeviceHost.h"
 #include "Platinum.h"
 
-using namespace Digikam;
-
 void NPT_Console::Output(const char* msg)
 {
     qCDebug(DIGIKAM_MEDIASRV_LOG) << msg;
@@ -63,44 +61,32 @@ void UPnPLogger(const NPT_LogRecord* record)
     switch (record->m_Level)
     {
         case NPT_LOG_LEVEL_FATAL:
-        {
             qCDebug(DIGIKAM_MEDIASRV_LOG_FATAL) << msg;
             break;
-        }
 
         case NPT_LOG_LEVEL_SEVERE:
-        {
             qCDebug(DIGIKAM_MEDIASRV_LOG_SEVERE) << msg;
             break;
-        }
 
         case NPT_LOG_LEVEL_WARNING:
-        {
             qCDebug(DIGIKAM_MEDIASRV_LOG_WARN) << msg;
             break;
-        }
 
         case NPT_LOG_LEVEL_INFO:
-        {
             qCDebug(DIGIKAM_MEDIASRV_LOG_INFO) << msg;
             break;
-        }
 
         case NPT_LOG_LEVEL_FINE:
-        {
             qCDebug(DIGIKAM_MEDIASRV_LOG) << msg;
             break;
-        }
 
         default: // NPT_LOG_LEVEL_DEBUG:
-        {
             qCDebug(DIGIKAM_MEDIASRV_LOG_DEBUG) << msg;
             break;
-        }
     }
 }
 
-namespace DigikamGenericMediaServerPlugin
+namespace Digikam
 {
 
 class Q_DECL_HIDDEN CDeviceHostReferenceHolder
@@ -180,4 +166,4 @@ void DMediaServer::addAlbumsOnServer(const MediaServerMap& map)
     static_cast<DLNAMediaServer*>(d->serverHolder->m_device.AsPointer())->addAlbumsOnServer(map);
 }
 
-} // namespace DigikamGenericMediaServerPlugin
+} // namespace Digikam

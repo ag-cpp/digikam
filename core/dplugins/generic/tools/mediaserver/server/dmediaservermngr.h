@@ -36,7 +36,7 @@
 
 #include "dmediaserver.h"
 
-namespace DigikamGenericMediaServerPlugin
+namespace Digikam
 {
 
 class DMediaServerMngr : public QObject
@@ -106,6 +106,6 @@ private:
     Private* const d;
 };
 
-} // namespace DigikamGenericMediaServerPlugin
+} // namespace Digikam
 
 #endif // DIGIKAM_DMEDIA_SERVER_MNGR_H

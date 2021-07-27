@@ -247,14 +247,11 @@ void FileActionMngr::applyMetadata(const QList<ItemInfo>& infos, const MetadataH
 }
 */
 
-void FileActionMngr::applyMetadata(const QList<ItemInfo>& infos, const DisjointMetadata& hub)
+void FileActionMngr::applyMetadata(const QList<ItemInfo>& infos, const DisjointMetadata &hub)
 {
     FileActionItemInfoList taskList = FileActionItemInfoList::create(infos);
     taskList.schedulingForDB(i18n("Applying metadata"), d->dbProgressCreator());
-    
-    DisjointMetadata* const hub2 = new DisjointMetadata();
-    hub2->setDataFields(hub.dataFields());
-    d->applyMetadata(taskList, hub2);
+    d->applyMetadata(taskList, new DisjointMetadata(hub));
 }
 
 void FileActionMngr::applyMetadata(const QList<ItemInfo>& infos, DisjointMetadata* hub)

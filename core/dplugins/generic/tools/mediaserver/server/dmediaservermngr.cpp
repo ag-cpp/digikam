@@ -49,9 +49,7 @@
 #include "digikam_debug.h"
 #include "dnotificationwrapper.h"
 
-using namespace Digikam;
-
-namespace DigikamGenericMediaServerPlugin
+namespace Digikam
 {
 
 class Q_DECL_HIDDEN DMediaServerMngrCreator
@@ -371,4 +369,4 @@ bool DMediaServerMngr::load()
     }
 }
 
-} // namespace DigikamGenericMediaServerPlugin
+} // namespace Digikam
