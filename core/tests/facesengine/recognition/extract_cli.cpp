@@ -34,7 +34,6 @@
 #include <QDir>
 #include <QElapsedTimer>
 #include "digikam_opencv.h"
-#include "recognitionpreprocessor.h"
 #include "opencvdnnfacedetector.h"
 #include "facedetector.h"
 
@@ -55,8 +54,6 @@ class Extractor {
 public:
     explicit Extractor() {
         m_detector = new Digikam::FaceDetector();
-        m_preprocessor = new Digikam::RecognitionPreprocessor;
-        m_preprocessor->init(Digikam::PreprocessorSelection::OPENFACE);
         m_net = cv::dnn::readNetFromTensorflow("../scripts/facenet_opencv_dnn/models/graph_final.pb");
     }
 
@@ -66,7 +63,6 @@ public:
 private:
 
     Digikam::FaceDetector* m_detector;
-    Digikam::RecognitionPreprocessor* m_preprocessor;
     cv::dnn::Net           m_net;
 };
 

@@ -82,9 +82,6 @@ public Q_SLOTS:
 
     void fetchData();
     void registerTrainingSet();
-    void saveData();
-    void testWriteDb();
-    void verifyKNearestDb();
 
 private:
 
@@ -501,177 +498,6 @@ void Benchmark::fetchData()
     splitData(dataset, splitRatio);
 }
 
-void Benchmark::saveData()
-{
-    QDir dataDir(m_parser->value(QLatin1String("dataset")));
-    QFileInfoList subDirs = dataDir.entryInfoList(QDir::NoDotAndDotDot | QDir::Dirs, QDir::Name);
-
-    QElapsedTimer timer;
-    timer.start();
-
-    QJsonArray faceEmbeddingArray;
-
-    for (int i = 0 ; i < subDirs.size() ; ++i)
-    {
-        QDir subDir(subDirs[i].absoluteFilePath());
-        QFileInfoList filesInfo = subDir.entryInfoList(QDir::Files | QDir::Readable);
-
-        for (int j = 0 ; j < filesInfo.size() ; ++j)
-        {
-            QImage* const img = new QImage(filesInfo[j].absoluteFilePath());
-
-            if (! img->isNull())
-            {
-                cv::Mat face;
-/*
-                if (preprocess(img, face))
-                {
-
-                    Identity newIdentity = m_recognizer->newIdentity(face);
-
-                    QJsonObject identityJson;
-                    identityJson[QLatin1String("id")] = i;
-                    identityJson[QLatin1String("faceembedding")] = QJsonDocument::fromJson(newIdentity.attribute(QLatin1String("faceEmbedding")).toLatin1()).array();
-
-                    faceEmbeddingArray.append(identityJson);
-                }
-*/
-            }
-        }
-    }
-
-    qCDebug(DIGIKAM_TESTS_LOG) << "Save face embedding in" << timer.elapsed() << "ms/face";
-
-    QFile dataFile(dataDir.dirName() + QLatin1String(".json"));
-
-    if (!dataFile.open(QIODevice::WriteOnly))
-    {
-        qWarning("Couldn't open save file.");
-        return;
-    }
-
-    QJsonDocument saveDoc(faceEmbeddingArray);
-    dataFile.write(saveDoc.toJson());
-
-    dataFile.close();
-}
-
-void Benchmark::testWriteDb()
-{
-    QDir dataDir(m_parser->value(QLatin1String("dataset")));
-
-    QFile dataFile(dataDir.dirName() + QLatin1String(".json"));
-
-    if (!dataFile.open(QIODevice::ReadOnly))
-    {
-        qWarning("Couldn't open data file.");
-        return;
-    }
-
-    QByteArray saveData = dataFile.readAll();
-    dataFile.close();
-
-    QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
-
-    QJsonArray data     = loadDoc.array();
-
-    QElapsedTimer timer;
-    timer.start();
-
-    for (int i = 0 ; i < data.size() ; ++i)
-    {
-        QJsonObject object               = data[i].toObject();
-        std::vector<float> faceEmbedding = DNNFaceExtractor::decodeVector(object[QLatin1String("faceembedding")].toArray());
-/*
-        m_recognizer->insertData(DNNFaceExtractor::vectortomat(faceEmbedding), object[QLatin1String("id")].toInt());
-*/
-    }
-
-    qCDebug(DIGIKAM_TESTS_LOG) << "write face embedding to spatial database with average" << timer.elapsed() /data.size() << "ms/faceEmbedding";
-}
-
-void Benchmark::verifyKNearestDb()
-{
-    QDir dataDir(m_parser->value(QLatin1String("dataset")));
-
-    QFile dataFile(dataDir.dirName() + QLatin1String(".json"));
-
-    if (!dataFile.open(QIODevice::ReadOnly))
-    {
-        qWarning("Couldn't open data file.");
-        return;
-    }
-
-    QByteArray saveData = dataFile.readAll();
-    dataFile.close();
-
-    QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
-
-    QJsonArray data = loadDoc.array();
-    int nbCorrect   = 0;
-
-    QElapsedTimer timer;
-    timer.start();
-
-    for (int i = 0 ; i < data.size() ; ++i)
-    {
-        QJsonObject object               = data[i].toObject();
-        std::vector<float> faceEmbedding = DNNFaceExtractor::decodeVector(object[QLatin1String("faceembedding")].toArray());
-        int label                        = object[QLatin1String("id")].toInt();
-
-        QMap<double, QVector<int> > closestNeighbors
-/*
-            = m_recognizer->getClosestNodes(DNNFaceExtractor::vectortomat(faceEmbedding), 1.0, 5)
-*/
-            ;
-
-        QMap<int, QVector<double> > votingGroups;
-
-        for (QMap<double, QVector<int> >::const_iterator iter  = closestNeighbors.cbegin();
-                                                         iter != closestNeighbors.cend();
-                                                         ++iter)
-        {
-            for (int j = 0 ; j < iter.value().size() ; ++j)
-            {
-                votingGroups[iter.value()[j]].append(iter.key());
-            }
-        }
-
-        double maxScore = 0;
-        int prediction  = -1;
-
-        for (QMap<int, QVector<double> >::const_iterator group  = votingGroups.cbegin();
-                                                         group != votingGroups.cend();
-                                                         ++group)
-        {
-            double score = 0;
-
-            for (int j = 0 ; j < group.value().size() ; ++j)
-            {
-                score += (1 - group.value()[j]);
-            }
-
-            if (score > maxScore)
-            {
-                maxScore   = score;
-                prediction = group.key();
-            }
-        }
-
-        if (label == prediction)
-        {
-            ++nbCorrect;
-        }
-    }
-
-    if (data.size() != 0)
-    {
-        qCDebug(DIGIKAM_TESTS_LOG) << "Accuracy"     << (float(nbCorrect) / data.size())*100
-                 << "with average" << timer.elapsed()   / data.size() 
-                 << "ms/faceEmbedding";
-    }
-}
-
 // --------------------------------------------------------
 
 QCommandLineParser* parseOptions(const QCoreApplication& app)
@@ -693,11 +519,7 @@ int main(int argc, char** argv)
 
     Benchmark benchmark;
     benchmark.m_parser = parseOptions(app);
-/*
-    benchmark.saveData();
-    benchmark.testWriteDb();
-    benchmark.verifyKNearestDb();
-*/
+
     benchmark.fetchData();
     benchmark.registerTrainingSet();
     benchmark.verifyTestSet();

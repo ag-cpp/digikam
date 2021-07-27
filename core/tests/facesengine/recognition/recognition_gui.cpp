@@ -367,10 +367,8 @@ void MainWindow::extractFaces(const QImage& img, QImage& imgScaled, const QList<
 
         m_preprocessedFaces << cvPreprocessedFace;
 
-        // Show aligned faces
-
-        cv::Mat cvAlignedFace = m_extractor->alignFace(cvPreprocessedFace);
-        m_alignedList->addItem(new QListWidgetItem(QIcon(showCVMat(cvAlignedFace)), QLatin1String("")));
+        // Show preprocessed faces
+        m_alignedList->addItem(new QListWidgetItem(QIcon(showCVMat(cvPreprocessedFace)), QLatin1String("")));
     }
 }
 

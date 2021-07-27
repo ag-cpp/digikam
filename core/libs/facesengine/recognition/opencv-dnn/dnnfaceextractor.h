@@ -30,10 +30,6 @@
 
 #include <vector>
 
-// Qt include
-
-#include <QJsonArray>
-
 // Local includes
 
 #include "digikam_opencv.h"
@@ -60,8 +56,6 @@ public:
      */
     bool loadModels();
 
-
-    cv::Mat alignFace(const cv::Mat& inputImage) const;
     cv::Mat getFaceEmbedding(const cv::Mat& faceImage);
 
     /**
@@ -75,8 +69,6 @@ public:
      * Convert face embedding between different formats
      */
     static cv::Mat            vectortomat(const std::vector<float>& vector);
-    static QJsonArray         encodeVector(const std::vector<float>& vector);
-    static std::vector<float> decodeVector(const QJsonArray& json);
 
 private:
 
