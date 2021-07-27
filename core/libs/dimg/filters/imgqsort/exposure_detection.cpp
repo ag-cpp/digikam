@@ -116,7 +116,7 @@ float ExposureDetector::detect()
 
 float ExposureDetector::percent_overexposed()
 {
-    int over_exposed_pixel = count_by_condition(d->threshold_overexposed, 255);
+    int over_exposed_pixel = count_by_condition(d->threshold_overexposed, 256);
 
     int demi_over_exposed_pixel = count_by_condition(d->threshold_demi_overexposed,d->threshold_overexposed);
 
@@ -142,7 +142,7 @@ int ExposureDetector::count_by_condition(int minVal, int maxVal)
 {
     cv::Mat mat;
 
-    mat = (d->image >= minVal) & (d->image <= maxVal);
+    mat = (d->image >= minVal) & (d->image < maxVal);
 
     return cv::countNonZero(mat);
 }
