@@ -137,7 +137,7 @@ void ImageQualityParser::startAnalyse()
         // Returns number of blocks in the image.
 
         compressionLevel = CompressionDetector(d->image).detect();
-        qInfo()<<"compressionLevel"<<compressionLevel;
+
         qCDebug(DIGIKAM_DIMG_LOG) << "Amount of compression artifacts present in image is:" << compressionLevel;
     }
 

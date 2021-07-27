@@ -121,12 +121,8 @@ float CompressionDetector::detect()
 
     int nb_pixels_normal = d->image.total() - nb_pixels_edge_block - nb_pixels_edge_block;
 
-    qInfo()<<"nb_pixels_edge_block"<<nb_pixels_edge_block<<"nb_pixels_mono_color"<<nb_pixels_mono_color<<"total pixel"<<d->image.total();
-
     float res = static_cast<float>((nb_pixels_mono_color * d->weight_mono_color + nb_pixels_edge_block * d->threshold_edges_block) /
                                    (nb_pixels_mono_color * d->weight_mono_color + nb_pixels_edge_block * d->threshold_edges_block + nb_pixels_normal));
-
-    qInfo()<<"res"<<res;
 
     return res;
 }
