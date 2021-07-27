@@ -101,15 +101,27 @@ cv::Mat CompressionDetector::prepareForDetection(const DImg& inputImage) const
     return cvImage;
 }
 
+auto accessRow = [](cv::Mat mat) {
+    return [mat](int index) {
+        return mat.row(index);
+    };
+};
+
+auto accessCol = [](cv::Mat mat) {
+    return [mat](int index) {
+        return mat.col(index);
+    };
+};
+
 float CompressionDetector::detect()
 {
     cv::Mat gray_image;
 
     cv::cvtColor(d->image, gray_image, cv::COLOR_BGR2GRAY);
 
-    cv::Mat verticalBlock = checkVertical(gray_image);
+    cv::Mat verticalBlock = checkEdgesBlock(gray_image, gray_image.cols, accessCol);
 
-    cv::Mat horizontalBlock = checkHorizontal(gray_image);
+    cv::Mat horizontalBlock = checkEdgesBlock(gray_image, gray_image.rows, accessRow);
 
     cv::Mat mono_color_map = detectMonoColorRegion();
 
@@ -127,33 +139,21 @@ float CompressionDetector::detect()
     return res;
 }
 
-cv::Mat CompressionDetector::checkVertical(const cv::Mat& gray_image) const
-{    
-    cv::Mat res = cv::Mat::zeros(gray_image.size(),CV_8UC1 );
-
-    for (int i = 2; i < gray_image.cols - 1; i ++)
-    {
-        cv::Mat a = (gray_image.col(i) - gray_image.col(i + 1)) - (gray_image.col(i - 1) - gray_image.col(i));
-        
-        cv::Mat b = (gray_image.col(i) - gray_image.col(i + 1)) - (gray_image.col(i + 1) - gray_image.col(i - 2));
-
-        res.col(i) = (a >= d->threshold_edges_block) & (b >= d->threshold_edges_block);
-    }
-
-    return res;
-}
-
-cv::Mat CompressionDetector::checkHorizontal(const cv::Mat& gray_image) const
+template <typename Function>
+cv::Mat CompressionDetector::checkEdgesBlock(const cv::Mat& gray_image, int blockSize, Function accessEdges) const
 {
     cv::Mat res = cv::Mat::zeros(gray_image.size(),CV_8UC1 );
 
-    for (int i = 2; i < gray_image.rows - 1; i ++)
-    {
-        cv::Mat a = (gray_image.row(i) - gray_image.row(i + 1)) - (gray_image.row(i - 1) - gray_image.row(i));
-        
-        cv::Mat b = (gray_image.row(i) - gray_image.row(i + 1)) - (gray_image.row(i + 1) - gray_image.row(i - 2));
+    auto accessGrayImageAt = accessEdges(gray_image);
+    auto accessResAt = accessEdges(res);
 
-        res.row(i) = (a >= d->threshold_edges_block) & (b >= d->threshold_edges_block);
+    for (int i = 2; i < blockSize - 1; i ++)
+    {
+        cv::Mat a = (accessGrayImageAt(i) - accessGrayImageAt(i + 1)) - (accessGrayImageAt(i - 1) - accessGrayImageAt(i));
+        
+        cv::Mat b = (accessGrayImageAt(i) - accessGrayImageAt(i + 1)) - (accessGrayImageAt(i + 1) - accessGrayImageAt(i - 2));
+
+        accessResAt(i) = (a >= d->threshold_edges_block) & (b >= d->threshold_edges_block);
     }
 
     return res;

@@ -47,8 +47,8 @@ private:
 
     cv::Mat prepareForDetection(const DImg& inputImage) const;
 
-    cv::Mat checkVertical(const cv::Mat& gray_image) const;
-    cv::Mat checkHorizontal(const cv::Mat& gray_image) const;
+    template <typename Function>
+    cv::Mat checkEdgesBlock(const cv::Mat& gray_image, int blockSize, Function accessEdges) const;
     cv::Mat detectMonoColorRegion()     const;
 
     float normalize(const float number);
