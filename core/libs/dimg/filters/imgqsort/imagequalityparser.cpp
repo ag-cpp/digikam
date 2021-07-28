@@ -24,13 +24,19 @@
 
 #include "imagequalityparser_p.h"
 
-// Local includes
+// Qt includes
 
-#include "imagequalitycalculator.h"
+#include <QScopedPointer>
+
+// Local includes 
+
+#include "noise_detector.h"
+#include "exposure_detector.h"
+#include "compression_detector.h"
 #include "blur_detector.h"
-#include "noise_detection.h"
-#include "exposure_detection.h"
-#include "compression_detection.h"
+#include "detector.h"
+#include "imagequalitycalculator.h"
+
 namespace Digikam
 {
 
@@ -41,7 +47,6 @@ ImageQualityParser::ImageQualityParser(const DImg& image,
 {
     d->imq     = settings;
     d->image   = image;
-    d->neimage = image;
     d->label   = label;
 }
 
@@ -50,88 +55,55 @@ ImageQualityParser::~ImageQualityParser()
     delete d;
 }
 
-void ImageQualityParser::readImage() const
-{
-    DColor col;
-    int j   = 0;
-
-    d->img8 = d->image;
-    d->img8.convertToEightBit();                        // Convert to 8 bits color depth.
-
-
-    // For Noise detection
-
-    if (d->imq.detectNoise)
-    {
-        for (int c = 0 ; d->running && (c < 3) ; ++c)
-        {
-            d->fimg[c] = new float[d->neimage.numPixels()];
-        }
-
-        j = 0;
-
-        for (uint y = 0 ; d->running && (y < d->neimage.height()) ; ++y)
-        {
-            for (uint x = 0 ; d->running && (x < d->neimage.width()) ; ++x)
-            {
-                col           = d->neimage.getPixelColor(x, y);
-                d->fimg[0][j] = col.red();
-                d->fimg[1][j] = col.green();
-                d->fimg[2][j] = col.blue();
-                ++j;
-            }
-        }
-    }
-}
-
 void ImageQualityParser::startAnalyse()
 {
-    // For Noise Estimation
-    // Use the Top/Left corner of 256x256 pixels to analyze noise contents from image.
-    // This will speed-up computation time with OpenCV.
 
-    readImage();
+    float blurLevel             = -1.0;
+    float noiseLevel            = -1.0;
+    float compressionLevel      = -1.0;
+    float exposureLevel         = -1.0;
+    float finalQuality          = -1.0;
 
-    double blur             = 0.0;
-    double noise            = 0.0;
-    float  compressionLevel = 0;
-    double finalQuality     = 0.0;
-    float exposureLevel     = 0.0;
+    QScopedPointer<ImageQualityCalculator> calculator(new ImageQualityCalculator());
+
+    const DetectorDistortion detector(d->image);
 
     // If blur option is selected in settings, run the blur detection algorithms
 
     if (d->running && d->imq.detectBlur)
     {
-        // Returns blur value between 0 and 1.
-        // If NaN is returned just assign NoPickLabel
+        blurLevel  = BlurDetector(detector, d->image).detect();
+        
+        qCDebug(DIGIKAM_DIMG_LOG) << "Amount of Blur present in image is:" << blurLevel;
 
-        blur  = BlurDetector(d->image).detect();
-        qCDebug(DIGIKAM_DIMG_LOG) << "Amount of Blur present in image is:" << blur;
+        calculator->addDetectionResult(QLatin1String("BLUR"), blurLevel, d->imq.blurWeight);
     }
 
     if (d->running && d->imq.detectNoise)
     {
-        // Some images give very low noise value. Assign NoPickLabel in that case.
-        // Returns noise value between 0 and 1.
-        noise = NoiseDetector(d->image).detect();
-        qCDebug(DIGIKAM_DIMG_LOG) << "Amount of Noise present in image is:" << noise;
+        noiseLevel = NoiseDetector(d->image).detect();
+        
+        qCDebug(DIGIKAM_DIMG_LOG) << "Amount of Noise present in image is:" << noiseLevel;
+
+        calculator->addDetectionResult(QLatin1String("NOISE"), noiseLevel, d->imq.noiseWeight);
     }
 
     if (d->running && d->imq.detectCompression)
     {
-        // Returns number of blocks in the image.
-
-        compressionLevel = CompressionDetector(d->image).detect();
+        compressionLevel = CompressionDetector(detector).detect();
 
         qCDebug(DIGIKAM_DIMG_LOG) << "Amount of compression artifacts present in image is:" << compressionLevel;
+
+        calculator->addDetectionResult(QLatin1String("COMPRESSION"), compressionLevel, d->imq.compressionWeight);
     }
 
     if (d->running && d->imq.detectExposure)
     {
-        // Returns percents of over-exposure in the image
+        exposureLevel = ExposureDetector(detector).detect();
 
-        exposureLevel = ExposureDetector(d->image).detect();
         qCDebug(DIGIKAM_DIMG_LOG) << "Under/Over exposure percents in image is: " << exposureLevel;
+
+        calculator->addDetectionResult(QLatin1String("EXPOSURE"), exposureLevel, d->imq.exposureWeight);
     }
 
 #ifdef TRACE
@@ -174,45 +146,22 @@ void ImageQualityParser::startAnalyse()
 
     if (d->running)
     {
-        // All the results to have a range of 1 to 100.
-        if (d->imq.detectBlur)
-        {
-            float finalBlur          = blur;
-
-     
-            finalQuality            = (1 - finalBlur)          * d->imq.blurWeight;
-        }
-        
-        if (d->imq.detectNoise)
-        {
-            double finalNoise         = noise * 100.0;
-
-            finalQuality            = 100 - finalNoise;
-        }
-
-        if (d->imq.detectExposure)
-        {
-            float finalExposure      = exposureLevel;
-
-            finalQuality            = (1 - finalExposure )* 100;
-        }
-
-        if (d->imq.detectCompression)
-        {
-            double finalCompression   = (1 - compressionLevel) * 100.0;        
-
-            finalQuality            =  finalCompression; 
-        }
-        
+        finalQuality            =  calculator->calculateQuality();
 
         qCDebug(DIGIKAM_DIMG_LOG) << "Final Quality estimated: " << finalQuality;
-        if ((int)finalQuality <= d->imq.rejectedThreshold)
+
+        // Assigning PickLabels
+
+        if      (finalQuality == -1.0)
+        {
+            *d->label = NoPickLabel;
+        }
+        else if ((int)finalQuality <= d->imq.rejectedThreshold)
         {
             *d->label = RejectedLabel;
         }
-        else if (((int)finalQuality > d->imq.rejectedThreshold) &&
-                 ((int)finalQuality <= d->imq.acceptedThreshold))
-
+        else if (((int)finalQuality >   d->imq.rejectedThreshold) &&
+                 ((int)finalQuality <=  d->imq.acceptedThreshold))
         {
             *d->label = PendingLabel;
         }
