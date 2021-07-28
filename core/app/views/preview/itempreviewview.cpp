@@ -605,7 +605,6 @@ void ItemPreviewView::mousePressEvent(QMouseEvent* e)
 {
     if ((e->button() == Qt::LeftButton) && (QApplication::keyboardModifiers() == Qt::ControlModifier))
     {
-        qInfo()<<"run add face here";
         d->faceGroup->addFace();
     }
 

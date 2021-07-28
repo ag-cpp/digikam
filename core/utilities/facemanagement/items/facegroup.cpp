@@ -505,7 +505,6 @@ void FaceGroup::startAutoSuggest()
 
 void FaceGroup::addFace()
 {
-    qInfo()<<"get here";
     if (d->manuallyAddWrapItem)
     {
         return;
