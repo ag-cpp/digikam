@@ -24,7 +24,7 @@
  *
  * ============================================================ */
 
-#include "compression_detection.h"
+#include "compression_detector.h"
 
 // Qt includes
 
@@ -68,60 +68,34 @@ public:
 };
 
 CompressionDetector::CompressionDetector(const DImg& image)
-    :  d(new Private)
+    :  DetectorDistortion(DetectorDistortion(image)),
+       d(new Private)
 {
-    d->image = prepareForDetection(image);
+    d->image = getCvImage();
 }
+
+CompressionDetector::CompressionDetector(const DetectorDistortion& detector)
+    :  DetectorDistortion(detector),
+       d(new Private)
+{
+    d->image = getCvImage();
+}
+
 
 CompressionDetector::~CompressionDetector()
 {
     delete d;
 }
 
-// Maybe this function will move to read_image() of imagequalityparser 
-// in case all detector of IQS use cv::Mat
-cv::Mat CompressionDetector::prepareForDetection(const DImg& inputImage) const
-{
-    if (inputImage.isNull() || !inputImage.size().isValid())
-    {
-        return cv::Mat();
-    }
-
-    cv::Mat cvImage;
-    int type               = inputImage.sixteenBit() ? CV_16UC4 : CV_8UC4;
-    cv::Mat cvImageWrapper = cv::Mat(inputImage.height(), inputImage.width(), type, inputImage.bits());
-
-    cv::cvtColor(cvImageWrapper, cvImage, cv::COLOR_RGBA2BGR);
-
-    if (type == CV_16UC4)
-    {
-        cvImage.convertTo(cvImage, CV_8UC3, 1 / 256.0);
-    }
-
-    return cvImage;
-}
-
-auto accessRow = [](cv::Mat mat) {
-    return [mat](int index) {
-        return mat.row(index);
-    };
-};
-
-auto accessCol = [](cv::Mat mat) {
-    return [mat](int index) {
-        return mat.col(index);
-    };
-};
-
-float CompressionDetector::detect()
+float CompressionDetector::detect() const
 {
     cv::Mat gray_image;
 
     cv::cvtColor(d->image, gray_image, cv::COLOR_BGR2GRAY);
 
-    cv::Mat verticalBlock = checkEdgesBlock(gray_image, gray_image.cols, accessCol);
+    cv::Mat verticalBlock = checkVertical(gray_image);
 
-    cv::Mat horizontalBlock = checkEdgesBlock(gray_image, gray_image.rows, accessRow);
+    cv::Mat horizontalBlock = checkHorizontal(gray_image);
 
     cv::Mat mono_color_map = detectMonoColorRegion();
 
@@ -133,27 +107,53 @@ float CompressionDetector::detect()
 
     int nb_pixels_normal = d->image.total() - nb_pixels_edge_block - nb_pixels_edge_block;
 
+    qInfo()<<"nb_pixels_edge_block"<<nb_pixels_edge_block<<"nb_pixels_mono_color"<<nb_pixels_mono_color<<"total pixel"<<d->image.total();
+
     float res = static_cast<float>((nb_pixels_mono_color * d->weight_mono_color + nb_pixels_edge_block * d->threshold_edges_block) /
                                    (nb_pixels_mono_color * d->weight_mono_color + nb_pixels_edge_block * d->threshold_edges_block + nb_pixels_normal));
+
+    qInfo()<<"res"<<res;
 
     return res;
 }
 
-template <typename Function>
-cv::Mat CompressionDetector::checkEdgesBlock(const cv::Mat& gray_image, int blockSize, Function accessEdges) const
+cv::Mat CompressionDetector::checkVertical(const cv::Mat& gray_image) const
+{    
+    cv::Mat res = cv::Mat::zeros(gray_image.size(),CV_8UC1 );
+
+    for (int i = 2; i < gray_image.cols - 1; i ++)
+    {
+        cv::Mat a = (gray_image.col(i) - gray_image.col(i + 1)) - (gray_image.col(i - 1) - gray_image.col(i));
+        
+        cv::Mat b = (gray_image.col(i) - gray_image.col(i + 1)) - (gray_image.col(i + 1) - gray_image.col(i - 2));
+
+        cv::threshold(a, a, d->threshold_edges_block, 1, cv::THRESH_BINARY);
+        cv::threshold(b, b, d->threshold_edges_block, 1, cv::THRESH_BINARY);
+
+        auto col = res.col(i);
+        col = a & b;
+    }
+
+    return res;
+}
+
+cv::Mat CompressionDetector::checkHorizontal(const cv::Mat& gray_image) const
 {
     cv::Mat res = cv::Mat::zeros(gray_image.size(),CV_8UC1 );
 
-    auto accessGrayImageAt = accessEdges(gray_image);
-    auto accessResAt = accessEdges(res);
-
-    for (int i = 2; i < blockSize - 1; i ++)
+    for (int i = 2; i < gray_image.rows - 1; i ++)
     {
-        cv::Mat a = (accessGrayImageAt(i) - accessGrayImageAt(i + 1)) - (accessGrayImageAt(i - 1) - accessGrayImageAt(i));
+        cv::Mat a = (gray_image.row(i) - gray_image.row(i + 1)) - (gray_image.row(i - 1) - gray_image.row(i));
         
-        cv::Mat b = (accessGrayImageAt(i) - accessGrayImageAt(i + 1)) - (accessGrayImageAt(i + 1) - accessGrayImageAt(i - 2));
+        cv::Mat b = (gray_image.row(i) - gray_image.row(i + 1)) - (gray_image.row(i + 1) - gray_image.row(i - 2));
 
-        accessResAt(i) = (a >= d->threshold_edges_block) & (b >= d->threshold_edges_block);
+        cv::threshold(a, a, d->threshold_edges_block, 1, cv::THRESH_BINARY);
+        cv::threshold(b, b, d->threshold_edges_block, 1, cv::THRESH_BINARY);
+
+        cv::Mat check = a & b;
+
+        auto row = res.row(i);
+        row = check;
     }
 
     return res;
@@ -165,13 +165,13 @@ cv::Mat CompressionDetector::detectMonoColorRegion() const
 
     cv::medianBlur(d->image, median_image, 5);
 
-    cv::Mat abs_difference = cv::abs(d->image - median_image);
+    cv::Mat mat_subtraction = cv::abs(d->image - median_image);
 
     std::vector<cv::Mat> rgbChannels(3);
     
-    cv::split(abs_difference, rgbChannels);
+    cv::split(mat_subtraction, rgbChannels);
 
-    cv::Mat res = rgbChannels[0] + rgbChannels[1] + rgbChannels[2];
+    cv::Mat res = rgbChannels.at(0) + rgbChannels.at(1) + rgbChannels.at(2);
 
     cv::threshold(res,res,d->threshold_mono_color,1,cv::THRESH_BINARY_INV);
 

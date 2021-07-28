@@ -36,6 +36,7 @@
 
 namespace Digikam
 {
+
 class Q_DECL_HIDDEN BlurDetector::Private
 {
 public:
@@ -45,8 +46,8 @@ public:
         sigma_smooth_image(5),
         filtrer_defocus(115),
 
-        part_size_motion_blur(40),
-        edges_filtrer(8),
+        part_size_motion_blur(50),
+        edges_filtrer(10),
         theta_resolution(CV_PI/900),
         min_line_length(30),
         threshold_hough(15),
@@ -86,9 +87,19 @@ public:
 };
 
 BlurDetector::BlurDetector(const DImg& image)
-    :  d(new Private)
+    : DetectorDistortion(DetectorDistortion(image)),
+      d(new Private)
 {
-    d->image = prepareForDetection(image);
+    d->image = getCvImage();
+
+    d->have_focus_region = haveFocusRegion(image);
+}
+
+BlurDetector::BlurDetector(const DetectorDistortion& detector, const DImg& image)
+    :  DetectorDistortion(detector),
+       d(new Private)
+{
+    d->image = getCvImage();
 
     d->have_focus_region = haveFocusRegion(image);
 }
@@ -123,7 +134,7 @@ cv::Mat BlurDetector::prepareForDetection(const DImg& inputImage) const
     return cvImage;
 }
 
-float BlurDetector::detect()
+float BlurDetector::detect() const
 { 
     cv::Mat edgesMap = edgeDetection(d->image);
 
@@ -208,7 +219,9 @@ cv::Mat BlurDetector::detectMotionBlurMap(const cv::Mat& edgesMap) const
                           d->part_size_motion_blur,d->part_size_motion_blur};
 
             cv::Mat subImg = edgesMap(rect);
-                        
+            
+            qCDebug(DIGIKAM_DIMG_LOG) << "Detect if each part is motion blur";
+            
             if(isMotionBlur(subImg)) 
             {
                 res(rect).setTo(1);
@@ -252,6 +265,8 @@ bool    BlurDetector::isMotionBlur(const cv::Mat& frag) const
 
         cv::meanStdDev(list_theta,mean,stddev);
 
+        qCDebug(DIGIKAM_DIMG_LOG) << "Standard Deviation for group of lines " << stddev[0];
+
         return stddev[0] < d->max_stddev;
     }
     return false;
@@ -279,8 +294,6 @@ cv::Mat BlurDetector::getWeightMap()                               const
 
             int width = std::min(d->image.size().width - x_position_corner, static_cast<int>(point.width * d->image.size().width * d->ratio_expand_af_point) );
             int height = std::min(d->image.size().height - y_position_corner, static_cast<int>(point.height * d->image.size().height * d->ratio_expand_af_point) );
-
-            qCDebug(DIGIKAM_DIMG_LOG) << "AF point properties "<<x_position_corner<<y_position_corner<<width<<height;
 
             cv::Rect rect{x_position_corner, y_position_corner,
                           width, height};
@@ -315,7 +328,9 @@ cv::Mat BlurDetector::detectBackgroundRegion(const cv::Mat& image)    const
                           d->part_size_mono_color, d->part_size_mono_color};
 
             cv::Mat subImg = image(rect);
-                        
+            
+            qCDebug(DIGIKAM_DIMG_LOG) << "Detect if each part is mono-color";
+            
             cv::Scalar mean, stddev;
 
             cv::meanStdDev(subImg,mean,stddev);

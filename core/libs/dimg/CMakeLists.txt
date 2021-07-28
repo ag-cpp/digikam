@@ -146,6 +146,8 @@ set(libdimgfilters_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/imgqsort/noise_detector.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/imgqsort/exposure_detector.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/imgqsort/compression_detector.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/filters/imgqsort/detector.cpp
+
 )
 
 # ==================================================================================================

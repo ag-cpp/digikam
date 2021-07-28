@@ -30,18 +30,20 @@
 
 #include "dimg.h"
 #include "digikam_opencv.h"
+#include "detector.h"
 
 namespace Digikam
 {
 
-class BlurDetector 
+class BlurDetector : public DetectorDistortion
 {
 public:
 
-    explicit BlurDetector(const DImg& image);
+    BlurDetector(const DImg& image);
+    explicit BlurDetector(const DetectorDistortion& detector, const DImg& image);
     ~BlurDetector();
 
-    float detect();
+    float detect() const;
 
 private:
     cv::Mat prepareForDetection(const DImg& inputImage)         const;

@@ -30,27 +30,27 @@
 
 #include "dimg.h"
 #include "digikam_opencv.h"
+#include "detector.h"
 
 namespace Digikam
 {
 
-class ExposureDetector 
+class ExposureDetector : public DetectorDistortion
 {
 public:
 
-    explicit ExposureDetector(const DImg& image);
+    ExposureDetector(const DImg& image);
+    explicit ExposureDetector(const DetectorDistortion& detector);
     ~ExposureDetector();
 
     float detect();
 
 private:
 
-    cv::Mat prepareForDetection(const DImg& inputImage) const;
-
     float percent_underexposed();
     float percent_overexposed();
 
-    int count_by_condition(int minVal, int maxVal);
+    int count_by_condition(int minVal = 0, int maxVal = 255);
     
 private:
 

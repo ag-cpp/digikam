@@ -24,7 +24,7 @@
  *
  * ============================================================ */
 
-#include "exposure_detection.h"
+#include "exposure_detector.h"
 
 // Qt includes
 
@@ -68,41 +68,31 @@ public:
 };
 
 ExposureDetector::ExposureDetector(const DImg& image)
-    :  d(new Private)
+    :  DetectorDistortion(DetectorDistortion(image)),
+       d(new Private)
 {
-    d->image = prepareForDetection(image);
+    cv::Mat cvImage = getCvImage();
+
+    cv::cvtColor(cvImage, cvImage, cv::COLOR_BGR2GRAY);
+    
+    d->image = cvImage;
 }
+
+ExposureDetector::ExposureDetector(const DetectorDistortion& detector)
+    :  DetectorDistortion(detector),
+       d(new Private)
+{
+    cv::Mat cvImage = getCvImage();
+
+    cv::cvtColor(cvImage, cvImage, cv::COLOR_BGR2GRAY);
+    
+    d->image = cvImage;
+}
+
 
 ExposureDetector::~ExposureDetector()
 {
     delete d;
-}
-
-// Maybe this function will move to read_image() of imagequalityparser 
-// in case all detector of IQS use cv::Mat
-cv::Mat ExposureDetector::prepareForDetection(const DImg& inputImage) const
-{
-    if (inputImage.isNull() || !inputImage.size().isValid())
-    {
-        return cv::Mat();
-    }
-
-    cv::Mat cvImage;
-    int type               = inputImage.sixteenBit() ? CV_16UC4 : CV_8UC4;
-    cv::Mat cvImageWrapper = cv::Mat(inputImage.height(), inputImage.width(), type, inputImage.bits());
-
-    cv::cvtColor(cvImageWrapper, cvImage, cv::COLOR_RGBA2BGR);
-
-    if (type == CV_16UC4)
-    {
-        cvImage.convertTo(cvImage, CV_8UC3, 1 / 256.0);
-    }
-
-    cv::cvtColor(cvImage, cvImage, cv::COLOR_BGR2GRAY);
-
-    // std::cout<<cvImage;
-
-    return cvImage;
 }
 
 float ExposureDetector::detect()
@@ -111,19 +101,21 @@ float ExposureDetector::detect()
     
     float underexposed = percent_underexposed();
 
+    qInfo()<<"overexposed"<<overexposed<<"underexposed"<<underexposed;
+
     return std::max(overexposed, underexposed);
 }
 
 float ExposureDetector::percent_overexposed()
 {
-    int over_exposed_pixel = count_by_condition(d->threshold_overexposed, 256);
+    int over_exposed_pixel = count_by_condition(d->threshold_overexposed, 255);
 
     int demi_over_exposed_pixel = count_by_condition(d->threshold_demi_overexposed,d->threshold_overexposed);
 
     int normal_pixel = d->image.total() - over_exposed_pixel - demi_over_exposed_pixel;
 
-    return static_cast<float>(over_exposed_pixel * d->weight_over_exposure + demi_over_exposed_pixel * d->weight_demi_over_exposure) / 
-           static_cast<float>(normal_pixel + over_exposed_pixel * d->weight_over_exposure + demi_over_exposed_pixel * d->weight_demi_over_exposure);
+    return static_cast<float>(static_cast<float>(over_exposed_pixel * d->weight_over_exposure + demi_over_exposed_pixel * d->weight_demi_over_exposure) / 
+                              static_cast<float>(normal_pixel + over_exposed_pixel * d->weight_over_exposure + demi_over_exposed_pixel * d->weight_demi_over_exposure));
 }
 
 float ExposureDetector::percent_underexposed()
@@ -134,15 +126,23 @@ float ExposureDetector::percent_underexposed()
 
     int normal_pixel = d->image.total() - under_exposed_pixel - demi_under_exposed_pixel;
 
-    return static_cast<float>(under_exposed_pixel * d->weight_under_exposure + demi_under_exposed_pixel * d->weight_demi_under_exposure) / 
-           static_cast<float>(normal_pixel + under_exposed_pixel * d->weight_under_exposure + demi_under_exposed_pixel * d->weight_demi_under_exposure);
+    return static_cast<float>(static_cast<float>(under_exposed_pixel * d->weight_under_exposure + demi_under_exposed_pixel * d->weight_demi_under_exposure) / 
+                              static_cast<float>(normal_pixel + under_exposed_pixel * d->weight_under_exposure + demi_under_exposed_pixel * d->weight_demi_under_exposure));
 }
 
 int ExposureDetector::count_by_condition(int minVal, int maxVal)
 {
     cv::Mat mat;
 
-    mat = (d->image >= minVal) & (d->image < maxVal);
+    if (minVal == 0)
+    {
+        cv::threshold(d->image,mat,maxVal, 1, cv::THRESH_BINARY_INV );
+    }
+    else
+    {
+        cv::threshold(d->image,mat,minVal, 0, cv::THRESH_TOZERO );
+        cv::threshold(mat     ,mat,maxVal, 0, cv::THRESH_TOZERO_INV );
+    }
 
     return cv::countNonZero(mat);
 }
