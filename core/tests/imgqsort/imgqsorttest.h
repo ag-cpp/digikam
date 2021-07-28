@@ -90,10 +90,10 @@ DataTestCases const dataTestCases =
         {QLatin1String("exposureDetection"), PairImageQuality(QLatin1String("test_underexposed_1.jpg"),1)},
         {QLatin1String("exposureDetection"), PairImageQuality(QLatin1String("test_underexposed_5.jpg"),2)},
 
-        {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_1.jpg"),3)},
-        {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_2.jpg"),3)},
-        {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_5.jpg"),2)},
-        {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_9.jpg"),1)},
+        {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_1.jpg"),1)},
+        {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_2.jpg"),1)},
+        {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_4.jpg"),2)},
+        {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_9.jpg"),3)},
 
         // {QLatin1String("sharpImage"), PairImageQuality(QLatin1String("blur_sky_1.jpg"),3)}, False case
         {QLatin1String("sharpImage"), PairImageQuality(QLatin1String("blur_rock_1.jpg"),3)},

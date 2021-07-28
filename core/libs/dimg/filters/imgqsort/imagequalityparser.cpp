@@ -28,7 +28,7 @@
 #include "blur_detector.h"
 #include "noise_detection.h"
 #include "exposure_detection.h"
-
+#include "compression_detection.h"
 namespace Digikam
 {
 
@@ -92,7 +92,7 @@ void ImageQualityParser::startAnalyse()
 
     double blur             = 0.0;
     double noise            = 0.0;
-    int    compressionLevel = 0;
+    float  compressionLevel = 0;
     double finalQuality     = 0.0;
     float exposureLevel     = 0.0;
 
@@ -119,7 +119,8 @@ void ImageQualityParser::startAnalyse()
     {
         // Returns number of blocks in the image.
 
-        compressionLevel = compressionDetector();
+        compressionLevel = CompressionDetector(d->image).detect();
+
         qCDebug(DIGIKAM_DIMG_LOG) << "Amount of compression artifacts present in image is:" << compressionLevel;
     }
 
@@ -178,7 +179,7 @@ void ImageQualityParser::startAnalyse()
 
             finalQuality            = (1 - finalBlur)          * d->imq.blurWeight;
         }
-
+        
         if (d->imq.detectNoise)
         {
             double finalNoise         = noise * 100.0;
@@ -192,12 +193,16 @@ void ImageQualityParser::startAnalyse()
 
             finalQuality            = (1 - finalExposure )* 100;
         }
+
+        if (d->imq.detectCompression)
+        {
+            double finalCompression   = (1 - compressionLevel) * 100.0;        
+
+            finalQuality            =  finalCompression; 
+        }
         
 
         qCDebug(DIGIKAM_DIMG_LOG) << "Final Quality estimated: " << finalQuality;
-
-        // Assigning PickLabels
-
         if ((int)finalQuality <= d->imq.rejectedThreshold)
         {
             *d->label = RejectedLabel;
