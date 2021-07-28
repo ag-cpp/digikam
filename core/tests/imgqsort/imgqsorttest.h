@@ -65,6 +65,8 @@ private Q_SLOTS:
     void testParseTestImagesForNoiseDetection();
     void testParseTestImagesForImageHighSO();
     void testParseTestImagesForVariousTypeNoise();
+    void testParseTestImagesForExposureDetection_sun();
+    void testParseTestImagesForExposureDetection_backlight();
 };
 
 // pair name image - quality expected
@@ -83,10 +85,10 @@ DataTestCases const dataTestCases =
         {QLatin1String("noiseDetection"), PairImageQuality(QLatin1String("test_noised_5.jpg"),2)},
         {QLatin1String("noiseDetection"), PairImageQuality(QLatin1String("test_noised_9.jpg"),1)},
 
-        {QLatin1String("exposureDetection"), PairImageQuality(QLatin1String("test_overexposed_1.jpg"),3)},
+        {QLatin1String("exposureDetection"), PairImageQuality(QLatin1String("test_overexposed_5.jpg"),2)},
         {QLatin1String("exposureDetection"), PairImageQuality(QLatin1String("test_overexposed_9.jpg"),1)},
-        {QLatin1String("exposureDetection"), PairImageQuality(QLatin1String("test_underexposed_1.jpg"),3)},
-        {QLatin1String("exposureDetection"), PairImageQuality(QLatin1String("test_underexposed_9.jpg"),1)},
+        {QLatin1String("exposureDetection"), PairImageQuality(QLatin1String("test_underexposed_1.jpg"),1)},
+        {QLatin1String("exposureDetection"), PairImageQuality(QLatin1String("test_underexposed_5.jpg"),2)},
 
         {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_1.jpg"),3)},
         {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_2.jpg"),3)},
@@ -108,9 +110,16 @@ DataTestCases const dataTestCases =
         {QLatin1String("defocusImage"), PairImageQuality(QLatin1String("blur_tree_3.jpg"),1)},
         {QLatin1String("defocusImage"), PairImageQuality(QLatin1String("blur_street_3.jpg"),1)},
 
-        {QLatin1String("blurBackGroundImage"), PairImageQuality(QLatin1String("blur_blurbackground_1.jpg"),3)},
         {QLatin1String("blurBackGroundImage"), PairImageQuality(QLatin1String("blur_blurbackground_2.jpg"),3)},
         {QLatin1String("blurBackGroundImage"), PairImageQuality(QLatin1String("blur_blurbackground_3.jpg"),3)},
+        
+        {QLatin1String("exposureBacklight"), PairImageQuality(QLatin1String("exposure_backlight_1.jpg"),1)},
+        {QLatin1String("exposureBacklight"), PairImageQuality(QLatin1String("exposure_backlight_2.jpg"),1)},
+        {QLatin1String("exposureBacklight"), PairImageQuality(QLatin1String("exposure_backlight_3.jpg"),1)},
+
+        {QLatin1String("exposureSun"), PairImageQuality(QLatin1String("exposure_sun_1.jpg"),2)},
+        {QLatin1String("exposureSun"), PairImageQuality(QLatin1String("exposure_sun_2.jpg"),2)},
+        {QLatin1String("exposureSun"), PairImageQuality(QLatin1String("exposure_sun_3.jpg"),1)},
 
         {QLatin1String("highISO"), PairImageQuality(QLatin1String("noise_book_1.jpg"),3)},
         {QLatin1String("highISO"), PairImageQuality(QLatin1String("noise_book_2.jpg"),1)},
