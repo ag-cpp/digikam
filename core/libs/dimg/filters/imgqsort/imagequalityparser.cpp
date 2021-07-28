@@ -27,6 +27,7 @@
 // Local includes 
 #include "blur_detector.h"
 #include "noise_detection.h"
+#include "exposure_detection.h"
 
 namespace Digikam
 {
@@ -93,8 +94,7 @@ void ImageQualityParser::startAnalyse()
     double noise            = 0.0;
     int    compressionLevel = 0;
     double finalQuality     = 0.0;
-    double underLevel       = 0.0;
-    double overLevel        = 0.0;
+    float exposureLevel     = 0.0;
 
     // If blur option is selected in settings, run the blur detection algorithms
 
@@ -127,9 +127,8 @@ void ImageQualityParser::startAnalyse()
     {
         // Returns percents of over-exposure in the image
 
-        exposureAmount(underLevel, overLevel);
-        qCDebug(DIGIKAM_DIMG_LOG) << "Under-exposure percents in image is: " << underLevel;
-        qCDebug(DIGIKAM_DIMG_LOG) << "Over-exposure percents in image is:  " << overLevel;
+        exposureLevel = ExposureDetector(d->image).detect();
+        qCDebug(DIGIKAM_DIMG_LOG) << "Under/Over exposure percents in image is: " << exposureLevel;
     }
 
 #ifdef TRACE
@@ -187,6 +186,14 @@ void ImageQualityParser::startAnalyse()
             finalQuality            = 100 - finalNoise;
         }
 
+        if (d->imq.detectExposure)
+        {
+            float finalExposure      = exposureLevel;
+
+            finalQuality            = (1 - finalExposure )* 100;
+        }
+        
+
         qCDebug(DIGIKAM_DIMG_LOG) << "Final Quality estimated: " << finalQuality;
 
         // Assigning PickLabels
@@ -197,7 +204,8 @@ void ImageQualityParser::startAnalyse()
         }
         else if (((int)finalQuality > d->imq.rejectedThreshold) &&
                  ((int)finalQuality <= d->imq.acceptedThreshold))
-        {   
+
+        {
             *d->label = PendingLabel;
         }
         else

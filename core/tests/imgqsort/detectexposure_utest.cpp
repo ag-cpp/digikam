@@ -21,7 +21,7 @@
  *
  * ============================================================ */
 
-#include "imgqsorttest.h"
+#include "detectexposure_utest.h"
 
 // Qt includes
 
@@ -40,14 +40,13 @@
 
 using namespace Digikam;
 
-QTEST_MAIN(ImgQSortTest)
+QTEST_MAIN(ImgQSortTestDetecteExposure)
 
-
-ImgQSortTest::ImgQSortTest(QObject* const)
+ImgQSortTestDetecteExposure::ImgQSortTestDetecteExposure(QObject* const)
 {
 }
 
-void ImgQSortTest::testParseTestImages(const QString& testcase_name, DetectionType mode)
+void ImgQSortTestDetecteExposure::testParseTestImages(const QString& testcase_name, DetectionType mode)
 {
     QStringList imageNames;
     QList<PairImageQuality> dataTest = dataTestCases.values(testcase_name);
@@ -67,50 +66,35 @@ void ImgQSortTest::testParseTestImages(const QString& testcase_name, DetectionTy
     }
 }
 
-void ImgQSortTest::initTestCase()
+void ImgQSortTestDetecteExposure::initTestCase()
 {
     QDir dir(QFINDTESTDATA("../../dplugins/dimg"));
     qputenv("DK_PLUGIN_PATH", dir.canonicalPath().toUtf8());
     DPluginLoader::instance()->init();
 }
 
-void ImgQSortTest::cleanupTestCase()
+void ImgQSortTestDetecteExposure::cleanupTestCase()
 {
 }
 
-QDir ImgQSortTest::imageDir() const
+QDir ImgQSortTestDetecteExposure::imageDir() const
 {
     QDir dir(QFINDTESTDATA("data/"));
-    qCDebug(DIGIKAM_TESTS_LOG) << "Images Directory:" << dir;
+    qDebug(DIGIKAM_TESTS_LOG) << "Images Directory:" << dir;
     return dir;
 }
 
-void ImgQSortTest::testParseTestImagesForBlurDetection()
+void ImgQSortTestDetecteExposure::testParseTestImagesForExposureDetection()
 {
-    // testParseTestImages(QLatin1String("blurDetection"), DETECTBLUR);
+    testParseTestImages(QLatin1String("exposureDetection"), DETECTEXPOSURE);
 }
 
-void ImgQSortTest::testParseTestImagesForCompressionDetection()
+void ImgQSortTestDetecteExposure::testParseTestImagesForExposureDetection_backlight()
 {
-    // testParseTestImages(QLatin1String("compressionDetection"), DETECTCOMPRESSION);
-}
+    testParseTestImages(QLatin1String("exposureBacklight"), DETECTEXPOSURE);
+} 
 
-void ImgQSortTest::testParseTestImagesForBlurDetection_SharpImage()
+void ImgQSortTestDetecteExposure::testParseTestImagesForExposureDetection_sun()
 {
-    // testParseTestImages(QLatin1String("sharpImage"), DETECTBLUR);
-}
-
-void ImgQSortTest::testParseTestImagesForBlurDetection_MotionBlurImage()
-{
-    // testParseTestImages(QLatin1String("motionBlurImage"), DETECTBLUR);
-}
-
-void ImgQSortTest::testParseTestImagesForBlurDetection_DefocusImage()
-{
-    // testParseTestImages(QLatin1String("defocusImage"), DETECTBLUR);
-}
-
-void ImgQSortTest::testParseTestImagesForBlurDetection_BlurBackGroundImage()
-{
-    // testParseTestImages(QLatin1String("blurBackGroundImage"), DETECTBLUR);
-}
+    testParseTestImages(QLatin1String("exposureSun"), DETECTEXPOSURE);
+} 
