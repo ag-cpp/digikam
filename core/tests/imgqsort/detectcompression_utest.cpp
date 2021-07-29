@@ -59,3 +59,17 @@ void ImgQSortTestDetectCompression::testParseTestImagesForCompressionDetection()
         QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
     }
 }
+
+void ImgQSortTestDetectCompression::testParseTestImagesForCompressionDetection_failCase()
+{
+    QList<PairImageQuality> dataTest = getDataTestCases().values(QLatin1String("compressionDetection_failCase"));
+
+    QHash<QString, int> results = testParseTestImages(QLatin1String("compressionDetection_failCase"), DETECTCOMPRESSION);
+
+    for (const auto& image_refQuality : dataTest)
+    {
+        QEXPECT_FAIL("", "Will fix in the next release", Continue);
+
+        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
+    }
+}

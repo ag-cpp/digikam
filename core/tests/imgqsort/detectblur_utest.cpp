@@ -107,3 +107,17 @@ void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection_BlurBackGroundI
         QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
     }
 }
+
+void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection_FailCase()
+{
+    QList<PairImageQuality> dataTest = getDataTestCases().values(QLatin1String("blurDetectionFailTest"));
+
+    QHash<QString, int> results = testParseTestImages(QLatin1String("blurDetectionFailTest"), DETECTBLUR);
+
+    for (const auto& image_refQuality : dataTest)
+    {
+        QEXPECT_FAIL("", "Will fix in the next release", Continue);
+
+        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
+    }
+}

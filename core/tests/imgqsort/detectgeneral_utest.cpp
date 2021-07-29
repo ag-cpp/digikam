@@ -21,7 +21,7 @@
  *
  * ============================================================ */
 
-#include "imgqsorttest_utest.h"
+#include "detectgeneral_utest.h"
 
 // Qt includes
 

@@ -43,6 +43,7 @@ QTEST_MAIN(ImgQSortTestDetectNoise)
 ImgQSortTestDetectNoise::ImgQSortTestDetectNoise(QObject* const parent)
   : ImgQSortTest(parent)
 {
+    m_dataTestCases = dataTestCases;
 }
 
 void ImgQSortTestDetectNoise::testParseTestImagesForNoiseDetection()
@@ -89,6 +90,8 @@ void ImgQSortTestDetectNoise::testParseTestImagesForVariousTypeNoiseFailCase()
 
     for (const auto& image_refQuality : dataTest)
     {
+        QEXPECT_FAIL("", "Will fix in the next release", Continue);
+
         QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
     }
 }

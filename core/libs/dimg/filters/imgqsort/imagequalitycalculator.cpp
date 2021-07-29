@@ -39,8 +39,8 @@ class Q_DECL_HIDDEN ImageQualityCalculator::Private
 public:
 
     explicit Private()
-      : threshold_punish(10.0),
-        weight_punish(20)
+      : threshold_punish(0.9),
+        weight_punish(20.0)
     {
     }
 
