@@ -50,7 +50,8 @@ ImgQSortTestDetectBlur::ImgQSortTestDetectBlur(QObject* const parent)
 
 void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection()
 {
-    QHash<QString, bool> results = testParseTestImages(QLatin1String("blurDetection"), DETECTBLUR);
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("blurDetection"), 
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTBLUR);
 
     for (const auto& test_case : results.keys())
     {

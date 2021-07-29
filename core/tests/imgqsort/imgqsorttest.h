@@ -111,6 +111,32 @@ protected:
 
         return results_test;
     }
+
+    template <typename Function>
+    QHash<QString, bool> testParseTestImages(const QString& testcase_name, Function ParseTestFunc, auto parameter)
+    {
+        QStringList imageNames;
+        
+        QList<PairImageQuality> dataTest = getDataTestCases().values(testcase_name);
+        
+        for (const auto& image_refQuality : dataTest)
+        {
+            imageNames << image_refQuality.first;
+        }
+
+        QFileInfoList list = imageDir().entryInfoList(imageNames,QDir::Files, QDir::Name);
+
+        QHash<QString, int> results_detection = ParseTestFunc(parameter, list);
+
+        QHash<QString, bool> results_test;
+
+        for (const auto& image_refQuality : dataTest)
+        {
+            results_test.insert(image_refQuality.first, results_detection.value(image_refQuality.first) == image_refQuality.second);
+        }
+
+        return results_test;
+    }
     
     DataTestCases getDataTestCases() const
     {
