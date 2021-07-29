@@ -50,7 +50,8 @@ ImgQSortTestDetectCompression::ImgQSortTestDetectCompression(QObject* const pare
 
 void ImgQSortTestDetectCompression::testParseTestImagesForCompressionDetection()
 {
-    QHash<QString, bool> results = testParseTestImages(QLatin1String("compressionDetection"), DETECTCOMPRESSION);
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("compressionDetection"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTCOMPRESSION);
 
     for (const auto& test_case : results.keys())
     {
@@ -60,7 +61,8 @@ void ImgQSortTestDetectCompression::testParseTestImagesForCompressionDetection()
 
 void ImgQSortTestDetectCompression::testParseTestImagesForCompressionDetection_failCase()
 {
-    QHash<QString, bool> results = testParseTestImages(QLatin1String("compressionDetection_failCase"), DETECTCOMPRESSION);
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("compressionDetection_failCase"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTCOMPRESSION);
 
     for (const auto& test_case : results.keys())
     {

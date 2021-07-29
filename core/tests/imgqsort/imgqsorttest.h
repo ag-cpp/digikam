@@ -112,8 +112,8 @@ protected:
         return results_test;
     }
 
-    template <typename Function>
-    QHash<QString, bool> testParseTestImages(const QString& testcase_name, Function ParseTestFunc, auto parameter)
+    template <typename Function, typename Parameter>
+    QHash<QString, bool> testParseTestImages(const QString& testcase_name, Function ParseTestFunc, Parameter parameter)
     {
         QStringList imageNames;
         

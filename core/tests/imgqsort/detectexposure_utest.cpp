@@ -45,7 +45,9 @@ ImgQSortTestDetecteExposure::ImgQSortTestDetecteExposure(QObject* const parent)
 
 void ImgQSortTestDetecteExposure::testParseTestImagesForExposureDetection()
 {
-    QHash<QString, bool> results = testParseTestImages(QLatin1String("exposureDetection"), DETECTEXPOSURE);
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("exposureDetection"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTEXPOSURE);
+
 
     for (const auto& test_case : results.keys())
     {
@@ -55,7 +57,8 @@ void ImgQSortTestDetecteExposure::testParseTestImagesForExposureDetection()
 
 void ImgQSortTestDetecteExposure::testParseTestImagesForExposureDetection_backlight()
 {
-    QHash<QString, bool> results = testParseTestImages(QLatin1String("exposureBacklight"), DETECTEXPOSURE);
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("exposureBacklight"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTEXPOSURE);
 
     for (const auto& test_case : results.keys())
     {
@@ -65,7 +68,8 @@ void ImgQSortTestDetecteExposure::testParseTestImagesForExposureDetection_backli
 
 void ImgQSortTestDetecteExposure::testParseTestImagesForExposureDetection_sun()
 {
-    QHash<QString, bool> results = testParseTestImages(QLatin1String("exposureSun"), DETECTEXPOSURE);
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("exposureSun"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTEXPOSURE);
 
     for (const auto& test_case : results.keys())
     {

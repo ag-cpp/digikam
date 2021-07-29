@@ -61,7 +61,8 @@ void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection()
 
 void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection_SharpImage()
 {
-    QHash<QString, bool> results = testParseTestImages(QLatin1String("sharpImage"), DETECTBLUR);
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("sharpImage"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTBLUR);
 
     for (const auto& test_case : results.keys())
     {
@@ -71,7 +72,8 @@ void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection_SharpImage()
 
 void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection_MotionBlurImage()
 {
-    QHash<QString, bool> results = testParseTestImages(QLatin1String("motionBlurImage"), DETECTBLUR);
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("motionBlurImage"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTBLUR);
 
     for (const auto& test_case : results.keys())
     {
@@ -81,7 +83,8 @@ void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection_MotionBlurImage
 
 void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection_DefocusImage()
 {
-    QHash<QString, bool> results = testParseTestImages(QLatin1String("defocusImage"), DETECTBLUR);
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("defocusImage"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTBLUR);
 
     for (const auto& test_case : results.keys())
     {
@@ -91,7 +94,8 @@ void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection_DefocusImage()
 
 void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection_BlurBackGroundImage()
 {
-    QHash<QString, bool> results = testParseTestImages(QLatin1String("blurBackGroundImage"), DETECTBLUR);
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("blurBackGroundImage"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTBLUR);
 
     for (const auto& test_case : results.keys())
     {
@@ -101,7 +105,8 @@ void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection_BlurBackGroundI
 
 void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection_FailCase()
 {
-    QHash<QString, bool> results = testParseTestImages(QLatin1String("blurDetectionFailTest"), DETECTBLUR);
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("blurDetectionFailTest"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTBLUR);
 
     for (const auto& test_case : results.keys())
     {

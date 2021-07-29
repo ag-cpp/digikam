@@ -48,7 +48,8 @@ ImgQSortTestDetectNoise::ImgQSortTestDetectNoise(QObject* const parent)
 
 void ImgQSortTestDetectNoise::testParseTestImagesForNoiseDetection()
 {
-    QHash<QString, bool> results = testParseTestImages(QLatin1String("noiseDetection"), DETECTNOISE);
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("noiseDetection"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTNOISE);
 
     for (const auto& test_case : results.keys())
     {
@@ -58,7 +59,8 @@ void ImgQSortTestDetectNoise::testParseTestImagesForNoiseDetection()
 
 void ImgQSortTestDetectNoise::testParseTestImagesForImageHighSO()
 {
-    QHash<QString, bool> results = testParseTestImages(QLatin1String("highISO"), DETECTNOISE);
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("highISO"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTNOISE);
 
     for (const auto& test_case : results.keys())
     {
@@ -68,7 +70,8 @@ void ImgQSortTestDetectNoise::testParseTestImagesForImageHighSO()
 
 void ImgQSortTestDetectNoise::testParseTestImagesForVariousTypeNoise()
 {
-    QHash<QString, bool> results = testParseTestImages(QLatin1String("variousTypesNoise"), DETECTNOISE);
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("variousTypesNoise"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTNOISE);
 
     for (const auto& test_case : results.keys())
     {
@@ -78,7 +81,8 @@ void ImgQSortTestDetectNoise::testParseTestImagesForVariousTypeNoise()
 
 void ImgQSortTestDetectNoise::testParseTestImagesForVariousTypeNoiseFailCase()
 {
-    QHash<QString, bool> results = testParseTestImages(QLatin1String("variousTypesNoiseFailCase"), DETECTNOISE);
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("variousTypesNoiseFailCase"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTNOISE);
 
     for (const auto& test_case : results.keys())
     {

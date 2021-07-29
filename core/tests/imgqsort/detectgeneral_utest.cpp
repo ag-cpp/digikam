@@ -48,7 +48,8 @@ ImgQSortTestGeneral::ImgQSortTestGeneral(QObject* const)
 
 void ImgQSortTestGeneral::testParseTestImagesForGeneralBadImage()
 {
-    QHash<QString, bool> results = testParseTestImages(QLatin1String("badImage"), DETECTIONGENERAL);
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("badImage"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTIONGENERAL);
 
     for (const auto& test_case : results.keys())
     {
@@ -58,7 +59,8 @@ void ImgQSortTestGeneral::testParseTestImagesForGeneralBadImage()
 
 void ImgQSortTestGeneral::testParseTestImagesForGeneralQuiteBadImage()
 {
-    QHash<QString, bool> results = testParseTestImages(QLatin1String("quiteBadImage"), DETECTIONGENERAL);
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("quiteBadImage"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTIONGENERAL);
 
     for (const auto& test_case : results.keys())
     {
@@ -68,7 +70,8 @@ void ImgQSortTestGeneral::testParseTestImagesForGeneralQuiteBadImage()
 
 void ImgQSortTestGeneral::testParseTestImagesForGeneralNormalImage()
 {
-    QHash<QString, bool> results = testParseTestImages(QLatin1String("normalImage"), DETECTIONGENERAL);
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("normalImage"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTIONGENERAL);
 
     for (const auto& test_case : results.keys())
     {
@@ -78,7 +81,8 @@ void ImgQSortTestGeneral::testParseTestImagesForGeneralNormalImage()
 
 void ImgQSortTestGeneral::testParseTestImagesForGeneralQuiteGoodImage()
 {
-    QHash<QString, bool> results = testParseTestImages(QLatin1String("quiteGoodImage"), DETECTIONGENERAL);
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("quiteGoodImage"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTIONGENERAL);
 
     for (const auto& test_case : results.keys())
     {
@@ -88,7 +92,8 @@ void ImgQSortTestGeneral::testParseTestImagesForGeneralQuiteGoodImage()
 
 void ImgQSortTestGeneral::testParseTestImagesForGeneralGoodImage()
 {
-    QHash<QString, bool> results = testParseTestImages(QLatin1String("goodImage"), DETECTIONGENERAL);
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("goodImage"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTIONGENERAL);
 
     for (const auto& test_case : results.keys())
     {
@@ -100,7 +105,8 @@ void ImgQSortTestGeneral::testParseTestImagesForSunImage()
 {
     CustomDetection customSettings {true,true,false,true};
 
-    QHash<QString, bool> results = testParseTestImages(QLatin1String("sunImage"), customSettings);
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("sunImage"),
+                                                       ImgQSortTest_ParseTestImagesCustomDetection, customSettings);
 
     for (const auto& test_case : results.keys())
     {
