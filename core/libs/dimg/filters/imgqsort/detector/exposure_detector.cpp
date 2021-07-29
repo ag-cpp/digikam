@@ -101,8 +101,6 @@ float ExposureDetector::detect() const
     
     float underexposed = percent_underexposed();
 
-    qInfo()<<"overexposed"<<overexposed<<"underexposed"<<underexposed;
-
     return std::max(overexposed, underexposed);
 }
 

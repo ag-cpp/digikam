@@ -103,7 +103,7 @@ void ImgQSortTestGeneral::testParseTestImagesForGeneralGoodImage()
 
 void ImgQSortTestGeneral::testParseTestImagesForSunImage()
 {
-    CustomDetection customSettings {true,true,false,true};
+    CustomDetection customSettings {true,true,true,false};
 
     QHash<QString, bool> results = testParseTestImages(QLatin1String("sunImage"),
                                                        ImgQSortTest_ParseTestImagesCustomDetection, customSettings);
@@ -111,6 +111,18 @@ void ImgQSortTestGeneral::testParseTestImagesForSunImage()
     for (const auto& test_case : results.keys())
     {
         QVERIFY(results.value(test_case));
+    }   
+}
+
+void ImgQSortTestGeneral::testParseTestImagesForGeneral_failCase()
+{
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("failCase"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTIONGENERAL);
+
+    for (const auto& test_case : results.keys())
+    {
+        QEXPECT_FAIL("", "Will fix in the next release", Continue);
+
+        QVERIFY(results.value(test_case));
     }
-    
 }

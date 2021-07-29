@@ -111,7 +111,6 @@ void ImageQualityCalculator::adjustWeightByQualityLevel() const
         {
             result.weight *= d->weight_punish;
             
-            qInfo()<<result.detetionType<<result.weight<<result.score;
         }
     }
 }

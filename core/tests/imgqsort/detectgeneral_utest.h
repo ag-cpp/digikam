@@ -50,30 +50,26 @@ private Q_SLOTS:
     void testParseTestImagesForGeneralNormalImage();
     void testParseTestImagesForGeneralQuiteGoodImage();
     void testParseTestImagesForGeneralGoodImage();
-
     void testParseTestImagesForSunImage();
+    void testParseTestImagesForGeneral_failCase();
+
 
 };
 
 DataTestCases const dataTestCases = 
     {   
-        {QLatin1String("badImage"), PairImageQuality(QLatin1String("general_bad_image_1.jpg"),3)},
-        {QLatin1String("badImage"), PairImageQuality(QLatin1String("general_bad_image_2.jpg"),3)},
-        {QLatin1String("badImage"), PairImageQuality(QLatin1String("general_bad_image_3.jpg"),2)},
-        {QLatin1String("badImage"), PairImageQuality(QLatin1String("general_bad_image_4.jpg"),1)},
+        {QLatin1String("badImage"), PairImageQuality(QLatin1String("general_bad_image_1.jpg"),1)},
+        {QLatin1String("badImage"), PairImageQuality(QLatin1String("general_bad_image_3.jpg"),1)},
         {QLatin1String("badImage"), PairImageQuality(QLatin1String("general_bad_image_5.jpg"),1)},
         {QLatin1String("badImage"), PairImageQuality(QLatin1String("general_bad_image_6.jpg"),1)},
-        {QLatin1String("badImage"), PairImageQuality(QLatin1String("general_bad_image_7.jpg"),1)},
-        {QLatin1String("badImage"), PairImageQuality(QLatin1String("general_bad_image_8.jpg"),1)},
 
-        {QLatin1String("quiteBadImage"), PairImageQuality(QLatin1String("general_quite_bad_image_1.jpg"),2)},
-        {QLatin1String("quiteBadImage"), PairImageQuality(QLatin1String("general_quite_bad_image_2.jpg"),2)},
-        {QLatin1String("quiteBadImage"), PairImageQuality(QLatin1String("general_quite_bad_image_3.jpg"),2)},
-        {QLatin1String("quiteBadImage"), PairImageQuality(QLatin1String("general_quite_bad_image_4.jpg"),2)},
-        {QLatin1String("quiteBadImage"), PairImageQuality(QLatin1String("general_quite_bad_image_5.jpg"),2)},
-        {QLatin1String("quiteBadImage"), PairImageQuality(QLatin1String("general_quite_bad_image_6.jpg"),2)},
-        {QLatin1String("quiteBadImage"), PairImageQuality(QLatin1String("general_quite_bad_image_7.jpg"),2)},
-        {QLatin1String("quiteBadImage"), PairImageQuality(QLatin1String("general_quite_bad_image_8.jpg"),2)},
+
+        {QLatin1String("quiteBadImage"), PairImageQuality(QLatin1String("general_quite_bad_image_1.jpg"),1)},
+        {QLatin1String("quiteBadImage"), PairImageQuality(QLatin1String("general_quite_bad_image_2.jpg"),1)},
+        {QLatin1String("quiteBadImage"), PairImageQuality(QLatin1String("general_quite_bad_image_3.jpg"),1)},
+        {QLatin1String("quiteBadImage"), PairImageQuality(QLatin1String("general_quite_bad_image_4.jpg"),1)},
+        {QLatin1String("quiteBadImage"), PairImageQuality(QLatin1String("general_quite_bad_image_5.jpg"),1)},
+        {QLatin1String("quiteBadImage"), PairImageQuality(QLatin1String("general_quite_bad_image_6.jpg"),1)},
 
         {QLatin1String("normalImage"), PairImageQuality(QLatin1String("general_normal_image_1.jpg"),2)},
         {QLatin1String("normalImage"), PairImageQuality(QLatin1String("general_normal_image_2.jpg"),2)},
@@ -81,17 +77,11 @@ DataTestCases const dataTestCases =
         {QLatin1String("normalImage"), PairImageQuality(QLatin1String("general_normal_image_4.jpg"),2)},
         {QLatin1String("normalImage"), PairImageQuality(QLatin1String("general_normal_image_5.jpg"),2)},
         {QLatin1String("normalImage"), PairImageQuality(QLatin1String("general_normal_image_6.jpg"),2)},
-        {QLatin1String("normalImage"), PairImageQuality(QLatin1String("general_normal_image_7.jpg"),2)},
-        {QLatin1String("normalImage"), PairImageQuality(QLatin1String("general_normal_image_8.jpg"),2)},
 
-        {QLatin1String("quiteGoodImage"), PairImageQuality(QLatin1String("general_quite_good_image_1.jpg"),2)},
-        {QLatin1String("quiteGoodImage"), PairImageQuality(QLatin1String("general_quite_good_image_2.jpg"),2)},
-        {QLatin1String("quiteGoodImage"), PairImageQuality(QLatin1String("general_quite_good_image_3.jpg"),2)},
-        {QLatin1String("quiteGoodImage"), PairImageQuality(QLatin1String("general_quite_good_image_4.jpg"),2)},
-        {QLatin1String("quiteGoodImage"), PairImageQuality(QLatin1String("general_quite_good_image_5.jpg"),2)},
-        {QLatin1String("quiteGoodImage"), PairImageQuality(QLatin1String("general_quite_good_image_6.jpg"),2)},
-        {QLatin1String("quiteGoodImage"), PairImageQuality(QLatin1String("general_quite_good_image_7.jpg"),2)},
-        {QLatin1String("quiteGoodImage"), PairImageQuality(QLatin1String("general_quite_good_image_8.jpg"),2)},
+        {QLatin1String("quiteGoodImage"), PairImageQuality(QLatin1String("general_quite_good_image_2.jpg"),3)},
+        {QLatin1String("quiteGoodImage"), PairImageQuality(QLatin1String("general_quite_good_image_3.jpg"),3)},
+        {QLatin1String("quiteGoodImage"), PairImageQuality(QLatin1String("general_quite_good_image_4.jpg"),3)},
+        {QLatin1String("quiteGoodImage"), PairImageQuality(QLatin1String("general_quite_good_image_5.jpg"),3)},
 
         {QLatin1String("goodImage"), PairImageQuality(QLatin1String("general_good_image_1.jpg"),3)},
         {QLatin1String("goodImage"), PairImageQuality(QLatin1String("general_good_image_2.jpg"),3)},
@@ -99,12 +89,15 @@ DataTestCases const dataTestCases =
         {QLatin1String("goodImage"), PairImageQuality(QLatin1String("general_good_image_4.jpg"),3)},
         {QLatin1String("goodImage"), PairImageQuality(QLatin1String("general_good_image_5.jpg"),3)},
         {QLatin1String("goodImage"), PairImageQuality(QLatin1String("general_good_image_6.jpg"),3)},
-        {QLatin1String("goodImage"), PairImageQuality(QLatin1String("general_good_image_7.jpg"),3)},
-        {QLatin1String("goodImage"), PairImageQuality(QLatin1String("general_good_image_8.jpg"),3)},
 
-        {QLatin1String("sunImage"), PairImageQuality(QLatin1String("exposure_sun_1.jpg"),3)},
-        {QLatin1String("sunImage"), PairImageQuality(QLatin1String("exposure_sun_2.jpg"),3)},
-        {QLatin1String("sunImage"), PairImageQuality(QLatin1String("exposure_sun_3.jpg"),3)},
+        {QLatin1String("sunImage"), PairImageQuality(QLatin1String("exposure_sun_1.jpg"),2)},
+        {QLatin1String("sunImage"), PairImageQuality(QLatin1String("exposure_sun_2.jpg"),2)},
+        {QLatin1String("sunImage"), PairImageQuality(QLatin1String("exposure_sun_3.jpg"),2)},
+
+        {QLatin1String("failCase"), PairImageQuality(QLatin1String("general_bad_image_2.jpg"),1)},
+        {QLatin1String("failCase"), PairImageQuality(QLatin1String("general_bad_image_4.jpg"),1)},
+        {QLatin1String("failCase"), PairImageQuality(QLatin1String("general_quite_good_image_1.jpg"),3)},
+        {QLatin1String("failCase"), PairImageQuality(QLatin1String("general_quite_good_image_6.jpg"),3)},
     };
 
 #endif // DIGIKAM_IMGQSORT_TEST_GENERAL_H

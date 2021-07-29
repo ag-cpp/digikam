@@ -108,37 +108,37 @@ void ImageQualityParser::startAnalyse()
 
 #ifdef TRACE
 
-    QFile filems("imgqsortresult.txt");
+    // QFile filems("imgqsortresult.txt");
 
-    if (filems.open(QIODevice::Append | QIODevice::Text))
-    {
-        QTextStream oms(&filems);
-        oms << "File:" << d->image.originalFilePath() << endl;
+    // if (filems.open(QIODevice::Append | QIODevice::Text))
+    // {
+    //     QTextStream oms(&filems);
+    //     oms << "File:" << d->image.originalFilePath() << endl;
 
-        if (d->imq.detectBlur)
-        {
-            oms << "Blur Present:" << blur << endl;
-            oms << "Blur Present(using LoG filter):"<< blur2 << endl;
-        }
+    //     if (d->imq.detectBlur)
+    //     {
+    //         oms << "Blur Present:" << blur << endl;
+    //         oms << "Blur Present(using LoG filter):"<< blur2 << endl;
+    //     }
 
-        if (d->imq.detectNoise)
-        {
-            oms << "Noise Present:" << noise << endl;
-        }
+    //     if (d->imq.detectNoise)
+    //     {
+    //         oms << "Noise Present:" << noise << endl;
+    //     }
 
-        if (d->imq.detectCompression)
-        {
-            oms << "Compression Present:" << compressionLevel << endl;
-        }
+    //     if (d->imq.detectCompression)
+    //     {
+    //         oms << "Compression Present:" << compressionLevel << endl;
+    //     }
 
-        if (d->imq.detectExposure)
-        {
-            oms << "Under-exposure Percents:" << underLevel << endl;
-            oms << "Over-exposure Percents:"  << overLevel << endl;
-        }
+    //     if (d->imq.detectExposure)
+    //     {
+    //         oms << "Under-exposure Percents:" << underLevel << endl;
+    //         oms << "Over-exposure Percents:"  << overLevel << endl;
+    //     }
 
-        filems.close();
-    }
+    //     filems.close();
+    // }
 
 #endif // TRACE
 

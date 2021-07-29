@@ -104,7 +104,7 @@ ImageQualityContainer ImgQSortTest_ArrangeCustomSettings (const CustomDetection&
     return settings;
 }
 
-QHash<QString, int> ImgQSortTest_ParseTestImagesCore(ImageQualityContainer settings, const QFileInfoList& list)
+QHash<QString, int> ImgQSortTest_ParseTestImagesCore(const ImageQualityContainer& settings, const QFileInfoList& list)
 {
     qCDebug(DIGIKAM_TESTS_LOG) << "Quality Detection Settings:" << settings;
 
@@ -114,24 +114,24 @@ QHash<QString, int> ImgQSortTest_ParseTestImagesCore(ImageQualityContainer setti
     {
         QString path = inf.filePath();
         qCDebug(DIGIKAM_TESTS_LOG) << path;
-
+        
         DImg dimg    = PreviewLoadThread::loadFastSynchronously(path, 1024);
 
         if (dimg.isNull())
         {
             qCDebug(DIGIKAM_TESTS_LOG) << path << "File cannot be loaded...";
         }
-
+        
         PickLabel pick;
         ImageQualityParser parser(dimg, settings, &pick);
         parser.startAnalyse();
-
         results.insert( path.split(QLatin1String("/")).last(), pick);
     }
 
     qCInfo(DIGIKAM_TESTS_LOG) << "Quality Results (0:None, 1:Rejected, 2:Pending, 3:Accepted):";
 
-    for (const auto& image_name: results.keys()) {
+    for (const auto& image_name: results.keys()) 
+    {
         qCInfo(DIGIKAM_TESTS_LOG) << "==>" << image_name << ":" << results.value(image_name);
     }
 
@@ -147,6 +147,7 @@ QHash<QString, int> ImgQSortTest_ParseTestImagesDefautDetection(DetectionType ty
 
 QHash<QString, int> ImgQSortTest_ParseTestImagesCustomDetection(const CustomDetection& customSetting, const QFileInfoList& list)
 {
+    
     ImageQualityContainer settings = ImgQSortTest_ArrangeCustomSettings(customSetting);
 
     return ImgQSortTest_ParseTestImagesCore(settings, list);
