@@ -43,97 +43,81 @@ QTEST_MAIN(ImgQSortTestGeneral)
 
 ImgQSortTestGeneral::ImgQSortTestGeneral(QObject* const)
 {
-}
-
-void ImgQSortTestGeneral::testParseTestImages(const QString& testcase_name, DetectionType mode)
-{
-    QStringList imageNames;
-    QList<PairImageQuality> dataTest = dataTestCases.values(testcase_name);
-    
-    for (const auto& image_refQuality : dataTest)
-    {
-        imageNames << image_refQuality.first;
-    }
-
-    QFileInfoList list = imageDir().entryInfoList(imageNames,QDir::Files, QDir::Name);
-
-    QHash<QString, int> results = ImgQSortTest_ParseTestImagesDefautDetection(mode, list);
-
-    for (const auto& image_refQuality : dataTest)
-    {
-        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
-    }
-}
-
-void ImgQSortTestGeneral::testParseTestImages(const QString& testcase_name, const CustomDetection* customSetting)
-{
-    QStringList imageNames;
-    QList<PairImageQuality> dataTest = dataTestCases.values(testcase_name);
-    
-    for (const auto& image_refQuality : dataTest)
-    {
-        imageNames << image_refQuality.first;
-    }
-
-    QFileInfoList list = imageDir().entryInfoList(imageNames,QDir::Files, QDir::Name);
-
-    QHash<QString, int> results = ImgQSortTest_ParseTestImagesCustomDetection(customSetting, list);
-
-    for (const auto& image_refQuality : dataTest)
-    {
-        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
-    }
-}
-
-void ImgQSortTestGeneral::initTestCase()
-{
-    QDir dir(QFINDTESTDATA("../../dplugins/dimg"));
-    qputenv("DK_PLUGIN_PATH", dir.canonicalPath().toUtf8());
-    DPluginLoader::instance()->init();
-}
-
-void ImgQSortTestGeneral::cleanupTestCase()
-{
-}
-
-QDir ImgQSortTestGeneral::imageDir() const
-{
-    QDir dir(QFINDTESTDATA("data/"));
-    qDebug(DIGIKAM_TESTS_LOG) << "Images Directory:" << dir;
-    return dir;
+    m_dataTestCases = dataTestCases;
 }
 
 void ImgQSortTestGeneral::testParseTestImagesForGeneralBadImage()
 {
-    testParseTestImages(QLatin1String("badImage"), DETECTIONGENERAL);
+    QList<PairImageQuality> dataTest = getDataTestCases().values(QLatin1String("badImage"));
+
+    QHash<QString, int> results = testParseTestImages(QLatin1String("badImage"), DETECTIONGENERAL);
+
+    for (const auto& image_refQuality : dataTest)
+    {
+        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
+    }
 }
 
 void ImgQSortTestGeneral::testParseTestImagesForGeneralQuiteBadImage()
 {
-    testParseTestImages(QLatin1String("quiteBadImage"), DETECTIONGENERAL);
+    QList<PairImageQuality> dataTest = getDataTestCases().values(QLatin1String("quiteBadImage"));
+
+    QHash<QString, int> results = testParseTestImages(QLatin1String("quiteBadImage"), DETECTIONGENERAL);
+
+    for (const auto& image_refQuality : dataTest)
+    {
+        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
+    }
 }
 
 void ImgQSortTestGeneral::testParseTestImagesForGeneralNormalImage()
 {
-    testParseTestImages(QLatin1String("normalImage"), DETECTIONGENERAL);
+    QList<PairImageQuality> dataTest = getDataTestCases().values(QLatin1String("normalImage"));
+
+    QHash<QString, int> results = testParseTestImages(QLatin1String("normalImage"), DETECTIONGENERAL);
+
+    for (const auto& image_refQuality : dataTest)
+    {
+        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
+    }
 }
 
 void ImgQSortTestGeneral::testParseTestImagesForGeneralQuiteGoodImage()
 {
-    testParseTestImages(QLatin1String("quiteGoodImage"), DETECTIONGENERAL);
+    QList<PairImageQuality> dataTest = getDataTestCases().values(QLatin1String("quiteGoodImage"));
+
+    QHash<QString, int> results = testParseTestImages(QLatin1String("quiteGoodImage"), DETECTIONGENERAL);
+
+    for (const auto& image_refQuality : dataTest)
+    {
+        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
+    }
 }
 
 void ImgQSortTestGeneral::testParseTestImagesForGeneralGoodImage()
 {
-    testParseTestImages(QLatin1String("goodImage"), DETECTIONGENERAL);
+    QList<PairImageQuality> dataTest = getDataTestCases().values(QLatin1String("goodImage"));
+
+    QHash<QString, int> results = testParseTestImages(QLatin1String("goodImage"), DETECTIONGENERAL);
+
+    for (const auto& image_refQuality : dataTest)
+    {
+        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
+    }
 }
 
 void ImgQSortTestGeneral::testParseTestImagesForSunImage()
 {
-    // Dont detect exposure
+    QList<PairImageQuality> dataTest = getDataTestCases().values(QLatin1String("badImage"));
+
     CustomDetection* customSettings = new CustomDetection{true,true,false,true};
 
-    testParseTestImages(QLatin1String("sunImage"), customSettings);
+    QHash<QString, int> results = testParseTestImages(QLatin1String("badImage"), customSettings);
+
+    for (const auto& image_refQuality : dataTest)
+    {
+        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
+    }
 
     delete customSettings;
 }

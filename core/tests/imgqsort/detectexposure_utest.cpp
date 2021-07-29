@@ -27,13 +27,10 @@
 
 #include <QTest>
 #include <QStringList>
-#include <QFileInfoList>
 #include <QDebug>
-#include <QDir>
 
 // Local includes
 
-#include "digikam_debug.h"
 #include "imgqsorttest.h"
 
 using namespace Digikam;

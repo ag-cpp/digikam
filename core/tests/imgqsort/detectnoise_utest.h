@@ -27,13 +27,11 @@
 // Qt includes
 
 #include <QObject>
-#include <QDir>
 #include <QMultiMap>
 #include <QString>
 
 // Local includes
 
-#include "imgqsorttest_shared.h"
 #include "imgqsorttest.h"
 
 using namespace Digikam;

@@ -33,10 +33,9 @@
 
 // Local includes
 
-#include "imgqsorttest_shared.h"
-#include "digikam_debug.h"
+#include "imgqsorttest.h"
 
-class ImgQSortTestGeneral : public QObject
+class ImgQSortTestGeneral : public ImgQSortTest
 {
     Q_OBJECT
 
@@ -44,16 +43,7 @@ public:
 
     explicit ImgQSortTestGeneral(QObject* const parent = nullptr);
 
-private:
-
-    QDir imageDir() const;
-    void testParseTestImages(const QString& testcase_name, DetectionType mode);
-    void testParseTestImages(const QString& testcase_name, const CustomDetection* customSetting);
-
 private Q_SLOTS:
-
-    void initTestCase();
-    void cleanupTestCase();
 
     void testParseTestImagesForGeneralBadImage();
     void testParseTestImagesForGeneralQuiteBadImage();
@@ -64,10 +54,6 @@ private Q_SLOTS:
     void testParseTestImagesForSunImage();
 
 };
-
-// pair name image - quality expected
-using PairImageQuality = QPair<QString, int>;
-using DataTestCases = QMultiMap<QString, PairImageQuality> ;
 
 DataTestCases const dataTestCases = 
     {   

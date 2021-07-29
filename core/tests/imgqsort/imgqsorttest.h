@@ -76,7 +76,22 @@ protected:
         QFileInfoList list = imageDir().entryInfoList(imageNames,QDir::Files, QDir::Name);
 
         return ImgQSortTest_ParseTestImagesDefautDetection(mode, list);
+    }
 
+    QHash<QString, int> testParseTestImages(const QString& testcase_name, const CustomDetection* customSetting)
+    {
+        QStringList imageNames;
+        
+        QList<PairImageQuality> dataTest = getDataTestCases().values(testcase_name);
+        
+        for (const auto& image_refQuality : dataTest)
+        {
+            imageNames << image_refQuality.first;
+        }
+
+        QFileInfoList list = imageDir().entryInfoList(imageNames,QDir::Files, QDir::Name);
+
+        return ImgQSortTest_ParseTestImagesCustomDetection(customSetting, list);
     }
     
     DataTestCases getDataTestCases() const

@@ -142,11 +142,11 @@ set(libdimgfilters_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/imgqsort/imagequalityparser.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/filters/imgqsort/imagequalitycalculator.cpp
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/imgqsort/blur_detector.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/imgqsort/noise_detector.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/imgqsort/exposure_detector.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/imgqsort/compression_detector.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/filters/imgqsort/detector.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/filters/imgqsort/detector/blur_detector.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/filters/imgqsort/detector/noise_detector.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/filters/imgqsort/detector/exposure_detector.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/filters/imgqsort/detector/compression_detector.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/filters/imgqsort/detector/detector.cpp
 
 )
 
