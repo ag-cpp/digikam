@@ -48,50 +48,42 @@ ImgQSortTestDetectNoise::ImgQSortTestDetectNoise(QObject* const parent)
 
 void ImgQSortTestDetectNoise::testParseTestImagesForNoiseDetection()
 {
-    QList<PairImageQuality> dataTest = getDataTestCases().values(QLatin1String("noiseDetection"));
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("noiseDetection"), DETECTNOISE);
 
-    QHash<QString, int> results = testParseTestImages(QLatin1String("noiseDetection"), DETECTNOISE);
-
-    for (const auto& image_refQuality : dataTest)
+    for (const auto& test_case : results.keys())
     {
-        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
+        QVERIFY(results.value(test_case));
     }
 }
 
 void ImgQSortTestDetectNoise::testParseTestImagesForImageHighSO()
 {
-    QList<PairImageQuality> dataTest = getDataTestCases().values(QLatin1String("highISO"));
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("highISO"), DETECTNOISE);
 
-    QHash<QString, int> results = testParseTestImages(QLatin1String("highISO"), DETECTNOISE);
-
-    for (const auto& image_refQuality : dataTest)
+    for (const auto& test_case : results.keys())
     {
-        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
+        QVERIFY(results.value(test_case));
     }
 }
 
 void ImgQSortTestDetectNoise::testParseTestImagesForVariousTypeNoise()
 {
-    QList<PairImageQuality> dataTest = getDataTestCases().values(QLatin1String("variousTypesNoise"));
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("variousTypesNoise"), DETECTNOISE);
 
-    QHash<QString, int> results = testParseTestImages(QLatin1String("variousTypesNoise"), DETECTNOISE);
-
-    for (const auto& image_refQuality : dataTest)
+    for (const auto& test_case : results.keys())
     {
-        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
+        QVERIFY(results.value(test_case));
     }
 }
 
 void ImgQSortTestDetectNoise::testParseTestImagesForVariousTypeNoiseFailCase()
 {
-    QList<PairImageQuality> dataTest = getDataTestCases().values(QLatin1String("variousTypesNoiseFailCase"));
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("variousTypesNoiseFailCase"), DETECTNOISE);
 
-    QHash<QString, int> results = testParseTestImages(QLatin1String("variousTypesNoiseFailCase"), DETECTNOISE);
-
-    for (const auto& image_refQuality : dataTest)
+    for (const auto& test_case : results.keys())
     {
         QEXPECT_FAIL("", "Will fix in the next release", Continue);
 
-        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
+        QVERIFY(results.value(test_case));
     }
 }

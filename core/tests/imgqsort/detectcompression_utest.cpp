@@ -50,26 +50,22 @@ ImgQSortTestDetectCompression::ImgQSortTestDetectCompression(QObject* const pare
 
 void ImgQSortTestDetectCompression::testParseTestImagesForCompressionDetection()
 {
-    QList<PairImageQuality> dataTest = getDataTestCases().values(QLatin1String("compressionDetection"));
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("compressionDetection"), DETECTCOMPRESSION);
 
-    QHash<QString, int> results = testParseTestImages(QLatin1String("compressionDetection"), DETECTCOMPRESSION);
-
-    for (const auto& image_refQuality : dataTest)
+    for (const auto& test_case : results.keys())
     {
-        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
+        QVERIFY(results.value(test_case));
     }
 }
 
 void ImgQSortTestDetectCompression::testParseTestImagesForCompressionDetection_failCase()
 {
-    QList<PairImageQuality> dataTest = getDataTestCases().values(QLatin1String("compressionDetection_failCase"));
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("compressionDetection_failCase"), DETECTCOMPRESSION);
 
-    QHash<QString, int> results = testParseTestImages(QLatin1String("compressionDetection_failCase"), DETECTCOMPRESSION);
-
-    for (const auto& image_refQuality : dataTest)
+    for (const auto& test_case : results.keys())
     {
         QEXPECT_FAIL("", "Will fix in the next release", Continue);
 
-        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
+        QVERIFY(results.value(test_case));
     }
 }

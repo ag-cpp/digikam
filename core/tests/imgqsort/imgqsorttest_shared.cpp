@@ -47,6 +47,10 @@ namespace Digikam
 
 ImageQualityContainer ImgQSortTest_ArrangeSettings (DetectionType type)
 {
+    qCDebug(DIGIKAM_TESTS_LOG) << "Process images for detection type "<<type;
+
+    qCInfo(DIGIKAM_TESTS_LOG)  << "Detection type (0:Blur, 1:Noise, 2:Compression, 3:Exposure, 4: General)";
+
     ImageQualityContainer settings;
 
     settings.detectBlur         = false;
@@ -83,22 +87,19 @@ ImageQualityContainer ImgQSortTest_ArrangeSettings (DetectionType type)
     return settings;
 }
 
-ImageQualityContainer ImgQSortTest_ArrangeCustomSettings (const CustomDetection* customSetting)
+ImageQualityContainer ImgQSortTest_ArrangeCustomSettings (const CustomDetection& customSetting)
 {
+    qCInfo(DIGIKAM_TESTS_LOG)  << "Detection type activate Blur "<< customSetting.detectBlur
+                               << "Noise "      << customSetting.detectNoise
+                               << "Compression "<< customSetting.detectCompression
+                               << "Exposure "   << customSetting.detectExposure;
+
     ImageQualityContainer settings;
 
-    if (customSetting == nullptr)
-    {
-        return ImgQSortTest_ArrangeSettings(DETECTIONGENERAL); // use general detection if 
-    }
-
-    else
-    {
-        settings.detectBlur         = customSetting->detectBlur;
-        settings.detectCompression  = customSetting->detectCompression;
-        settings.detectNoise        = customSetting->detectNoise;
-        settings.detectExposure     = customSetting->detectExposure;
-    }
+    settings.detectBlur         = customSetting.detectBlur;
+    settings.detectCompression  = customSetting.detectCompression;
+    settings.detectNoise        = customSetting.detectNoise;
+    settings.detectExposure     = customSetting.detectExposure;
 
     return settings;
 }
@@ -139,16 +140,12 @@ QHash<QString, int> ImgQSortTest_ParseTestImagesCore(ImageQualityContainer setti
 
 QHash<QString, int> ImgQSortTest_ParseTestImagesDefautDetection(DetectionType type, const QFileInfoList& list)
 {
-    qCDebug(DIGIKAM_TESTS_LOG) << "Process images for detection type "<<type;
-
-    qCInfo(DIGIKAM_TESTS_LOG)  << "Detection type (0:Blur, 1:Noise, 2:Compression, 3:Exposure, 4: General)";
-
     ImageQualityContainer settings = ImgQSortTest_ArrangeSettings(type);
 
     return ImgQSortTest_ParseTestImagesCore(settings, list);
 }
 
-QHash<QString, int> ImgQSortTest_ParseTestImagesCustomDetection(const CustomDetection* customSetting, const QFileInfoList& list)
+QHash<QString, int> ImgQSortTest_ParseTestImagesCustomDetection(const CustomDetection& customSetting, const QFileInfoList& list)
 {
     ImageQualityContainer settings = ImgQSortTest_ArrangeCustomSettings(customSetting);
 

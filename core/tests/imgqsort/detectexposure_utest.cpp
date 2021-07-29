@@ -45,36 +45,30 @@ ImgQSortTestDetecteExposure::ImgQSortTestDetecteExposure(QObject* const parent)
 
 void ImgQSortTestDetecteExposure::testParseTestImagesForExposureDetection()
 {
-    QList<PairImageQuality> dataTest = getDataTestCases().values(QLatin1String("exposureDetection"));
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("exposureDetection"), DETECTEXPOSURE);
 
-    QHash<QString, int> results = testParseTestImages(QLatin1String("exposureDetection"), DETECTEXPOSURE);
-
-    for (const auto& image_refQuality : dataTest)
+    for (const auto& test_case : results.keys())
     {
-        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
+        QVERIFY(results.value(test_case));
     }
 }
 
 void ImgQSortTestDetecteExposure::testParseTestImagesForExposureDetection_backlight()
 {
-    QList<PairImageQuality> dataTest = getDataTestCases().values(QLatin1String("exposureBacklight"));
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("exposureBacklight"), DETECTEXPOSURE);
 
-    QHash<QString, int> results = testParseTestImages(QLatin1String("exposureBacklight"), DETECTEXPOSURE);
-
-    for (const auto& image_refQuality : dataTest)
+    for (const auto& test_case : results.keys())
     {
-        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
+        QVERIFY(results.value(test_case));
     }
 } 
 
 void ImgQSortTestDetecteExposure::testParseTestImagesForExposureDetection_sun()
 {
-    QList<PairImageQuality> dataTest = getDataTestCases().values(QLatin1String("exposureSun"));
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("exposureSun"), DETECTEXPOSURE);
 
-    QHash<QString, int> results = testParseTestImages(QLatin1String("exposureSun"), DETECTEXPOSURE);
-
-    for (const auto& image_refQuality : dataTest)
+    for (const auto& test_case : results.keys())
     {
-        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
+        QVERIFY(results.value(test_case));
     }
 } 

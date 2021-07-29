@@ -50,74 +50,62 @@ ImgQSortTestDetectBlur::ImgQSortTestDetectBlur(QObject* const parent)
 
 void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection()
 {
-    QList<PairImageQuality> dataTest = getDataTestCases().values(QLatin1String("blurDetection"));
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("blurDetection"), DETECTBLUR);
 
-    QHash<QString, int> results = testParseTestImages(QLatin1String("blurDetection"), DETECTBLUR);
-
-    for (const auto& image_refQuality : dataTest)
+    for (const auto& test_case : results.keys())
     {
-        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
+        QVERIFY(results.value(test_case));
     }
 }
 
 void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection_SharpImage()
 {
-    QList<PairImageQuality> dataTest = getDataTestCases().values(QLatin1String("sharpImage"));
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("sharpImage"), DETECTBLUR);
 
-    QHash<QString, int> results = testParseTestImages(QLatin1String("sharpImage"), DETECTBLUR);
-
-    for (const auto& image_refQuality : dataTest)
+    for (const auto& test_case : results.keys())
     {
-        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
+        QVERIFY(results.value(test_case));
     }
 }
 
 void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection_MotionBlurImage()
 {
-    QList<PairImageQuality> dataTest = getDataTestCases().values(QLatin1String("motionBlurImage"));
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("motionBlurImage"), DETECTBLUR);
 
-    QHash<QString, int> results = testParseTestImages(QLatin1String("motionBlurImage"), DETECTBLUR);
-
-    for (const auto& image_refQuality : dataTest)
+    for (const auto& test_case : results.keys())
     {
-        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
+        QVERIFY(results.value(test_case));
     }
 }
 
 void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection_DefocusImage()
 {
-    QList<PairImageQuality> dataTest = getDataTestCases().values(QLatin1String("defocusImage"));
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("defocusImage"), DETECTBLUR);
 
-    QHash<QString, int> results = testParseTestImages(QLatin1String("defocusImage"), DETECTBLUR);
-
-    for (const auto& image_refQuality : dataTest)
+    for (const auto& test_case : results.keys())
     {
-        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
+        QVERIFY(results.value(test_case));
     }
 }
 
 void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection_BlurBackGroundImage()
 {
-    QList<PairImageQuality> dataTest = getDataTestCases().values(QLatin1String("blurBackGroundImage"));
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("blurBackGroundImage"), DETECTBLUR);
 
-    QHash<QString, int> results = testParseTestImages(QLatin1String("blurBackGroundImage"), DETECTBLUR);
-
-    for (const auto& image_refQuality : dataTest)
+    for (const auto& test_case : results.keys())
     {
-        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
+        QVERIFY(results.value(test_case));
     }
 }
 
 void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection_FailCase()
 {
-    QList<PairImageQuality> dataTest = getDataTestCases().values(QLatin1String("blurDetectionFailTest"));
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("blurDetectionFailTest"), DETECTBLUR);
 
-    QHash<QString, int> results = testParseTestImages(QLatin1String("blurDetectionFailTest"), DETECTBLUR);
-
-    for (const auto& image_refQuality : dataTest)
+    for (const auto& test_case : results.keys())
     {
         QEXPECT_FAIL("", "Will fix in the next release", Continue);
 
-        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
+        QVERIFY(results.value(test_case));
     }
 }

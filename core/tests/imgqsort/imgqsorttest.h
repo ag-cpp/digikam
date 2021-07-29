@@ -62,7 +62,7 @@ protected:
         return dir;
     }
     
-    QHash<QString, int> testParseTestImages(const QString& testcase_name, DetectionType mode)
+    QHash<QString, bool> testParseTestImages(const QString& testcase_name, DetectionType mode)
     {
         QStringList imageNames;
         
@@ -75,10 +75,19 @@ protected:
 
         QFileInfoList list = imageDir().entryInfoList(imageNames,QDir::Files, QDir::Name);
 
-        return ImgQSortTest_ParseTestImagesDefautDetection(mode, list);
+        QHash<QString, int> results_detection = ImgQSortTest_ParseTestImagesDefautDetection(mode, list);
+
+        QHash<QString, bool> results_test;
+
+        for (const auto& image_refQuality : dataTest)
+        {
+            results_test.insert(image_refQuality.first, results_detection.value(image_refQuality.first) == image_refQuality.second);
+        }
+
+        return results_test;
     }
 
-    QHash<QString, int> testParseTestImages(const QString& testcase_name, const CustomDetection* customSetting)
+    QHash<QString, bool> testParseTestImages(const QString& testcase_name, const CustomDetection& customSetting)
     {
         QStringList imageNames;
         
@@ -91,7 +100,16 @@ protected:
 
         QFileInfoList list = imageDir().entryInfoList(imageNames,QDir::Files, QDir::Name);
 
-        return ImgQSortTest_ParseTestImagesCustomDetection(customSetting, list);
+        QHash<QString, int> results_detection = ImgQSortTest_ParseTestImagesCustomDetection(customSetting, list);
+
+        QHash<QString, bool> results_test;
+
+        for (const auto& image_refQuality : dataTest)
+        {
+            results_test.insert(image_refQuality.first, results_detection.value(image_refQuality.first) == image_refQuality.second);
+        }
+
+        return results_test;
     }
     
     DataTestCases getDataTestCases() const
