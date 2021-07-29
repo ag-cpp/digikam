@@ -26,6 +26,10 @@
 // Qt includes
 
 #include <QStringList>
+#include <QObject>
+#include <QDir>
+#include <QMultiMap>
+#include <QTest>
 
 // Local includes
 
@@ -33,8 +37,13 @@
 #include "previewloadthread.h"
 #include "imagequalityparser.h"
 #include "digikam_debug.h"
+#include "digikam_globals.h"
+#include "imagequalitycontainer.h"
+#include "dpluginloader.h"
 
-using namespace Digikam;
+
+namespace Digikam
+{
 
 ImageQualityContainer ImgQSortTest_ArrangeSettings (DetectionType type)
 {
@@ -144,4 +153,6 @@ QHash<QString, int> ImgQSortTest_ParseTestImagesCustomDetection(const CustomDete
     ImageQualityContainer settings = ImgQSortTest_ArrangeCustomSettings(customSetting);
 
     return ImgQSortTest_ParseTestImagesCore(settings, list);
+}
+
 }

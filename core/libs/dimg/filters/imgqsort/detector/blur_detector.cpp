@@ -46,8 +46,8 @@ public:
         sigma_smooth_image(5),
         filtrer_defocus(115),
 
-        part_size_motion_blur(50),
-        edges_filtrer(10),
+        part_size_motion_blur(40),
+        edges_filtrer(8),
         theta_resolution(CV_PI/900),
         min_line_length(30),
         threshold_hough(15),
@@ -107,31 +107,6 @@ BlurDetector::BlurDetector(const DetectorDistortion& detector, const DImg& image
 BlurDetector::~BlurDetector()
 {
     delete d;
-}
-
-// Maybe this function will move to read_image() of imagequalityparser 
-// in case all detector of IQS use cv::Mat
-cv::Mat BlurDetector::prepareForDetection(const DImg& inputImage) const
-{
-    if (inputImage.isNull() || !inputImage.size().isValid())
-    {
-        return cv::Mat();
-    }
-
-    cv::Mat cvImage;
-    
-    int type               = inputImage.sixteenBit() ? CV_16UC4 : CV_8UC4;
-    
-    cv::Mat cvImageWrapper = cv::Mat(inputImage.height(), inputImage.width(), type, inputImage.bits());
-
-    cv::cvtColor(cvImageWrapper, cvImage, cv::COLOR_RGBA2BGR);
-
-    if (type == CV_16UC4)
-    {
-        cvImage.convertTo(cvImage, CV_8UC3, 1 / 256.0);
-    }
-
-    return cvImage;
 }
 
 float BlurDetector::detect() const

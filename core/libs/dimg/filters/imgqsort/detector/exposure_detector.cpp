@@ -95,7 +95,7 @@ ExposureDetector::~ExposureDetector()
     delete d;
 }
 
-float ExposureDetector::detect()
+float ExposureDetector::detect() const
 {
     float overexposed = percent_overexposed();
     
@@ -106,7 +106,7 @@ float ExposureDetector::detect()
     return std::max(overexposed, underexposed);
 }
 
-float ExposureDetector::percent_overexposed()
+float ExposureDetector::percent_overexposed() const
 {
     int over_exposed_pixel = count_by_condition(d->threshold_overexposed, 255);
 
@@ -118,7 +118,7 @@ float ExposureDetector::percent_overexposed()
                               static_cast<float>(normal_pixel + over_exposed_pixel * d->weight_over_exposure + demi_over_exposed_pixel * d->weight_demi_over_exposure));
 }
 
-float ExposureDetector::percent_underexposed()
+float ExposureDetector::percent_underexposed() const
 {
     int under_exposed_pixel = count_by_condition(0,d->threshold_underexposed);
 
@@ -130,19 +130,9 @@ float ExposureDetector::percent_underexposed()
                               static_cast<float>(normal_pixel + under_exposed_pixel * d->weight_under_exposure + demi_under_exposed_pixel * d->weight_demi_under_exposure));
 }
 
-int ExposureDetector::count_by_condition(int minVal, int maxVal)
+int ExposureDetector::count_by_condition(int minVal, int maxVal) const
 {
-    cv::Mat mat;
-
-    if (minVal == 0)
-    {
-        cv::threshold(d->image,mat,maxVal, 1, cv::THRESH_BINARY_INV );
-    }
-    else
-    {
-        cv::threshold(d->image,mat,minVal, 0, cv::THRESH_TOZERO );
-        cv::threshold(mat     ,mat,maxVal, 0, cv::THRESH_TOZERO_INV );
-    }
+    cv::Mat mat = (d->image >= minVal) & (d->image < maxVal);
 
     return cv::countNonZero(mat);
 }

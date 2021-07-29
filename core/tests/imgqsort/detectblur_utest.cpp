@@ -42,24 +42,17 @@ using namespace Digikam;
 
 QTEST_MAIN(ImgQSortTestDetectBlur)
 
-
-ImgQSortTestDetectBlur::ImgQSortTestDetectBlur(QObject* const)
+ImgQSortTestDetectBlur::ImgQSortTestDetectBlur(QObject* const parent)
+  : ImgQSortTest(parent)
 {
+    m_dataTestCases = dataTestCases;
 }
 
-void ImgQSortTestDetectBlur::testParseTestImages(const QString& testcase_name, DetectionType mode)
+void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection()
 {
-    QStringList imageNames;
-    QList<PairImageQuality> dataTest = dataTestCases.values(testcase_name);
-    
-    for (const auto& image_refQuality : dataTest)
-    {
-        imageNames << image_refQuality.first;
-    }
+    QList<PairImageQuality> dataTest = getDataTestCases().values(QLatin1String("blurDetection"));
 
-    QFileInfoList list = imageDir().entryInfoList(imageNames,QDir::Files, QDir::Name);
-
-    QHash<QString, int> results = ImgQSortTest_ParseTestImages(mode, list);
+    QHash<QString, int> results = testParseTestImages(QLatin1String("blurDetection"), DETECTBLUR);
 
     for (const auto& image_refQuality : dataTest)
     {
@@ -67,45 +60,50 @@ void ImgQSortTestDetectBlur::testParseTestImages(const QString& testcase_name, D
     }
 }
 
-void ImgQSortTestDetectBlur::initTestCase()
-{
-    QDir dir(QFINDTESTDATA("../../dplugins/dimg"));
-    qputenv("DK_PLUGIN_PATH", dir.canonicalPath().toUtf8());
-    DPluginLoader::instance()->init();
-}
-
-void ImgQSortTestDetectBlur::cleanupTestCase()
-{
-}
-
-QDir ImgQSortTestDetectBlur::imageDir() const
-{
-    QDir dir(QFINDTESTDATA("data/"));
-    qCDebug(DIGIKAM_TESTS_LOG) << "Images Directory:" << dir;
-    return dir;
-}
-
-void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection()
-{
-    testParseTestImages(QLatin1String("blurDetection"), DETECTBLUR);
-}
-
 void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection_SharpImage()
 {
-    testParseTestImages(QLatin1String("sharpImage"), DETECTBLUR);
+    QList<PairImageQuality> dataTest = getDataTestCases().values(QLatin1String("sharpImage"));
+
+    QHash<QString, int> results = testParseTestImages(QLatin1String("sharpImage"), DETECTBLUR);
+
+    for (const auto& image_refQuality : dataTest)
+    {
+        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
+    }
 }
 
 void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection_MotionBlurImage()
 {
-    testParseTestImages(QLatin1String("motionBlurImage"), DETECTBLUR);
+    QList<PairImageQuality> dataTest = getDataTestCases().values(QLatin1String("motionBlurImage"));
+
+    QHash<QString, int> results = testParseTestImages(QLatin1String("motionBlurImage"), DETECTBLUR);
+
+    for (const auto& image_refQuality : dataTest)
+    {
+        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
+    }
 }
 
 void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection_DefocusImage()
 {
-    testParseTestImages(QLatin1String("defocusImage"), DETECTBLUR);
+    QList<PairImageQuality> dataTest = getDataTestCases().values(QLatin1String("defocusImage"));
+
+    QHash<QString, int> results = testParseTestImages(QLatin1String("defocusImage"), DETECTBLUR);
+
+    for (const auto& image_refQuality : dataTest)
+    {
+        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
+    }
 }
 
 void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection_BlurBackGroundImage()
 {
-    testParseTestImages(QLatin1String("blurBackGroundImage"), DETECTBLUR);
+    QList<PairImageQuality> dataTest = getDataTestCases().values(QLatin1String("blurBackGroundImage"));
+
+    QHash<QString, int> results = testParseTestImages(QLatin1String("blurBackGroundImage"), DETECTBLUR);
+
+    for (const auto& image_refQuality : dataTest)
+    {
+        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
+    }
 }

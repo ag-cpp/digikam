@@ -33,32 +33,24 @@
 
 // Local includes
 
-#include "digikam_globals.h"
-#include "imagequalitycontainer.h"
-#include "dpluginloader.h"
 #include "digikam_debug.h"
+#include "imgqsorttest.h"
 
 using namespace Digikam;
 
 QTEST_MAIN(ImgQSortTestDetecteExposure)
 
-ImgQSortTestDetecteExposure::ImgQSortTestDetecteExposure(QObject* const)
+ImgQSortTestDetecteExposure::ImgQSortTestDetecteExposure(QObject* const parent)
+  : ImgQSortTest(parent)
 {
+    m_dataTestCases = dataTestCases;
 }
 
-void ImgQSortTestDetecteExposure::testParseTestImages(const QString& testcase_name, DetectionType mode)
+void ImgQSortTestDetecteExposure::testParseTestImagesForExposureDetection()
 {
-    QStringList imageNames;
-    QList<PairImageQuality> dataTest = dataTestCases.values(testcase_name);
-    
-    for (const auto& image_refQuality : dataTest)
-    {
-        imageNames << image_refQuality.first;
-    }
+    QList<PairImageQuality> dataTest = getDataTestCases().values(QLatin1String("exposureDetection"));
 
-    QFileInfoList list = imageDir().entryInfoList(imageNames,QDir::Files, QDir::Name);
-
-    QHash<QString, int> results = ImgQSortTest_ParseTestImages(mode, list);
+    QHash<QString, int> results = testParseTestImages(QLatin1String("exposureDetection"), DETECTEXPOSURE);
 
     for (const auto& image_refQuality : dataTest)
     {
@@ -66,35 +58,26 @@ void ImgQSortTestDetecteExposure::testParseTestImages(const QString& testcase_na
     }
 }
 
-void ImgQSortTestDetecteExposure::initTestCase()
-{
-    QDir dir(QFINDTESTDATA("../../dplugins/dimg"));
-    qputenv("DK_PLUGIN_PATH", dir.canonicalPath().toUtf8());
-    DPluginLoader::instance()->init();
-}
-
-void ImgQSortTestDetecteExposure::cleanupTestCase()
-{
-}
-
-QDir ImgQSortTestDetecteExposure::imageDir() const
-{
-    QDir dir(QFINDTESTDATA("data/"));
-    qDebug(DIGIKAM_TESTS_LOG) << "Images Directory:" << dir;
-    return dir;
-}
-
-void ImgQSortTestDetecteExposure::testParseTestImagesForExposureDetection()
-{
-    testParseTestImages(QLatin1String("exposureDetection"), DETECTEXPOSURE);
-}
-
 void ImgQSortTestDetecteExposure::testParseTestImagesForExposureDetection_backlight()
 {
-    testParseTestImages(QLatin1String("exposureBacklight"), DETECTEXPOSURE);
+    QList<PairImageQuality> dataTest = getDataTestCases().values(QLatin1String("exposureBacklight"));
+
+    QHash<QString, int> results = testParseTestImages(QLatin1String("exposureBacklight"), DETECTEXPOSURE);
+
+    for (const auto& image_refQuality : dataTest)
+    {
+        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
+    }
 } 
 
 void ImgQSortTestDetecteExposure::testParseTestImagesForExposureDetection_sun()
 {
-    testParseTestImages(QLatin1String("exposureSun"), DETECTEXPOSURE);
+    QList<PairImageQuality> dataTest = getDataTestCases().values(QLatin1String("exposureSun"));
+
+    QHash<QString, int> results = testParseTestImages(QLatin1String("exposureSun"), DETECTEXPOSURE);
+
+    for (const auto& image_refQuality : dataTest)
+    {
+        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
+    }
 } 

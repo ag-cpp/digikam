@@ -4,11 +4,11 @@
  * https://www.digikam.org
  *
  * Date        : 
- * Description : Image Quality Parser - blur detection
+ * Description : Image Quality Parser - noise detection
  *
  * Copyright (C) 2013-2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
  *
- * References  : 
+ * References  : http://www.arpnjournals.org/jeas/research_papers/rp_2016/jeas_1216_5505.pdf
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -23,8 +23,8 @@
  *
  * ============================================================ */
 
-#ifndef DIGIKAM_BLUR_DETECTOR_H
-#define DIGIKAM_BLUR_DETECTOR_H
+#ifndef DIGIKAM_COMPRESSION_DETECTOR_H
+#define DIGIKAM_COMPRESSION_DETECTOR_H
 
 // Local includes
 
@@ -35,28 +35,24 @@
 namespace Digikam
 {
 
-class BlurDetector : public DetectorDistortion
+class CompressionDetector : public DetectorDistortion 
 {
 public:
 
-    BlurDetector(const DImg& image);
-    explicit BlurDetector(const DetectorDistortion& detector, const DImg& image);
-    ~BlurDetector();
+    CompressionDetector(const DImg& image);
+    explicit CompressionDetector(const DetectorDistortion& detector);
+    ~CompressionDetector();
 
     float detect() const;
 
 private:
-    cv::Mat prepareForDetection(const DImg& inputImage)         const;
 
-    cv::Mat edgeDetection(const cv::Mat& image)                 const;
-    cv::Mat detectDefocusMap(const cv::Mat& edgesMap)           const;
-    cv::Mat detectMotionBlurMap(const cv::Mat& edgesMap)        const;
-    bool    isMotionBlur(const cv::Mat& frag)                   const;
+    template <typename Function>
+    cv::Mat checkEdgesBlock(const cv::Mat& gray_image, int blockSize, Function accessEdges) const;
+    cv::Mat detectMonoColorRegion() const;
 
-    bool    haveFocusRegion(const DImg& image)                  const;
-    cv::Mat detectBackgroundRegion(const cv::Mat& image)        const;
-    cv::Mat getWeightMap()                                      const;
-
+    float normalize(const float number);
+    
 private:
 
     class Private;
@@ -65,4 +61,4 @@ private:
 
 } // namespace Digikam
 
-#endif // DIGIKAM_BLUR_DETECTOR_H
+#endif // DIGIKAM_COMPRESSION_DETECTOR_H

@@ -29,7 +29,7 @@
 // Qt includes
 
 #include <QList>
-
+#include <QDebug>
 
 namespace Digikam
 {
@@ -39,19 +39,16 @@ class Q_DECL_HIDDEN ImageQualityCalculator::Private
 public:
 
     explicit Private()
-      : deltaWeight(10.o)
+      : threshold_punish(10.0),
+        weight_punish(20)
     {
     }
 
-    float deltaWeight;
+    float threshold_punish;
+    float weight_punish;
 
     QList<resultDetection> detectionResults;
 };
-
-bool resultLessThan(const ImageQualityCalculator::resultDetection& r1, const ImageQualityCalculator::resultDetection& r2) const
-{
-    return r1.score < r2.score;
-}
 
 ImageQualityCalculator::ImageQualityCalculator()
     : d(new Private)
@@ -87,8 +84,6 @@ void ImageQualityCalculator::normalizeWeight() const
 
 float ImageQualityCalculator::calculateQuality() const
 {
-    sortDetectionResults();
-
     adjustWeightByQualityLevel();
 
     normalizeWeight();
@@ -108,27 +103,16 @@ int ImageQualityCalculator::numberDetectors() const
     return d->detectionResults.count();
 }
 
-void ImageQualityCalculator::sortDetectionResults() const
-{
-    qSort(d->detectionResults.begin(), d->detectionResults.end(), resultLessThan);
-}
-
 void ImageQualityCalculator::adjustWeightByQualityLevel() const
 {
-    const int nb_detectors = numberDetectors();
-
-    if (!nb_detectors)
+    for (auto& result : d->detectionResults)
     {
-        return;
-    }
-
-    for (int i = 0; i < nb_detectors ; i++)
-    {
-        qInfo()<<"coef adjust"<<i - nb_detectors/2;
-
-        d->detectionResults.at(i).weight += d->deltaWeight * (i - nb_detectors/2);
-
-        qInfo()<<"weight after ajdust and score"<<d->detectionResults.at(i).weight << d->detectionResults.at(i).score;
+        if (result.score > d->threshold_punish)
+        {
+            result.weight *= d->weight_punish;
+            
+            qInfo()<<result.detetionType<<result.weight<<result.score;
+        }
     }
 }
 

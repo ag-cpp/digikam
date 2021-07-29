@@ -34,8 +34,12 @@
 // Local includes
 
 #include "imgqsorttest_shared.h"
+#include "imgqsorttest.h"
 
-class ImgQSortTestDetecteExposure : public QObject
+namespace Digikam
+{
+
+class ImgQSortTestDetecteExposure : public ImgQSortTest
 {
     Q_OBJECT
 
@@ -45,13 +49,7 @@ public:
 
 private:
 
-    QDir imageDir() const;
-    void testParseTestImages(const QString& testcase_name, DetectionType mode);
-
 private Q_SLOTS:
-
-    void initTestCase();
-    void cleanupTestCase();
 
     void testParseTestImagesForExposureDetection_sun();
     void testParseTestImagesForExposureDetection_backlight();
@@ -78,5 +76,7 @@ DataTestCases const dataTestCases =
         {QLatin1String("exposureDetection"), PairImageQuality(QLatin1String("test_underexposed_5.jpg"),2)},
 
     };
+
+}
 
 #endif // DIGIKAM_IMGQSORT_TEST_DETECT_EXPOSURE_H

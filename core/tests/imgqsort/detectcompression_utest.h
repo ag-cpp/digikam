@@ -34,8 +34,13 @@
 // Local includes
 
 #include "imgqsorttest_shared.h"
+#include "imgqsorttest.h"
 
-class ImgQSortTestDetectCompression : public QObject
+namespace Digikam
+
+{
+    
+class ImgQSortTestDetectCompression : public ImgQSortTest
 {
     Q_OBJECT
 
@@ -45,21 +50,11 @@ public:
 
 private:
 
-    QDir imageDir() const;
-    void testParseTestImages(const QString& testcase_name, DetectionType mode);
-
 private Q_SLOTS:
-
-    void initTestCase();
-    void cleanupTestCase();
 
     void testParseTestImagesForCompressionDetection();
 
 };
-
-// pair name image - quality expected
-using PairImageQuality = QPair<QString, int>;
-using DataTestCases = QMultiMap<QString, PairImageQuality> ;
 
 DataTestCases const dataTestCases = 
     {   
@@ -68,5 +63,7 @@ DataTestCases const dataTestCases =
         {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_4.jpg"),2)},
         {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_9.jpg"),3)},
     };
+
+}
 
 #endif // DIGIKAM_IMGQSORT_TEST_DETECT_COMPRESSION_H
