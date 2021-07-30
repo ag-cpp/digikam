@@ -15,7 +15,7 @@ faceEmbeddings = faceData[embeddingIndex].values
 labels = faceData[0].values
 
 reducer = umap.UMAP(n_neighbors=15, metric='euclidean', min_dist=0.1, n_components=2, transform_seed=42)
-reducer.fit(faceEmbeddings)
+reducer.fit(faceEmbeddings)exit()
 reducedEmbedding = reducer.transform(faceEmbeddings)
 
 reducedData = pd.DataFrame({'label':labels, 'X1': reducedEmbedding[:, 0], 'X2': reducedEmbedding[:, 1]})
