@@ -55,6 +55,23 @@ std::pair<cv::Mat, cv::Mat> loadData(const QString& fileName)
     return std::make_pair(predictors, labels);
 }
 
+cv::Mat extractTrainData(std::pair<cv::Mat, cv::Mat> data, int nbPoints)
+{
+    cv::Mat trainData;
+    std::unordered_map<int, int> counters;
+
+    for (int i = 0; i < data.first.rows; ++i) 
+    {
+        if (counters[data.second.row(i).at<int>(0)] < nbPoints)
+        {
+            ++counters[data.second.row(i).at<int>(0)];
+            trainData.push_back(data.first.row(i));
+        }
+    }
+
+    return trainData;
+}
+
 void save(std::pair<cv::Mat, cv::Mat> data, const QString& fileName) 
 {
     QFile file(fileName);
@@ -90,6 +107,7 @@ int main(int argc, char** argv)
     std::shared_ptr<QCommandLineParser> parser = parseOptions(app);
 
     std::pair<cv::Mat, cv::Mat> data = loadData(parser->value(QLatin1String("in")));
+    cv::Mat trainData = extractTrainData(data, 100);
 
     cv::Mat samples = data.first;
     
@@ -108,13 +126,15 @@ int main(int argc, char** argv)
         QElapsedTimer timer;
         timer.start();
 
-        cv::Mat window;
-        samples(cv::Range(i, std::min(i+100, samples.rows)), cv::Range(0, samples.cols)).copyTo(window);
-        cv::Mat projectedWindow = reducer.project(window);
+        cv::Mat buffer;
+        samples(cv::Range(i, std::min(i+100, samples.rows)), cv::Range(0, samples.cols)).copyTo(buffer);
 
-        projectedData.push_back(projectedWindow);
+
+        cv::Mat projected = Digikam::DimensionReducer::reduceDimension(trainData, buffer, 2, 4);
+
+        projectedData.push_back(projected);
         
-        qDebug() << "Parse through" << window.rows << "in" << timer.elapsed();
+        qDebug() << "Parse through" << 100 << "in" << timer.elapsed();
         i += 100;
     }
     */

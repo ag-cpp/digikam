@@ -4,7 +4,7 @@
 
 namespace Digikam 
 {
-cv::Mat DimensionReducer::reduceDimension(cv::Mat data, int outputDimension, int nbCore)
+cv::Mat DimensionReducer::reduceDimension(cv::Mat data, int outputDimension, int nbCPU)
 {
     cv::Mat projectedData(data.rows, outputDimension, CV_32F);
     TSNE::tsne_run_float(reinterpret_cast<float*>(data.data), 
@@ -14,18 +14,39 @@ cv::Mat DimensionReducer::reduceDimension(cv::Mat data, int outputDimension, int
                           outputDimension, 
                           30, 
                           0.5, 
-                          nbCore);
+                          nbCPU);
     
     return projectedData;
+}
+
+cv::Mat DimensionReducer::reduceDimension(cv::Mat trainData, cv::Mat newData, int outputDimension, int nbCPU) 
+{
+    cv::Mat buffer = trainData.clone();
+    buffer.push_back(newData);
+
+    cv::Mat projectedData(buffer.rows, outputDimension, CV_32F);
+    TSNE::tsne_run_float(reinterpret_cast<float*>(buffer.data), 
+                         buffer.rows, 
+                         buffer.cols, 
+                         reinterpret_cast<float*>(projectedData.data), 
+                         outputDimension, 
+                         30, 
+                         0.5, 
+                         nbCPU);
+
+    cv::Mat output;
+    projectedData(cv::Range(std::max(0, projectedData.rows - newData.rows), projectedData.rows), cv::Range(0, projectedData.cols)).copyTo(output);
+
+    return output;
 }
 
 class DimensionReducer::Private
 {
 public:
-    explicit Private(int capacity, int targetNbDimension, int nbCore)
+    explicit Private(int capacity, int targetNbDimension, int nbCPU)
         : capacity(capacity),
           targetNbDimension(targetNbDimension),
-          nbCore(nbCore)
+          nbCPU(nbCPU)
     {
     }
 
@@ -33,7 +54,7 @@ public:
     cv::Mat buffer;
     int capacity;
     int targetNbDimension;
-    int nbCore;
+    int nbCPU;
 };
 
 DimensionReducer::DimensionReducer(int bufferCapacity, int targetNbDimension, int nbCore)
@@ -60,7 +81,7 @@ cv::Mat DimensionReducer::project(cv::Mat data)
                           d->targetNbDimension, 
                           30, 
                           0.5, 
-                          d->nbCore);
+                          d->nbCPU);
 
     cv::Mat output;
     projectedData(cv::Range(std::max(0, projectedData.rows - data.rows), projectedData.rows), cv::Range(0, projectedData.cols)).copyTo(output);

@@ -196,10 +196,6 @@ void SplitTree::subdivide() {
         }
         
         SplitTree* qt = new SplitTree(this, data, mean_Y, width_Y);        
-        if (!qt) 
-        {
-            std::cout << "qt null" << std::endl;
-        }
         children.push_back(qt);
         delete[] bits; 
     }
