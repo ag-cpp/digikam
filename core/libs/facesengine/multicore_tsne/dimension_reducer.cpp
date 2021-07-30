@@ -48,9 +48,8 @@ DimensionReducer::~DimensionReducer()
 
 cv::Mat DimensionReducer::project(cv::Mat data) 
 {
+    d->buffer = d->buffer(cv::Range(std::max(0, d->buffer.rows - d->capacity + data.rows), d->buffer.rows), cv::Range(0, d->buffer.cols)); 
     d->buffer.push_back(data);
-    cv::Mat tempBuffer;
-    d->buffer(cv::Range(std::max(0, d->buffer.rows - d->capacity), d->buffer.rows), cv::Range(0, d->buffer.cols)).copyTo(tempBuffer);
 
     cv::Mat projectedData(tempBuffer.rows, d->targetNbDimension, CV_32F);
     TSNE::tsne_run_float(reinterpret_cast<float*>(tempBuffer.data), 
