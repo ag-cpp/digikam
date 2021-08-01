@@ -107,7 +107,7 @@ int main(int argc, char** argv)
     std::shared_ptr<QCommandLineParser> parser = parseOptions(app);
 
     std::pair<cv::Mat, cv::Mat> data = loadData(parser->value(QLatin1String("in")));
-    cv::Mat trainData = extractTrainData(data, 100);
+    //cv::Mat trainData = extractTrainData(data, 100);
 
     cv::Mat samples = data.first;
     
