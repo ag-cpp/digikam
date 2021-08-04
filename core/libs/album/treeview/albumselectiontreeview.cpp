@@ -288,8 +288,11 @@ void AlbumSelectionTreeView::slotScanForFaces()
     settings.alreadyScannedHandling = FaceScanSettings::Rescan;
     settings.albums                 = albums;
 
+    // TODO facesengine 2 replug face detector
+    /*
     FacesDetector* const tool = new FacesDetector(settings);
     tool->start();
+    */
 }
 
 void AlbumSelectionTreeView::slotRepairHiddenItems()

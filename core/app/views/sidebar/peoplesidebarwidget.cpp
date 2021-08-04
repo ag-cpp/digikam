@@ -193,6 +193,8 @@ void PeopleSideBarWidget::slotScanForFaces()
 
     if (!d->settingsWdg->settingsConflicted())
     {
+        // TODO facesengine 2 replug face detector
+        /*
         FacesDetector* const tool = new FacesDetector(faceScanSettings);
         tool->start();
 
@@ -204,6 +206,7 @@ void PeopleSideBarWidget::slotScanForFaces()
 
         connect(tool, SIGNAL(signalCanceled()),
                 this, SLOT(slotScanComplete()));
+        */
     }
     else
     {

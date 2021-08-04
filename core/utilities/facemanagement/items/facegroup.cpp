@@ -45,9 +45,12 @@ FaceGroup::FaceGroup(GraphicsDImgView* const view)
     connect(view->previewItem(), SIGNAL(stateChanged(int)),
             this, SLOT(itemStateChanged(int)));
 
+    // TODO facesengine replug pipeline
+    /*
     d->editPipeline.plugDatabaseEditor();
     d->editPipeline.plugTrainer();
     d->editPipeline.construct();
+    */
 }
 
 FaceGroup::~FaceGroup()
@@ -452,7 +455,8 @@ void FaceGroup::slotAssigned(const TaggingAction& action, const ItemInfo&, const
 
         if (tagId)
         {
-            face = d->editPipeline.confirm(d->info, face, d->view->previewItem()->image(), tagId, currentRegion);
+            // TODO facesengine replug pipeline
+            //face = d->editPipeline.confirm(d->info, face, d->view->previewItem()->image(), tagId, currentRegion);
         }
     }
 
@@ -467,7 +471,8 @@ void FaceGroup::slotRejected(const ItemInfo&, const QVariant& faceIdentifier)
     if (faceList.size() == 5)
     {
         FaceItem* const item = d->items[faceList[4].toInt()];
-        d->editPipeline.remove(d->info, item->face());
+        // TODO facesengine replug pipeline
+        //d->editPipeline.remove(d->info, item->face());
 
         item->setFace(FaceTagsIface());
         d->visibilityController->hideAndRemoveItem(item);
@@ -550,8 +555,10 @@ void FaceGroup::slotAddItemFinished(const QRectF& rect)
             preview.rotateAndFlip(d->info.orientation());
         }
 
-        FaceTagsIface face   = d->editPipeline.addManually(d->info, preview,
+        // TODO facesengine replug pipeline
+        FaceTagsIface face;   /*= d->editPipeline.addManually(d->info, preview,
                                                            TagRegion(faceRect));
+        */
 
         FaceItem* const item = d->addItem(face);
         d->visibilityController->setItemDirectlyVisible(item, true);
@@ -609,7 +616,8 @@ void FaceGroup::applyItemGeometryChanges()
 
         if (item->face().region() != currentRegion)
         {
-            d->editPipeline.editRegion(d->info, preview, item->face(), currentRegion);
+            // TODO facesengine replug pipeline
+            //d->editPipeline.editRegion(d->info, preview, item->face(), currentRegion);
         }
     }
 }

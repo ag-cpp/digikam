@@ -97,7 +97,8 @@ public:
     CheckableAlbumFilterModel* filterModel;
     TagPropertiesFilterModel*  filteredModel;
 
-    FacePipeline               editPipeline;
+    // TODO facesengine replug face pipeline
+    //FacePipeline               editPipeline;
 
     FaceGroup* const           q;
 };

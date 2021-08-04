@@ -66,7 +66,7 @@ public:
         duplicatesFinder(nullptr),
         metadataSynchronizer(nullptr),
         imageQualitySorter(nullptr),
-        facesDetector(nullptr),
+        //facesDetector(nullptr),
         databaseCleaner(nullptr)
     {
     }
@@ -83,7 +83,8 @@ public:
     DuplicatesFinder*      duplicatesFinder;
     MetadataSynchronizer*  metadataSynchronizer;
     ImageQualitySorter*    imageQualitySorter;
-    FacesDetector*         facesDetector;
+    // TODO facesengine 2 replug facedetector
+    //FacesDetector*         facesDetector;
     DbCleaner*             databaseCleaner;
 };
 
@@ -161,12 +162,15 @@ void MaintenanceMngr::slotToolCompleted(ProgressItem* tool)
         d->duplicatesFinder = nullptr;
         stage6();
     }
+    // TODO facesengine 2 replug face detector
+    /*
     else if (tool == dynamic_cast<ProgressItem*>(d->facesDetector))
     {
         d->facesDetector = nullptr;
         stage7();
     }
-   else if (tool == dynamic_cast<ProgressItem*>(d->imageQualitySorter))
+    */
+    else if (tool == dynamic_cast<ProgressItem*>(d->imageQualitySorter))
     {
         d->imageQualitySorter = nullptr;
         stage8();
@@ -185,7 +189,8 @@ void MaintenanceMngr::slotToolCanceled(ProgressItem* tool)
         (tool == dynamic_cast<ProgressItem*>(d->fingerPrintsGenerator)) ||
         (tool == dynamic_cast<ProgressItem*>(d->duplicatesFinder))      ||
         (tool == dynamic_cast<ProgressItem*>(d->databaseCleaner))       ||
-        (tool == dynamic_cast<ProgressItem*>(d->facesDetector))         ||
+        // TODO facesengine 2 replug face detector
+        //(tool == dynamic_cast<ProgressItem*>(d->facesDetector))         ||
         (tool == dynamic_cast<ProgressItem*>(d->imageQualitySorter))    ||
         (tool == dynamic_cast<ProgressItem*>(d->metadataSynchronizer)))
     {
@@ -317,9 +322,12 @@ void MaintenanceMngr::stage6()
     {
         // NOTE : Use multi-core CPU option is passed through FaceScanSettings
         d->settings.faceSettings.useFullCpu = d->settings.useMutiCoreCPU;
+        // TODO facesengine 2 replug face detector
+        /*
         d->facesDetector                    = new FacesDetector(d->settings.faceSettings);
         d->facesDetector->setNotificationEnabled(false);
         d->facesDetector->start();
+        */
     }
     else
     {

@@ -63,7 +63,8 @@ public:
 
     ItemViewUtilities*       utilities;
 
-    FacePipeline             editPipeline;
+    // TODO facesengine: Replug pipeline
+    //FacePipeline             editPipeline;
 
     DigikamItemDelegate*     normalDelegate;
     ItemFaceDelegate*        faceDelegate;

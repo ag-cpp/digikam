@@ -80,12 +80,15 @@ void ItemIconView::slotImageScanForFaces()
     settings.alreadyScannedHandling = FaceScanSettings::Rescan;
     settings.infos                  = selectedInfoList(ApplicationSettings::Tools);
 
+    // TODO facesengine 2 replug face detector
+    /*
     FacesDetector* const tool = new FacesDetector(settings);
 
     connect(tool, SIGNAL(signalComplete()),
             this, SLOT(slotRefreshImagePreview()));
 
     tool->start();
+    */
 }
 
 } // namespace Digikam

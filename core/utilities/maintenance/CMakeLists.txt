@@ -19,7 +19,8 @@ set(libmaintenance_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/newitemsfinder.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/thumbsgenerator.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/thumbstask.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/facesdetector.cpp
+    #TODO facesengine 1 replug detector pipeline
+    #${CMAKE_CURRENT_SOURCE_DIR}/facesdetector.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/fingerprintsgenerator.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/fingerprintstask.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/imagequalitysorter.cpp

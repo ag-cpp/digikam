@@ -81,13 +81,15 @@ DigikamItemView::DigikamItemView(QWidget* const parent)
 {
     installDefaultModels();
 
+    // TODO facesengine replug pipeline
+    /*
     d->editPipeline.plugDatabaseEditor();
     d->editPipeline.plugTrainer();
     d->editPipeline.construct();
 
     connect(&d->editPipeline, SIGNAL(scheduled()),
             this, SLOT(slotInitProgressIndicator()));
-
+    */
     d->normalDelegate = new DigikamItemDelegate(this);
     d->faceDelegate   = new ItemFaceDelegate(this);
 
@@ -437,7 +439,8 @@ void DigikamItemView::confirmFaces(const QList<QModelIndex>& indexes, int tagId)
 
     for (int i = 0 ; i < infos.size() ; ++i)
     {
-        d->editPipeline.confirm(infos[i], faces[i], tagId);
+        // TODO facesengine replug pipeline
+        //d->editPipeline.confirm(infos[i], faces[i], tagId);
     }
 }
 
@@ -458,7 +461,8 @@ void DigikamItemView::removeFaces(const QList<QModelIndex>& indexes)
 
     for (int i = 0 ; i < infos.size() ; ++i)
     {
-        d->editPipeline.remove(infos[i], faces[i]);
+        // TODO facesengine replug pipeline
+        //d->editPipeline.remove(infos[i], faces[i]);
     }
 }
 
@@ -482,14 +486,14 @@ void DigikamItemView::rejectFaces(const QList<QModelIndex>& indexes)
         if (FaceTags::isTheUnknownPerson(faces[i].tagId()))
         {
             // Reject signal was sent from an Unknown Face. Mark as Ignored.
-
-            d->editPipeline.editTag(infos[i], faces[i], FaceTags::ignoredPersonTagId());
+            // TODO facesengine replug pipeline
+            //d->editPipeline.editTag(infos[i], faces[i], FaceTags::ignoredPersonTagId());
         }
         else
         {
             // Reject face suggestion. Mark as Unknown.
-
-            d->editPipeline.editTag(infos[i], faces[i], FaceTags::unknownPersonTagId());
+            // TODO facesengine replug pipeline
+            //d->editPipeline.editTag(infos[i], faces[i], FaceTags::unknownPersonTagId());
         }
     }
 }
@@ -681,6 +685,8 @@ void DigikamItemView::slotInitProgressIndicator()
     {
         FileActionProgress* const item = new FileActionProgress(QLatin1String("FaceActionProgress"));
 
+        // TODO facesengine
+        /*
         connect(&d->editPipeline, SIGNAL(started(QString)),
                 item, SLOT(slotProgressStatus(QString)));
 
@@ -689,6 +695,7 @@ void DigikamItemView::slotInitProgressIndicator()
 
         connect(&d->editPipeline, SIGNAL(finished()),
                 item, SLOT(slotCompleted()));
+        */
     }
 }
 
