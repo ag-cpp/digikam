@@ -84,11 +84,16 @@ void ImageQualityCalculator::normalizeWeight() const
 
 float ImageQualityCalculator::calculateQuality() const
 {
+    if (!numberDetectors())
+    {
+        return -1;
+    }
+    
     adjustWeightByQualityLevel();
 
     normalizeWeight();
 
-    float damage;
+    float damage = 0.0;
 
     for (const auto result : d->detectionResults)
     {
@@ -109,8 +114,7 @@ void ImageQualityCalculator::adjustWeightByQualityLevel() const
     {
         if (result.score > d->threshold_punish)
         {
-            result.weight *= d->weight_punish;
-            
+            result.weight *= d->weight_punish;  
         }
     }
 }
