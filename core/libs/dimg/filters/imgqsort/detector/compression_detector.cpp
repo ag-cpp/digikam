@@ -157,7 +157,7 @@ cv::Mat CompressionDetector::detectMonoColorRegion() const
     
     cv::split(mat_subtraction, rgbChannels);
 
-    cv::Mat res = rgbChannels.at(0) + rgbChannels.at(1) + rgbChannels.at(2);
+    cv::Mat res = rgbChannels[0] + rgbChannels[1] + rgbChannels[2];
 
     cv::threshold(res,res,d->threshold_mono_color,1,cv::THRESH_BINARY_INV);
 

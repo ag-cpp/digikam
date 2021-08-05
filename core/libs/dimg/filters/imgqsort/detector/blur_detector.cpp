@@ -303,9 +303,7 @@ cv::Mat BlurDetector::detectBackgroundRegion(const cv::Mat& image)    const
                           d->part_size_mono_color, d->part_size_mono_color};
 
             cv::Mat subImg = image(rect);
-            
-            qCDebug(DIGIKAM_DIMG_LOG) << "Detect if each part is mono-color";
-            
+                        
             cv::Scalar mean, stddev;
 
             cv::meanStdDev(subImg,mean,stddev);
