@@ -87,7 +87,7 @@ public:
 };
 
 BlurDetector::BlurDetector(const DImg& image)
-    : DetectorDistortion(DetectorDistortion(image)),
+    : DetectorDistortion(image),
       d(new Private)
 {
     d->image = getCvImage();

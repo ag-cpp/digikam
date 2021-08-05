@@ -95,7 +95,7 @@ public:
 
 // Main noise detection
 NoiseDetector::NoiseDetector(const DImg& image)
-    :  DetectorDistortion(DetectorDistortion(image)),
+    :  DetectorDistortion(image),
        d(new Private)
 {
     cv::Mat cvImage = getCvImage();

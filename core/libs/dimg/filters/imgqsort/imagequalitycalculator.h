@@ -41,7 +41,7 @@ class ImageQualityCalculator
 {
 public:
 
-    struct resultDetection
+    struct ResultDetection
     {
         QString detetionType;
         float weight;

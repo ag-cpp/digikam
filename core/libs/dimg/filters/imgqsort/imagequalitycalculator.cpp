@@ -47,18 +47,18 @@ public:
     float threshold_punish;
     float weight_punish;
 
-    QList<resultDetection> detectionResults;
+    QList<ResultDetection> detectionResults;
 };
 
 ImageQualityCalculator::ImageQualityCalculator()
     : d(new Private)
 {
-    d->detectionResults = QList<resultDetection>();
+    d->detectionResults = QList<ResultDetection>();
 }
 
 void ImageQualityCalculator::addDetectionResult(const QString& name, const float score, const float weight) const
 {
-    resultDetection result;
+    ResultDetection result;
     
     result.detetionType = name;
     result.weight       = weight;
