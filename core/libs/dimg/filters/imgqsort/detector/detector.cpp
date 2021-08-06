@@ -36,38 +36,23 @@
 
 namespace Digikam
 {
-class Q_DECL_HIDDEN DetectorDistortion::Private
+
+DetectorDistortion::DetectorDistortion()
 {
-public:
-    explicit Private()
-    {
-    }
-
-    cv::Mat image;
-
-};
-
-DetectorDistortion::DetectorDistortion(const DImg& image)
-    :  d(new Private)
-{
-    d->image = prepareForDetection(image);
 }
 
 DetectorDistortion::DetectorDistortion(const DetectorDistortion& other)
-    :   d(new Private)
 {
-    d->image = other.d->image;
 }
 
 
 DetectorDistortion::~DetectorDistortion()
 {
-    delete d;
 }
 
 // Maybe this function will move to read_image() of imagequalityparser 
 // in case all detector of IQS use cv::Mat
-cv::Mat DetectorDistortion::prepareForDetection(const DImg& inputImage) const
+cv::Mat DetectorDistortion::prepareForDetection(const DImg& inputImage)
 {
     if (inputImage.isNull() || !inputImage.size().isValid())
     {
@@ -88,16 +73,6 @@ cv::Mat DetectorDistortion::prepareForDetection(const DImg& inputImage) const
     }
 
     return cvImage;
-}
-
-cv::Mat DetectorDistortion::getCvImage() const
-{
-    return d->image;
-}
-
-float DetectorDistortion::detect() const
-{
-    return -1.0;
 }
 
 }

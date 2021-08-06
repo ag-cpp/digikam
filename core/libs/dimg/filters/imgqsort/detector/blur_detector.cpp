@@ -63,8 +63,6 @@ public:
 
     }
 
-    cv::Mat image;
-
     float                               min_abs;
     float                               ordre_log_filtrer;
     float                               sigma_smooth_image;
@@ -87,20 +85,9 @@ public:
 };
 
 BlurDetector::BlurDetector(const DImg& image)
-    : DetectorDistortion(image),
+    : DetectorDistortion(),
       d(new Private)
 {
-    d->image = getCvImage();
-
-    d->have_focus_region = haveFocusRegion(image);
-}
-
-BlurDetector::BlurDetector(const DetectorDistortion& detector, const DImg& image)
-    :  DetectorDistortion(detector),
-       d(new Private)
-{
-    d->image = getCvImage();
-
     d->have_focus_region = haveFocusRegion(image);
 }
 
@@ -109,9 +96,9 @@ BlurDetector::~BlurDetector()
     delete d;
 }
 
-float BlurDetector::detect() const
+float BlurDetector::detect(const cv::Mat& image) const
 { 
-    cv::Mat edgesMap = edgeDetection(d->image);
+    cv::Mat edgesMap = edgeDetection(image);
 
     cv::Mat defocusMap = detectDefocusMap(edgesMap);
     defocusMap.convertTo(defocusMap,CV_8U);
@@ -119,7 +106,7 @@ float BlurDetector::detect() const
     cv::Mat motionBlurMap = detectMotionBlurMap(edgesMap);
     motionBlurMap.convertTo(motionBlurMap,CV_8U);
     
-    cv::Mat weightsMat = getWeightMap();
+    cv::Mat weightsMat = getWeightMap(image);
 
     cv::Mat blurMap = defocusMap + motionBlurMap;
 
@@ -256,19 +243,19 @@ bool BlurDetector::haveFocusRegion(const DImg& image)              const
     return !d->af_points.isEmpty();
 }
 
-cv::Mat BlurDetector::getWeightMap()                               const
+cv::Mat BlurDetector::getWeightMap(const cv::Mat& image)                               const
 {
-    cv::Mat res = cv::Mat::zeros(d->image.size(), CV_8UC1);
+    cv::Mat res = cv::Mat::zeros(image.size(), CV_8UC1);
 
     if (d->have_focus_region)
     {
         for (const auto point : d->af_points)
         {
-            int x_position_corner = std::max(static_cast<int>((point.x_position - point.width * 0.5  *d->ratio_expand_af_point) * d->image.size().width), 0);
-            int y_position_corner = std::max(static_cast<int>((point.y_position - point.height * 0.5 *d->ratio_expand_af_point) * d->image.size().height), 0);
+            int x_position_corner = std::max(static_cast<int>((point.x_position - point.width * 0.5  *d->ratio_expand_af_point) * image.size().width), 0);
+            int y_position_corner = std::max(static_cast<int>((point.y_position - point.height * 0.5 *d->ratio_expand_af_point) * image.size().height), 0);
 
-            int width = std::min(d->image.size().width - x_position_corner, static_cast<int>(point.width * d->image.size().width * d->ratio_expand_af_point) );
-            int height = std::min(d->image.size().height - y_position_corner, static_cast<int>(point.height * d->image.size().height * d->ratio_expand_af_point) );
+            int width = std::min(image.size().width - x_position_corner, static_cast<int>(point.width * image.size().width * d->ratio_expand_af_point) );
+            int height = std::min(image.size().height - y_position_corner, static_cast<int>(point.height * image.size().height * d->ratio_expand_af_point) );
 
             cv::Rect rect{x_position_corner, y_position_corner,
                           width, height};
@@ -278,7 +265,7 @@ cv::Mat BlurDetector::getWeightMap()                               const
     }
     else
     {
-        res = detectBackgroundRegion(d->image);
+        res = detectBackgroundRegion(image);
         
         cv::threshold(res, res, 0.5, 1, cv::THRESH_BINARY_INV);
     }

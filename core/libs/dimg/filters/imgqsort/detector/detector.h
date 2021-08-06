@@ -39,23 +39,16 @@ class DetectorDistortion
 {
 public:
 
-    explicit DetectorDistortion(const DImg& image);
+    explicit DetectorDistortion();
     DetectorDistortion(const DetectorDistortion& detector);
     virtual ~DetectorDistortion();
 
-    virtual float detect() const;
+    virtual float detect(const cv::Mat& image) const = 0;
 
-private:
-    cv::Mat prepareForDetection(const DImg& inputImage)     const;
+public:
 
-protected:
+    static cv::Mat prepareForDetection(const DImg& inputImage);
 
-    cv::Mat getCvImage()                                    const;
-
-private:
-
-    class Private;
-    Private* const d;
 };
 
 } // namespace Digikam

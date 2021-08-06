@@ -52,8 +52,6 @@ public:
     {
     }
 
-    cv::Mat image;
-
     int threshold_overexposed;
     int threshold_demi_overexposed;
     int threshold_underexposed;
@@ -67,26 +65,10 @@ public:
 
 };
 
-ExposureDetector::ExposureDetector(const DImg& image)
-    :  DetectorDistortion(image),
+ExposureDetector::ExposureDetector()
+    :  DetectorDistortion(),
        d(new Private)
 {
-    cv::Mat cvImage = getCvImage();
-
-    cv::cvtColor(cvImage, cvImage, cv::COLOR_BGR2GRAY);
-    
-    d->image = cvImage;
-}
-
-ExposureDetector::ExposureDetector(const DetectorDistortion& detector)
-    :  DetectorDistortion(detector),
-       d(new Private)
-{
-    cv::Mat cvImage = getCvImage();
-
-    cv::cvtColor(cvImage, cvImage, cv::COLOR_BGR2GRAY);
-    
-    d->image = cvImage;
 }
 
 
@@ -95,42 +77,42 @@ ExposureDetector::~ExposureDetector()
     delete d;
 }
 
-float ExposureDetector::detect() const
+float ExposureDetector::detect(const cv::Mat& image) const
 {
-    float overexposed = percent_overexposed();
+    float overexposed = percent_overexposed(image);
     
-    float underexposed = percent_underexposed();
+    float underexposed = percent_underexposed(image);
 
     return std::max(overexposed, underexposed);
 }
 
-float ExposureDetector::percent_overexposed() const
+float ExposureDetector::percent_overexposed(const cv::Mat& image) const
 {
-    int over_exposed_pixel = count_by_condition(d->threshold_overexposed, 255);
+    int over_exposed_pixel = count_by_condition(image, d->threshold_overexposed, 255);
 
-    int demi_over_exposed_pixel = count_by_condition(d->threshold_demi_overexposed,d->threshold_overexposed);
+    int demi_over_exposed_pixel = count_by_condition(image, d->threshold_demi_overexposed,d->threshold_overexposed);
 
-    int normal_pixel = d->image.total() - over_exposed_pixel - demi_over_exposed_pixel;
+    int normal_pixel = image.total() - over_exposed_pixel - demi_over_exposed_pixel;
 
     return static_cast<float>(static_cast<float>(over_exposed_pixel * d->weight_over_exposure + demi_over_exposed_pixel * d->weight_demi_over_exposure) / 
                               static_cast<float>(normal_pixel + over_exposed_pixel * d->weight_over_exposure + demi_over_exposed_pixel * d->weight_demi_over_exposure));
 }
 
-float ExposureDetector::percent_underexposed() const
+float ExposureDetector::percent_underexposed(const cv::Mat& image) const
 {
-    int under_exposed_pixel = count_by_condition(0,d->threshold_underexposed);
+    int under_exposed_pixel = count_by_condition(image, 0, d->threshold_underexposed);
 
-    int demi_under_exposed_pixel = count_by_condition(d->threshold_underexposed,d->threshold_demi_underexposed);
+    int demi_under_exposed_pixel = count_by_condition(image, d->threshold_underexposed, d->threshold_demi_underexposed);
 
-    int normal_pixel = d->image.total() - under_exposed_pixel - demi_under_exposed_pixel;
+    int normal_pixel = image.total() - under_exposed_pixel - demi_under_exposed_pixel;
 
     return static_cast<float>(static_cast<float>(under_exposed_pixel * d->weight_under_exposure + demi_under_exposed_pixel * d->weight_demi_under_exposure) / 
                               static_cast<float>(normal_pixel + under_exposed_pixel * d->weight_under_exposure + demi_under_exposed_pixel * d->weight_demi_under_exposure));
 }
 
-int ExposureDetector::count_by_condition(int minVal, int maxVal) const
+int ExposureDetector::count_by_condition(const cv::Mat& image, int minVal, int maxVal) const
 {
-    cv::Mat mat = (d->image >= minVal) & (d->image < maxVal);
+    cv::Mat mat = (image >= minVal) & (image < maxVal);
 
     return cv::countNonZero(mat);
 }

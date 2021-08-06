@@ -66,13 +66,19 @@ void ImageQualityParser::startAnalyse()
 
     QScopedPointer<ImageQualityCalculator> calculator(new ImageQualityCalculator());
 
-    const DetectorDistortion detector(d->image);
+    // const DetectorDistortion detector(d->image);
+
+    cv::Mat cvImage = DetectorDistortion::prepareForDetection(d->image);
+
+    cv::Mat grayImage;
+
+    cv::cvtColor(cvImage, grayImage, cv::COLOR_BGR2GRAY);
 
     // If blur option is selected in settings, run the blur detection algorithms
 
     if (d->running && d->imq.detectBlur)
     {
-        blurLevel  = BlurDetector(detector, d->image).detect();
+        blurLevel  = BlurDetector(d->image).detect(cvImage);
         
         qCDebug(DIGIKAM_DIMG_LOG) << "Amount of Blur present in image is:" << blurLevel;
 
@@ -81,7 +87,11 @@ void ImageQualityParser::startAnalyse()
 
     if (d->running && d->imq.detectNoise)
     {
-        noiseLevel = NoiseDetector(d->image).detect();
+        cv::Mat image_float = grayImage;
+
+        image_float.convertTo(image_float,CV_32F);
+
+        noiseLevel = NoiseDetector().detect(image_float );
         
         qCDebug(DIGIKAM_DIMG_LOG) << "Amount of Noise present in image is:" << noiseLevel;
 
@@ -90,7 +100,7 @@ void ImageQualityParser::startAnalyse()
 
     if (d->running && d->imq.detectCompression)
     {
-        compressionLevel = CompressionDetector(detector).detect();
+        compressionLevel = CompressionDetector().detect(cvImage);
 
         qCDebug(DIGIKAM_DIMG_LOG) << "Amount of compression artifacts present in image is:" << compressionLevel;
 
@@ -99,7 +109,7 @@ void ImageQualityParser::startAnalyse()
 
     if (d->running && d->imq.detectExposure)
     {
-        exposureLevel = ExposureDetector(detector).detect();
+        exposureLevel = ExposureDetector().detect(grayImage);
 
         qCDebug(DIGIKAM_DIMG_LOG) << "Under/Over exposure percents in image is: " << exposureLevel;
 

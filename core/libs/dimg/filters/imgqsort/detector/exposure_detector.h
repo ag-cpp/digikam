@@ -39,18 +39,18 @@ class ExposureDetector : public DetectorDistortion
 {
 public:
 
-    ExposureDetector(const DImg& image);
-    explicit ExposureDetector(const DetectorDistortion& detector);
+    explicit ExposureDetector();
     ~ExposureDetector();
 
-    float detect() const;
+    float detect(const cv::Mat& image)          const override;
 
 private:
 
-    float percent_underexposed() const;
-    float percent_overexposed() const;
+    float percent_underexposed(const cv::Mat& image)    const;
+    float percent_overexposed(const cv::Mat& image)     const;
 
-    int count_by_condition(int minVal, int maxVal) const ;
+    int count_by_condition(const cv::Mat& image, 
+                           int minVal, int maxVal)      const ;
     
 private:
 

@@ -52,8 +52,6 @@ public:
     {
     }
 
-    cv::Mat image;
-
     int threshold_edges_block;
     float weight_edges_block;
 
@@ -67,18 +65,10 @@ public:
     float beta;
 };
 
-CompressionDetector::CompressionDetector(const DImg& image)
-    :  DetectorDistortion(image),
+CompressionDetector::CompressionDetector()
+    :  DetectorDistortion(),
        d(new Private)
 {
-    d->image = getCvImage();
-}
-
-CompressionDetector::CompressionDetector(const DetectorDistortion& detector)
-    :  DetectorDistortion(detector),
-       d(new Private)
-{
-    d->image = getCvImage();
 }
 
 CompressionDetector::~CompressionDetector()
@@ -98,17 +88,17 @@ auto accessCol = [](cv::Mat mat) {
     };
 };
 
-float CompressionDetector::detect() const
+float CompressionDetector::detect(const cv::Mat& image) const
 {
     cv::Mat gray_image;
 
-    cv::cvtColor(d->image, gray_image, cv::COLOR_BGR2GRAY);
+    cv::cvtColor(image, gray_image, cv::COLOR_BGR2GRAY);
 
     cv::Mat verticalBlock = checkEdgesBlock(gray_image, gray_image.cols, accessCol);
 
     cv::Mat horizontalBlock = checkEdgesBlock(gray_image, gray_image.rows, accessRow);
 
-    cv::Mat mono_color_map = detectMonoColorRegion();
+    cv::Mat mono_color_map = detectMonoColorRegion(image);
 
     cv::Mat block_map = mono_color_map.mul(verticalBlock + horizontalBlock);
 
@@ -116,7 +106,7 @@ float CompressionDetector::detect() const
 
     int nb_pixels_mono_color = cv::countNonZero(mono_color_map);
 
-    int nb_pixels_normal = d->image.total() - nb_pixels_edge_block - nb_pixels_edge_block;
+    int nb_pixels_normal = image.total() - nb_pixels_edge_block - nb_pixels_edge_block;
 
     float res = static_cast<float>((nb_pixels_mono_color * d->weight_mono_color + nb_pixels_edge_block * d->threshold_edges_block) /
                                    (nb_pixels_mono_color * d->weight_mono_color + nb_pixels_edge_block * d->threshold_edges_block + nb_pixels_normal));
@@ -145,13 +135,13 @@ cv::Mat CompressionDetector::checkEdgesBlock(const cv::Mat& gray_image, int bloc
     return res;
 }
 
-cv::Mat CompressionDetector::detectMonoColorRegion() const
+cv::Mat CompressionDetector::detectMonoColorRegion(const cv::Mat& image) const
 {
     cv::Mat median_image;
 
-    cv::medianBlur(d->image, median_image, 5);
+    cv::medianBlur(image, median_image, 5);
 
-    cv::Mat mat_subtraction = cv::abs(d->image - median_image);
+    cv::Mat mat_subtraction = cv::abs(image - median_image);
 
     std::vector<cv::Mat> rgbChannels(3);
     

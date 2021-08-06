@@ -39,17 +39,16 @@ class CompressionDetector : public DetectorDistortion
 {
 public:
 
-    CompressionDetector(const DImg& image);
-    explicit CompressionDetector(const DetectorDistortion& detector);
+    explicit CompressionDetector();
     ~CompressionDetector();
 
-    float detect() const;
+    float detect(const cv::Mat& image)             const override;
 
 private:
 
     template <typename Function>
     cv::Mat checkEdgesBlock(const cv::Mat& gray_image, int blockSize, Function accessEdges) const;
-    cv::Mat detectMonoColorRegion() const;
+    cv::Mat detectMonoColorRegion(const cv::Mat& image)     const;
 
     float normalize(const float number);
     

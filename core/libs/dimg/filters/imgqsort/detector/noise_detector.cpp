@@ -83,9 +83,6 @@ public:
         beta(7.0)
     {
     }
-
-    cv::Mat image;
-
     int size_filter;
 
     float alpha;
@@ -94,30 +91,10 @@ public:
 };
 
 // Main noise detection
-NoiseDetector::NoiseDetector(const DImg& image)
-    :  DetectorDistortion(image),
+NoiseDetector::NoiseDetector()
+    :  DetectorDistortion(),
        d(new Private)
 {
-    cv::Mat cvImage = getCvImage();
-
-    cv::cvtColor(cvImage, cvImage, cv::COLOR_BGR2GRAY);
-    
-    cvImage.convertTo(cvImage,CV_32F);
-
-    d->image = cvImage;
-}
-
-NoiseDetector::NoiseDetector(const DetectorDistortion& detector)
-    :  DetectorDistortion(detector),
-       d(new Private)
-{
-    cv::Mat cvImage = getCvImage();
-
-    cv::cvtColor(cvImage, cvImage, cv::COLOR_BGR2GRAY);
-    
-    cvImage.convertTo(cvImage,CV_32F);
-
-    d->image = cvImage;
 }
 
 NoiseDetector::~NoiseDetector()
@@ -125,11 +102,11 @@ NoiseDetector::~NoiseDetector()
     delete d;
 }
 
-float NoiseDetector::detect() const
+float NoiseDetector::detect(const cv::Mat& image) const
 {    
     // Decompose to channels
-
-    Mat3D channels = decompose_by_filter(filtersHaar);
+    
+    Mat3D channels = decompose_by_filter(image, filtersHaar);
     
     // Calculate variance and kurtosis
 
@@ -144,7 +121,7 @@ float NoiseDetector::detect() const
     return normalize(V);
 }
 
-NoiseDetector::Mat3D NoiseDetector::decompose_by_filter(const Mat3D& filters) const
+NoiseDetector::Mat3D NoiseDetector::decompose_by_filter(const cv::Mat& image, const Mat3D& filters) const
 {
     Mat3D filtersUsed = filters.mid(1); // do not use first filter
     
@@ -154,9 +131,9 @@ NoiseDetector::Mat3D NoiseDetector::decompose_by_filter(const Mat3D& filters) co
 
     for (const auto& filter: filtersUsed)
     {
-        cv::Mat tmp = cv::Mat(d->image.size().width, d->image.size().height, CV_32FC1 );
+        cv::Mat tmp = cv::Mat(image.size().width, image.size().height, CV_32FC1 );
    
-        cv::filter2D(d->image, tmp, -1, filter, cv::Point(-1,-1), 0.0, cv::BORDER_REPLICATE);
+        cv::filter2D(image, tmp, -1, filter, cv::Point(-1,-1), 0.0, cv::BORDER_REPLICATE);
         
         channels.push_back(tmp);
     }
@@ -203,7 +180,7 @@ float NoiseDetector::noise_variance(const cv::Mat& variance, const cv::Mat& kurt
 
 cv::Mat NoiseDetector::raw_moment(const NoiseDetector::Mat3D& mat, int order) const
 {
-    float taille_image = d->image.size().width * d->image.size().height;
+    float taille_image = mat[0].size().width * mat[0].size().height;
     
     std::vector<float> vec;
     vec.reserve(mat.size());
@@ -218,7 +195,7 @@ cv::Mat NoiseDetector::raw_moment(const NoiseDetector::Mat3D& mat, int order) co
 
 cv::Mat NoiseDetector::pow_mat(const cv::Mat& mat, float order) const
 {
-    cv::Mat res = cv::Mat(d->image.size().width, d->image.size().height, CV_32FC1 );
+    cv::Mat res = cv::Mat(mat.size().width, mat.size().height, CV_32FC1 );
     
     cv::pow(mat, order, res);
 

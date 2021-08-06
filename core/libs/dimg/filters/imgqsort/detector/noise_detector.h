@@ -41,11 +41,10 @@ public:
     typedef QList<cv::Mat> Mat3D;
 public:
 
-    NoiseDetector(const DImg& image);
-    explicit NoiseDetector(const DetectorDistortion& detector);
+    explicit NoiseDetector();
     ~NoiseDetector();
 
-    float detect()                                                              const;
+    float detect(const cv::Mat& image)                                  const override;
 
 public:
     
@@ -53,7 +52,7 @@ public:
 
 private:
     
-    Mat3D   decompose_by_filter(const Mat3D& filters)                           const;                          
+    Mat3D   decompose_by_filter(const cv::Mat& image, const Mat3D& filters)     const;                          
     void    calculate_variance_kurtosis(const Mat3D& channels, cv::Mat& variance, cv::Mat& kurtosis) const;
     float   noise_variance(const cv::Mat& variance, const cv::Mat& kurtosis)    const;
     float   normalize(const float number)                                       const;

@@ -39,11 +39,10 @@ class BlurDetector : public DetectorDistortion
 {
 public:
 
-    BlurDetector(const DImg& image);
-    explicit BlurDetector(const DetectorDistortion& detector, const DImg& image);
+    explicit BlurDetector(const DImg& image);
     ~BlurDetector();
 
-    float detect() const;
+    float detect(const cv::Mat& image)                 const override;
 
 private:
 
@@ -54,7 +53,7 @@ private:
 
     bool    haveFocusRegion(const DImg& image)                  const;
     cv::Mat detectBackgroundRegion(const cv::Mat& image)        const;
-    cv::Mat getWeightMap()                                      const;
+    cv::Mat getWeightMap(const cv::Mat& image)                  const;
 
 private:
 
