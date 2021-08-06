@@ -177,6 +177,7 @@ set(DIGIKAMGUI_OBJECTS
             $<TARGET_OBJECTS:gui_importui_obj>
             $<TARGET_OBJECTS:gui_importuibackend_obj>
             $<TARGET_OBJECTS:gui_facemanagement_obj>
+            $<TARGET_OBJECTS:gui_focuspointmanagement_obj>
             $<TARGET_OBJECTS:gui_queuemanager_obj>
             $<TARGET_OBJECTS:gui_advancedrename_obj>
 )

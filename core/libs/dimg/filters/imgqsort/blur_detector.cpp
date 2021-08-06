@@ -261,7 +261,7 @@ bool BlurDetector::haveFocusRegion(const DImg& image)              const
 {
     QScopedPointer<FocusPointsExtractor> const extractor (new FocusPointsExtractor(nullptr, image.originalFilePath()));
 
-    d->af_points = extractor->get_af_points(FocusPointsExtractor::TypePoint::Selected);
+    d->af_points = extractor->get_af_points(FocusPoint::TypePoint::Selected);
     
     return !d->af_points.isEmpty();
 }
