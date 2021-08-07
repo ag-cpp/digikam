@@ -3,10 +3,9 @@
  * This file is a part of digiKam project
  * https://www.digikam.org
  *
- * Date        : 2010-09-03
- * Description : Integrated, multithread face detection
+ * Date        : 2021-08-07
+ * Description : Integrated, multithread face embedding extraction
  *
- * Copyright (C) 2010-2011 by Marcel Wiesweg <marcel dot wiesweg at gmx dot de>
  * Copyright (C) 2012-2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
  * Copyright (C)      2021 by Nghia Duong    <minhnghiaduong997 at gmail dot com>
  * 
@@ -23,41 +22,50 @@
  *
  * ============================================================ */
 
-#ifndef DIGIKAM_DETECTION_WORKER_H
-#define DIGIKAM_DETECTION_WORKER_H
+#include "extractionworker.h"
 
-#include <QImage>
-// Local 
-#include "actionthreadbase.h"
+// Local includes
+#include "facialrecognition_wrapper.h"
 
 namespace Digikam
 {
 
-class FaceDetector;
-
-class Q_DECL_HIDDEN DetectionWorker : public ActionJob
+class Q_DECL_HIDDEN ExtractionWorker::Private 
 {
-    Q_OBJECT
+public:
+
+    explicit Private()
+    {
+    }
+
+    ~Private()
+    {
+    }
 
 public:
 
-    explicit DetectionWorker();
-    ~DetectionWorker() override;
-public Q_SLOTS:
-
-    QList<QRectF> process(const QImage& image);
-    void setAccuracyAndModel(double value, bool yolo);
-
-private:
-
-    class Private;
-    Private* d;
-
-    // Disable
-    DetectionWorker(const DetectionWorker&)            = delete;
-    DetectionWorker& operator=(const DetectionWorker&) = delete;
+    FacialRecognitionWrapper recognizer;
 };
 
-} // namespace Digikam
+ExtractionWorker::ExtractionWorker()
+    : d (new Private())
+{
+}
 
-#endif // DIGIKAM_DETECTION_WORKER_H
+ExtractionWorker::~ExtractionWorker()
+{
+    // TODO wait for finish
+    delete d;
+}
+
+void ExtractionWorker::process()
+{
+   
+}
+
+void ExtractionWorker::setThreshold(double threshold, bool)
+{
+    d->recognizer.setParameter(QLatin1String("threshold"), threshold);
+}
+
+} // namespace Digikam
