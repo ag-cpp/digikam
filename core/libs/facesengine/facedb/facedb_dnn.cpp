@@ -28,9 +28,9 @@
 namespace Digikam
 {
 
-void FaceDb::insertFaceVectors(const QList<cv::Mat>& faceEmbeddings,
-                               const QList<int>&     facetagIds,
-                               const QString&        context) const
+void FaceDb::insertFaceVectors(const QVector<cv::Mat>& faceEmbeddings,
+                               const QVector<int>&     facetagIds,
+                               const QString&          context) const
 {    
     DbEngineSqlQuery query = d->db->prepareQuery(QLatin1String("INSERT INTO FaceMatrices (identity, `context`, embedding) "
                                                                "VALUES (?,?,?);"));

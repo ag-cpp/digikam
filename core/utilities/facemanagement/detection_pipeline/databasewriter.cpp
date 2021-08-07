@@ -28,9 +28,28 @@
 // Local includes
 #include "digikam_debug.h"
 #include "faceutils.h"
+#include "faceembedding_manager.h"
 
 namespace Digikam
 {
+
+class Q_DECL_HIDDEN DatabaseWriter::Private
+{
+public:
+
+    explicit Private()
+    {
+
+    }
+
+    ~Private()
+    {
+    }
+
+public:
+
+    FaceEmbeddingManager db;
+};
 
 DatabaseWriter::DatabaseWriter()
 {
@@ -40,10 +59,10 @@ DatabaseWriter::~DatabaseWriter()
 {
 }
 
-QList<FaceTagsIface> DatabaseWriter::saveDetectedRect(const ItemInfo& info, 
-                                                      const QSize& imgSize, 
-                                                      const QList<QRectF>& detectedFaces, 
-                                                      bool overwriteUnconfirmed) 
+QList<FaceTagsIface> DatabaseWriter::saveDetectedRects(const ItemInfo& info, 
+                                                       const QSize& imgSize, 
+                                                       const QList<QRectF>& detectedFaces, 
+                                                       bool overwriteUnconfirmed) 
 {
     if (!info.isNull() && !detectedFaces.isEmpty())
     {
@@ -67,9 +86,9 @@ QList<FaceTagsIface> DatabaseWriter::saveDetectedRect(const ItemInfo& info,
     utils.markAsScanned(info);
     
     QList<FaceTagsIface> faceTags = utils.writeUnconfirmedResults(info.id(),
-                                                                      detectedFaces,
-                                                                      QList<Identity>(),
-                                                                      imgSize);
+                                                                  detectedFaces,
+                                                                  QList<Identity>(),
+                                                                  imgSize);
 
     // TODO facesengine 3: what does Role serve?
     //faceTags.setRole(FacePipelineFaceTagsIface::DetectedFromImage);
@@ -84,6 +103,13 @@ QList<FaceTagsIface> DatabaseWriter::saveDetectedRect(const ItemInfo& info,
     */
 
     return faceTags;
+}
+
+void DatabaseWriter::saveExtractedFaceEmbeddings(const QVector<cv::Mat>& faceEmbeddings,
+                                                 const QVector<int>&     facetagIds,
+                                                 const QString&          context)
+{
+    d->db.saveEmbeddings(faceEmbeddings, facetagIds, context);
 }
 
 } // namespace Digikam

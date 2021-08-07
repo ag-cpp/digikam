@@ -43,15 +43,14 @@ public:
     explicit FaceEmbeddingManager();
     ~FaceEmbeddingManager();
 
-
 public:
 
     /**
      * Save face embeddings extracted from face images
      */
-    void saveEmbeddings(const QList<cv::Mat>& faceEmbeddings,
-                        const QList<int>&     facetagIds,
-                        const QString&        context);
+    void saveEmbeddings(const QVector<cv::Mat>& faceEmbeddings,
+                        const QVector<int>&     facetagIds,
+                        const QString&          context);
 
     /**
      * Retrieve face embeddings with their labels

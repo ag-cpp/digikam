@@ -93,9 +93,9 @@ public:
      * @param facetagIds list of corresponding tag IDs
      * @param context insertion context
      */
-    void insertFaceVectors(const QList<cv::Mat>& faceEmbeddings,
-                           const QList<int>&     facetagIds,
-                           const QString&        context) const;
+    void insertFaceVectors(const QVector<cv::Mat>& faceEmbeddings,
+                           const QVector<int>&     facetagIds,
+                           const QString&          context) const;
 
     /**
      * @brief trainData: extract train data from database

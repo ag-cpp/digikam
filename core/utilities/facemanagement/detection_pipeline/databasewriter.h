@@ -27,6 +27,7 @@
 #define DIGIKAM_DATABASE_WRITER_H
 
 // Local includes
+#include "digikam_opencv.h"
 #include "actionthreadbase.h"
 #include "iteminfo.h"
 #include "facetagsiface.h"
@@ -45,16 +46,25 @@ public:
 
 public:
 
-    QList<FaceTagsIface> saveDetectedRect(const ItemInfo& info, 
-                                          const QSize& imgSize, 
-                                          const QList<QRectF>& detectedFaces, 
-                                          bool overwriteUnconfirmed);
+    QList<FaceTagsIface> saveDetectedRects(const ItemInfo& info, 
+                                           const QSize& imgSize, 
+                                           const QList<QRectF>& detectedFaces, 
+                                           bool overwriteUnconfirmed);
+
+    void saveExtractedFaceEmbeddings(const QVector<cv::Mat>& faceEmbeddings,
+                                     const QVector<int>&     facetagIds,
+                                     const QString&          context);
 
 private:
 
     // Disable
     DatabaseWriter(const DatabaseWriter&)            = delete;
     DatabaseWriter& operator=(const DatabaseWriter&) = delete;
+
+private:
+
+    class Private;
+    Private* d;
 };
 
 } // namespace Digikam

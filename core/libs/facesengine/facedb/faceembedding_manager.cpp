@@ -61,9 +61,9 @@ public:
     mutable QMutex              mutex;
 };
 
-void FaceEmbeddingManager::saveEmbeddings(const QList<cv::Mat>& faceEmbeddings,
-                                          const QList<int>&     facetagIds,
-                                          const QString&        context)
+void FaceEmbeddingManager::saveEmbeddings(const QVector<cv::Mat>& faceEmbeddings,
+                                          const QVector<int>&     facetagIds,
+                                          const QString&          context)
 {
     if (!d || !d->dbAvailable)
     {
