@@ -23,8 +23,8 @@
  * ============================================================ */
 
 
-#ifndef FACIAL_RECOGNITION_WRAPPER_H
-#define FACIAL_RECOGNITION_WRAPPER_H
+#ifndef FACEDB_WRAPPER_H
+#define FACEDB_WRAPPER_H
 
 // Qt includes
 
@@ -45,6 +45,8 @@ class DIGIKAM_GUI_EXPORT FaceDbWrapper
 public:
 
     explicit FaceDbWrapper();
+    FaceDbWrapper(const FaceDbWrapper&);
+
     ~FaceDbWrapper();
 
 public:
@@ -144,7 +146,6 @@ public:
 private:
 
     // Disable
-    FaceDbWrapper(const FaceDbWrapper&)            = delete;
     FaceDbWrapper& operator=(const FaceDbWrapper&) = delete;
 
 private:
@@ -155,4 +156,4 @@ private:
 
 } // namespace Digikam
 
-#endif // FACIAL_RECOGNITION_WRAPPER_H
+#endif // FACEDB_WRAPPER_H
