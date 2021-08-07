@@ -3,7 +3,7 @@
  * This file is a part of digiKam
  *
  * Date        : 2021-08-07
- * Description : The access point to Face database.
+ * Description : Manage Identities retrieval and assignment
  *
  * Copyright (C) 2012-2013 by Marcel Wiesweg <marcel dot wiesweg at gmx dot de>
  * Copyright (C) 2010-2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
@@ -23,8 +23,8 @@
  * ============================================================ */
 
 
-#ifndef FACEDB_WRAPPER_H
-#define FACEDB_WRAPPER_H
+#ifndef IDENTITIES_MANAGER_H
+#define IDENTITIES_MANAGER_H
 
 // Qt includes
 
@@ -35,19 +35,16 @@
 
 #include "digikam_export.h"
 #include "identity.h"
-#include "digikam_opencv.h"
 
 namespace Digikam
 {
 
-class DIGIKAM_GUI_EXPORT FaceDbWrapper
+class DIGIKAM_GUI_EXPORT IdentitiesManager
 {
 public:
 
-    explicit FaceDbWrapper();
-    FaceDbWrapper(const FaceDbWrapper&);
-
-    ~FaceDbWrapper();
+    explicit IdentitiesManager();
+    ~IdentitiesManager();
 
 public:
 
@@ -62,8 +59,6 @@ public:
     void vacuum();
 
 public:
-
-    // --- Identity management -----------------------------------------
 
     /// NOTE: For the documentation of standard attributes, see identity.h
 
@@ -116,44 +111,24 @@ public:
      */
     void deleteIdentities(QList<Identity> identitiesToBeDeleted);
 
-    // --- Faces embedding management ----------------------------------------------------
-    /**
-     * Save face embedding extracted from face images
-     */
-    void saveEmbeddings(const QList<cv::Mat>& faceEmbeddings,
-                        const QList<int>&     facetagIds,
-                        const QString&        context);
-
     /**
      * Save identities assigned to saved face embeddings
      */
     void assignLabels(const QList<int>& faceEmbeddingIds,
                       const QList<int>& identityIds);
 
-    /**
-     * Deletes the training data for all identities,
-     * leaving the identities as such in the database.
-     */
-    void clearAllEmbedding(const QString& trainingContext = QString());
-
-    /**
-     * Deletes the training data for the given identity,
-     * leaving the identity as such in the database.
-     */
-    void clearEmbedding(const QList<Identity>& identitiesToClean,
-                        const QString& trainingContext = QString());
-
 private:
 
     // Disable
-    FaceDbWrapper& operator=(const FaceDbWrapper&) = delete;
+    IdentitiesManager& operator=(const IdentitiesManager&) = delete;
+    IdentitiesManager(const IdentitiesManager&) = delete;
 
 private:
 
     class Private;
-    static Private* d;
+    Private* d;
 };
 
 } // namespace Digikam
 
-#endif // FACEDB_WRAPPER_H
+#endif // IDENTITIES_MANAGER_H

@@ -43,7 +43,6 @@ public:
 public Q_SLOTS:
 
     void process();
-    void setThreshold(double threshold, bool);
 
 private:
 

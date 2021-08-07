@@ -3,7 +3,7 @@
  * This file is a part of digiKam
  *
  * Date        : 2021-08-07
- * Description : The access point to Face database.
+ * Description : Manage Identities retrieval and assignment
  *
  * Copyright (C) 2012-2013 by Marcel Wiesweg <marcel dot wiesweg at gmx dot de>
  * Copyright (C) 2010-2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
@@ -22,76 +22,124 @@
  *
  * ============================================================ */
 
-/* ============================================================
- *
- * This file is a part of digiKam
- *
- * Date        : 2010-06-16
- * Description : The private implementation of recognition wrapper
- *
- * Copyright (C)      2010 by Marcel Wiesweg <marcel dot wiesweg at gmx dot de>
- * Copyright (C)      2010 by Aditya Bhatt <adityabhatt1991 at gmail dot com>
- * Copyright (C) 2010-2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
- * Copyright (C)      2019 by Thanh Trung Dinh <dinhthanhtrung1996 at gmail dot com>
- * Copyright (C)      2020 by Nghia Duong <minhnghiaduong997 at gmail dot com>
- *
- * This program is free software; you can redistribute it
- * and/or modify it under the terms of the GNU General
- * Public License as published by the Free Software Foundation;
- * either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * ============================================================ */
+#include "identities_manager.h"
 
-#include "facedb_wrapper_p.h"
-
+#include <QMutex>
 #include <QUuid>
 
+#include "coredbaccess.h"
+#include "dbengineparameters.h"
 #include "facedboperationgroup.h"
 #include "facedbaccess.h"
 #include "facedb.h"
-
 #include "digikam_debug.h"
 
 namespace Digikam
 {
 
-FaceDbWrapper::Private* FaceDbWrapper::d = nullptr;
-
-FaceDbWrapper::FaceDbWrapper()
+class Q_DECL_HIDDEN IdentitiesManager::Private
 {
-    if (!d)
+public:
+
+    explicit Private()
+        : mutex (QMutex::Recursive)
     {
-        d = new Private();
+        DbEngineParameters params = CoreDbAccess::parameters().faceParameters();
+        params.setFaceDatabasePath(CoreDbAccess::parameters().faceParameters().getFaceDatabaseNameOrDir());
+        FaceDbAccess::setParameters(params);
+
+        dbAvailable = FaceDbAccess::checkReadyForUse(nullptr);
+        if (dbAvailable)
+        {
+            qCDebug(DIGIKAM_FACESENGINE_LOG) << "Face database ready for use";
+
+            foreach (const Identity& identity, FaceDbAccess().db()->identities())
+            {
+                identityCache[identity.id()] = identity;
+            }
+        }
+        else
+        {
+            qCDebug(DIGIKAM_FACESENGINE_LOG) << "Failed to initialize face database";
+        }
     }
-    else
+
+    ~Private()
     {
-        ++(d->ref);
     }
+
+public:
+    // --- Identity management (facesengine_interface_identity.cpp) -----------------------------------------
+
+    static bool identityContains(const Identity& identity,
+                                 const QString& attribute,
+                                 const QString& value)
+    {
+        const QMultiMap<QString, QString> map     = identity.attributesMap();
+        QMap<QString, QString>::const_iterator it = map.constFind(attribute);
+
+        for ( ; (it != map.constEnd()) && (it.key() == attribute) ; ++it)
+        {
+            if (it.value() == value)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    Identity findByAttribute(const QString& attribute,
+                             const QString& value) const
+    {
+        foreach (const Identity& identity, identityCache)
+        {
+            if (identityContains(identity, attribute, value))
+            {
+                return identity;
+            }
+        }
+
+        return Identity();
+    }
+
+    Identity findByAttributes(const QString& attribute,
+                              const QMultiMap<QString, QString>& valueMap) const
+    {
+        QMap<QString, QString>::const_iterator it = valueMap.find(attribute);
+
+        for ( ; (it != valueMap.end()) && (it.key() == attribute) ; ++it)
+        {
+            foreach (const Identity& identity, identityCache)
+            {
+                if (identityContains(identity, attribute, it.value()))
+                {
+                    return identity;
+                }
+            }
+        }
+
+        return Identity();
+    }
+
+public:
+
+    bool                        dbAvailable;
+    mutable QMutex              mutex;
+    QHash<int, Identity>        identityCache;
+};
+
+IdentitiesManager::IdentitiesManager()
+    : d(new Private())
+{
 }
 
-FaceDbWrapper::FaceDbWrapper(const FaceDbWrapper& other)
+IdentitiesManager::~IdentitiesManager()
 {
-    Q_UNUSED(other)
-    ++(d->ref);
+    delete d;
 }
 
-FaceDbWrapper::~FaceDbWrapper()
-{
-    --(d->ref);
-
-    if (d->ref == 0)
-    {
-        delete d;
-    }
-}
-
-bool FaceDbWrapper::integrityCheck()
+bool IdentitiesManager::integrityCheck()
 {
     if (!d || !d->dbAvailable)
     {
@@ -103,7 +151,7 @@ bool FaceDbWrapper::integrityCheck()
     return FaceDbAccess().db()->integrityCheck();
 }
 
-void FaceDbWrapper::vacuum()
+void IdentitiesManager::vacuum()
 {
     if (!d || !d->dbAvailable)
     {
@@ -116,7 +164,7 @@ void FaceDbWrapper::vacuum()
 }
 
 // --- Identity management -----------------------------------------
-QList<Identity> FaceDbWrapper::allIdentities() const
+QList<Identity> IdentitiesManager::allIdentities() const
 {
     if (!d || !d->dbAvailable)
     {
@@ -128,7 +176,7 @@ QList<Identity> FaceDbWrapper::allIdentities() const
     return (d->identityCache.values());
 }
 
-Identity FaceDbWrapper::identity(int id) const
+Identity IdentitiesManager::identity(int id) const
 {
     if (!d || !d->dbAvailable)
     {
@@ -140,7 +188,7 @@ Identity FaceDbWrapper::identity(int id) const
     return (d->identityCache.value(id));
 }
 
-Identity FaceDbWrapper::findIdentity(const QString& attribute, const QString& value) const
+Identity IdentitiesManager::findIdentity(const QString& attribute, const QString& value) const
 {
     if (!d || !d->dbAvailable || attribute.isEmpty())
     {
@@ -152,7 +200,7 @@ Identity FaceDbWrapper::findIdentity(const QString& attribute, const QString& va
     return (d->findByAttribute(attribute, value));
 }
 
-Identity FaceDbWrapper::findIdentity(const QMultiMap<QString, QString>& attributes) const
+Identity IdentitiesManager::findIdentity(const QMultiMap<QString, QString>& attributes) const
 {
     if (!d || !d->dbAvailable || attributes.isEmpty())
     {
@@ -222,7 +270,7 @@ Identity FaceDbWrapper::findIdentity(const QMultiMap<QString, QString>& attribut
     return Identity();
 }
 
-Identity FaceDbWrapper::addIdentity(const QMultiMap<QString, QString>& attributes)
+Identity IdentitiesManager::addIdentity(const QMultiMap<QString, QString>& attributes)
 {
     if (!d || !d->dbAvailable)
     {
@@ -261,7 +309,7 @@ Identity FaceDbWrapper::addIdentity(const QMultiMap<QString, QString>& attribute
     return identity;
 }
 
-Identity FaceDbWrapper::addIdentityDebug(const QMultiMap<QString, QString>& attributes)
+Identity IdentitiesManager::addIdentityDebug(const QMultiMap<QString, QString>& attributes)
 {
     Identity identity;
     {
@@ -275,7 +323,7 @@ Identity FaceDbWrapper::addIdentityDebug(const QMultiMap<QString, QString>& attr
     return identity;
 }
 
-void FaceDbWrapper::addIdentityAttributes(int id, const QMultiMap<QString, QString>& attributes)
+void IdentitiesManager::addIdentityAttributes(int id, const QMultiMap<QString, QString>& attributes)
 {
     if (!d || !d->dbAvailable)
     {
@@ -295,7 +343,7 @@ void FaceDbWrapper::addIdentityAttributes(int id, const QMultiMap<QString, QStri
     }
 }
 
-void FaceDbWrapper::addIdentityAttribute(int id, const QString& attribute, const QString& value)
+void IdentitiesManager::addIdentityAttribute(int id, const QString& attribute, const QString& value)
 {
     if (!d || !d->dbAvailable)
     {
@@ -314,7 +362,7 @@ void FaceDbWrapper::addIdentityAttribute(int id, const QString& attribute, const
     }
 }
 
-void FaceDbWrapper::setIdentityAttributes(int id, const QMultiMap<QString, QString>& attributes)
+void IdentitiesManager::setIdentityAttributes(int id, const QMultiMap<QString, QString>& attributes)
 {
     if (!d || !d->dbAvailable)
     {
@@ -331,7 +379,7 @@ void FaceDbWrapper::setIdentityAttributes(int id, const QMultiMap<QString, QStri
     }
 }
 
-void FaceDbWrapper::deleteIdentity(const Identity& identityToBeDeleted)
+void IdentitiesManager::deleteIdentity(const Identity& identityToBeDeleted)
 {
     if (!d || !d->dbAvailable || identityToBeDeleted.isNull())
     {
@@ -344,7 +392,7 @@ void FaceDbWrapper::deleteIdentity(const Identity& identityToBeDeleted)
     d->identityCache.remove(identityToBeDeleted.id());
 }
 
-void FaceDbWrapper::deleteIdentities(QList<Identity> identitiesToBeDeleted)
+void IdentitiesManager::deleteIdentities(QList<Identity> identitiesToBeDeleted)
 {
     QList<Identity>::iterator identity = identitiesToBeDeleted.begin();
 

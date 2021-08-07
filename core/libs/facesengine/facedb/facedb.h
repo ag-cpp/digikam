@@ -88,20 +88,14 @@ public:
     // --- OpenCV DNN
 
     /**
-     * @brief insertFaceVector : insert a new face embedding to database
-     * @param faceEmbedding
-     * @param label
-     * @return id of newly inserted entry
+     * @brief insertFaceVectors : insert new face embeddings to database
+     * @param faceEmbeddings list of face embeddings to insert
+     * @param facetagIds list of corresponding tag IDs
+     * @param context insertion context
      */
-    int insertFaceVector(const cv::Mat& faceEmbedding,
-                         const int label,
-                         const QString& context)                                const;
-
-    /**
-     * @brief reconstructTree: reconstruct KD-Tree from data in the database
-     * @return
-     */
-    KDTree* reconstructTree()                                                   const;
+    void insertFaceVectors(const QList<cv::Mat>& faceEmbeddings,
+                           const QList<int>&     facetagIds,
+                           const QString&        context) const;
 
     /**
      * @brief trainData: extract train data from database

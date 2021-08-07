@@ -24,8 +24,11 @@
 
 #include "extractionworker.h"
 
+#include <QList>
+#include <QVector>
+
 // Local includes
-#include "facialrecognition_wrapper.h"
+#include "dnnfaceextractor.h"
 
 namespace Digikam
 {
@@ -34,21 +37,71 @@ class Q_DECL_HIDDEN ExtractionWorker::Private
 {
 public:
 
-    explicit Private()
+    explicit Private(int nbExtractor)
     {
+        for (int i = 0 ; i < nbExtractor; ++i)
+        {
+            extractors << new DNNFaceExtractor;
+        }
     }
 
     ~Private()
     {
+        QVector<DNNFaceExtractor*>::iterator extractor = extractors.begin();
+
+        while (extractor != extractors.end())
+        {
+            delete *extractor;
+            extractor = extractors.erase(extractor);
+        }
     }
 
 public:
 
-    FacialRecognitionWrapper recognizer;
+    QVector<DNNFaceExtractor*> extractors;
+
+public:
+    class ParallelExtractors;
 };
 
+class ExtractionWorker::Private::ParallelExtractors : public cv::ParallelLoopBody
+{
+public:
+
+    ParallelExtractors(ExtractionWorker::Private* d,
+                       const QList<QImage*>& images,
+                       QVector<cv::Mat>& embeddings)
+        : images     (images),
+          embeddings (embeddings),
+          d          (d)
+    {
+        embeddings.resize(images.size());
+    }
+
+    void operator()(const cv::Range& range) const override
+    {
+        for(int i = range.start ; i < range.end ; ++i)
+        {
+            // TODO
+            //embeddings[i] = d->extractors[i%(d->extractors.size())]->getFaceEmbedding();
+        }
+    }
+
+private:
+
+    const QList<QImage*>&                   images;
+    QVector<cv::Mat>&                       embeddings;
+
+    ExtractionWorker::Private* const d;
+
+private:
+
+    Q_DISABLE_COPY(ParallelExtractors)
+};
+
+
 ExtractionWorker::ExtractionWorker()
-    : d (new Private())
+    : d (new Private(1))
 {
 }
 
@@ -61,11 +114,6 @@ ExtractionWorker::~ExtractionWorker()
 void ExtractionWorker::process()
 {
    
-}
-
-void ExtractionWorker::setThreshold(double threshold, bool)
-{
-    d->recognizer.setParameter(QLatin1String("threshold"), threshold);
 }
 
 } // namespace Digikam

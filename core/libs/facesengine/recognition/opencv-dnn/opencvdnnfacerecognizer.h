@@ -25,15 +25,11 @@
 #ifndef OPENCV_DNN_FACERECOGNIZER_H
 #define OPENCV_DNN_FACERECOGNIZER_H
 
-// Qt includes
-
-#include <QImage>
+#include <QVector>
 
 // Local includes
-
 #include "digikam_opencv.h"
 #include "digikam_export.h"
-#include "identity.h"
 
 namespace Digikam
 {
@@ -45,73 +41,33 @@ public:
     enum Classifier
     {
         SVM = 0,
-        OpenCV_KNN,
-        Tree,
-        DB,
+        KNN,
     };
 
     /**
      *  @brief OpenCVDNNFaceRecognizer:Master class to control entire recognition using OpenFace algorithm
      */
-    explicit OpenCVDNNFaceRecognizer(Classifier method = Tree);
+    explicit OpenCVDNNFaceRecognizer(cv::Ptr<cv::ml::TrainData> data, Classifier method = KNN);
     ~OpenCVDNNFaceRecognizer();
 
 public:
 
     /**
-     *  Returns a cvMat created from the inputImage, optimized for recognition
-     */
-    static cv::Mat prepareForRecognition(QImage& inputImage);
-
-    /**
-     *  Returns a cvMat created from the cvinputImage, optimized for recognition
-     */
-    static cv::Mat prepareForRecognition(const cv::Mat& cvinputImage);
-
-    /**
-     * Register faces corresponding to an identity
-     */
-    void train(const QList<QImage*>& images, const int label, const QString& context);
-
-    /**
-     * Try to recognize the given image.
-     * Returns the identity id.
-     * If the identity cannot be recognized, returns -1.
-     * TODO: verify workflow to economize this routine
-     */
-    int recognize(QImage* inputImage);
-
-    /**
-     * Try to recognize a list of given images.
+     * Try to recognize a list of given face embeddings.
      * Returns a list of identity ids.
      * If an identity cannot be recognized, returns -1.
      */
-    QVector<int> recognize(const QList<QImage*>& inputImages);
-
-    /**
-     * clear specified trained data
-     */
-    void clearTraining(const QList<int>& idsToClear, const QString& trainingContext);
+    QVector<int> recognize(const QVector<cv::Mat>& inputEmbeddings);
 
     /**
      * set K parameter of K-Nearest neighbors algorithm
      */
-    void setNbNeighBors(int k);
+    void setNbNeighbors(int k);
 
     /**
      * set maximum square distance of 2 vector
      */
     void setThreshold(float threshold);
-
-    /**
-     * @brief register training data for unit test
-     */
-    bool registerTrainingData(const cv::Mat& preprocessedImage, int label);
-
-    /**
-     * @brief predict label of test data for unit test
-     */
-    int verifyTestData(const cv::Mat& preprocessedImage);
 
 private:
 

@@ -24,6 +24,7 @@
  * ============================================================ */
 
 #include "facedb_p.h"
+#include "kd_tree.h"
 
 namespace Digikam
 {

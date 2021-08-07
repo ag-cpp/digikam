@@ -33,7 +33,7 @@
 // Local includes
 
 #include "identity.h"
-#include "facialrecognition_wrapper.h"
+#include "identities_manager.h"
 #include "iteminfo.h"
 #include "facetagseditor.h"
 #include "digikam_export.h"
@@ -136,7 +136,7 @@ public:
     static int          faceRectDisplayMargin(const QRect& rect);
 
     // TODO: investigate this method
-    Identity identityForTag(int tagId, FacialRecognitionWrapper& recognizer)            const;
+    Identity identityForTag(int tagId, IdentitiesManager& recognizer)                   const;
     int      tagForIdentity(const Identity& identity)                                   const;
 
 protected:
