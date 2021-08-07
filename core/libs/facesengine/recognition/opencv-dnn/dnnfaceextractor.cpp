@@ -201,10 +201,6 @@ cv::Mat DNNFaceExtractor::getFaceEmbedding(const cv::Mat& faceImage)
     qCDebug(DIGIKAM_FACEDB_LOG) << "faceImage size: (" << faceImage.rows << ", " << faceImage.cols << ")\n";
 */
     QElapsedTimer timer;
-
-    timer.start();
-
-    qCDebug(DIGIKAM_FACEDB_LOG) << "Finish aligning face in " << timer.elapsed() << " ms";
     qCDebug(DIGIKAM_FACEDB_LOG) << "Start neural network";
 
     timer.start();

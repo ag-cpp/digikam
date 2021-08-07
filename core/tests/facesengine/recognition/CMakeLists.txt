@@ -112,7 +112,7 @@ target_link_libraries(extract_cli
 )
 
 # -----------------------------------------------------------------------------
-
+# TODO facesengine 3: reactivate tests
 #set(recognition_gui_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/recognition_gui.cpp)
 #add_executable(recognition_gui ${recognition_gui_SRCS})
 

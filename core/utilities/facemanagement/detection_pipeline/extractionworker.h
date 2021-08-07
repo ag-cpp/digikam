@@ -27,6 +27,7 @@
 
 // Local includes
 #include "actionthreadbase.h"
+#include "digikam_opencv.h"
 
 namespace Digikam
 {
@@ -42,7 +43,7 @@ public:
 
 public Q_SLOTS:
 
-    void process();
+    QVector<cv::Mat> process(const QImage& faceImg, const QList<QRect>& detectedFaces);
 
 private:
 
