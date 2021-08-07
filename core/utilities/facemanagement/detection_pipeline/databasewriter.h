@@ -4,12 +4,12 @@
  * https://www.digikam.org
  *
  * Date        : 2010-09-03
- * Description : Integrated, multithread face detection / recognition
+ * Description : Database writer for facial detection pipeline
  *
  * Copyright (C) 2010-2011 by Marcel Wiesweg <marcel dot wiesweg at gmx dot de>
  * Copyright (C) 2012-2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
  * Copyright (C)      2021 by Nghia Duong    <minhnghiaduong997 at gmail dot com>
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation;
@@ -23,41 +23,40 @@
  *
  * ============================================================ */
 
-#ifndef DIGIKAM_DETECTION_WORKER_H
-#define DIGIKAM_DETECTION_WORKER_H
+#ifndef DIGIKAM_DATABASE_WRITER_H
+#define DIGIKAM_DATABASE_WRITER_H
 
-#include <QImage>
-// Local 
+// Local includes
 #include "actionthreadbase.h"
+#include "iteminfo.h"
+#include "facetagsiface.h"
 
 namespace Digikam
 {
 
-class FaceDetector;
-
-class Q_DECL_HIDDEN DetectionWorker : public ActionJob
+class Q_DECL_HIDDEN DatabaseWriter : public ActionJob
 {
     Q_OBJECT
 
 public:
 
-    explicit DetectionWorker();
-    ~DetectionWorker() override;
-public Q_SLOTS:
+    DatabaseWriter();
+    ~DatabaseWriter() override;
 
-    QList<QRectF> process(const QImage& info);
-    void setAccuracyAndModel(double value, bool yolo);
+public:
+
+    QList<FaceTagsIface> saveDetectedRect(const ItemInfo& info, 
+                                          const QSize& imgSize, 
+                                          const QList<QRectF>& detectedFaces, 
+                                          bool overwriteUnconfirmed);
 
 private:
 
-    class Private;
-    Private* d;
-
     // Disable
-    DetectionWorker(const DetectionWorker&)            = delete;
-    DetectionWorker& operator=(const DetectionWorker&) = delete;
+    DatabaseWriter(const DatabaseWriter&)            = delete;
+    DatabaseWriter& operator=(const DatabaseWriter&) = delete;
 };
 
 } // namespace Digikam
 
-#endif // DIGIKAM_DETECTION_WORKER_H
+#endif // DIGIKAM_DATABASE_WRITER_H

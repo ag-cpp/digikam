@@ -25,30 +25,53 @@
 
 #include "detectionworker.h"
 
-// Local includes
+#include <QRect>
 
+// Local includes
+#include "facedetector.h"
 #include "digikam_debug.h"
 
 namespace Digikam
 {
 
+class Q_DECL_HIDDEN DetectionWorker::Private
+{
+public:
+    explicit Private()
+    {
+    }
+
+    ~Private()
+    {
+    }
+
+public:
+
+    FaceDetector detector;
+};
+
 DetectionWorker::DetectionWorker()
+    : d(new Private())
 {
 }
 
 DetectionWorker::~DetectionWorker()
 {
     // TODO wait for the job is finished
+    delete d;
 }
 
-void DetectionWorker::process(const Dimage& image)
+QList<QRectF> DetectionWorker::process(const QImage& image)
 {
-    if (!image.isNull())
+    if (image.isNull())
     {
-        package->detectedFaces = detector.detectFaces(image);
-
-        qCDebug(DIGIKAM_GENERAL_LOG) << "Found" << package->detectedFaces.size();
+        return {};
     }
+
+    QList<QRectF> detectedFaces = d->detector.detectFaces(image);
+    qCDebug(DIGIKAM_GENERAL_LOG) << "Found" << detectedFaces.size();
+
+    return detectedFaces;
 }
 
 void DetectionWorker::setAccuracyAndModel(double accuracy, bool yolo)
@@ -57,7 +80,7 @@ void DetectionWorker::setAccuracyAndModel(double accuracy, bool yolo)
     params[QLatin1String("accuracy")]    = accuracy;
     params[QLatin1String("useyolov3")]   = yolo;
     params[QLatin1String("specificity")] = 0.8;     // TODO: add UI for sensitivity - specificity
-    detector.setParameters(params);
+    d->detector.setParameters(params);
 }
 
 } // namespace Digikam
