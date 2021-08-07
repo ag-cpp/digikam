@@ -580,6 +580,11 @@
                 context TEXT,
                 embedding BLOB NOT NULL);
                 </statement>
+                <statement mode="plain">DROP TABLE IF EXISTS FaceReferences;</statement>
+                <statement mode="plain">CREATE TABLE FaceReferences
+                (tagId INTEGER PRIMARY KEY,
+                matriceId INTEGER NOT NULL);
+                </statement>
             </dbaction>
 
             <dbaction name="CreateFaceDBKDTree" mode="transaction">
@@ -1666,6 +1671,7 @@
             <dbaction name="CreateFaceDBFaceMatrices" mode="transaction">
                 <statement mode="plain">SET FOREIGN_KEY_CHECKS=0;</statement>
                 <statement mode="plain">DROP TABLE IF EXISTS FaceMatrices;</statement>
+                <statement mode="plain">DROP TABLE IF EXISTS FaceReferences;</statement>
                 <statement mode="plain">SET FOREIGN_KEY_CHECKS=1;</statement>
                 <statement mode="plain">CREATE TABLE FaceMatrices
                     (id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -1673,6 +1679,12 @@
                     `context` LONGTEXT CHARACTER SET utf8 COLLATE utf8_general_ci,
                     embedding BLOB NOT NULL,
                     CONSTRAINT FaceEmbedding_Identities FOREIGN KEY (identity) REFERENCES Identities (id) ON DELETE CASCADE ON UPDATE CASCADE)
+                    ENGINE InnoDB;
+                </statement>
+                <statement mode="plain">CREATE TABLE FaceReferences
+                    (tagId INTEGER PRIMARY KEY,
+                    matriceId INTEGER NOT NULL,
+                    CONSTRAINT FaceEmbedding_Matrices FOREIGN KEY (matriceId) REFERENCES FaceMatrices (id) ON DELETE CASCADE ON UPDATE CASCADE)
                     ENGINE InnoDB;
                 </statement>
             </dbaction>

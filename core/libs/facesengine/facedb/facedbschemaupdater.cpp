@@ -41,7 +41,7 @@ namespace Digikam
 
 int FaceDbSchemaUpdater::schemaVersion()
 {
-    return 4;
+    return 5;
 }
 
 // -------------------------------------------------------------------------------------
@@ -230,6 +230,10 @@ bool FaceDbSchemaUpdater::makeUpdates()
         {
             updateV3ToV4();
         }
+        else if (d->currentVersion == 4)
+        {
+            updateV3ToV4();
+        }
     }
 
     return true;
@@ -316,6 +320,21 @@ bool FaceDbSchemaUpdater::updateV3ToV4()
     d->currentRequiredVersion = 4;
 
     // TODO: retrain recognized identities
+
+    return true;
+}
+
+bool FaceDbSchemaUpdater::updateV4ToV5()
+{
+    if (!(d->dbAccess->backend()->execDBAction(d->dbAccess->backend()->getDBAction(QLatin1String("CreateFaceDBFaceMatrices")))))
+    {
+        qCDebug(DIGIKAM_FACEDB_LOG) << "fail to recreate FaceMatrices table";
+
+        return false;
+    }
+
+    d->currentVersion         = 5;
+    d->currentRequiredVersion = 5;
 
     return true;
 }
