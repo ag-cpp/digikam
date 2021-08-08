@@ -26,7 +26,6 @@
 
 #include <QList>
 #include <QVector>
-#include <QImage>
 
 // Local includes
 #include "dnnfaceextractor.h"

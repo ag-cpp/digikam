@@ -31,18 +31,18 @@ add_custom_target(scriptlink_rec ALL
 
 # -----------------------------------------------------------------------------
 
-set(facerec_cli_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/face_rec_cli.cpp)
-add_executable(face_rec_cli ${facerec_cli_SRCS})
+#set(facerec_cli_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/face_rec_cli.cpp)
+#add_executable(face_rec_cli ${facerec_cli_SRCS})
 
-target_link_libraries(face_rec_cli
+#target_link_libraries(face_rec_cli
 
-                      digikamcore
-                      digikamgui
-                      digikamfacesengine
-                      digikamdatabase
+#                      digikamcore
+#                      digikamgui
+#                      digikamfacesengine
+#                      digikamdatabase
 
-                      ${COMMON_TEST_LINK}
-)
+#                      ${COMMON_TEST_LINK}
+#)
 
 # -----------------------------------------------------------------------------
 
@@ -128,18 +128,18 @@ target_link_libraries(extract_cli
 
 # -----------------------------------------------------------------------------
 
-set(traindb_cli_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/traindb_cli.cpp)
-add_executable(traindb_cli ${traindb_cli_SRCS})
+#set(traindb_cli_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/traindb_cli.cpp)
+#add_executable(traindb_cli ${traindb_cli_SRCS})
 
-target_link_libraries(traindb_cli
+#target_link_libraries(traindb_cli
 
-                      digikamcore
-                      digikamgui
-                      digikamfacesengine
-                      digikamdatabase
+#                      digikamcore
+#                      digikamgui
+#                      digikamfacesengine
+#                      digikamdatabase
 
-                      ${COMMON_TEST_LINK}
-)
+#                      ${COMMON_TEST_LINK}
+#)
 
 # -----------------------------------------------------------------------------
 
