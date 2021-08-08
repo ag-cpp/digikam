@@ -50,7 +50,7 @@
 #include "tagfolderview.h"
 #include "timelinewidget.h"
 #include "facescanwidget.h"
-#include "facesdetector.h"
+#include "facesmanager.h"
 #include "dnotificationwidget.h"
 #include "applicationsettings.h"
 

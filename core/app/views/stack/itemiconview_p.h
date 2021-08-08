@@ -61,7 +61,7 @@
 #include "dzoombar.h"
 #include "dtrashitemmodel.h"
 #include "facescansettings.h"
-#include "facesdetector.h"
+#include "facesmanager.h"
 #include "fileactionmngr.h"
 #include "fileactionprogress.h"
 #include "filtersidebarwidget.h"

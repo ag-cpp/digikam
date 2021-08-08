@@ -49,7 +49,7 @@
 #include "tooltipfiller.h"
 #include "thumbsgenerator.h"
 #include "newitemsfinder.h"
-#include "facesdetector.h"
+#include "facesmanager.h"
 #include "coredbaccess.h"
 #include "coredb.h"
 

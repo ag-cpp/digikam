@@ -21,3 +21,42 @@
  *
  * ============================================================ */
 
+#include "detectionpipeline.h"
+
+#include <QDebug>
+
+namespace Digikam
+{
+
+class Q_DECL_HIDDEN DetectionPipeline::Private
+{
+public:
+
+    explicit Private()
+    {
+    }
+
+    ~Private()
+    {
+    }
+
+public:
+
+};
+
+DetectionPipeline::DetectionPipeline()
+    : d(new Private())
+{
+}
+
+DetectionPipeline::~DetectionPipeline()
+{
+    delete d;
+}
+
+void DetectionPipeline::process(const ItemInfo& info) 
+{
+    qDebug() << info.fileUrl();
+}
+
+}

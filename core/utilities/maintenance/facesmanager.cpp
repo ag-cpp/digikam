@@ -23,7 +23,7 @@
  *
  * ============================================================ */
 
-#include "facesdetector.h"
+#include "facesmanager.h"
 
 // Qt includes
 
@@ -97,17 +97,18 @@ private:
 
 // --------------------------------------------------------------------------
 
-class Q_DECL_HIDDEN FacesDetector::Private
+class Q_DECL_HIDDEN FacesManager::Private
 {
 public:
 
     explicit Private()
-      : source   (FacesDetector::Albums),
-        benchmark(false)
+      //: source   (FacesManager::Albums),
+        //benchmark(false)
     {
     }
 
-    FacesDetector::InputSource source;
+    /*
+    FacesManager::InputSource source;
     bool                       benchmark;
 
     AlbumPointerList<>         albumTodoList;
@@ -116,12 +117,14 @@ public:
 
     ItemInfoJob                albumListing;
     FacePipeline               pipeline;
+    */
 };
 
-FacesDetector::FacesDetector(const FaceScanSettings& settings, ProgressItem* const parent)
-    : MaintenanceTool(QLatin1String("FacesDetector"), parent),
+FacesManager::FacesManager(const FaceScanSettings& settings, ProgressItem* const parent)
+    : MaintenanceTool(QLatin1String("FacesManager"), parent),
       d              (new Private)
 {
+    /*
     setLabel(i18n("Updating faces database."));
     ProgressManager::addProgressItem(this);
 
@@ -238,44 +241,47 @@ FacesDetector::FacesDetector(const FaceScanSettings& settings, ProgressItem* con
             getImagesWithImageTagProperty(FaceTags::unknownPersonTagId(),
                                           ImageTagPropertyName::autodetectedFace());
 
-        d->source = FacesDetector::Ids;
+        d->source = FacesManager::Ids;
     }
     else if (settings.task == FaceScanSettings::RetrainAll)
     {
         d->idsTodoList = CoreDbAccess().db()->
             getImagesWithProperty(ImageTagPropertyName::tagRegion());
 
-        d->source = FacesDetector::Ids;
+        d->source = FacesManager::Ids;
     }
     else if (settings.albums.isEmpty() && settings.infos.isEmpty())
     {
         d->albumTodoList = AlbumManager::instance()->allPAlbums();
-        d->source = FacesDetector::Albums;
+        d->source = FacesManager::Albums;
     }
     else if (!settings.albums.isEmpty())
     {
         d->albumTodoList = settings.albums;
-        d->source = FacesDetector::Albums;
+        d->source = FacesManager::Albums;
     }
     else
     {
         d->infoTodoList = settings.infos;
-        d->source = FacesDetector::Infos;
+        d->source = FacesManager::Infos;
     }
+    */
 }
 
-FacesDetector::~FacesDetector()
+FacesManager::~FacesManager()
 {
     delete d;
 }
 
-void FacesDetector::slotStart()
+/*
+
+void FacesManager::slotStart()
 {
     MaintenanceTool::slotStart();
 
     setThumbnail(QIcon::fromTheme(QLatin1String("edit-image-face-show")).pixmap(22));
 
-    if      (d->source == FacesDetector::Infos)
+    if      (d->source == FacesManager::Infos)
     {
         int total = d->infoTodoList.count();
         qCDebug(DIGIKAM_GENERAL_LOG) << "Total is" << total;
@@ -291,7 +297,7 @@ void FacesDetector::slotStart()
         slotItemsInfo(d->infoTodoList);
         return;
     }
-    else if (d->source == FacesDetector::Ids)
+    else if (d->source == FacesManager::Ids)
     {
         ItemInfoList itemInfos(d->idsTodoList);
 
@@ -385,9 +391,9 @@ void FacesDetector::slotStart()
     slotContinueAlbumListing();
 }
 
-void FacesDetector::slotContinueAlbumListing()
+void FacesManager::slotContinueAlbumListing()
 {
-    if (d->source != FacesDetector::Albums)
+    if (d->source != FacesManager::Albums)
     {
         slotDone();
         return;
@@ -421,12 +427,12 @@ void FacesDetector::slotContinueAlbumListing()
     d->albumListing.allItemsFromAlbum(album);
 }
 
-void FacesDetector::slotItemsInfo(const ItemInfoList& items)
+void FacesManager::slotItemsInfo(const ItemInfoList& items)
 {
     d->pipeline.process(items);
 }
 
-void FacesDetector::slotDone()
+void FacesManager::slotDone()
 {
     if (d->benchmark)
     {
@@ -440,22 +446,23 @@ void FacesDetector::slotDone()
     MaintenanceTool::slotDone();
 }
 
-void FacesDetector::slotCancel()
+void FacesManager::slotCancel()
 {
     d->pipeline.shutDown();
     MaintenanceTool::slotCancel();
 }
 
-void FacesDetector::slotImagesSkipped(const QList<ItemInfo>& infos)
+void FacesManager::slotImagesSkipped(const QList<ItemInfo>& infos)
 {
     advance(infos.size());
 }
 
-void FacesDetector::slotShowOneDetected(const FacePipelinePackage& /*package*/)
+void FacesManager::slotShowOneDetected(const FacePipelinePackage& package)
 {
     advance(1);
 }
+*/
 
 } // namespace Digikam
 
-#include "facesdetector.moc"
+#include "facesmanager.moc"

@@ -48,7 +48,7 @@
 #include "metadatasynchronizer.h"
 #include "dnotificationwrapper.h"
 #include "progressmanager.h"
-#include "facesdetector.h"
+#include "facesmanager.h"
 #include "dbcleaner.h"
 
 namespace Digikam

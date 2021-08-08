@@ -22,8 +22,8 @@
  *
  * ============================================================ */
 
-#ifndef DIGIKAM_FACES_DETECTOR_H
-#define DIGIKAM_FACES_DETECTOR_H
+#ifndef DIGIKAM_FACES_MANAGER_H
+#define DIGIKAM_FACES_MANAGER_H
 
 // Qt includes
 
@@ -42,27 +42,30 @@ class FaceScanSettings;
 class ItemInfo;
 class ItemInfoList;
 
-class FacesDetector : public MaintenanceTool
+class FacesManager : public MaintenanceTool
 {
     Q_OBJECT
 
 public:
 
+    /*
     enum InputSource
     {
         Albums = 0,
         Infos,
         Ids
     };
+    */
 
 public:
 
-    explicit FacesDetector(const FaceScanSettings& settings,
-                           ProgressItem* const parent = nullptr);
-    ~FacesDetector()                                                override;
+    explicit FacesManager(const FaceScanSettings& settings,
+                          ProgressItem* const parent = nullptr);
+    ~FacesManager()                                                 override;
 
 private Q_SLOTS:
 
+    /*
     void slotStart()                                                override;
     void slotContinueAlbumListing();
     void slotItemsInfo(const ItemInfoList&);
@@ -70,7 +73,7 @@ private Q_SLOTS:
     void slotShowOneDetected(const FacePipelinePackage&);
     void slotDone()                                                 override;
     void slotCancel()                                               override;
-
+    */
 private:
 
     class Private;
@@ -79,4 +82,4 @@ private:
 
 } // namespace Digikam
 
-#endif // DIGIKAM_FACES_DETECTOR_H
+#endif // DIGIKAM_FACES_MANAGER_H

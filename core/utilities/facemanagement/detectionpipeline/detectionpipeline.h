@@ -24,8 +24,27 @@
 #ifndef DIGIKAM_DETECTION_PIPELINE_H
 #define DIGIKAM_DETECTION_PIPELINE_H
 
+#include "iteminfo.h"
+
 namespace Digikam
 {
+
+class DetectionPipeline
+{
+public:
+
+    explicit DetectionPipeline();
+    ~DetectionPipeline();
+
+public:
+
+    void process(const ItemInfo& info);
+
+private:
+
+    class Private;
+    Private* d;
+};
 
 }
 
