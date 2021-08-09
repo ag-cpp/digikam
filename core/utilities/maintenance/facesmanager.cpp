@@ -57,52 +57,12 @@
 
 namespace Digikam
 {
-
-class Q_DECL_HIDDEN BenchmarkMessageDisplay : public QWidget
-{
-    Q_OBJECT
-
-public:
-
-    explicit BenchmarkMessageDisplay(const QString& richText)
-        : QWidget(nullptr)
-    {
-        setAttribute(Qt::WA_DeleteOnClose);
-
-        QVBoxLayout* const vbox     = new QVBoxLayout;
-        QTextEdit* const edit       = new QTextEdit;
-        vbox->addWidget(edit, 1);
-        QPushButton* const okButton = new QPushButton(i18n("OK"));
-        vbox->addWidget(okButton, 0, Qt::AlignRight);
-
-        setLayout(vbox);
-
-        connect(okButton, SIGNAL(clicked()),
-                this, SLOT(close()));
-
-        edit->setHtml(richText);
-        QApplication::clipboard()->setText(edit->toPlainText());
-
-        resize(500, 400);
-        show();
-        raise();
-    }
-
-private:
-
-    // Disable
-    BenchmarkMessageDisplay(QWidget*);
-};
-
-// --------------------------------------------------------------------------
-
 class Q_DECL_HIDDEN FacesManager::Private
 {
 public:
 
     explicit Private()
-      //: source   (FacesManager::Albums),
-        //benchmark(false)
+        : source (FacesManager::Albums)
     {
     }
 
@@ -112,7 +72,6 @@ public:
     }
 
     FacesManager::InputSource source;
-    //bool                       benchmark;
 
     AlbumPointerList<>         albumTodoList;
     ItemInfoList               infoTodoList;
@@ -157,32 +116,6 @@ FacesManager::FacesManager(const FaceScanSettings& settings, ProgressItem* const
         FacialRecognitionWrapper().clearAllTraining(QLatin1String("digikam"));
         d->pipeline.plugRetrainingDatabaseFilter();
         d->pipeline.plugTrainer();
-        d->pipeline.construct();
-    }
-    else if (settings.task == FaceScanSettings::BenchmarkDetection)
-    {
-        d->benchmark = true;
-        d->pipeline.plugDatabaseFilter(FacePipeline::ScanAll);
-        d->pipeline.plugFacePreviewLoader();
-
-        if (settings.useFullCpu)
-        {
-            d->pipeline.plugParallelFaceDetectors();
-        }
-        else
-        {
-            d->pipeline.plugFaceDetector();
-        }
-
-        d->pipeline.plugDetectionBenchmarker();
-        d->pipeline.construct();
-    }
-    else if (settings.task == FaceScanSettings::BenchmarkRecognition)
-    {
-        d->benchmark = true;
-        d->pipeline.plugRetrainingDatabaseFilter();
-        d->pipeline.plugFaceRecognizer();
-        d->pipeline.plugRecognitionBenchmarker();
         d->pipeline.construct();
     }
     else // FaceScanSettings::RecognizeMarkedFaces
@@ -412,14 +345,6 @@ void FacesManager::slotItemsInfo(const ItemInfoList& items)
 
 void FacesManager::slotDone()
 {
-    /*
-    TODO facesengine review where needed benchmark
-    if (d->benchmark)
-    {
-        new BenchmarkMessageDisplay(d->pipeline.benchmarkResult());
-    }
-    */
-
     // Switch on scanned for faces flag on digiKam config file.
 
     KSharedConfig::openConfig()->group("General Settings").writeEntry("Face Scanner First Run", true);

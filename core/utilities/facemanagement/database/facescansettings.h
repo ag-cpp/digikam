@@ -42,10 +42,7 @@ public:
         Detect,
         DetectAndRecognize,
         RecognizeMarkedFaces,
-        // TODO facesengine 5 review necessary tasks
         RetrainAll,
-        //BenchmarkDetection,
-        //BenchmarkRecognition
     };
 
     /// For detect and recognize
