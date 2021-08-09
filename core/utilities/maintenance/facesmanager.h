@@ -48,14 +48,13 @@ class FacesManager : public MaintenanceTool
 
 public:
 
-    /*
     enum InputSource
     {
         Albums = 0,
         Infos,
-        Ids
+        // TODO facesengine Ids is only for recognition
+        //Ids
     };
-    */
 
 public:
 
@@ -65,15 +64,15 @@ public:
 
 private Q_SLOTS:
 
-    /*
     void slotStart()                                                override;
     void slotContinueAlbumListing();
     void slotItemsInfo(const ItemInfoList&);
-    void slotImagesSkipped(const QList<ItemInfo>&);
-    void slotShowOneDetected(const FacePipelinePackage&);
+    void slotAdvance();
+    // TODO facesengine: find the purpose of this method
+    //void slotShowOneDetected(const FacePipelinePackage&);
     void slotDone()                                                 override;
     void slotCancel()                                               override;
-    */
+    
 private:
 
     class Private;

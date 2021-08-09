@@ -3,11 +3,12 @@
  * This file is a part of digiKam project
  * https://www.digikam.org
  *
- * Date        : 2021-08-08
- * Description : Async face detection pipeline
+ * Date        : 2010-09-03
+ * Description : Filtering scanned image for detection
  *
+ * Copyright (C) 2010-2011 by Marcel Wiesweg <marcel dot wiesweg at gmx dot de>
  * Copyright (C)      2021 by Nghia Duong    <minhnghiaduong997 at gmail dot com>
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation;
@@ -21,18 +22,18 @@
  *
  * ============================================================ */
 
-#include "detectionpipeline.h"
+#include "scanfilter.h"
 
-#include <QDebug>
+#include "faceutils.h"
 
 namespace Digikam
 {
-
-class Q_DECL_HIDDEN DetectionPipeline::Private
+class Q_DECL_HIDDEN ScanFilter::Private
 {
 public:
 
-    explicit Private()
+    explicit Private(FilterMode mode)
+        : mode(mode)
     {
     }
 
@@ -42,30 +43,42 @@ public:
 
 public:
 
+    FilterMode mode;
 };
 
-DetectionPipeline::DetectionPipeline()
-    : d(new Private())
+ScanFilter::ScanFilter(FilterMode mode)
+    : d(new Private(mode))
 {
 }
 
-DetectionPipeline::~DetectionPipeline()
+ScanFilter::~ScanFilter()
 {
     delete d;
 }
 
-void DetectionPipeline::process(const QList<ItemInfo>& info) 
+bool ScanFilter::filter(const ItemInfo& info) const
 {
-    for (int i = 0; i < info.size(); ++i)
+    FaceUtils utils;
+
+    switch (d->mode)
     {
-         qDebug() << info[i].fileUrl();
+        case ScanAll:
+        {
+            return false;
+        }
+
+        case SkipAlreadyScanned:
+        {
+            if (!utils.hasBeenScanned(info))
+            {
+                return false;
+            }
+
+            break;
+        }
     }
+
+    return true;
 }
 
-void DetectionPipeline::cancel()
-{
-    // TODO
-}
-
-
-}
+} // namespace Digikam

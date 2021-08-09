@@ -3,11 +3,12 @@
  * This file is a part of digiKam project
  * https://www.digikam.org
  *
- * Date        : 2021-08-08
- * Description : Async face detection pipeline
+ * Date        : 2010-09-03
+ * Description : Filtering scanned image for detection
  *
+ * Copyright (C) 2010-2011 by Marcel Wiesweg <marcel dot wiesweg at gmx dot de>
  * Copyright (C)      2021 by Nghia Duong    <minhnghiaduong997 at gmail dot com>
- * 
+ *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation;
@@ -21,31 +22,40 @@
  *
  * ============================================================ */
 
-#ifndef DIGIKAM_DETECTION_PIPELINE_H
-#define DIGIKAM_DETECTION_PIPELINE_H
+#ifndef DIGIKAM_SCANFILTER_H
+#define DIGIKAM_SCANFILTER_H
 
 #include "iteminfo.h"
 
 namespace Digikam
 {
 
-class DetectionPipeline: public QObject
+class Q_DECL_HIDDEN ScanFilter
 {
-    Q_OBJECT
 public:
 
-    explicit DetectionPipeline();
-    ~DetectionPipeline();
+    enum FilterMode
+    {
+        /// Will read any given image
+        ScanAll,
+
+        /// Will skip any image that is already marked as scanned
+        SkipAlreadyScanned,
+
+        // TODO facesengine 5 review scan mode for classification
+    };
 
 public:
 
-    void process(const QList<ItemInfo>& info);
-    void cancel();
+    explicit ScanFilter(FilterMode mode);
+    ~ScanFilter();
 
-Q_SIGNALS:
+public:
 
-    void processed();
-    void finished();
+    /**
+     * filter returns true if the item is filtered, and false if it's not
+     */ 
+    bool filter(const ItemInfo& info) const;
 
 private:
 
@@ -53,6 +63,6 @@ private:
     Private* d;
 };
 
-}
+} // namespace Digikam
 
-#endif // DIGIKAM_DETECTION_PIPELINE_H
+#endif //DIGIKAM_SCANFILTER_H

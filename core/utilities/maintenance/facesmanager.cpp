@@ -44,13 +44,12 @@
 
 // Local includes
 
-#include "facialrecognition_wrapper.h"
 #include "digikam_debug.h"
 #include "coredb.h"
 #include "album.h"
 #include "albummanager.h"
 #include "albumpointer.h"
-#include "facepipeline.h"
+#include "detectionpipeline.h"
 #include "facescansettings.h"
 #include "iteminfo.h"
 #include "iteminfojob.h"
@@ -107,28 +106,65 @@ public:
     {
     }
 
-    /*
+
     FacesManager::InputSource source;
-    bool                       benchmark;
+    //bool                       benchmark;
 
     AlbumPointerList<>         albumTodoList;
     ItemInfoList               infoTodoList;
-    QList<qlonglong>           idsTodoList;
+    //QList<qlonglong>           idsTodoList;
 
     ItemInfoJob                albumListing;
-    FacePipeline               pipeline;
-    */
+    DetectionPipeline          pipeline;
+    //FacePipeline               pipeline;
 };
 
 FacesManager::FacesManager(const FaceScanSettings& settings, ProgressItem* const parent)
     : MaintenanceTool(QLatin1String("FacesManager"), parent),
       d              (new Private)
 {
-    /*
     setLabel(i18n("Updating faces database."));
     ProgressManager::addProgressItem(this);
 
-    if      (settings.task == FaceScanSettings::RetrainAll)
+    if ((settings.task == FaceScanSettings::DetectAndRecognize) ||
+        (settings.task == FaceScanSettings::Detect))
+    {
+        bool scanAll = false;
+        bool overWrite = false;
+
+        if (settings.alreadyScannedHandling == FaceScanSettings::Rescan)
+        {
+            scanAll = true;
+            overWrite = true;
+        }
+        else if (settings.alreadyScannedHandling == FaceScanSettings::Merge)
+        {
+            scanAll = true;
+        }
+        
+        /*
+        d->pipeline.plugDatabaseFilter(filterMode);
+        d->pipeline.plugFacePreviewLoader();
+
+        if (settings.useFullCpu)
+        {
+            d->pipeline.plugParallelFaceDetectors();
+        }
+        else
+        {
+            d->pipeline.plugFaceDetector();
+        }
+
+        d->pipeline.plugDatabaseWriter(writeMode);
+        d->pipeline.setAccuracyAndModel(settings.accuracy,
+                                        settings.useYoloV3);
+        d->pipeline.construct();
+        */
+    }
+
+
+    /*
+    else if      (settings.task == FaceScanSettings::RetrainAll)
     {
         // clear all training data in the database
         FacialRecognitionWrapper().clearAllTraining(QLatin1String("digikam"));
@@ -162,51 +198,6 @@ FacesManager::FacesManager(const FaceScanSettings& settings, ProgressItem* const
         d->pipeline.plugRecognitionBenchmarker();
         d->pipeline.construct();
     }
-    else if ((settings.task == FaceScanSettings::DetectAndRecognize) ||
-             (settings.task == FaceScanSettings::Detect))
-    {
-        FacePipeline::FilterMode filterMode;
-        FacePipeline::WriteMode  writeMode;
-
-        if      (settings.alreadyScannedHandling == FaceScanSettings::Skip)
-        {
-            filterMode = FacePipeline::SkipAlreadyScanned;
-            writeMode  = FacePipeline::NormalWrite;
-        }
-        else if (settings.alreadyScannedHandling == FaceScanSettings::Rescan)
-        {
-            filterMode = FacePipeline::ScanAll;
-            writeMode  = FacePipeline::OverwriteUnconfirmed;
-        }
-        else // FaceScanSettings::Merge
-        {
-            filterMode = FacePipeline::ScanAll;
-            writeMode  = FacePipeline::NormalWrite;
-        }
-
-        d->pipeline.plugDatabaseFilter(filterMode);
-        d->pipeline.plugFacePreviewLoader();
-
-        if (settings.useFullCpu)
-        {
-            d->pipeline.plugParallelFaceDetectors();
-        }
-        else
-        {
-            d->pipeline.plugFaceDetector();
-        }
-
-        if (settings.task == FaceScanSettings::DetectAndRecognize)
-        {
-            //d->pipeline.plugRerecognizingDatabaseFilter();
-            d->pipeline.plugFaceRecognizer();
-        }
-
-        d->pipeline.plugDatabaseWriter(writeMode);
-        d->pipeline.setAccuracyAndModel(settings.accuracy,
-                                        settings.useYoloV3);
-        d->pipeline.construct();
-    }
     else // FaceScanSettings::RecognizeMarkedFaces
     {
         d->pipeline.plugRerecognizingDatabaseFilter();
@@ -216,6 +207,7 @@ FacesManager::FacesManager(const FaceScanSettings& settings, ProgressItem* const
                                         settings.useYoloV3);
         d->pipeline.construct();
     }
+    */
 
     connect(&d->albumListing, SIGNAL(signalItemsInfo(ItemInfoList)),
             this, SLOT(slotItemsInfo(ItemInfoList)));
@@ -223,18 +215,14 @@ FacesManager::FacesManager(const FaceScanSettings& settings, ProgressItem* const
     connect(&d->albumListing, SIGNAL(signalCompleted()),
             this, SLOT(slotContinueAlbumListing()));
 
-    connect(&d->pipeline, SIGNAL(finished()),
-            this, SLOT(slotContinueAlbumListing()));
-
-    connect(&d->pipeline, SIGNAL(processed(FacePipelinePackage)),
-            this, SLOT(slotShowOneDetected(FacePipelinePackage)));
-
-    connect(&d->pipeline, SIGNAL(skipped(QList<ItemInfo>)),
-            this, SLOT(slotImagesSkipped(QList<ItemInfo>)));
-
     connect(this, SIGNAL(progressItemCanceled(ProgressItem*)),
             this, SLOT(slotCancel()));
 
+    connect(&d->pipeline, SIGNAL(processed()),
+            this, SLOT(slotAdvance()));
+
+    /*
+    TODO facesengine: Ids is for recognition
     if      (settings.task == FaceScanSettings::RecognizeMarkedFaces)
     {
         d->idsTodoList = CoreDbAccess().db()->
@@ -250,7 +238,8 @@ FacesManager::FacesManager(const FaceScanSettings& settings, ProgressItem* const
 
         d->source = FacesManager::Ids;
     }
-    else if (settings.albums.isEmpty() && settings.infos.isEmpty())
+    
+    else*/ if (settings.albums.isEmpty() && settings.infos.isEmpty())
     {
         d->albumTodoList = AlbumManager::instance()->allPAlbums();
         d->source = FacesManager::Albums;
@@ -265,7 +254,6 @@ FacesManager::FacesManager(const FaceScanSettings& settings, ProgressItem* const
         d->infoTodoList = settings.infos;
         d->source = FacesManager::Infos;
     }
-    */
 }
 
 FacesManager::~FacesManager()
@@ -273,14 +261,12 @@ FacesManager::~FacesManager()
     delete d;
 }
 
-/*
-
 void FacesManager::slotStart()
 {
     MaintenanceTool::slotStart();
 
     setThumbnail(QIcon::fromTheme(QLatin1String("edit-image-face-show")).pixmap(22));
-
+    
     if      (d->source == FacesManager::Infos)
     {
         int total = d->infoTodoList.count();
@@ -297,6 +283,9 @@ void FacesManager::slotStart()
         slotItemsInfo(d->infoTodoList);
         return;
     }
+
+    /*
+    TODO facesengine: Only for recognition
     else if (d->source == FacesManager::Ids)
     {
         ItemInfoList itemInfos(d->idsTodoList);
@@ -315,6 +304,7 @@ void FacesManager::slotStart()
         slotItemsInfo(itemInfos);
         return;
     }
+    */
 
     setUsesBusyIndicator(true);
 
@@ -399,11 +389,11 @@ void FacesManager::slotContinueAlbumListing()
         return;
     }
 
-    qCDebug(DIGIKAM_GENERAL_LOG) << d->albumListing.isRunning() << !d->pipeline.hasFinished();
+    qCDebug(DIGIKAM_GENERAL_LOG) << d->albumListing.isRunning();
 
     // we get here by the finished signal from both, and want both to have finished to continue
 
-    if (d->albumListing.isRunning() || !d->pipeline.hasFinished())
+    if (d->albumListing.isRunning())
     {
         return;
     }
@@ -432,12 +422,17 @@ void FacesManager::slotItemsInfo(const ItemInfoList& items)
     d->pipeline.process(items);
 }
 
+
+
 void FacesManager::slotDone()
 {
+    /*
+    TODO facesengine review where needed benchmark
     if (d->benchmark)
     {
         new BenchmarkMessageDisplay(d->pipeline.benchmarkResult());
     }
+    */
 
     // Switch on scanned for faces flag on digiKam config file.
 
@@ -446,17 +441,19 @@ void FacesManager::slotDone()
     MaintenanceTool::slotDone();
 }
 
+
 void FacesManager::slotCancel()
 {
-    d->pipeline.shutDown();
+    d->pipeline.cancel();
     MaintenanceTool::slotCancel();
 }
 
-void FacesManager::slotImagesSkipped(const QList<ItemInfo>& infos)
+void FacesManager::slotAdvance()
 {
-    advance(infos.size());
+    advance(1);
 }
 
+/*
 void FacesManager::slotShowOneDetected(const FacePipelinePackage& package)
 {
     advance(1);

@@ -34,6 +34,7 @@ set(libfacemanagement_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/detectionpipeline/detectionworker.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/detectionpipeline/extractionworker.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/detectionpipeline/databasewriter.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/detectionpipeline/scanfilter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/detectionpipeline/detectionpipeline.cpp
 )
 
