@@ -82,69 +82,45 @@ void ImageQualityParser::startAnalyse()
     std::unique_ptr<CompressionDetector> compressionDetector;
     std::unique_ptr<ExposureDetector> exposureDetector;
  
-    QList<ImageQualityThread*> pool;
+    ImageQualityThreadPool pool(this, d->calculator);
 
     if (d->running && d->imq.detectBlur)
-    {
+    {        
         blurDetector = std::unique_ptr<BlurDetector>(new BlurDetector(d->image));
-        
-        ImageQualityThread* blurThread = new ImageQualityThread(this, blurDetector.get(), cvImage, d->calculator, d->imq.blurWeight);
-        
-        connect(blurThread, &QThread::finished, blurThread, &QObject::deleteLater);
 
-        blurThread->start();
-
-        pool.push_back(blurThread);
+        pool.addDetector(cvImage, d->imq.blurWeight, blurDetector.get());
     }
 
     if (d->running && d->imq.detectNoise)
     {
         noiseDetector = std::unique_ptr<NoiseDetector>(new NoiseDetector());
-        
-        ImageQualityThread* nosieThread = new ImageQualityThread(this, noiseDetector.get(), grayImage, 
-                                                                 d->calculator, d->imq.noiseWeight);
-                
-        connect(nosieThread, &QThread::finished, nosieThread, &QObject::deleteLater);
 
-        nosieThread->start();
-
-        pool.push_back(nosieThread);
+        pool.addDetector(grayImage, d->imq.noiseWeight, noiseDetector.get());
     }
 
     if (d->running && d->imq.detectCompression)
     {
         compressionDetector = std::unique_ptr<CompressionDetector>(new CompressionDetector());
-        
-        ImageQualityThread* compressionThread = new ImageQualityThread(this, compressionDetector.get(), cvImage, 
-                                                                       d->calculator, d->imq.compressionWeight);
 
-        connect(compressionThread, &QThread::finished, compressionThread, &QObject::deleteLater);
-
-        compressionThread->start();
-
-        pool.push_back(compressionThread);
+        pool.addDetector(cvImage, d->imq.compressionWeight, compressionDetector.get());
     }
 
     if (d->running && d->imq.detectExposure)
     {
         exposureDetector = std::unique_ptr<ExposureDetector>(new ExposureDetector());
 
-        ImageQualityThread* exposureThread = new ImageQualityThread(this, exposureDetector.get(), grayImage, 
-                                                                    d->calculator, d->imq.exposureWeight);
-                
-        connect(exposureThread, &QThread::finished, exposureThread, &QObject::deleteLater);
-
-        exposureThread->start();
-
-        pool.push_back(exposureThread);
+        pool.addDetector(grayImage, d->imq.exposureWeight, exposureDetector.get());
     }
 
-    for(const auto& thread : pool)
-    {
-        thread->quit();
-        thread->wait();
-        delete thread;
-    }
+    pool.start();
+    pool.end();
+
+    // for(const auto& thread : pool)
+    // {
+    //     thread->quit();
+    //     thread->wait();
+    //     delete thread;
+    // }
 
 
 #ifdef TRACE

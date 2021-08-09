@@ -50,4 +50,49 @@ void ImageQualityThread::run()
     m_calculator->addDetectionResult(QString(), damageLevel, m_weight);
 }
 
+//--------------------------------------------------------------------------
+
+ImageQualityThreadPool::ImageQualityThreadPool(QObject* const parent , ImageQualityCalculator* calculator)
+    : QObject(parent), m_calculator(calculator)
+{   
+}
+
+ImageQualityThreadPool::~ImageQualityThreadPool()
+{
+    end();
+
+    for(auto& thread : m_threads)
+    {
+        delete thread;
+    }
+}
+
+
+void ImageQualityThreadPool::addDetector(const cv::Mat& image, float weight_quality, DetectorDistortion* detector)
+{
+    ImageQualityThread* thread = new ImageQualityThread(this, detector, image, 
+                                                        m_calculator, weight_quality);
+                
+    connect(thread, &QThread::finished, thread, &QObject::deleteLater);
+    
+    m_threads.push_back(thread);
+}  
+
+void ImageQualityThreadPool::start()
+{
+    for (const auto& thread : m_threads)
+    {
+        thread->start();
+    }
+}
+
+void ImageQualityThreadPool::end()
+{
+    for(auto& thread : m_threads)
+    {
+        thread->quit();
+        thread->wait();
+    }
+}
+
 }

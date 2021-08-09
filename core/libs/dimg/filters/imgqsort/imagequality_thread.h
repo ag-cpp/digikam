@@ -63,6 +63,31 @@ private:
     float                   m_weight;
 };
 
+
+
+class ImageQualityThreadPool: public QObject
+{
+    Q_OBJECT
+public:
+
+    explicit ImageQualityThreadPool(QObject* const parent , ImageQualityCalculator* calculator);
+    ~ImageQualityThreadPool();
+
+public:
+
+    void addDetector(const cv::Mat& image, float weight_quality, DetectorDistortion* detector);  
+
+    void start();
+    void end();
+
+    // void run() override;
+
+private:
+
+    ImageQualityCalculator*     m_calculator;
+    QList<ImageQualityThread*>  m_threads;
+};
+
 } // namespace Digikam
 
 #endif // DIGIKAM_IMAGEQUALITY_THREAD_H
