@@ -4,7 +4,7 @@
  * https://www.digikam.org
  *
  * Date        : 
- * Description : Image Quality Parser - noise detection
+ * Description : Image Quality Parser - blur detection
  *
  * Copyright (C) 2013-2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
  *
@@ -23,43 +23,31 @@
  *
  * ============================================================ */
 
-#ifndef DIGIKAM_EXPOSURE_DETECTOR_H
-#define DIGIKAM_EXPOSURE_DETECTOR_H
+#include "imagequality_thread.h"
+
+// Qt includes
+
 
 // Local includes
-
-#include "dimg.h"
-#include "digikam_opencv.h"
-#include "detector.h"
 
 namespace Digikam
 {
 
-class ExposureDetector : public DetectorDistortion
+ImageQualityThread::ImageQualityThread(QObject* const parent ,DetectorDistortion* detector,
+                                       const cv::Mat& image, ImageQualityCalculator* calculator, 
+                                       float weight_quality)
+  : QThread(parent)
 {
-    Q_OBJECT
-    
-public:
+    m_image = image;
+    m_detector = detector;
+    m_calculator = calculator;
+    m_weight = weight_quality;
+}
 
-    explicit ExposureDetector();
-    ~ExposureDetector();
+void ImageQualityThread::run()
+{
+    float damageLevel = m_detector->detect(m_image);
+    m_calculator->addDetectionResult(QString(), damageLevel, m_weight);
+}
 
-    float detect(const cv::Mat& image)          const override;
-
-private:
-
-    float percent_underexposed(const cv::Mat& image)    const;
-    float percent_overexposed(const cv::Mat& image)     const;
-
-    int count_by_condition(const cv::Mat& image, 
-                           int minVal, int maxVal)      const ;
-    
-private:
-
-    class Private;
-    Private* const d;
-};
-
-} // namespace Digikam
-
-#endif // DIGIKAM_EXPOSURE_DETECTOR_H
+}

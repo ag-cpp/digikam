@@ -27,6 +27,10 @@
 // Qt includes
 
 #include <QScopedPointer>
+#include <QThread>
+#include <QThreadPool>
+#include <QFuture>
+#include <QtConcurrent>
 
 // Local includes 
 
@@ -34,11 +38,21 @@
 #include "exposure_detector.h"
 #include "compression_detector.h"
 #include "blur_detector.h"
-#include "detector.h"
-#include "imagequalitycalculator.h"
+
+#include <thread>
+#include <memory>
+
+#include "imagequality_thread.h"
 
 namespace Digikam
 {
+
+void calculateDamage(const DetectorDistortion* detector, const cv::Mat& image, float qualityWeight, ImageQualityCalculator* calculator)
+{
+    float damage = detector->detect(image);
+
+    calculator->addDetectionResult(QString(), damage, qualityWeight);
+}
 
 ImageQualityParser::ImageQualityParser(const DImg& image,
                                        const ImageQualityContainer& settings,
@@ -52,19 +66,14 @@ ImageQualityParser::ImageQualityParser(const DImg& image,
 
 ImageQualityParser::~ImageQualityParser()
 {
+    delete d->calculator;
     delete d;
 }
 
 void ImageQualityParser::startAnalyse()
 {
 
-    float blurLevel             = -1.0;
-    float noiseLevel            = -1.0;
-    float compressionLevel      = -1.0;
-    float exposureLevel         = -1.0;
     float finalQuality          = -1.0;
-
-    QScopedPointer<ImageQualityCalculator> calculator(new ImageQualityCalculator());
 
     // const DetectorDistortion detector(d->image);
 
@@ -73,48 +82,74 @@ void ImageQualityParser::startAnalyse()
     cv::Mat grayImage;
 
     cv::cvtColor(cvImage, grayImage, cv::COLOR_BGR2GRAY);
+    //-----------------------------------------------------------------------------
 
-    // If blur option is selected in settings, run the blur detection algorithms
+    std::unique_ptr<BlurDetector> blurDetector;
+    std::unique_ptr<NoiseDetector> noiseDetector;
+    std::unique_ptr<CompressionDetector> compressionDetector;
+    std::unique_ptr<ExposureDetector> exposureDetector;
+ 
+    QList<ImageQualityThread*> pool;
 
     if (d->running && d->imq.detectBlur)
     {
-        blurLevel  = BlurDetector(d->image).detect(cvImage);
+        blurDetector = std::unique_ptr<BlurDetector>(new BlurDetector(d->image));
         
-        qCDebug(DIGIKAM_DIMG_LOG) << "Amount of Blur present in image is:" << blurLevel;
+        ImageQualityThread* blurThread = new ImageQualityThread(this, blurDetector.get(), cvImage, d->calculator, d->imq.blurWeight);
+        
+        connect(blurThread, &QThread::finished, blurThread, &QObject::deleteLater);
 
-        calculator->addDetectionResult(QLatin1String("BLUR"), blurLevel, d->imq.blurWeight);
+        blurThread->start();
+
+        pool.push_back(blurThread);
     }
 
     if (d->running && d->imq.detectNoise)
     {
-        cv::Mat image_float = grayImage;
-
-        image_float.convertTo(image_float,CV_32F);
-
-        noiseLevel = NoiseDetector().detect(image_float );
+        noiseDetector = std::unique_ptr<NoiseDetector>(new NoiseDetector());
         
-        qCDebug(DIGIKAM_DIMG_LOG) << "Amount of Noise present in image is:" << noiseLevel;
+        ImageQualityThread* nosieThread = new ImageQualityThread(this, noiseDetector.get(), grayImage, d->calculator, d->imq.noiseWeight);
+                
+        connect(nosieThread, &QThread::finished, nosieThread, &QObject::deleteLater);
 
-        calculator->addDetectionResult(QLatin1String("NOISE"), noiseLevel, d->imq.noiseWeight);
+        nosieThread->start();
+
+        pool.push_back(nosieThread);
     }
 
     if (d->running && d->imq.detectCompression)
     {
-        compressionLevel = CompressionDetector().detect(cvImage);
+        compressionDetector = std::unique_ptr<CompressionDetector>(new CompressionDetector());
+        
+        ImageQualityThread* compressionThread = new ImageQualityThread(this, compressionDetector.get(), cvImage, d->calculator, d->imq.compressionWeight);
 
-        qCDebug(DIGIKAM_DIMG_LOG) << "Amount of compression artifacts present in image is:" << compressionLevel;
+        connect(compressionThread, &QThread::finished, compressionThread, &QObject::deleteLater);
 
-        calculator->addDetectionResult(QLatin1String("COMPRESSION"), compressionLevel, d->imq.compressionWeight);
+        compressionThread->start();
+
+        pool.push_back(compressionThread);
     }
 
     if (d->running && d->imq.detectExposure)
     {
-        exposureLevel = ExposureDetector().detect(grayImage);
+        exposureDetector = std::unique_ptr<ExposureDetector>(new ExposureDetector());
 
-        qCDebug(DIGIKAM_DIMG_LOG) << "Under/Over exposure percents in image is: " << exposureLevel;
+        ImageQualityThread* exposureThread = new ImageQualityThread(this, exposureDetector.get(), grayImage, d->calculator, d->imq.exposureWeight);
+                
+        connect(exposureThread, &QThread::finished, exposureThread, &QObject::deleteLater);
 
-        calculator->addDetectionResult(QLatin1String("EXPOSURE"), exposureLevel, d->imq.exposureWeight);
+        exposureThread->start();
+
+        pool.push_back(exposureThread);
     }
+
+    for(const auto& thread : pool)
+    {
+        thread->quit();
+        thread->wait();
+        delete thread;
+    }
+
 
 #ifdef TRACE
 
@@ -156,7 +191,7 @@ void ImageQualityParser::startAnalyse()
 
     if (d->running)
     {
-        finalQuality            =  calculator->calculateQuality();
+        finalQuality            =  d->calculator->calculateQuality();
 
         qCDebug(DIGIKAM_DIMG_LOG) << "Final Quality estimated: " << finalQuality;
 

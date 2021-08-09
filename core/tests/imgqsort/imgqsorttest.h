@@ -61,56 +61,6 @@ protected:
         qCDebug(DIGIKAM_TESTS_LOG) << "Images Directory:" << dir;
         return dir;
     }
-    
-    QHash<QString, bool> testParseTestImages(const QString& testcase_name, DetectionType mode)
-    {
-        QStringList imageNames;
-        
-        QList<PairImageQuality> dataTest = getDataTestCases().values(testcase_name);
-        
-        for (const auto& image_refQuality : dataTest)
-        {
-            imageNames << image_refQuality.first;
-        }
-
-        QFileInfoList list = imageDir().entryInfoList(imageNames,QDir::Files, QDir::Name);
-
-        QHash<QString, int> results_detection = ImgQSortTest_ParseTestImagesDefautDetection(mode, list);
-
-        QHash<QString, bool> results_test;
-
-        for (const auto& image_refQuality : dataTest)
-        {
-            results_test.insert(image_refQuality.first, results_detection.value(image_refQuality.first) == image_refQuality.second);
-        }
-
-        return results_test;
-    }
-
-    QHash<QString, bool> testParseTestImages(const QString& testcase_name, const CustomDetection& customSetting)
-    {
-        QStringList imageNames;
-        
-        QList<PairImageQuality> dataTest = getDataTestCases().values(testcase_name);
-        
-        for (const auto& image_refQuality : dataTest)
-        {
-            imageNames << image_refQuality.first;
-        }
-
-        QFileInfoList list = imageDir().entryInfoList(imageNames,QDir::Files, QDir::Name);
-
-        QHash<QString, int> results_detection = ImgQSortTest_ParseTestImagesCustomDetection(customSetting, list);
-
-        QHash<QString, bool> results_test;
-
-        for (const auto& image_refQuality : dataTest)
-        {
-            results_test.insert(image_refQuality.first, results_detection.value(image_refQuality.first) == image_refQuality.second);
-        }
-
-        return results_test;
-    }
 
     template <typename Function, typename Parameter>
     QHash<QString, bool> testParseTestImages(const QString& testcase_name, Function ParseTestFunc, Parameter parameter)

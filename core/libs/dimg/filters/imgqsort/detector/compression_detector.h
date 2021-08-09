@@ -37,6 +37,8 @@ namespace Digikam
 
 class CompressionDetector : public DetectorDistortion 
 {
+    Q_OBJECT
+    
 public:
 
     explicit CompressionDetector();

@@ -137,7 +137,7 @@ cv::Mat CompressionDetector::checkEdgesBlock(const cv::Mat& gray_image, int bloc
 
 cv::Mat CompressionDetector::detectMonoColorRegion(const cv::Mat& image) const
 {
-    cv::Mat median_image;
+    cv::Mat median_image = cv::Mat();
 
     cv::medianBlur(image, median_image, 5);
 

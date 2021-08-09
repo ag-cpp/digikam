@@ -104,9 +104,13 @@ NoiseDetector::~NoiseDetector()
 
 float NoiseDetector::detect(const cv::Mat& image) const
 {    
+    cv::Mat image_float = image;
+
+    image_float.convertTo(image_float,CV_32F);
+    
     // Decompose to channels
     
-    Mat3D channels = decompose_by_filter(image, filtersHaar);
+    Mat3D channels = decompose_by_filter(image_float, filtersHaar);
     
     // Calculate variance and kurtosis
 

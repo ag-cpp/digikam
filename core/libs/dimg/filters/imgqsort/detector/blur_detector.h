@@ -37,6 +37,8 @@ namespace Digikam
 
 class BlurDetector : public DetectorDistortion
 {
+    Q_OBJECT
+    
 public:
 
     explicit BlurDetector(const DImg& image);

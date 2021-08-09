@@ -37,6 +37,7 @@ namespace Digikam
 
 class NoiseDetector : public DetectorDistortion  
 {
+    Q_OBJECT
 public:
     typedef QList<cv::Mat> Mat3D;
 public:

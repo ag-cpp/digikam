@@ -27,6 +27,10 @@
 #ifndef DIGIKAM_DETECTOR_DISTORTION_H
 #define DIGIKAM_DETECTOR_DISTORTION_H
 
+// Qt includes
+
+#include <QThread> 
+
 // Local includes
 
 #include "dimg.h"
@@ -35,13 +39,14 @@
 namespace Digikam
 {
 
-class DetectorDistortion
+class DetectorDistortion : public QObject
 {
+    Q_OBJECT
+
 public:
 
-    explicit DetectorDistortion();
-    DetectorDistortion(const DetectorDistortion& detector);
-    virtual ~DetectorDistortion();
+    explicit DetectorDistortion(QObject* const parent = nullptr);
+    virtual ~DetectorDistortion() = default;
 
     virtual float detect(const cv::Mat& image) const = 0;
 

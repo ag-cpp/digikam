@@ -71,7 +71,6 @@ ExposureDetector::ExposureDetector()
 {
 }
 
-
 ExposureDetector::~ExposureDetector()
 {
     delete d;

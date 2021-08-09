@@ -88,7 +88,11 @@ BlurDetector::BlurDetector(const DImg& image)
     : DetectorDistortion(),
       d(new Private)
 {
-    d->have_focus_region = haveFocusRegion(image);
+    QScopedPointer<FocusPointsExtractor> const extractor (new FocusPointsExtractor(nullptr, image.originalFilePath()));
+
+    d->af_points = extractor->get_af_points(FocusPointsExtractor::TypePoint::Selected);
+    
+    d->have_focus_region = !d->af_points.isEmpty();
 }
 
 BlurDetector::~BlurDetector()

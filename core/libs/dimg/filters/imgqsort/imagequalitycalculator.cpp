@@ -56,6 +56,12 @@ ImageQualityCalculator::ImageQualityCalculator()
     d->detectionResults = QList<ResultDetection>();
 }
 
+ImageQualityCalculator::~ImageQualityCalculator()
+{
+    delete d;
+}
+
+
 void ImageQualityCalculator::addDetectionResult(const QString& name, const float score, const float weight) const
 {
     ResultDetection result;

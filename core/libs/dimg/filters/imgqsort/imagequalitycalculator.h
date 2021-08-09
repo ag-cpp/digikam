@@ -51,6 +51,7 @@ public:
 public:
 
     explicit ImageQualityCalculator();
+    ~ImageQualityCalculator();
 
     float calculateQuality()  const;
     void addDetectionResult(const QString& name, const float score, const float weight) const;
