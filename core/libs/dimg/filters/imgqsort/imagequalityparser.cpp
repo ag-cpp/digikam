@@ -47,13 +47,6 @@
 namespace Digikam
 {
 
-void calculateDamage(const DetectorDistortion* detector, const cv::Mat& image, float qualityWeight, ImageQualityCalculator* calculator)
-{
-    float damage = detector->detect(image);
-
-    calculator->addDetectionResult(QString(), damage, qualityWeight);
-}
-
 ImageQualityParser::ImageQualityParser(const DImg& image,
                                        const ImageQualityContainer& settings,
                                        PickLabel* const label)
@@ -108,7 +101,8 @@ void ImageQualityParser::startAnalyse()
     {
         noiseDetector = std::unique_ptr<NoiseDetector>(new NoiseDetector());
         
-        ImageQualityThread* nosieThread = new ImageQualityThread(this, noiseDetector.get(), grayImage, d->calculator, d->imq.noiseWeight);
+        ImageQualityThread* nosieThread = new ImageQualityThread(this, noiseDetector.get(), grayImage, 
+                                                                 d->calculator, d->imq.noiseWeight);
                 
         connect(nosieThread, &QThread::finished, nosieThread, &QObject::deleteLater);
 
@@ -121,7 +115,8 @@ void ImageQualityParser::startAnalyse()
     {
         compressionDetector = std::unique_ptr<CompressionDetector>(new CompressionDetector());
         
-        ImageQualityThread* compressionThread = new ImageQualityThread(this, compressionDetector.get(), cvImage, d->calculator, d->imq.compressionWeight);
+        ImageQualityThread* compressionThread = new ImageQualityThread(this, compressionDetector.get(), cvImage, 
+                                                                       d->calculator, d->imq.compressionWeight);
 
         connect(compressionThread, &QThread::finished, compressionThread, &QObject::deleteLater);
 
@@ -134,7 +129,8 @@ void ImageQualityParser::startAnalyse()
     {
         exposureDetector = std::unique_ptr<ExposureDetector>(new ExposureDetector());
 
-        ImageQualityThread* exposureThread = new ImageQualityThread(this, exposureDetector.get(), grayImage, d->calculator, d->imq.exposureWeight);
+        ImageQualityThread* exposureThread = new ImageQualityThread(this, exposureDetector.get(), grayImage, 
+                                                                    d->calculator, d->imq.exposureWeight);
                 
         connect(exposureThread, &QThread::finished, exposureThread, &QObject::deleteLater);
 
