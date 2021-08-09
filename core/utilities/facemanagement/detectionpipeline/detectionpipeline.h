@@ -34,7 +34,7 @@ class DetectionPipeline: public QObject
     Q_OBJECT
 public:
 
-    explicit DetectionPipeline();
+    explicit DetectionPipeline(bool scanAll, bool overWrite);
     ~DetectionPipeline();
 
 public:
@@ -45,7 +45,6 @@ public:
 Q_SIGNALS:
 
     void processed();
-    void finished();
 
 private:
 

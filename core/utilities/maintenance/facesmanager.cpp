@@ -106,6 +106,10 @@ public:
     {
     }
 
+    ~Private()
+    {
+        delete pipeline;
+    }
 
     FacesManager::InputSource source;
     //bool                       benchmark;
@@ -115,7 +119,7 @@ public:
     //QList<qlonglong>           idsTodoList;
 
     ItemInfoJob                albumListing;
-    DetectionPipeline          pipeline;
+    DetectionPipeline*         pipeline;
     //FacePipeline               pipeline;
 };
 
@@ -141,25 +145,8 @@ FacesManager::FacesManager(const FaceScanSettings& settings, ProgressItem* const
         {
             scanAll = true;
         }
-        
-        /*
-        d->pipeline.plugDatabaseFilter(filterMode);
-        d->pipeline.plugFacePreviewLoader();
 
-        if (settings.useFullCpu)
-        {
-            d->pipeline.plugParallelFaceDetectors();
-        }
-        else
-        {
-            d->pipeline.plugFaceDetector();
-        }
-
-        d->pipeline.plugDatabaseWriter(writeMode);
-        d->pipeline.setAccuracyAndModel(settings.accuracy,
-                                        settings.useYoloV3);
-        d->pipeline.construct();
-        */
+        d->pipeline = new DetectionPipeline(scanAll, overWrite);
     }
 
 
@@ -218,7 +205,7 @@ FacesManager::FacesManager(const FaceScanSettings& settings, ProgressItem* const
     connect(this, SIGNAL(progressItemCanceled(ProgressItem*)),
             this, SLOT(slotCancel()));
 
-    connect(&d->pipeline, SIGNAL(processed()),
+    connect(d->pipeline, SIGNAL(processed()),
             this, SLOT(slotAdvance()));
 
     /*
@@ -264,6 +251,7 @@ FacesManager::~FacesManager()
 void FacesManager::slotStart()
 {
     MaintenanceTool::slotStart();
+    qDebug() << "Start scan for faces with source" << d->source;
 
     setThumbnail(QIcon::fromTheme(QLatin1String("edit-image-face-show")).pixmap(22));
     
@@ -383,20 +371,15 @@ void FacesManager::slotStart()
 
 void FacesManager::slotContinueAlbumListing()
 {
+    qDebug() << "slotContinueAlbumListing";
+
     if (d->source != FacesManager::Albums)
     {
         slotDone();
         return;
     }
 
-    qCDebug(DIGIKAM_GENERAL_LOG) << d->albumListing.isRunning();
-
-    // we get here by the finished signal from both, and want both to have finished to continue
-
-    if (d->albumListing.isRunning())
-    {
-        return;
-    }
+    qDebug() << d->albumListing.isRunning();
 
     // list can have null pointer if album was deleted recently
 
@@ -414,12 +397,15 @@ void FacesManager::slotContinueAlbumListing()
     }
     while (!album);
 
+    qDebug() << "Scanning" << album->id();
+
     d->albumListing.allItemsFromAlbum(album);
 }
 
 void FacesManager::slotItemsInfo(const ItemInfoList& items)
 {
-    d->pipeline.process(items);
+    qDebug() << "Process" << items.size();
+    d->pipeline->process(items);
 }
 
 
@@ -444,7 +430,7 @@ void FacesManager::slotDone()
 
 void FacesManager::slotCancel()
 {
-    d->pipeline.cancel();
+    d->pipeline->cancel();
     MaintenanceTool::slotCancel();
 }
 

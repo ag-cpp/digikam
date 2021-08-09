@@ -44,7 +44,7 @@ public:
 
 };
 
-DetectionPipeline::DetectionPipeline()
+DetectionPipeline::DetectionPipeline(bool scanAll, bool overWrite)
     : d(new Private())
 {
 }
@@ -56,9 +56,31 @@ DetectionPipeline::~DetectionPipeline()
 
 void DetectionPipeline::process(const QList<ItemInfo>& info) 
 {
+    // TODO assemble pipeline
+    /*
+        d->pipeline.plugDatabaseFilter(filterMode);
+        d->pipeline.plugFacePreviewLoader();
+
+        if (settings.useFullCpu)
+        {
+            d->pipeline.plugParallelFaceDetectors();
+        }
+        else
+        {
+            d->pipeline.plugFaceDetector();
+        }
+
+        d->pipeline.plugDatabaseWriter(writeMode);
+        d->pipeline.setAccuracyAndModel(settings.accuracy,
+                                        settings.useYoloV3);
+        d->pipeline.construct();
+    */
+
     for (int i = 0; i < info.size(); ++i)
     {
          qDebug() << info[i].fileUrl();
+
+         emit processed();
     }
 }
 
