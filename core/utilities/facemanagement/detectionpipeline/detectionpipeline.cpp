@@ -25,6 +25,8 @@
 
 #include <QDebug>
 
+#include "util/asyncbuffer.h"
+
 namespace Digikam
 {
 
