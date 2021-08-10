@@ -38,17 +38,17 @@ const float RATIO_POINT_IMAGE = 1 / 120; // this is a guess
 namespace PanasonicInternal
 {
 
-FocusPointsExtractor::FocusPoint create_af_point(float af_x_position, float af_y_position,
+FocusPoint create_af_point(float af_x_position, float af_y_position,
                                                  float afPointWidth,  float afPointHeight)
 {    
-    FocusPointsExtractor::FocusPoint point;
+    FocusPoint point;
 
     point.x_position = af_x_position;
     point.y_position = af_y_position;
     point.width      = afPointWidth  * RATIO_POINT_IMAGE;
     point.height     = afPointHeight * RATIO_POINT_IMAGE;
     
-    point.type = FocusPointsExtractor::TypePoint::SelectedInFocus;
+    point.type = FocusPoint::TypePoint::SelectedInFocus;
 
     return point;
 }
@@ -66,7 +66,7 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_panasonic()
 
     if (imageWidth.isNull() || imageHeight.isNull())
     {
-        return ListAFPoints();
+        return getAFPoints_default();
     }
 
     // Get af point
@@ -74,7 +74,7 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_panasonic()
 
     if (af_position.isEmpty())
     {
-        return ListAFPoints();
+        return getAFPoints_default();
     }
     float af_x_position = af_position[0].toFloat();
     float af_y_position = af_position[1].toFloat();

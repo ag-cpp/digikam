@@ -3,11 +3,10 @@
  * This file is a part of digiKam project
  * https://www.digikam.org
  *
- * Date        : 2013-08-19
- * Description : Image Quality settings widget
+ * Date        : 
+ * Description : Writer of focus points to exiftool data
  *
- * Copyright (C) 2013-2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
- * Copyright (C) 2013-2014 by Gowtham Ashok <gwty93 at gmail dot com>
+ * Copyright (C) 2020-2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -22,35 +21,39 @@
  *
  * ============================================================ */
 
-#ifndef DIGIKAM_IMAGE_QUALITY_SETTINGS_H
-#define DIGIKAM_IMAGE_QUALITY_SETTINGS_H
 
-// Qt includes
+#ifndef DIGIKAM_FOCUSPOINTS_WRITER_H
+#define DIGIKAM_FOCUSPOINTS_WRITER_H
 
-#include <QWidget>
+// Qt includes 
+
+#include <QObject>
+#include <QVariant>
+#include <QStringList>
 
 // Local includes
 
 #include "digikam_export.h"
-#include "imagequalitycontainer.h"
+#include "focuspoint.h"
 
-namespace Digikam
+
+namespace Digikam 
 {
 
-class DIGIKAM_EXPORT ImageQualitySettings : public QWidget
+class DIGIKAM_EXPORT FocusPointsWriter : public QObject
 {
     Q_OBJECT
 
 public:
 
-    explicit ImageQualitySettings(QWidget* const parent = nullptr);
-    ~ImageQualitySettings() override;
+    explicit FocusPointsWriter(QObject* const parent, const QString& path);
+    ~FocusPointsWriter();
 
-    void applySettings();
-    void readSettings();
-    ImageQualityContainer getImageQualityContainer();
+public:
 
-
+    void writeFocusPoint(const FocusPoint& point);
+    void writeFocusPoint(const QRectF& rectF);
+    
 private:
 
     class Private;
@@ -59,4 +62,4 @@ private:
 
 } // namespace Digikam
 
-#endif // DIGIKAM_IMAGE_QUALITY_SETTINGS_H
+#endif // DIGIKAM_FOCUSPOINTS_WRITER_H

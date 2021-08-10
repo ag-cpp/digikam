@@ -35,6 +35,7 @@
 // Local includes
 
 #include "digikam_export.h"
+#include "focuspoint.h"
 
 
 namespace Digikam 
@@ -45,23 +46,6 @@ class DIGIKAM_EXPORT FocusPointsExtractor : public QObject
     Q_OBJECT
 
 public:
-
-    enum class TypePoint
-    {
-        Inactive            = 0,
-        Infocus             = 1,
-        Selected            = 2,
-        SelectedInFocus     = 3
-    };
-
-    struct FocusPoint {
-
-        float       x_position;
-        float       y_position;
-        float       width;
-        float       height;
-        TypePoint   type;
-    };
 
     /**
      * A list used to store focus points of a image extracted from meta data 
@@ -81,7 +65,7 @@ public:
 public:
 
     ListAFPoints get_af_points();
-    ListAFPoints get_af_points(FocusPointsExtractor::TypePoint type);
+    ListAFPoints get_af_points(FocusPoint::TypePoint type);
         
 private:
     
@@ -92,6 +76,7 @@ private:
         
     ListAFPoints findAFPoints();
     
+    ListAFPoints getAFPoints_default();
     ListAFPoints getAFPoints_canon();
     ListAFPoints getAFPoints_nikon();
     ListAFPoints getAFPoints_panasonic();
@@ -102,26 +87,6 @@ private:
     class Private;
     Private* const d;
 };
-
-inline FocusPointsExtractor::TypePoint operator|(FocusPointsExtractor::TypePoint type1, FocusPointsExtractor::TypePoint type2)
-{
-    return static_cast<FocusPointsExtractor::TypePoint>(static_cast<int>(type1) | static_cast<int>(type2) );
-}
-
-inline FocusPointsExtractor::TypePoint operator&(FocusPointsExtractor::TypePoint type1, FocusPointsExtractor::TypePoint type2)
-{
-    return static_cast<FocusPointsExtractor::TypePoint>(static_cast<int>(type1) & static_cast<int>(type2) );
-}
-
-inline FocusPointsExtractor::TypePoint& operator|=(FocusPointsExtractor::TypePoint& type1, FocusPointsExtractor::TypePoint type2)
-{
-    return type1 = type1 | type2;
-}
-
-inline FocusPointsExtractor::TypePoint& operator&=(FocusPointsExtractor::TypePoint& type1, FocusPointsExtractor::TypePoint type2)
-{
-    return type1 = type1 & type2;
-}
 
 } // namespace Digikam
 

@@ -93,6 +93,7 @@ set(libdigikamgui_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/views/stack/itemiconview_tools.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/views/stack/itemiconview_views.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/views/stack/itemiconview_zoom.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/views/stack/itemiconview_iqs.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/views/stack/trashview.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/views/stack/stackedview.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/views/stack/welcomepageview.cpp
@@ -177,6 +178,7 @@ set(DIGIKAMGUI_OBJECTS
             $<TARGET_OBJECTS:gui_importui_obj>
             $<TARGET_OBJECTS:gui_importuibackend_obj>
             $<TARGET_OBJECTS:gui_facemanagement_obj>
+            $<TARGET_OBJECTS:gui_focuspointmanagement_obj>
             $<TARGET_OBJECTS:gui_queuemanager_obj>
             $<TARGET_OBJECTS:gui_advancedrename_obj>
 )

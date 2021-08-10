@@ -38,18 +38,18 @@ const float RATIO_POINT_IMAGE = 120; // this is a guess
 namespace SonyInternal
 {
 
-FocusPointsExtractor::FocusPoint create_af_point(float imageWidth, float imageHeight, 
+FocusPoint create_af_point(float imageWidth, float imageHeight, 
                                                  float afPointWidth, float afPointHeight, 
                                                  float af_x_position, float af_y_position)
 {    
-    FocusPointsExtractor::FocusPoint point;
+    FocusPoint point;
 
     point.x_position = af_x_position / imageWidth;
     point.y_position = af_y_position / imageHeight;
     point.width      = afPointWidth;
     point.height     = afPointHeight;
     
-    point.type = FocusPointsExtractor::TypePoint::SelectedInFocus;
+    point.type = FocusPoint::TypePoint::SelectedInFocus;
 
     return point;
 }
@@ -66,7 +66,7 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_sony()
 
     if (af_info.isEmpty())
     {
-        return ListAFPoints();
+        return getAFPoints_default();
     }
 
     // Get size image

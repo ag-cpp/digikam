@@ -33,6 +33,7 @@
 
 namespace Digikam
 {
+
 class Q_DECL_HIDDEN FocusPointsExtractor::Private
 {
 public:
@@ -122,10 +123,16 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::findAFPoints()
 {
     QString model = findValue(QLatin1String("EXIF.IFD0.Camera.Make")).toString();
 
-    if (model.isNull() || !d->exifToolAvailable)
+    if (!d->exifToolAvailable)
     {
         return ListAFPoints();
     }
+
+    if (model.isNull())
+    {
+        return getAFPoints_default();
+    }
+    
     model = model.split(QLatin1String(" "))[0].toUpper();
     
     if (model == QLatin1String("CANON"))
@@ -147,12 +154,12 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::findAFPoints()
     return ListAFPoints();
 }
 
-FocusPointsExtractor::ListAFPoints FocusPointsExtractor::get_af_points(FocusPointsExtractor::TypePoint type)
+FocusPointsExtractor::ListAFPoints FocusPointsExtractor::get_af_points(FocusPoint::TypePoint type)
 {
     ListAFPoints points;
     for (const auto point : d->af_points)
     {
-        if (type == TypePoint::Inactive)
+        if (type == FocusPoint::TypePoint::Inactive)
         {
             if (point.type == type)
             {

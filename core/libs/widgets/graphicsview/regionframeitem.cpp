@@ -42,6 +42,7 @@
 #include <QTimer>
 #include <QToolButton>
 
+#include <QDebug>
 // Local includes
 
 #include "graphicsdimgitem.h"
