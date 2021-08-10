@@ -28,21 +28,28 @@
 
 #include <QImage>
 
+#include "actionthreadbase.h"
+
 namespace Digikam
 {
 
-class FaceDetector;
-
-class Q_DECL_HIDDEN DetectionWorker 
+class Q_DECL_HIDDEN DetectionWorker: public ActionJob
 {
+    Q_OBJECT
 public:
 
     explicit DetectionWorker();
     ~DetectionWorker();
+
 public:
 
-    QList<QRectF> process(const QImage& image);
     void setAccuracyAndModel(double value, bool yolo);
+
+    void run() override;
+
+public Q_SLOTS:
+
+    void process(const QImage& image);
 
 private:
 

@@ -25,6 +25,7 @@
 
 #include <QDebug>
 
+#include "faceutils.h"
 #include "util/asyncbuffer.h"
 
 namespace Digikam
@@ -35,6 +36,8 @@ class Q_DECL_HIDDEN DetectionPipeline::Private
 public:
 
     explicit Private()
+        : scanAll(true),
+          overWrite(true)
     {
     }
 
@@ -44,6 +47,8 @@ public:
 
 public:
 
+    bool scanAll;
+    bool overWrite;
 };
 
 DetectionPipeline::DetectionPipeline(bool scanAll, bool overWrite)
@@ -54,6 +59,17 @@ DetectionPipeline::DetectionPipeline(bool scanAll, bool overWrite)
 DetectionPipeline::~DetectionPipeline()
 {
     delete d;
+}
+
+bool filter(const ItemInfo& info)
+{
+    FaceUtils utils;
+    if (!utils.hasBeenScanned(info))
+    {
+        return false;
+    }
+
+    return true;
 }
 
 void DetectionPipeline::process(const QList<ItemInfo>& info) 
@@ -80,9 +96,13 @@ void DetectionPipeline::process(const QList<ItemInfo>& info)
 
     for (int i = 0; i < info.size(); ++i)
     {
-         qDebug() << info[i].fileUrl();
+        if (!d->scanAll && filter(info[i]))
+        {
+            emit processed();
+            continue;
+        }
 
-         emit processed();
+        qDebug() << info[i].fileUrl(); 
     }
 }
 
@@ -90,6 +110,7 @@ void DetectionPipeline::cancel()
 {
     // TODO
 }
+
 
 
 }

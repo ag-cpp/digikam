@@ -61,6 +61,13 @@ AsyncBuffer<T>::AsyncBuffer(int capacity)
 }
 
 template <typename T>
+AsyncBuffer<T>::~AsyncBuffer()
+{
+    m_writeWait.wakeAll();
+    m_readWait.wakeAll();
+}
+
+template <typename T>
 T AsyncBuffer<T>::read()
 {
     m_mutex.lock();
@@ -89,7 +96,7 @@ void AsyncBuffer<T>::append(const T& object)
         m_writeWait.wait(&m_mutex);
     }
 
-    m_data.queue(object);
+    m_data.enqueue(object);
 
     m_mutex.unlock();
 

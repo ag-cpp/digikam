@@ -30,6 +30,7 @@
 // Local includes
 #include "facedetector.h"
 #include "digikam_debug.h"
+#include "util/asyncbuffer.h"
 
 namespace Digikam
 {
@@ -38,6 +39,7 @@ class Q_DECL_HIDDEN DetectionWorker::Private
 {
 public:
     explicit Private()
+        : buffer(1000)
     {
     }
 
@@ -48,6 +50,7 @@ public:
 public:
 
     FaceDetector detector;
+    AsyncBuffer<QImage> buffer;
 };
 
 DetectionWorker::DetectionWorker()
@@ -61,7 +64,15 @@ DetectionWorker::~DetectionWorker()
     delete d;
 }
 
-QList<QRectF> DetectionWorker::process(const QImage& image)
+void DetectionWorker::run()
+{
+    while (!m_cancel)
+    {
+
+    }
+}
+/*
+QList<QRectF> process(const QImage& image)
 {
     if (image.isNull())
     {
@@ -72,6 +83,11 @@ QList<QRectF> DetectionWorker::process(const QImage& image)
     qCDebug(DIGIKAM_GENERAL_LOG) << "Found" << detectedFaces.size();
 
     return detectedFaces;
+}
+*/
+void DetectionWorker::process(const QImage& image)
+{
+    d->buffer.append(image);
 }
 
 void DetectionWorker::setAccuracyAndModel(double accuracy, bool yolo)
