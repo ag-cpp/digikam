@@ -52,7 +52,7 @@ public Q_SLOTS:
 
 Q_SIGNALS:
 
-    void faceDetected(const QImage& image, const QList<QRectF>&);
+    void faceDetected(const ItemInfo&, const QImage&, const QList<QRectF>&);
 
 private:
 

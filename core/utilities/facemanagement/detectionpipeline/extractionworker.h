@@ -25,23 +25,35 @@
 #ifndef DIGIKAM_EXTRACTION_WORKER_H
 #define DIGIKAM_EXTRACTION_WORKER_H
 
+#include <QImage>
+
 // Local includes
 #include "digikam_opencv.h"
-#include <QImage>
+#include "actionthreadbase.h"
+#include "iteminfo.h"
 
 namespace Digikam
 {
 
-class Q_DECL_HIDDEN ExtractionWorker
+class Q_DECL_HIDDEN ExtractionWorker: public ActionJob
 {
+    Q_OBJECT
 public:
 
-    explicit ExtractionWorker();
+    explicit ExtractionWorker(bool overwriteUnconfirmed);
     ~ExtractionWorker();
 
 public:
 
-    QVector<cv::Mat> process(const QImage& faceImg, const QList<QRect>& detectedFaces);
+    void run() override;
+
+public Q_SLOTS:
+
+    void process(const ItemInfo& info, const QImage& image, const QList<QRectF>& detectedFaces);
+
+Q_SIGNALS:
+
+    void embeddingExtracted(const QVector<cv::Mat>& faceEmbeddings, const QVector<int>& facetagIds);
 
 private:
 

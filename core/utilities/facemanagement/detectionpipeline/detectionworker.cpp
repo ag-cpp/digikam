@@ -76,7 +76,7 @@ void DetectionWorker::run()
             QList<QRectF> detectedFaces = d->detector.detectFaces(image);
             qCDebug(DIGIKAM_GENERAL_LOG) << "Found" << detectedFaces.size();
 
-            emit faceDetected(image, detectedFaces);
+            emit faceDetected(info, image, detectedFaces);
         }
     }
 }

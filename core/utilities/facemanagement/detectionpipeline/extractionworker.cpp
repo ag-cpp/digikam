@@ -33,6 +33,7 @@
 #include "iteminfo.h"
 #include "facetagsiface.h"
 #include "digikam_debug.h"
+#include "util/asyncbuffer.h"
 
 namespace Digikam
 {
@@ -73,10 +74,10 @@ cv::Mat prepareForRecognition(QImage& inputImage)
     return cvImage;
 }
 
-QList<FaceTagsIface>  saveDetectedRects(const ItemInfo& info, 
-                                        const QSize& imgSize, 
-                                        const QList<QRectF>& detectedFaces, 
-                                        bool overwriteUnconfirmed)
+QList<FaceTagsIface> saveDetectedRects(const ItemInfo& info, 
+                                       const QSize& imgSize, 
+                                       const QList<QRectF>& detectedFaces, 
+                                       bool overwriteUnconfirmed)
 {
     if (!info.isNull() && !detectedFaces.isEmpty())
     {
@@ -119,12 +120,31 @@ QList<FaceTagsIface>  saveDetectedRects(const ItemInfo& info,
     return faceTags;
 }
 
+struct Q_DECL_HIDDEN FacesPackage
+{
+public:
+
+    FacesPackage(const ItemInfo& info, const QImage& image, const QList<QRectF>& detectedFaces)
+        : info(info),
+          image(image),
+          detectedFaces(detectedFaces)
+    {
+    }
+
+public:
+
+    ItemInfo info;
+    QImage image;
+    QList<QRectF> detectedFaces;
+};
 
 class Q_DECL_HIDDEN ExtractionWorker::Private 
 {
 public:
 
-    explicit Private(int nbExtractor)
+    explicit Private(int nbExtractor, bool overwriteUnconfirmed)
+        : buffer(1000),
+          overwriteUnconfirmed(overwriteUnconfirmed)
     {
         for (int i = 0 ; i < nbExtractor; ++i)
         {
@@ -146,48 +166,48 @@ public:
 public:
 
     QVector<DNNFaceExtractor*> extractors;
+    AsyncBuffer<FacesPackage> buffer;
+    bool overwriteUnconfirmed;
 
 public:
-    class ParallelExtractors;
-};
 
-class ExtractionWorker::Private::ParallelExtractors : public cv::ParallelLoopBody
-{
-public:
-
-    ParallelExtractors(ExtractionWorker::Private* d,
-                       QList<QImage>& images,
-                       QVector<cv::Mat>& embeddings)
-        : images     (images),
-          embeddings (embeddings),
-          d          (d)
+    class ParallelExtractors : public cv::ParallelLoopBody
     {
-        embeddings.resize(images.size());
-    }
+    public:
 
-    void operator()(const cv::Range& range) const override
-    {
-        for(int i = range.start ; i < range.end ; ++i)
+        ParallelExtractors(ExtractionWorker::Private* d,
+                        QList<QImage>& images,
+                        QVector<cv::Mat>& embeddings)
+            : images     (images),
+            embeddings (embeddings),
+            d          (d)
         {
-            embeddings[i] = d->extractors[i%(d->extractors.size())]->getFaceEmbedding(prepareForRecognition(images[i]));
+            embeddings.resize(images.size());
         }
-    }
 
-private:
+        void operator()(const cv::Range& range) const override
+        {
+            for(int i = range.start ; i < range.end ; ++i)
+            {
+                embeddings[i] = d->extractors[i%(d->extractors.size())]->getFaceEmbedding(prepareForRecognition(images[i]));
+            }
+        }
 
-    QList<QImage>&                   images;
-    QVector<cv::Mat>&                embeddings;
+    private:
 
-    ExtractionWorker::Private* const d;
+        QList<QImage>&                   images;
+        QVector<cv::Mat>&                embeddings;
 
-private:
+        ExtractionWorker::Private* const d;
 
-    Q_DISABLE_COPY(ParallelExtractors)
+    private:
+
+        Q_DISABLE_COPY(ParallelExtractors)
+    };
 };
 
-
-ExtractionWorker::ExtractionWorker()
-    : d (new Private(1))
+ExtractionWorker::ExtractionWorker(bool overwriteUnconfirmed)
+    : d (new Private(1, overwriteUnconfirmed))
 {
 }
 
@@ -197,14 +217,38 @@ ExtractionWorker::~ExtractionWorker()
     delete d;
 }
 
-QVector<cv::Mat> ExtractionWorker::process(const QImage& faceImg, const QList<QRect>& detectedFaces)
+void ExtractionWorker::run()
 {
-    QVector<cv::Mat> embeddings;
-    QList<QImage> croppedFaces = crop(faceImg, detectedFaces);
+    while (!m_cancel)
+    {
+        FacesPackage package = d->buffer.read();
 
-    cv::parallel_for_(cv::Range(0, croppedFaces.size()), Private::ParallelExtractors(d, croppedFaces, embeddings));
+        QList<FaceTagsIface> tags = saveDetectedRects(package.info, 
+                                                      package.image.size(),
+                                                      package.detectedFaces,
+                                                      d->overwriteUnconfirmed);
 
-    return embeddings;
+        QVector<int> tagIDs;
+        QList<QRect> detectedFaces;
+
+        for (int i = 0; i < tags.size(); ++i)
+        {
+            tagIDs.append(tags[i].tagId());
+            detectedFaces.append(tags[i].region().toRect());
+        }
+
+        QVector<cv::Mat> embeddings;    
+        QList<QImage> croppedFaces = crop(package.image, detectedFaces);
+
+        cv::parallel_for_(cv::Range(0, croppedFaces.size()), Private::ParallelExtractors(d, croppedFaces, embeddings));
+
+        emit embeddingExtracted(embeddings, tagIDs);
+    }
+}
+
+void ExtractionWorker::process(const ItemInfo& info, const QImage& image, const QList<QRectF>& detectedFaces)
+{
+    d->buffer.append(FacesPackage(info, image, detectedFaces));
 }
 
 } // namespace Digikam
