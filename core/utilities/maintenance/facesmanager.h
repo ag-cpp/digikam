@@ -67,9 +67,7 @@ private Q_SLOTS:
     void slotStart()                                                override;
     void slotContinueAlbumListing();
     void slotItemsInfo(const ItemInfoList&);
-    void slotAdvance();
-    // TODO facesengine: find the purpose of this method
-    //void slotShowOneDetected(const FacePipelinePackage&);
+    void slotAdvance(int);
     void slotDone()                                                 override;
     void slotCancel()                                               override;
     

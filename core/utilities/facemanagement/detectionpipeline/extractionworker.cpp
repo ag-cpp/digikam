@@ -95,6 +95,8 @@ QList<FaceTagsIface> saveDetectedRects(const ItemInfo& info,
         QList<FaceTagsIface> oldEntries = utils.unconfirmedFaceTagsIfaces(info.id());
         qCDebug(DIGIKAM_GENERAL_LOG) << "Removing old entries" << oldEntries;
         utils.removeFaces(oldEntries);
+
+        // TODO facesengine: remove associated embedding
     }
 
     // mark the whole image as scanned-for-faces
@@ -241,6 +243,8 @@ void ExtractionWorker::run()
         QList<QImage> croppedFaces = crop(package.image, detectedFaces);
 
         cv::parallel_for_(cv::Range(0, croppedFaces.size()), Private::ParallelExtractors(d, croppedFaces, embeddings));
+
+        qDebug() << "Extract embedding from" << package.info.filePath();
 
         emit embeddingExtracted(embeddings, tagIDs);
     }

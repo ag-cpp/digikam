@@ -27,6 +27,7 @@
 #include <QQueue>
 #include <QMutex>
 #include <QWaitCondition>
+#include <QDebug>
 
 namespace Digikam
 {
@@ -70,6 +71,7 @@ AsyncBuffer<T>::~AsyncBuffer()
 template <typename T>
 T AsyncBuffer<T>::read()
 {
+    qDebug() << "buffer size" << m_data.size();
     m_mutex.lock();
 
     while (m_data.empty())
@@ -99,6 +101,8 @@ void AsyncBuffer<T>::append(const T& object)
     m_data.enqueue(object);
 
     m_mutex.unlock();
+
+    qDebug() << "write buffer size" << m_data.size();
 
     m_readWait.wakeAll();
 }

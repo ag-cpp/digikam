@@ -26,7 +26,9 @@
 #include <QDebug>
 
 #include "faceutils.h"
-#include "util/asyncbuffer.h"
+#include "detectionworker.h"
+#include "extractionworker.h"
+#include "databasewriter.h"
 
 namespace Digikam
 {
@@ -36,8 +38,6 @@ class Q_DECL_HIDDEN DetectionPipeline::Private
 public:
 
     explicit Private()
-        : scanAll(true),
-          overWrite(true)
     {
     }
 
@@ -48,17 +48,46 @@ public:
 public:
 
     bool scanAll;
-    bool overWrite;
+    DetectionWorker*  detector;
+    ExtractionWorker* extractor;
+    DatabaseWriter*   writer;
 };
 
-DetectionPipeline::DetectionPipeline(bool scanAll, bool overWrite)
-    : d(new Private())
+DetectionPipeline::DetectionPipeline(bool scanAll, bool overWrite, QObject* parent)
+    : ActionThreadBase(parent),
+      d(new Private())
 {
+    d->scanAll   = scanAll;
+    d->detector  = new DetectionWorker();
+    /*
+    d->extractor = new ExtractionWorker(overWrite);
+    d->writer    = new DatabaseWriter(1);
+
+    qRegisterMetaType< QList<QRectF> >("QList<QRectF>");
+    qRegisterMetaType< QVector<int> >("QVector<int>");
+    qRegisterMetaType< QVector<cv::Mat> >("QVector<cv::Mat>");
+
+    connect(d->detector, SIGNAL(faceDetected(const ItemInfo&, const QImage&, const QList<QRectF>&)),
+            d->extractor, SLOT(process(const ItemInfo&, const QImage&, const QList<QRectF>&)), Qt::DirectConnection);
+
+    connect(d->extractor, SIGNAL(embeddingExtracted(const QVector<cv::Mat>&, const QVector<int>&)),
+            d->writer, SLOT(saveExtractedFaceEmbeddings(const QVector<cv::Mat>&, const QVector<int>&)), Qt::DirectConnection);
+
+    connect(d->writer, SIGNAL(saved(int)),
+            this, SIGNAL(processed(int)), Qt::DirectConnection);
+    */        
+
+    ActionJobCollection jobs;
+    jobs[d->detector]   = 1;
+    /*
+    jobs[d->extractor]  = 1;
+    jobs[d->writer]     = 1;
+    */
+    appendJobs(jobs);
 }
 
 DetectionPipeline::~DetectionPipeline()
 {
-    delete d;
 }
 
 bool filter(const ItemInfo& info)
@@ -98,19 +127,13 @@ void DetectionPipeline::process(const QList<ItemInfo>& info)
     {
         if (!d->scanAll && filter(info[i]))
         {
-            emit processed();
+            emit processed(1);
             continue;
         }
 
         qDebug() << info[i].fileUrl(); 
+        d->detector->process(info[i]);
     }
 }
-
-void DetectionPipeline::cancel()
-{
-    // TODO
-}
-
-
 
 }

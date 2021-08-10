@@ -25,6 +25,7 @@
 
 #include "databasewriter.h"
 
+#include <QDebug>
 // Local includes
 #include "faceembedding_manager.h"
 #include "util/asyncbuffer.h"
@@ -92,9 +93,13 @@ void DatabaseWriter::run()
             tempEmbeddings.clear();
             tempTagIDs.clear();
 
+            qDebug() << "Save";
+
             emit saved(d->batchSize);
         }
     }
+
+    // TODO find a way to notify ending
 
     // flush out data
     d->db.saveEmbeddings(tempEmbeddings, tempTagIDs, QLatin1String("Face detection"));

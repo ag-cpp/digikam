@@ -25,27 +25,27 @@
 #define DIGIKAM_DETECTION_PIPELINE_H
 
 #include "iteminfo.h"
+#include "actionthreadbase.h"
 
 namespace Digikam
 {
 
-class DetectionPipeline: public QObject
+class DetectionPipeline: public ActionThreadBase
 {
     Q_OBJECT
 public:
 
-    explicit DetectionPipeline(bool scanAll, bool overWrite);
+    explicit DetectionPipeline(bool scanAll, bool overWrite, QObject* parent = nullptr);
     ~DetectionPipeline();
 
 public:
 
     void process(const QList<ItemInfo>& info);
-    void cancel();
 
 Q_SIGNALS:
 
-    void processed();
-
+    void processed(int);
+    
 private:
 
     class Private;

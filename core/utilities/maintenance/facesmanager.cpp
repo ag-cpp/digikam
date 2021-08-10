@@ -138,8 +138,8 @@ FacesManager::FacesManager(const FaceScanSettings& settings, ProgressItem* const
     connect(this, SIGNAL(progressItemCanceled(ProgressItem*)),
             this, SLOT(slotCancel()));
 
-    connect(d->pipeline, SIGNAL(processed()),
-            this, SLOT(slotAdvance()));
+    connect(d->pipeline, SIGNAL(processed(int)),
+            this, SLOT(slotAdvance(int)));
 
     /*
     TODO facesengine: Ids is for recognition
@@ -178,13 +178,14 @@ FacesManager::FacesManager(const FaceScanSettings& settings, ProgressItem* const
 
 FacesManager::~FacesManager()
 {
+    qDebug() << "FacesManager destroyed";
     delete d;
 }
 
 void FacesManager::slotStart()
 {
     MaintenanceTool::slotStart();
-    qDebug() << "Start scan for faces with source" << d->source;
+    d->pipeline->start();
 
     setThumbnail(QIcon::fromTheme(QLatin1String("edit-image-face-show")).pixmap(22));
     
@@ -341,8 +342,7 @@ void FacesManager::slotItemsInfo(const ItemInfoList& items)
     d->pipeline->process(items);
 }
 
-
-
+// TODO facesengine: modify done point
 void FacesManager::slotDone()
 {
     // Switch on scanned for faces flag on digiKam config file.
@@ -355,21 +355,15 @@ void FacesManager::slotDone()
 
 void FacesManager::slotCancel()
 {
+    qDebug() << "canceled";
     d->pipeline->cancel();
     MaintenanceTool::slotCancel();
 }
 
-void FacesManager::slotAdvance()
+void FacesManager::slotAdvance(int a)
 {
-    advance(1);
+    advance(a);
 }
-
-/*
-void FacesManager::slotShowOneDetected(const FacePipelinePackage& package)
-{
-    advance(1);
-}
-*/
 
 } // namespace Digikam
 
