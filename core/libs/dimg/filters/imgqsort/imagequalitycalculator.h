@@ -3,12 +3,11 @@
  * This file is a part of digiKam project
  * https://www.digikam.org
  *
- * Date        : 
- * Description : Image Quality Parser - noise detection
+ * Date        : 25/08/2013
+ * Description : Image Quality Calculor
  *
  * Copyright (C) 2013-2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
- *
- * References  : 
+ * Copyright (C) 2013-2021 by Phuoc Khanh Le <phuockhanhnk94 at gmail dot com>
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -23,41 +22,52 @@
  *
  * ============================================================ */
 
-#ifndef DIGIKAM_EXPOSURE_DETECTOR_H
-#define DIGIKAM_EXPOSURE_DETECTOR_H
+#ifndef DIGIKAM_IMAGE_QUALITY_CALCULATOR_H
+#define DIGIKAM_IMAGE_QUALITY_CALCULATOR_H
 
-// Local includes
+// Local includes 
 
-#include "dimg.h"
-#include "digikam_opencv.h"
+#include "digikam_globals.h"
+
+// Qt includes
+
+#include <QString>
+#include <QList>
 
 namespace Digikam
 {
 
-class ExposureDetector 
+class ImageQualityCalculator
 {
 public:
 
-    explicit ExposureDetector(const DImg& image);
-    ~ExposureDetector();
+    struct ResultDetection
+    {
+        QString detetionType;
+        float weight;
+        float score;    
+    };
 
-    float detect();
+public:
+
+    explicit ImageQualityCalculator();
+    ~ImageQualityCalculator();
+
+    float calculateQuality()  const;
+    void addDetectionResult(const QString& name, const float score, const float weight) const;
 
 private:
 
-    cv::Mat prepareForDetection(const DImg& inputImage) const;
+    void normalizeWeight() const;
+    void adjustWeightByQualityLevel() const;
+    int numberDetectors() const;
 
-    float percent_underexposed();
-    float percent_overexposed();
-
-    int count_by_condition(int minVal, int maxVal);
-    
 private:
 
     class Private;
     Private* const d;
 };
 
-} // namespace Digikam
+} 
 
-#endif // DIGIKAM_EXPOSURE_DETECTOR_H
+#endif // DIGIKAM_IMAGE_QUALITY_CALCULATOR_H

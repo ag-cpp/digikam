@@ -27,15 +27,17 @@
 // Qt includes
 
 #include <QObject>
-#include <QDir>
-#include <QMultiMap>
 #include <QString>
 
 // Local includes
 
-#include "imgqsorttest_shared.h"
+#include "imgqsorttest.h"
 
-class ImgQSortTestDetectCompression : public QObject
+namespace Digikam
+
+{
+    
+class ImgQSortTestDetectCompression : public ImgQSortTest
 {
     Q_OBJECT
 
@@ -45,28 +47,22 @@ public:
 
 private:
 
-    QDir imageDir() const;
-    void testParseTestImages(const QString& testcase_name, DetectionType mode);
-
 private Q_SLOTS:
 
-    void initTestCase();
-    void cleanupTestCase();
-
     void testParseTestImagesForCompressionDetection();
+    void testParseTestImagesForCompressionDetection_failCase();
 
 };
 
-// pair name image - quality expected
-using PairImageQuality = QPair<QString, int>;
-using DataTestCases = QMultiMap<QString, PairImageQuality> ;
-
 DataTestCases const dataTestCases = 
     {   
-        // {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_1.jpg"),1)},
         {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_2.jpg"),2)},
         {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_4.jpg"),2)},
         {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_9.jpg"),3)},
+
+        {QLatin1String("compressionDetection_failCase"), PairImageQuality(QLatin1String("test_compressed_1.jpg"),1)}, //False case : Pending instead of Accepted
     };
+
+}
 
 #endif // DIGIKAM_IMGQSORT_TEST_DETECT_COMPRESSION_H

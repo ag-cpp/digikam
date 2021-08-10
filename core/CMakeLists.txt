@@ -339,9 +339,11 @@ if(MINGW)
     endif ()
 
     # Enable C++11 support
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
 endif()
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
 # -- To link under Solaris (see bug #274484) -----------------------------------
 

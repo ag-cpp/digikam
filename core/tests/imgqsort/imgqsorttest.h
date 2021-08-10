@@ -34,6 +34,16 @@
 // Local includes
 
 #include "imgqsorttest_shared.h"
+#include "digikam_globals.h"
+#include "imagequalitycontainer.h"
+#include "dpluginloader.h"
+
+// Shared class for utest
+
+using namespace Digikam;
+
+using PairImageQuality = QPair<QString, int>;
+using DataTestCases = QMultiMap<QString, PairImageQuality> ;
 
 class ImgQSortTest : public QObject
 {
@@ -41,97 +51,62 @@ class ImgQSortTest : public QObject
 
 public:
 
-    explicit ImgQSortTest(QObject* const parent = nullptr);
+    explicit ImgQSortTest(QObject* const parent = nullptr):QObject(parent){}
 
-private:
+protected:
 
-    QDir imageDir() const;
-    void testParseTestImages(const QString& testcase_name, DetectionType mode);
+    QDir imageDir() const
+    {
+        QDir dir(QFINDTESTDATA("data/"));
+        qCDebug(DIGIKAM_TESTS_LOG) << "Images Directory:" << dir;
+        return dir;
+    }
 
-private Q_SLOTS:
-
-    void initTestCase();
-    void cleanupTestCase();
-
-    void testParseTestImagesForExposureDetection();
-    void testParseTestImagesForBlurDetection();
-    void testParseTestImagesForCompressionDetection();
-
-    void testParseTestImagesForBlurDetection_SharpImage();
-    void testParseTestImagesForBlurDetection_MotionBlurImage();
-    void testParseTestImagesForBlurDetection_DefocusImage();
-    void testParseTestImagesForBlurDetection_BlurBackGroundImage();
-
-    void testParseTestImagesForNoiseDetection();
-    void testParseTestImagesForImageHighSO();
-    void testParseTestImagesForVariousTypeNoise();
-    void testParseTestImagesForExposureDetection_sun();
-    void testParseTestImagesForExposureDetection_backlight();
-};
-
-// pair name image - quality expected
-using PairImageQuality = QPair<QString, int>;
-using DataTestCases = QMultiMap<QString, PairImageQuality> ;
-
-DataTestCases const dataTestCases = 
-    {   
-        {QLatin1String("blurDetection"), PairImageQuality(QLatin1String("test_blurred_1.jpg"),2)},
-        {QLatin1String("blurDetection"), PairImageQuality(QLatin1String("test_blurred_2.jpg"),2)},
-        {QLatin1String("blurDetection"), PairImageQuality(QLatin1String("test_blurred_5.jpg"),1)},
-        {QLatin1String("blurDetection"), PairImageQuality(QLatin1String("test_blurred_9.jpg"),1)},
-
-        {QLatin1String("noiseDetection"), PairImageQuality(QLatin1String("test_noised_1.jpg"),3)},
-        {QLatin1String("noiseDetection"), PairImageQuality(QLatin1String("test_noised_2.jpg"),3)},
-        {QLatin1String("noiseDetection"), PairImageQuality(QLatin1String("test_noised_5.jpg"),2)},
-        {QLatin1String("noiseDetection"), PairImageQuality(QLatin1String("test_noised_9.jpg"),1)},
-
-        {QLatin1String("exposureDetection"), PairImageQuality(QLatin1String("test_overexposed_5.jpg"),2)},
-        {QLatin1String("exposureDetection"), PairImageQuality(QLatin1String("test_overexposed_9.jpg"),1)},
-        {QLatin1String("exposureDetection"), PairImageQuality(QLatin1String("test_underexposed_1.jpg"),1)},
-        {QLatin1String("exposureDetection"), PairImageQuality(QLatin1String("test_underexposed_5.jpg"),2)},
-
-        {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_1.jpg"),1)},
-        {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_2.jpg"),1)},
-        {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_4.jpg"),2)},
-        {QLatin1String("compressionDetection"), PairImageQuality(QLatin1String("test_compressed_9.jpg"),3)},
-
-        // {QLatin1String("sharpImage"), PairImageQuality(QLatin1String("blur_sky_1.jpg"),3)}, False case
-        {QLatin1String("sharpImage"), PairImageQuality(QLatin1String("blur_rock_1.jpg"),3)},
-        {QLatin1String("sharpImage"), PairImageQuality(QLatin1String("blur_tree_1.jpg"),3)},
-        {QLatin1String("sharpImage"), PairImageQuality(QLatin1String("blur_street_1.jpg"),3)},
-
-        {QLatin1String("motionBlurImage"), PairImageQuality(QLatin1String("blur_sky_2.jpg"),1)},
-        {QLatin1String("motionBlurImage"), PairImageQuality(QLatin1String("blur_rock_2.jpg"),1)},
-        {QLatin1String("motionBlurImage"), PairImageQuality(QLatin1String("blur_tree_2.jpg"),1)},
-        {QLatin1String("motionBlurImage"), PairImageQuality(QLatin1String("blur_street_2.jpg"),1)},
-
-        {QLatin1String("defocusImage"), PairImageQuality(QLatin1String("blur_sky_3.jpg"),1)},
-        {QLatin1String("defocusImage"), PairImageQuality(QLatin1String("blur_rock_3.jpg"),1)},
-        {QLatin1String("defocusImage"), PairImageQuality(QLatin1String("blur_tree_3.jpg"),1)},
-        {QLatin1String("defocusImage"), PairImageQuality(QLatin1String("blur_street_3.jpg"),1)},
-
-        {QLatin1String("blurBackGroundImage"), PairImageQuality(QLatin1String("blur_blurbackground_2.jpg"),3)},
-        {QLatin1String("blurBackGroundImage"), PairImageQuality(QLatin1String("blur_blurbackground_3.jpg"),3)},
+    template <typename Function, typename Parameter>
+    QHash<QString, bool> testParseTestImages(const QString& testcase_name, Function ParseTestFunc, Parameter parameter)
+    {
+        QStringList imageNames;
         
-        {QLatin1String("exposureBacklight"), PairImageQuality(QLatin1String("exposure_backlight_1.jpg"),1)},
-        {QLatin1String("exposureBacklight"), PairImageQuality(QLatin1String("exposure_backlight_2.jpg"),1)},
-        {QLatin1String("exposureBacklight"), PairImageQuality(QLatin1String("exposure_backlight_3.jpg"),1)},
+        QList<PairImageQuality> dataTest = getDataTestCases().values(testcase_name);
+        
+        for (const auto& image_refQuality : dataTest)
+        {
+            imageNames << image_refQuality.first;
+        }
 
-        {QLatin1String("exposureSun"), PairImageQuality(QLatin1String("exposure_sun_1.jpg"),2)},
-        {QLatin1String("exposureSun"), PairImageQuality(QLatin1String("exposure_sun_2.jpg"),2)},
-        {QLatin1String("exposureSun"), PairImageQuality(QLatin1String("exposure_sun_3.jpg"),1)},
+        QFileInfoList list = imageDir().entryInfoList(imageNames,QDir::Files, QDir::Name);
 
-        {QLatin1String("highISO"), PairImageQuality(QLatin1String("noise_book_1.jpg"),3)},
-        {QLatin1String("highISO"), PairImageQuality(QLatin1String("noise_book_2.jpg"),1)},
-        {QLatin1String("highISO"), PairImageQuality(QLatin1String("noise_graffi_1.jpg"),3)},
-        {QLatin1String("highISO"), PairImageQuality(QLatin1String("noise_graffi_2.jpg"),1)},
+        QHash<QString, int> results_detection = ParseTestFunc(parameter, list);
 
-        {QLatin1String("variousTypesNoise"), PairImageQuality(QLatin1String("noise_bird_nor.png"),3)},
-        {QLatin1String("variousTypesNoise"), PairImageQuality(QLatin1String("noise_bird_gaussian.png"),1)},
-        {QLatin1String("variousTypesNoise"), PairImageQuality(QLatin1String("noise_bird_rayleigh.png"),1)},
-        {QLatin1String("variousTypesNoise"), PairImageQuality(QLatin1String("noise_bird_speckle.png"),1)},
-        // {QLatin1String("variousTypesNoise"), PairImageQuality(QLatin1String("noise_bird_salt_pepper.png"),1)}, False case
-        // {QLatin1String("variousTypesNoise"), PairImageQuality(QLatin1String("noise_bird_bandpass.png"),1)}, Faslse case
-    };
+        QHash<QString, bool> results_test;
+
+        for (const auto& image_refQuality : dataTest)
+        {
+            results_test.insert(image_refQuality.first, results_detection.value(image_refQuality.first) == image_refQuality.second);
+        }
+
+        return results_test;
+    }
+    
+    DataTestCases getDataTestCases() const
+    {
+        return m_dataTestCases;
+    }
+
+protected Q_SLOTS:
+
+    void initTestCase()
+    {
+        QDir dir(QFINDTESTDATA("../../dplugins/dimg"));
+        qputenv("DK_PLUGIN_PATH", dir.canonicalPath().toUtf8());
+        DPluginLoader::instance()->init();
+    }
+
+    void cleanupTestCase(){}
+
+protected:
+
+    DataTestCases m_dataTestCases;
+};
 
 #endif // DIGIKAM_IMGQSORT_TEST_H

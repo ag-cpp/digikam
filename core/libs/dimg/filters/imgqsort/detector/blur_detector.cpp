@@ -36,6 +36,7 @@
 
 namespace Digikam
 {
+
 class Q_DECL_HIDDEN BlurDetector::Private
 {
 public:
@@ -62,8 +63,6 @@ public:
 
     }
 
-    cv::Mat image;
-
     float                               min_abs;
     float                               ordre_log_filtrer;
     float                               sigma_smooth_image;
@@ -86,11 +85,14 @@ public:
 };
 
 BlurDetector::BlurDetector(const DImg& image)
-    :  d(new Private)
+    : DetectorDistortion(),
+      d(new Private)
 {
-    d->image = prepareForDetection(image);
+    QScopedPointer<FocusPointsExtractor> const extractor (new FocusPointsExtractor(nullptr, image.originalFilePath()));
 
-    d->have_focus_region = haveFocusRegion(image);
+    d->af_points = extractor->get_af_points(FocusPointsExtractor::TypePoint::Selected);
+    
+    d->have_focus_region = !d->af_points.isEmpty();
 }
 
 BlurDetector::~BlurDetector()
@@ -98,34 +100,9 @@ BlurDetector::~BlurDetector()
     delete d;
 }
 
-// Maybe this function will move to read_image() of imagequalityparser 
-// in case all detector of IQS use cv::Mat
-cv::Mat BlurDetector::prepareForDetection(const DImg& inputImage) const
-{
-    if (inputImage.isNull() || !inputImage.size().isValid())
-    {
-        return cv::Mat();
-    }
-
-    cv::Mat cvImage;
-    
-    int type               = inputImage.sixteenBit() ? CV_16UC4 : CV_8UC4;
-    
-    cv::Mat cvImageWrapper = cv::Mat(inputImage.height(), inputImage.width(), type, inputImage.bits());
-
-    cv::cvtColor(cvImageWrapper, cvImage, cv::COLOR_RGBA2BGR);
-
-    if (type == CV_16UC4)
-    {
-        cvImage.convertTo(cvImage, CV_8UC3, 1 / 256.0);
-    }
-
-    return cvImage;
-}
-
-float BlurDetector::detect()
+float BlurDetector::detect(const cv::Mat& image) const
 { 
-    cv::Mat edgesMap = edgeDetection(d->image);
+    cv::Mat edgesMap = edgeDetection(image);
 
     cv::Mat defocusMap = detectDefocusMap(edgesMap);
     defocusMap.convertTo(defocusMap,CV_8U);
@@ -133,7 +110,7 @@ float BlurDetector::detect()
     cv::Mat motionBlurMap = detectMotionBlurMap(edgesMap);
     motionBlurMap.convertTo(motionBlurMap,CV_8U);
     
-    cv::Mat weightsMat = getWeightMap();
+    cv::Mat weightsMat = getWeightMap(image);
 
     cv::Mat blurMap = defocusMap + motionBlurMap;
 
@@ -208,7 +185,9 @@ cv::Mat BlurDetector::detectMotionBlurMap(const cv::Mat& edgesMap) const
                           d->part_size_motion_blur,d->part_size_motion_blur};
 
             cv::Mat subImg = edgesMap(rect);
-                        
+            
+            qCDebug(DIGIKAM_DIMG_LOG) << "Detect if each part is motion blur";
+            
             if(isMotionBlur(subImg)) 
             {
                 res(rect).setTo(1);
@@ -252,6 +231,8 @@ bool    BlurDetector::isMotionBlur(const cv::Mat& frag) const
 
         cv::meanStdDev(list_theta,mean,stddev);
 
+        qCDebug(DIGIKAM_DIMG_LOG) << "Standard Deviation for group of lines " << stddev[0];
+
         return stddev[0] < d->max_stddev;
     }
     return false;
@@ -266,21 +247,19 @@ bool BlurDetector::haveFocusRegion(const DImg& image)              const
     return !d->af_points.isEmpty();
 }
 
-cv::Mat BlurDetector::getWeightMap()                               const
+cv::Mat BlurDetector::getWeightMap(const cv::Mat& image)                               const
 {
-    cv::Mat res = cv::Mat::zeros(d->image.size(), CV_8UC1);
+    cv::Mat res = cv::Mat::zeros(image.size(), CV_8UC1);
 
     if (d->have_focus_region)
     {
         for (const auto point : d->af_points)
         {
-            int x_position_corner = std::max(static_cast<int>((point.x_position - point.width * 0.5  *d->ratio_expand_af_point) * d->image.size().width), 0);
-            int y_position_corner = std::max(static_cast<int>((point.y_position - point.height * 0.5 *d->ratio_expand_af_point) * d->image.size().height), 0);
+            int x_position_corner = std::max(static_cast<int>((point.x_position - point.width * 0.5  *d->ratio_expand_af_point) * image.size().width), 0);
+            int y_position_corner = std::max(static_cast<int>((point.y_position - point.height * 0.5 *d->ratio_expand_af_point) * image.size().height), 0);
 
-            int width = std::min(d->image.size().width - x_position_corner, static_cast<int>(point.width * d->image.size().width * d->ratio_expand_af_point) );
-            int height = std::min(d->image.size().height - y_position_corner, static_cast<int>(point.height * d->image.size().height * d->ratio_expand_af_point) );
-
-            qCDebug(DIGIKAM_DIMG_LOG) << "AF point properties "<<x_position_corner<<y_position_corner<<width<<height;
+            int width = std::min(image.size().width - x_position_corner, static_cast<int>(point.width * image.size().width * d->ratio_expand_af_point) );
+            int height = std::min(image.size().height - y_position_corner, static_cast<int>(point.height * image.size().height * d->ratio_expand_af_point) );
 
             cv::Rect rect{x_position_corner, y_position_corner,
                           width, height};
@@ -290,7 +269,7 @@ cv::Mat BlurDetector::getWeightMap()                               const
     }
     else
     {
-        res = detectBackgroundRegion(d->image);
+        res = detectBackgroundRegion(image);
         
         cv::threshold(res, res, 0.5, 1, cv::THRESH_BINARY_INV);
     }

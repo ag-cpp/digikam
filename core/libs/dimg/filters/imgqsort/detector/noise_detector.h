@@ -30,30 +30,30 @@
 
 #include "dimg.h"
 #include "digikam_opencv.h"
+#include "detector.h"
 
 namespace Digikam
 {
 
-class NoiseDetector 
+class NoiseDetector : public DetectorDistortion  
 {
+    Q_OBJECT
 public:
     typedef QList<cv::Mat> Mat3D;
 public:
 
-    explicit NoiseDetector(const DImg& image);
+    explicit NoiseDetector();
     ~NoiseDetector();
 
-    float detect()                                                              const;
+    float detect(const cv::Mat& image)                                  const override;
 
 public:
     
     static const Mat3D filtersHaar;
 
 private:
-
-    cv::Mat prepareForDetection(const DImg& inputImage)                         const;
     
-    Mat3D   decompose_by_filter(const Mat3D& filters)                           const;                          
+    Mat3D   decompose_by_filter(const cv::Mat& image, const Mat3D& filters)     const;                          
     void    calculate_variance_kurtosis(const Mat3D& channels, cv::Mat& variance, cv::Mat& kurtosis) const;
     float   noise_variance(const cv::Mat& variance, const cv::Mat& kurtosis)    const;
     float   normalize(const float number)                                       const;
@@ -66,6 +66,7 @@ private:
 
     class Private;
     Private* const d;
+
 };
 
 } // namespace Digikam

@@ -42,49 +42,32 @@ using namespace Digikam;
 
 QTEST_MAIN(ImgQSortTestDetectCompression)
 
-ImgQSortTestDetectCompression::ImgQSortTestDetectCompression(QObject* const)
+ImgQSortTestDetectCompression::ImgQSortTestDetectCompression(QObject* const parent)
+  : ImgQSortTest(parent)
 {
-}
-
-void ImgQSortTestDetectCompression::testParseTestImages(const QString& testcase_name, DetectionType mode)
-{
-    QStringList imageNames;
-    QList<PairImageQuality> dataTest = dataTestCases.values(testcase_name);
-    
-    for (const auto& image_refQuality : dataTest)
-    {
-        imageNames << image_refQuality.first;
-    }
-
-    QFileInfoList list = imageDir().entryInfoList(imageNames,QDir::Files, QDir::Name);
-
-    QHash<QString, int> results = ImgQSortTest_ParseTestImages(mode, list);
-
-    for (const auto& image_refQuality : dataTest)
-    {
-        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
-    }
-}
-
-void ImgQSortTestDetectCompression::initTestCase()
-{
-    QDir dir(QFINDTESTDATA("../../dplugins/dimg"));
-    qputenv("DK_PLUGIN_PATH", dir.canonicalPath().toUtf8());
-    DPluginLoader::instance()->init();
-}
-
-void ImgQSortTestDetectCompression::cleanupTestCase()
-{
-}
-
-QDir ImgQSortTestDetectCompression::imageDir() const
-{
-    QDir dir(QFINDTESTDATA("data/"));
-    qDebug(DIGIKAM_TESTS_LOG) << "Images Directory:" << dir;
-    return dir;
+    m_dataTestCases = dataTestCases;
 }
 
 void ImgQSortTestDetectCompression::testParseTestImagesForCompressionDetection()
 {
-    testParseTestImages(QLatin1String("compressionDetection"), DETECTCOMPRESSION);
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("compressionDetection"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTCOMPRESSION);
+
+    for (const auto& test_case : results.keys())
+    {
+        QVERIFY(results.value(test_case));
+    }
+}
+
+void ImgQSortTestDetectCompression::testParseTestImagesForCompressionDetection_failCase()
+{
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("compressionDetection_failCase"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTCOMPRESSION);
+
+    for (const auto& test_case : results.keys())
+    {
+        QEXPECT_FAIL("", "Will fix in the next release", Continue);
+
+        QVERIFY(results.value(test_case));
+    }
 }

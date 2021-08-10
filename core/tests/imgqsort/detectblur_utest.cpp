@@ -42,70 +42,76 @@ using namespace Digikam;
 
 QTEST_MAIN(ImgQSortTestDetectBlur)
 
-
-ImgQSortTestDetectBlur::ImgQSortTestDetectBlur(QObject* const)
+ImgQSortTestDetectBlur::ImgQSortTestDetectBlur(QObject* const parent)
+  : ImgQSortTest(parent)
 {
-}
-
-void ImgQSortTestDetectBlur::testParseTestImages(const QString& testcase_name, DetectionType mode)
-{
-    QStringList imageNames;
-    QList<PairImageQuality> dataTest = dataTestCases.values(testcase_name);
-    
-    for (const auto& image_refQuality : dataTest)
-    {
-        imageNames << image_refQuality.first;
-    }
-
-    QFileInfoList list = imageDir().entryInfoList(imageNames,QDir::Files, QDir::Name);
-
-    QHash<QString, int> results = ImgQSortTest_ParseTestImages(mode, list);
-
-    for (const auto& image_refQuality : dataTest)
-    {
-        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
-    }
-}
-
-void ImgQSortTestDetectBlur::initTestCase()
-{
-    QDir dir(QFINDTESTDATA("../../dplugins/dimg"));
-    qputenv("DK_PLUGIN_PATH", dir.canonicalPath().toUtf8());
-    DPluginLoader::instance()->init();
-}
-
-void ImgQSortTestDetectBlur::cleanupTestCase()
-{
-}
-
-QDir ImgQSortTestDetectBlur::imageDir() const
-{
-    QDir dir(QFINDTESTDATA("data/"));
-    qCDebug(DIGIKAM_TESTS_LOG) << "Images Directory:" << dir;
-    return dir;
+    m_dataTestCases = dataTestCases;
 }
 
 void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection()
 {
-    testParseTestImages(QLatin1String("blurDetection"), DETECTBLUR);
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("blurDetection"), 
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTBLUR);
+
+    for (const auto& test_case : results.keys())
+    {
+        QVERIFY(results.value(test_case));
+    }
 }
 
 void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection_SharpImage()
 {
-    testParseTestImages(QLatin1String("sharpImage"), DETECTBLUR);
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("sharpImage"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTBLUR);
+
+    for (const auto& test_case : results.keys())
+    {
+        QVERIFY(results.value(test_case));
+    }
 }
 
 void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection_MotionBlurImage()
 {
-    testParseTestImages(QLatin1String("motionBlurImage"), DETECTBLUR);
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("motionBlurImage"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTBLUR);
+
+    for (const auto& test_case : results.keys())
+    {
+        QVERIFY(results.value(test_case));
+    }
 }
 
 void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection_DefocusImage()
 {
-    testParseTestImages(QLatin1String("defocusImage"), DETECTBLUR);
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("defocusImage"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTBLUR);
+
+    for (const auto& test_case : results.keys())
+    {
+        QVERIFY(results.value(test_case));
+    }
 }
 
 void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection_BlurBackGroundImage()
 {
-    testParseTestImages(QLatin1String("blurBackGroundImage"), DETECTBLUR);
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("blurBackGroundImage"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTBLUR);
+
+    for (const auto& test_case : results.keys())
+    {
+        QVERIFY(results.value(test_case));
+    }
+}
+
+void ImgQSortTestDetectBlur::testParseTestImagesForBlurDetection_FailCase()
+{
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("blurDetectionFailTest"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTBLUR);
+
+    for (const auto& test_case : results.keys())
+    {
+        QEXPECT_FAIL("", "Will fix in the next release", Continue);
+
+        QVERIFY(results.value(test_case));
+    }
 }

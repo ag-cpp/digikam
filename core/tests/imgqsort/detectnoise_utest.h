@@ -27,15 +27,16 @@
 // Qt includes
 
 #include <QObject>
-#include <QDir>
 #include <QMultiMap>
 #include <QString>
 
 // Local includes
 
-#include "imgqsorttest_shared.h"
+#include "imgqsorttest.h"
 
-class ImgQSortTestDetectNoise : public QObject
+using namespace Digikam;
+
+class ImgQSortTestDetectNoise : public ImgQSortTest
 {
     Q_OBJECT
 
@@ -45,23 +46,14 @@ public:
 
 private:
 
-    QDir imageDir() const;
-    void testParseTestImages(const QString& testcase_name, DetectionType mode, bool expectedFail = false);
-
 private Q_SLOTS:
 
-    void initTestCase();
-    void cleanupTestCase();
 
     void testParseTestImagesForNoiseDetection();
     void testParseTestImagesForImageHighSO();
     void testParseTestImagesForVariousTypeNoise();
     void testParseTestImagesForVariousTypeNoiseFailCase();
 };
-
-// pair name image - quality expected
-using PairImageQuality = QPair<QString, int>;
-using DataTestCases = QMultiMap<QString, PairImageQuality> ;
 
 DataTestCases const dataTestCases = 
     {   
