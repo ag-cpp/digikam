@@ -50,7 +50,7 @@ public:
 public:
 
     FaceDetector detector;
-    AsyncBuffer<QImage> buffer;
+    AsyncBuffer<ItemInfo> buffer;
 };
 
 DetectionWorker::DetectionWorker()
@@ -68,26 +68,22 @@ void DetectionWorker::run()
 {
     while (!m_cancel)
     {
+        ItemInfo info = d->buffer.read();
+        QImage image(info.filePath());
 
+        if (!image.isNull())
+        {
+            QList<QRectF> detectedFaces = d->detector.detectFaces(image);
+            qCDebug(DIGIKAM_GENERAL_LOG) << "Found" << detectedFaces.size();
+
+            emit faceDetected(image, detectedFaces);
+        }
     }
 }
-/*
-QList<QRectF> process(const QImage& image)
-{
-    if (image.isNull())
-    {
-        return {};
-    }
 
-    QList<QRectF> detectedFaces = d->detector.detectFaces(image);
-    qCDebug(DIGIKAM_GENERAL_LOG) << "Found" << detectedFaces.size();
-
-    return detectedFaces;
-}
-*/
-void DetectionWorker::process(const QImage& image)
+void DetectionWorker::process(const ItemInfo& info)
 {
-    d->buffer.append(image);
+    d->buffer.append(info);
 }
 
 void DetectionWorker::setAccuracyAndModel(double accuracy, bool yolo)

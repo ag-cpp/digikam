@@ -26,9 +26,8 @@
 #ifndef DIGIKAM_DETECTION_WORKER_H
 #define DIGIKAM_DETECTION_WORKER_H
 
-#include <QImage>
-
 #include "actionthreadbase.h"
+#include "iteminfo.h"
 
 namespace Digikam
 {
@@ -49,7 +48,11 @@ public:
 
 public Q_SLOTS:
 
-    void process(const QImage& image);
+    void process(const ItemInfo& image);
+
+Q_SIGNALS:
+
+    void faceDetected(const QImage& image, const QList<QRectF>&);
 
 private:
 

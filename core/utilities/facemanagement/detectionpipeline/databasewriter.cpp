@@ -26,8 +26,6 @@
 #include "databasewriter.h"
 
 // Local includes
-#include "digikam_debug.h"
-#include "faceutils.h"
 #include "faceembedding_manager.h"
 
 namespace Digikam
@@ -39,7 +37,6 @@ public:
 
     explicit Private()
     {
-
     }
 
     ~Private()
@@ -52,57 +49,13 @@ public:
 };
 
 DatabaseWriter::DatabaseWriter()
+    : d(new Private())
 {
 }
 
 DatabaseWriter::~DatabaseWriter()
 {
-}
-
-QList<FaceTagsIface> DatabaseWriter::saveDetectedRects(const ItemInfo& info, 
-                                                       const QSize& imgSize, 
-                                                       const QList<QRectF>& detectedFaces, 
-                                                       bool overwriteUnconfirmed) 
-{
-    if (!info.isNull() && !detectedFaces.isEmpty())
-    {
-        return {};
-    }
-
-    // Detection / Recognition
-    FaceUtils utils;
-
-    // overwriteUnconfirmed means that a new scan discarded unconfirmed results of previous scans
-    // (assuming at least equal or new, better methodology is in use compared to the previous scan)
-
-    if (overwriteUnconfirmed)
-    {
-        QList<FaceTagsIface> oldEntries = utils.unconfirmedFaceTagsIfaces(info.id());
-        qCDebug(DIGIKAM_GENERAL_LOG) << "Removing old entries" << oldEntries;
-        utils.removeFaces(oldEntries);
-    }
-
-    // mark the whole image as scanned-for-faces
-    utils.markAsScanned(info);
-    
-    QList<FaceTagsIface> faceTags = utils.writeUnconfirmedResults(info.id(),
-                                                                  detectedFaces,
-                                                                  QList<Identity>(),
-                                                                  imgSize);
-
-    // TODO facesengine 3: what does Role serve?
-    //faceTags.setRole(FacePipelineFaceTagsIface::DetectedFromImage);
-        
-    // TODO facesengine 3: Review the necessity of thumbnails
-    /*
-    if (!package->image.isNull())
-    {
-        utils.storeThumbnails(thumbnailLoadThread, package->filePath,
-                              package->databaseFaces.toFaceTagsIfaceList(), package->image);
-    }
-    */
-
-    return faceTags;
+    delete d;
 }
 
 void DatabaseWriter::saveExtractedFaceEmbeddings(const QVector<cv::Mat>& faceEmbeddings,

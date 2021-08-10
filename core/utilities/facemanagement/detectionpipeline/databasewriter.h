@@ -26,10 +26,12 @@
 #ifndef DIGIKAM_DATABASE_WRITER_H
 #define DIGIKAM_DATABASE_WRITER_H
 
+#include <QVector>
+#include <QString>
+
 // Local includes
 #include "digikam_opencv.h"
-#include "iteminfo.h"
-#include "facetagsiface.h"
+
 
 namespace Digikam
 {
@@ -42,11 +44,6 @@ public:
     ~DatabaseWriter();
 
 public:
-
-    QList<FaceTagsIface> saveDetectedRects(const ItemInfo& info, 
-                                           const QSize& imgSize, 
-                                           const QList<QRectF>& detectedFaces, 
-                                           bool overwriteUnconfirmed);
 
     void saveExtractedFaceEmbeddings(const QVector<cv::Mat>& faceEmbeddings,
                                      const QVector<int>&     facetagIds,

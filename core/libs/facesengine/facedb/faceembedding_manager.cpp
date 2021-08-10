@@ -61,6 +61,16 @@ public:
     mutable QMutex              mutex;
 };
 
+FaceEmbeddingManager::FaceEmbeddingManager()
+    : d(new Private())
+{
+}
+
+FaceEmbeddingManager::~FaceEmbeddingManager()
+{
+    delete d;
+}
+
 void FaceEmbeddingManager::saveEmbeddings(const QVector<cv::Mat>& faceEmbeddings,
                                           const QVector<int>&     facetagIds,
                                           const QString&          context)
