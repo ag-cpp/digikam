@@ -42,10 +42,6 @@ DetectorDistortion::DetectorDistortion(QObject* const parent)
 {
 }
 
-// DetectorDistortion::~DetectorDistortion()
-// {
-// }
-
 // Maybe this function will move to read_image() of imagequalityparser 
 // in case all detector of IQS use cv::Mat
 cv::Mat DetectorDistortion::prepareForDetection(const DImg& inputImage)
