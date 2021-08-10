@@ -1262,7 +1262,7 @@ void ContextMenuHelper::addIQSAction(QObject* recv, const char* slot)
 {
     QAction* const IQSAction = new QAction(QIcon::fromTheme(QLatin1String("")),
                                            i18ncp("@action:inmenu Pluralized",
-                                                    "Image Quality Sorter", "Image Quality Sorter",1), d->parent);
+                                                    "Image Quality Sort", "Image Quality Sort",1), d->parent);
     connect(IQSAction, SIGNAL(triggered()),
             recv, slot);
 

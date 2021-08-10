@@ -9,15 +9,15 @@ namespace Digikam
 
 void ItemIconView::slotImageQualitySorter()
 {
+    Setup::execSinglePage(this, Setup::ImageQualityPage);
+    
     QStringList paths;
 
     for (const auto& url : selectedUrls())
     {
         paths<<url.toLocalFile();
     }
-
-    qInfo()<<paths;
-
+    
     SetupImageQualitySorter* settingWidgets = new SetupImageQualitySorter();
 
     ImageQualityContainer settings = settingWidgets->getImageQualityContainer();

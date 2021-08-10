@@ -253,6 +253,7 @@ ItemPreviewView::ItemPreviewView(QWidget* const parent, Mode mode, Album* const 
 ItemPreviewView::~ItemPreviewView()
 {
     delete d->item;
+    delete d->focusPointGroup;
     delete d;
 }
 
