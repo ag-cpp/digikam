@@ -114,7 +114,7 @@ void AllMessagesListJob::jobFinished(KJob *kjob)
     {
         setError(job->error());
         setErrorText(job->errorText());
-        //qCWarning(DIGIKAM_WEBSERVICES_LOG) << "Job error: " << job->errorString();
+        qCWarning(DIGIKAM_WEBSERVICES_LOG) << "Job error: " << job->errorString();
 
         return;
     }
@@ -150,7 +150,7 @@ void AllMessagesListJob::jobFinished(KJob *kjob)
             setErrorText(i18n("The number of incoming messages has changed between requests."));
         }
 
-        //qCWarning(DIGIKAM_WEBSERVICES_LOG) << "Job error: " << job->errorString();
+        qCWarning(DIGIKAM_WEBSERVICES_LOG) << "Job error: " << job->errorString();
         emitResult();
 
         return;
