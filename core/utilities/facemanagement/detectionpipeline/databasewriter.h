@@ -31,23 +31,31 @@
 
 // Local includes
 #include "digikam_opencv.h"
-
+#include "actionthreadbase.h"
 
 namespace Digikam
 {
 
-class Q_DECL_HIDDEN DatabaseWriter
+class Q_DECL_HIDDEN DatabaseWriter: public ActionJob
 {
+    Q_OBJECT
 public:
 
-    DatabaseWriter();
+    explicit DatabaseWriter(int batchSize);
     ~DatabaseWriter();
 
 public:
 
+    void run() override;
+    
+public Q_SLOTS:
+
     void saveExtractedFaceEmbeddings(const QVector<cv::Mat>& faceEmbeddings,
-                                     const QVector<int>&     facetagIds,
-                                     const QString&          context);
+                                     const QVector<int>&     facetagIds);
+
+Q_SIGNALS:
+
+    void saved(int);
 
 private:
 

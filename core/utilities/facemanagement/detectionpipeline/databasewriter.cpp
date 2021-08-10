@@ -27,15 +27,30 @@
 
 // Local includes
 #include "faceembedding_manager.h"
+#include "util/asyncbuffer.h"
 
 namespace Digikam
 {
+
+struct DataPackage
+{
+    DataPackage(cv::Mat embedding, int tagID)
+        : embedding(embedding),
+          tagID(tagID)
+    {
+    }
+
+    cv::Mat embedding;
+    int tagID;
+};
 
 class Q_DECL_HIDDEN DatabaseWriter::Private
 {
 public:
 
-    explicit Private()
+    explicit Private(int batchSize)
+        : buffer(1000),
+          batchSize(batchSize)
     {
     }
 
@@ -46,10 +61,12 @@ public:
 public:
 
     FaceEmbeddingManager db;
+    AsyncBuffer<DataPackage> buffer;
+    int batchSize;
 };
 
-DatabaseWriter::DatabaseWriter()
-    : d(new Private())
+DatabaseWriter::DatabaseWriter(int batchSize)
+    : d(new Private(batchSize))
 {
 }
 
@@ -58,11 +75,39 @@ DatabaseWriter::~DatabaseWriter()
     delete d;
 }
 
-void DatabaseWriter::saveExtractedFaceEmbeddings(const QVector<cv::Mat>& faceEmbeddings,
-                                                 const QVector<int>&     facetagIds,
-                                                 const QString&          context)
+void DatabaseWriter::run()
 {
-    d->db.saveEmbeddings(faceEmbeddings, facetagIds, context);
+    QVector<cv::Mat> tempEmbeddings;
+    QVector<int> tempTagIDs;
+
+    while (!m_cancel)
+    {
+        DataPackage package = d->buffer.read();
+        tempEmbeddings.append(package.embedding);
+        tempTagIDs.append(package.tagID);
+
+        if (tempEmbeddings.size() >= d->batchSize)
+        {
+            d->db.saveEmbeddings(tempEmbeddings, tempTagIDs, QLatin1String("Face detection"));
+            tempEmbeddings.clear();
+            tempTagIDs.clear();
+
+            emit saved(d->batchSize);
+        }
+    }
+
+    // flush out data
+    d->db.saveEmbeddings(tempEmbeddings, tempTagIDs, QLatin1String("Face detection"));
+    emit saved(tempEmbeddings.size());
+}
+
+void DatabaseWriter::saveExtractedFaceEmbeddings(const QVector<cv::Mat>& faceEmbeddings,
+                                                 const QVector<int>&     facetagIds)
+{
+    for (int i = 0; i < faceEmbeddings.size(); ++i)
+    {
+        d->buffer.append(DataPackage(faceEmbeddings[i], facetagIds[i]));
+    }
 }
 
 } // namespace Digikam
