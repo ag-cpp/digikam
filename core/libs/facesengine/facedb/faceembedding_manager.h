@@ -48,9 +48,9 @@ public:
     /**
      * Save face embeddings extracted from face images
      */
-    void saveEmbeddings(const QVector<cv::Mat>& faceEmbeddings,
-                        const QVector<int>&     facetagIds,
-                        const QString&          context);
+    void saveEmbedding(const cv::Mat& faceEmbedding,
+                       const int      tagID,
+                       const QString& context) const;
 
     /**
      * Retrieve face embeddings with their labels

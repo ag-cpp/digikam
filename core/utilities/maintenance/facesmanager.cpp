@@ -349,7 +349,7 @@ void FacesManager::slotDone()
 
     KSharedConfig::openConfig()->group("General Settings").writeEntry("Face Scanner First Run", true);
 
-    MaintenanceTool::slotDone();
+    //MaintenanceTool::slotDone();
 }
 
 

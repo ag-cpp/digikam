@@ -88,14 +88,14 @@ public:
     // --- OpenCV DNN
 
     /**
-     * @brief insertFaceVectors : insert new face embeddings to database
-     * @param faceEmbeddings list of face embeddings to insert
-     * @param facetagIds list of corresponding tag IDs
-     * @param context insertion context
+     * @brief insertFaceVector : insert new face embeddings to database
+     * @param faceEmbedding
+     * @param tagID
+     * @param context 
      */
-    void insertFaceVectors(const QVector<cv::Mat>& faceEmbeddings,
-                           const QVector<int>&     facetagIds,
-                           const QString&          context) const;
+    void insertFaceVector(const cv::Mat& faceEmbedding,
+                          const int tagID,
+                          const QString& context) const;
 
     /**
      * @brief trainData: extract train data from database

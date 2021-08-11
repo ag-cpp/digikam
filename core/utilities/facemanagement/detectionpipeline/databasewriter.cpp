@@ -78,32 +78,15 @@ DatabaseWriter::~DatabaseWriter()
 
 void DatabaseWriter::run()
 {
-    QVector<cv::Mat> tempEmbeddings;
-    QVector<int> tempTagIDs;
-
     while (!m_cancel)
     {
         DataPackage package = d->buffer.read();
-        tempEmbeddings.append(package.embedding);
-        tempTagIDs.append(package.tagID);
+        d->db.saveEmbedding(package.embedding, package.tagID, QLatin1String("Face detection"));
 
-        if (tempEmbeddings.size() >= d->batchSize)
-        {
-            d->db.saveEmbeddings(tempEmbeddings, tempTagIDs, QLatin1String("Face detection"));
-            tempEmbeddings.clear();
-            tempTagIDs.clear();
+        qDebug() << "Save";
 
-            qDebug() << "Save";
-
-            emit saved(d->batchSize);
-        }
+        emit saved(1);
     }
-
-    // TODO find a way to notify ending
-
-    // flush out data
-    d->db.saveEmbeddings(tempEmbeddings, tempTagIDs, QLatin1String("Face detection"));
-    emit saved(tempEmbeddings.size());
 }
 
 void DatabaseWriter::saveExtractedFaceEmbeddings(const QVector<cv::Mat>& faceEmbeddings,
@@ -111,6 +94,7 @@ void DatabaseWriter::saveExtractedFaceEmbeddings(const QVector<cv::Mat>& faceEmb
 {
     for (int i = 0; i < faceEmbeddings.size(); ++i)
     {
+        qDebug() << "Queueing embedding for save";
         d->buffer.append(DataPackage(faceEmbeddings[i], facetagIds[i]));
     }
 }

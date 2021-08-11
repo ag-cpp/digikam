@@ -59,7 +59,6 @@ DetectionPipeline::DetectionPipeline(bool scanAll, bool overWrite, QObject* pare
 {
     d->scanAll   = scanAll;
     d->detector  = new DetectionWorker();
-    /*
     d->extractor = new ExtractionWorker(overWrite);
     d->writer    = new DatabaseWriter(1);
 
@@ -74,15 +73,13 @@ DetectionPipeline::DetectionPipeline(bool scanAll, bool overWrite, QObject* pare
             d->writer, SLOT(saveExtractedFaceEmbeddings(const QVector<cv::Mat>&, const QVector<int>&)), Qt::DirectConnection);
 
     connect(d->writer, SIGNAL(saved(int)),
-            this, SIGNAL(processed(int)), Qt::DirectConnection);
-    */        
+            this, SIGNAL(processed(int)), Qt::DirectConnection);      
 
     ActionJobCollection jobs;
     jobs[d->detector]   = 1;
-    /*
     jobs[d->extractor]  = 1;
     jobs[d->writer]     = 1;
-    */
+
     appendJobs(jobs);
 }
 

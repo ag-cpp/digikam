@@ -78,7 +78,7 @@ void DetectionWorker::run()
 
             qDebug() << "Found" << detectedFaces.size() << "from" << info.filePath();
 
-            //emit faceDetected(info, image, detectedFaces);
+            emit faceDetected(info, image, detectedFaces);
         }
     }
 

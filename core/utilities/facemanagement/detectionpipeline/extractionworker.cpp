@@ -79,7 +79,7 @@ QList<FaceTagsIface> saveDetectedRects(const ItemInfo& info,
                                        const QList<QRectF>& detectedFaces, 
                                        bool overwriteUnconfirmed)
 {
-    if (!info.isNull() && !detectedFaces.isEmpty())
+    if (info.isNull() || detectedFaces.isEmpty())
     {
         return {};
     }
@@ -230,6 +230,8 @@ void ExtractionWorker::run()
                                                       package.detectedFaces,
                                                       d->overwriteUnconfirmed);
 
+        qDebug() << "save" << tags.size() << "detected";
+
         QVector<int> tagIDs;
         QList<QRect> detectedFaces;
 
@@ -244,7 +246,7 @@ void ExtractionWorker::run()
 
         cv::parallel_for_(cv::Range(0, croppedFaces.size()), Private::ParallelExtractors(d, croppedFaces, embeddings));
 
-        qDebug() << "Extract embedding from" << package.info.filePath();
+        qDebug() << "Extract" << embeddings.size() << "embedding from" << package.info.filePath();
 
         emit embeddingExtracted(embeddings, tagIDs);
     }

@@ -28,57 +28,49 @@
 namespace Digikam
 {
 
-void FaceDb::insertFaceVectors(const QVector<cv::Mat>& faceEmbeddings,
-                               const QVector<int>&     facetagIds,
-                               const QString&          context) const
+void FaceDb::insertFaceVector(const cv::Mat& faceEmbedding,
+                              const int tagID,
+                              const QString& context) const
 {    
-    DbEngineSqlQuery query = d->db->prepareQuery(QLatin1String("INSERT INTO FaceMatrices (identity, `context`, embedding) "
-                                                               "VALUES (?,?,?);"));
+    QVariantList bindingValues;
 
-    QList<int> insertedIds;
+    bindingValues << -1;
+    bindingValues << context;
+    bindingValues << QByteArray::fromRawData((char*)faceEmbedding.ptr<float>(), (sizeof(float) * faceEmbedding.cols));
 
-    for (int i = 0; i < faceEmbeddings.size(); ++i)
+    DbEngineSqlQuery query = d->db->execQuery(QLatin1String("INSERT INTO FaceMatrices (identity, `context`, embedding) "
+                                                            "VALUES (?,?,?);"),
+                                              bindingValues);
+
+    if (query.lastInsertId().isNull())
     {
-        QVariantList bindingValues;
-
-        bindingValues << -1;
-        bindingValues << context;
-        bindingValues << QByteArray::fromRawData((char*)faceEmbeddings[i].ptr<float>(), (sizeof(float) * faceEmbeddings[i].cols));
-
-        if(!query.exec())
-        {
-            qCWarning(DIGIKAM_FACEDB_LOG) << "fail to insert face embedding, last query"
+        qCWarning(DIGIKAM_FACEDB_LOG) << "fail to insert face embedding, last query"
                                       << query.lastQuery()
                                       << "bound values" << query.boundValues()
                                       << query.lastError();
-            
-            insertedIds.append(-1);
-        }
-        else
-        {
-            insertedIds.append(query.lastInsertId().toInt());
-        }
+    }
+    else
+    {
+        qCDebug(DIGIKAM_FACEDB_LOG) << "Commit face mat data "
+                                    << query.lastInsertId().toInt();
     }
 
-    query = d->db->prepareQuery(QLatin1String("INSERT INTO FaceReferences (tagId, matriceId) "
-                                              "VALUES (?,?);"));
+    int insertedID = query.lastInsertId().toInt();
 
-    for (int i = 0; i < insertedIds.size(); ++i)
+    bindingValues.clear();
+    bindingValues << tagID;
+    bindingValues << insertedID;
+    // TODO facesengine: find out how to get the unique ID of detected face region
+    query = d->db->execQuery(QLatin1String("INSERT INTO FaceReferences (tagId, matriceId) "
+                                            "VALUES (?,?);"),
+                                            bindingValues);
+
+    if(!query.exec())
     {
-        if (insertedIds[i] >= 0)
-        {
-            QVariantList bindingValues;
-            bindingValues << facetagIds[i];
-            bindingValues << insertedIds[i];
-
-            if(!query.exec())
-            {
-                qCWarning(DIGIKAM_FACEDB_LOG) << "fail to insert face reference, last query"
-                                              << query.lastQuery()
-                                              << "bound values" << query.boundValues()
-                                              << query.lastError();
-            }
-        }
+        qCWarning(DIGIKAM_FACEDB_LOG) << "fail to insert face reference, last query"
+                                      << query.lastQuery()
+                                      << "bound values" << query.boundValues()
+                                      << query.lastError();
     }
 }
 
