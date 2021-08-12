@@ -39,16 +39,9 @@ namespace
 FocusPoint create_af_point(float afPointWidth, float afPointHeight, 
                            float af_x_position, float af_y_position)
 {    
-    FocusPoint point;
-
-    point.x_position = af_x_position;
-    point.y_position = af_y_position;
-    point.width      = afPointWidth;
-    point.height     = afPointHeight;
-    
-    point.type = FocusPoint::TypePoint::SelectedInFocus;
-
-    return point;
+    return FocusPoint(af_x_position, af_y_position, 
+                      afPointWidth, afPointHeight,
+                      FocusPoint::TypePoint::SelectedInFocus);;
 }
 
 }

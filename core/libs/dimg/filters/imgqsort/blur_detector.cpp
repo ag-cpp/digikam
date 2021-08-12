@@ -274,11 +274,16 @@ cv::Mat BlurDetector::getWeightMap()                               const
     {
         for (const auto point : d->af_points)
         {
-            int x_position_corner = std::max(static_cast<int>((point.x_position - point.width * 0.5  *d->ratio_expand_af_point) * d->image.size().width), 0);
-            int y_position_corner = std::max(static_cast<int>((point.y_position - point.height * 0.5 *d->ratio_expand_af_point) * d->image.size().height), 0);
+            QPointF pos = point.getPosition();
+            QSizeF size = point.getSize();
 
-            int width = std::min(d->image.size().width - x_position_corner, static_cast<int>(point.width * d->image.size().width * d->ratio_expand_af_point) );
-            int height = std::min(d->image.size().height - y_position_corner, static_cast<int>(point.height * d->image.size().height * d->ratio_expand_af_point) );
+            qInfo()<<pos<<size;
+
+            int x_position_corner = std::max(static_cast<int>((pos.x() - size.width() * 0.5  *d->ratio_expand_af_point) * d->image.size().width), 0);
+            int y_position_corner = std::max(static_cast<int>((pos.y() - size.height() * 0.5 *d->ratio_expand_af_point) * d->image.size().height), 0);
+
+            int width = std::min(d->image.size().width - x_position_corner, static_cast<int>(size.width() * d->image.size().width * d->ratio_expand_af_point) );
+            int height = std::min(d->image.size().height - y_position_corner, static_cast<int>(size.height() * d->image.size().height * d->ratio_expand_af_point) );
 
             qCDebug(DIGIKAM_DIMG_LOG) << "AF point properties "<<x_position_corner<<y_position_corner<<width<<height;
 

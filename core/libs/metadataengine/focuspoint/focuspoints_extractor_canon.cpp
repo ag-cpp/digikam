@@ -39,31 +39,29 @@ namespace CanonInternal
 void set_point_position(FocusPoint& point, float imageWidth, float imageHeight,
                   float af_x_position, float af_y_position, int yDirection)
 {
-    point.x_position = 0.5 + af_x_position /  imageWidth;
-    point.y_position = 0.5 + af_y_position * yDirection /  imageHeight;
+    point.setPosition(0.5 + af_x_position /  imageWidth, 0.5 + af_y_position * yDirection /  imageHeight);
 }
 
 void set_point_size(FocusPoint& point,
                     float imageWidth, float imageHeight,
                     float afPointWidth, float afPointHeight)
 {
-    point.width = afPointWidth / imageWidth ;
-    point.height = afPointHeight / imageHeight ;
+    point.setSize(afPointWidth / imageWidth, afPointHeight / imageHeight);
 }
 
 void set_point_type(FocusPoint& point,
                     QStringList af_selected, QStringList af_infocus,
                     int index)
 {
-    point.type = FocusPoint::TypePoint::Inactive;
+    point.setType(FocusPoint::TypePoint::Inactive);
 
     if (af_selected.contains(QString::number(index + 1)))
     {
-        point.type |= FocusPoint::TypePoint::Selected;
+        point.setType( FocusPoint::TypePoint::Selected);
     }
     if (af_infocus.contains(QString::number(index + 1)))
     {
-        point.type |= FocusPoint::TypePoint::Selected;
+        point.setType(point.getType() | FocusPoint::TypePoint::Selected);
     }
 }
 

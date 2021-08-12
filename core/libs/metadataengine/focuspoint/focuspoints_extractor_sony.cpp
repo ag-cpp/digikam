@@ -42,16 +42,10 @@ FocusPoint create_af_point(float imageWidth, float imageHeight,
                                                  float afPointWidth, float afPointHeight, 
                                                  float af_x_position, float af_y_position)
 {    
-    FocusPoint point;
-
-    point.x_position = af_x_position / imageWidth;
-    point.y_position = af_y_position / imageHeight;
-    point.width      = afPointWidth;
-    point.height     = afPointHeight;
-    
-    point.type = FocusPoint::TypePoint::SelectedInFocus;
-
-    return point;
+    return FocusPoint(af_x_position / imageWidth,
+                      af_y_position / imageHeight,
+                      afPointWidth, afPointHeight,
+                      FocusPoint::TypePoint::SelectedInFocus);
 }
 
 }

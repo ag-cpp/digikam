@@ -41,16 +41,10 @@ namespace PanasonicInternal
 FocusPoint create_af_point(float af_x_position, float af_y_position,
                                                  float afPointWidth,  float afPointHeight)
 {    
-    FocusPoint point;
-
-    point.x_position = af_x_position;
-    point.y_position = af_y_position;
-    point.width      = afPointWidth  * RATIO_POINT_IMAGE;
-    point.height     = afPointHeight * RATIO_POINT_IMAGE;
-    
-    point.type = FocusPoint::TypePoint::SelectedInFocus;
-
-    return point;
+    return FocusPoint(af_x_position, af_y_position,
+                      afPointWidth  * RATIO_POINT_IMAGE,
+                      afPointHeight * RATIO_POINT_IMAGE,
+                      FocusPoint::TypePoint::SelectedInFocus);
 }
 
 }

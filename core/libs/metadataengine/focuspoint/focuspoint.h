@@ -60,10 +60,16 @@ public:
     FocusPoint(QRectF rectF);
     ~FocusPoint();
 
-    void SetType(TypePoint type);
-    QRect getRectBySize(const QSize& size) const;
+    void setType(TypePoint type)                            ;
+    TypePoint getType()                                     const;
+    QRect getRectBySize(const QSize& size)                  const;
 
-public:
+    void setPosition(float x_position, float y_position)    ;
+    void setSize(float width, float height)                 ;
+    QPointF getPosition()                                   const;
+    QSizeF  getSize()                                       const;
+
+private:
     float       x_position;
     float       y_position;
     float       width;

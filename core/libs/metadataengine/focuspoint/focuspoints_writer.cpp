@@ -69,23 +69,26 @@ void FocusPointsWriter::writeFocusPoint(const FocusPoint& point)
 {
     ExifToolParser::ExifToolData newTags;
 
+    QPointF pos = point.getPosition();
+    QSizeF size = point.getSize();
+
     newTags.insert(QLatin1String("xmp:RegionAreaX"),
-                   QVariantList() << QString::number(point.x_position)
+                   QVariantList() << QString::number(pos.x())
                                   << QString()
                                   << QString::fromUtf8("Region Area X"));
 
     newTags.insert(QLatin1String("xmp:RegionAreaY"),
-                   QVariantList() << QString::number(point.y_position)
+                   QVariantList() << QString::number(pos.y())
                                   << QString()
                                   << QString::fromUtf8("Region Area Y"));
 
     newTags.insert(QLatin1String("xmp:RegionAreaH"),
-                   QVariantList() << QString::number(point.height)
+                   QVariantList() << QString::number(size.height())
                                   << QString()
                                   << QString::fromUtf8("Region Area Height"));
 
     newTags.insert(QLatin1String("xmp:RegionAreaW"),
-                   QVariantList() << QString::number(point.width)
+                   QVariantList() << QString::number(size.width())
                                   << QString()
                                   << QString::fromUtf8("Region Area Width"));
 

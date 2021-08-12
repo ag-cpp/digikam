@@ -30,7 +30,7 @@ void FocusPointItem::setPoint(const FocusPoint& point)
     // updateCurrentTag();
     setEditable(false);
 
-    switch(m_point.type)
+    switch(m_point.getType())
     {
         case FocusPoint::TypePoint::Inactive : 
             break;

@@ -161,14 +161,14 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::get_af_points(FocusPoin
     {
         if (type == FocusPoint::TypePoint::Inactive)
         {
-            if (point.type == type)
+            if (point.getType() == type)
             {
                 points.push_back(point);
             }
         }
         else
         {
-            if ((point.type & type) == type)
+            if ((point.getType() & type) == type)
             {
                 points.push_back(point);
             }
