@@ -27,6 +27,8 @@ void ItemIconView::slotImageQualitySorter()
     thread->sortByImageQuality(paths, settings);
     
     thread->start();
+
+    connect(thread, &QThread::finished, thread, &QObject::deleteLater);
 }
 
 

@@ -87,7 +87,7 @@ void GetPhotoUploadServerJob::prepareQueryItems()
             {
                 setError(KJob::UserDefinedError);
                 setErrorText(QLatin1String("m_aid not set."));
-                qCWarning(DIGIKAM_WEBSERVICES_LOG) << "m_aid not set.";
+                //qCWarning(DIGIKAM_WEBSERVICES_LOG) << "m_aid not set.";
             }
 
             addQueryItem(QLatin1String("aid"), QString::number(m_aid));
@@ -112,7 +112,7 @@ void GetPhotoUploadServerJob::prepareQueryItems()
             {
                 setError(KJob::UserDefinedError);
                 setErrorText(QLatin1String("Only one parameter m_uid or m_gid should be set."));
-                qCWarning(DIGIKAM_WEBSERVICES_LOG) << "Only one parameter m_uid or m_gid should be set.";
+                //qCWarning(DIGIKAM_WEBSERVICES_LOG) << "Only one parameter m_uid or m_gid should be set.";
             }
 
             if (m_uid != -1)
@@ -132,7 +132,7 @@ void GetPhotoUploadServerJob::prepareQueryItems()
         {
             setError(KJob::UserDefinedError);
             setErrorText(QLatin1String("Unsupported m_dest."));
-            qCWarning(DIGIKAM_WEBSERVICES_LOG) << "Unsupported m_dest.";
+            //qCWarning(DIGIKAM_WEBSERVICES_LOG) << "Unsupported m_dest.";
             break;
         }
     }
