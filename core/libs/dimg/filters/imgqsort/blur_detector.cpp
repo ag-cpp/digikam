@@ -277,8 +277,6 @@ cv::Mat BlurDetector::getWeightMap()                               const
             QPointF pos = point.getPosition();
             QSizeF size = point.getSize();
 
-            qInfo()<<pos<<size;
-
             int x_position_corner = std::max(static_cast<int>((pos.x() - size.width() * 0.5  *d->ratio_expand_af_point) * d->image.size().width), 0);
             int y_position_corner = std::max(static_cast<int>((pos.y() - size.height() * 0.5 *d->ratio_expand_af_point) * d->image.size().height), 0);
 

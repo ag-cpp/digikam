@@ -64,8 +64,8 @@ public:
     TypePoint getType()                                     const;
     QRect getRectBySize(const QSize& size)                  const;
 
-    void setPosition(float x_position, float y_position)    ;
-    void setSize(float width, float height)                 ;
+    void setPosition(float x_position, float y_position);
+    void setSize(float width, float height);
     QPointF getPosition()                                   const;
     QSizeF  getSize()                                       const;
 

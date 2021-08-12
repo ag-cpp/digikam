@@ -78,5 +78,4 @@ QSizeF FocusPoint::getSize() const
 {
     return QSizeF(width, height);
 }
-
 }
