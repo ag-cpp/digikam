@@ -42,8 +42,6 @@ public:
 
 public:
 
-    void setAccuracyAndModel(double value, bool yolo);
-
     void run() override;
 
 public Q_SLOTS:

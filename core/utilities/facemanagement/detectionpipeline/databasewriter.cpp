@@ -35,14 +35,14 @@ namespace Digikam
 
 struct DataPackage
 {
-    DataPackage(cv::Mat embedding, int tagID)
+    DataPackage(cv::Mat embedding, QString tagID)
         : embedding(embedding),
           tagID(tagID)
     {
     }
 
     cv::Mat embedding;
-    int tagID;
+    QString tagID;
 };
 
 class Q_DECL_HIDDEN DatabaseWriter::Private
@@ -90,7 +90,7 @@ void DatabaseWriter::run()
 }
 
 void DatabaseWriter::saveExtractedFaceEmbeddings(const QVector<cv::Mat>& faceEmbeddings,
-                                                 const QVector<int>&     facetagIds)
+                                                 const QVector<QString>& facetagIds)
 {
     for (int i = 0; i < faceEmbeddings.size(); ++i)
     {

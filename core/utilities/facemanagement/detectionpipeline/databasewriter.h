@@ -51,7 +51,7 @@ public:
 public Q_SLOTS:
 
     void saveExtractedFaceEmbeddings(const QVector<cv::Mat>& faceEmbeddings,
-                                     const QVector<int>&     facetagIds);
+                                     const QVector<QString>& facetagIds);
 
 Q_SIGNALS:
 

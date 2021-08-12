@@ -49,7 +49,7 @@ public:
      * Save face embeddings extracted from face images
      */
     void saveEmbedding(const cv::Mat& faceEmbedding,
-                       const int      tagID,
+                       const QString& tagID,
                        const QString& context) const;
 
     /**

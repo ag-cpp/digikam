@@ -79,7 +79,6 @@ public:
 
     ItemInfoJob                albumListing;
     DetectionPipeline*         pipeline;
-    //FacePipeline               pipeline;
 };
 
 FacesManager::FacesManager(const FaceScanSettings& settings, ProgressItem* const parent)
@@ -342,13 +341,13 @@ void FacesManager::slotItemsInfo(const ItemInfoList& items)
     d->pipeline->process(items);
 }
 
-// TODO facesengine: modify done point
 void FacesManager::slotDone()
 {
     // Switch on scanned for faces flag on digiKam config file.
 
     KSharedConfig::openConfig()->group("General Settings").writeEntry("Face Scanner First Run", true);
 
+    // TODO facesengine: modify done point
     //MaintenanceTool::slotDone();
 }
 

@@ -72,7 +72,7 @@ FaceEmbeddingManager::~FaceEmbeddingManager()
 }
 
 void FaceEmbeddingManager::saveEmbedding(const cv::Mat& faceEmbedding,
-                                         const int      tagID,
+                                         const QString& tagID,
                                          const QString& context) const
 {
     if (!d || !d->dbAvailable)

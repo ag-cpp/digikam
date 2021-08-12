@@ -29,7 +29,7 @@ namespace Digikam
 {
 
 void FaceDb::insertFaceVector(const cv::Mat& faceEmbedding,
-                              const int tagID,
+                              const QString& tagID,
                               const QString& context) const
 {    
     QVariantList bindingValues;

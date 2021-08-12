@@ -90,13 +90,4 @@ void DetectionWorker::process(const ItemInfo& info)
     d->buffer.append(info);
 }
 
-void DetectionWorker::setAccuracyAndModel(double accuracy, bool yolo)
-{
-    QVariantMap params;
-    params[QLatin1String("accuracy")]    = accuracy;
-    params[QLatin1String("useyolov3")]   = yolo;
-    params[QLatin1String("specificity")] = 0.8;     // TODO: add UI for sensitivity - specificity
-    d->detector.setParameters(params);
-}
-
 } // namespace Digikam

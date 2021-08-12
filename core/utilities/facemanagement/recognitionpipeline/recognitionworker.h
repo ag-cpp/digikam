@@ -3,9 +3,10 @@
  * This file is a part of digiKam project
  * https://www.digikam.org
  *
- * Date        : 2021-07-08
- * Description : Integrated, multithread face embedding extraction
+ * Date        : 2021-08-11
+ * Description : Integrated, multithread face recognition
  *
+ * Copyright (C) 2010-2011 by Marcel Wiesweg <marcel dot wiesweg at gmx dot de>
  * Copyright (C) 2012-2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
  * Copyright (C)      2021 by Nghia Duong    <minhnghiaduong997 at gmail dot com>
  * 
@@ -22,38 +23,26 @@
  *
  * ============================================================ */
 
-#ifndef DIGIKAM_EXTRACTION_WORKER_H
-#define DIGIKAM_EXTRACTION_WORKER_H
+#ifndef DIGIKAM_RECOGNITION_WORKER_H
+#define DIGIKAM_RECOGNITION_WORKER_H
 
-#include <QImage>
-
-// Local includes
-#include "digikam_opencv.h"
 #include "actionthreadbase.h"
 #include "iteminfo.h"
 
 namespace Digikam
 {
 
-class Q_DECL_HIDDEN ExtractionWorker: public ActionJob
+class Q_DECL_HIDDEN RecognitionWorker: public ActionJob
 {
     Q_OBJECT
 public:
 
-    explicit ExtractionWorker(bool overwriteUnconfirmed);
-    ~ExtractionWorker();
+    explicit RecognitionWorker();
+    ~RecognitionWorker();
 
 public:
 
     void run() override;
-
-public Q_SLOTS:
-
-    void process(const ItemInfo& info, const QImage& image, const QList<QRectF>& detectedFaces);
-
-Q_SIGNALS:
-
-    void embeddingExtracted(const QVector<cv::Mat>&, const QVector<QString>&);
 
 private:
 
@@ -61,10 +50,10 @@ private:
     Private* d;
 
     // Disable
-    ExtractionWorker(const ExtractionWorker&)            = delete;
-    ExtractionWorker& operator=(const ExtractionWorker&) = delete;
+    RecognitionWorker(const RecognitionWorker&)            = delete;
+    RecognitionWorker& operator=(const RecognitionWorker&) = delete;
 };
 
 } // namespace Digikam
 
-#endif // DIGIKAM_EXTRACTION_WORKER_H
+#endif // DIGIKAM_RECOGNITION_WORKER_H

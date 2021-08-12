@@ -181,8 +181,8 @@ public:
                         QList<QImage>& images,
                         QVector<cv::Mat>& embeddings)
             : images     (images),
-            embeddings (embeddings),
-            d          (d)
+              embeddings (embeddings),
+              d          (d)
         {
             embeddings.resize(images.size());
         }
@@ -208,6 +208,11 @@ public:
     };
 };
 
+QString encodeTagID(int imageID, const FaceTagsIface& tag)
+{
+    return QString::number(imageID) + QLatin1Char('-') + tag.region().toXml();
+}
+
 ExtractionWorker::ExtractionWorker(bool overwriteUnconfirmed)
     : d (new Private(1, overwriteUnconfirmed))
 {
@@ -232,12 +237,12 @@ void ExtractionWorker::run()
 
         qDebug() << "save" << tags.size() << "detected";
 
-        QVector<int> tagIDs;
+        QVector<QString> tagIDs;
         QList<QRect> detectedFaces;
 
         for (int i = 0; i < tags.size(); ++i)
         {
-            tagIDs.append(tags[i].tagId());
+            tagIDs.append(encodeTagID(package.info.id(), tags[i]));
             detectedFaces.append(tags[i].region().toRect());
         }
 

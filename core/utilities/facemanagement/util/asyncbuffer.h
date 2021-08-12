@@ -6,7 +6,7 @@
  * Date        : 2021-08-10
  * Description : Async buffer
  *
- * Copyright (C)      2021 by Nghia Duong    <minhnghiaduong997 at gmail dot com>
+ * Copyright (C)      2021 by Nghia Duong <minhnghiaduong997 at gmail dot com>
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -71,7 +71,6 @@ AsyncBuffer<T>::~AsyncBuffer()
 template <typename T>
 T AsyncBuffer<T>::read()
 {
-    qDebug() << "buffer size" << m_data.size();
     m_mutex.lock();
 
     while (m_data.empty())
@@ -82,7 +81,6 @@ T AsyncBuffer<T>::read()
     T object = m_data.dequeue();
 
     m_mutex.unlock();
-
     m_writeWait.wakeAll();
 
     return object;
@@ -101,9 +99,6 @@ void AsyncBuffer<T>::append(const T& object)
     m_data.enqueue(object);
 
     m_mutex.unlock();
-
-    qDebug() << "write buffer size" << m_data.size();
-
     m_readWait.wakeAll();
 }
 

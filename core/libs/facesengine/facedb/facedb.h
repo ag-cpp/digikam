@@ -94,7 +94,7 @@ public:
      * @param context 
      */
     void insertFaceVector(const cv::Mat& faceEmbedding,
-                          const int tagID,
+                          const QString& tagID,
                           const QString& context) const;
 
     /**
