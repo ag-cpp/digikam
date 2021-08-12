@@ -108,7 +108,7 @@ void UploadPhotosJob::serverJobFinished(KJob *kjob)
     {
         setError(job->error());
         setErrorText(job->errorText());
-        //qCWarning(DIGIKAM_WEBSERVICES_LOG) << "Job error: " << job->errorString();
+        qCWarning(DIGIKAM_WEBSERVICES_LOG) << "Job error: " << job->errorString();
 
         // It is safe to emit result here because there are no jobs
         // running in parallel with this one.
@@ -180,7 +180,7 @@ void UploadPhotosJob::postJobFinished(KJob* kjob)
     {
         setError(job->error());
         setErrorText(job->errorText());
-        //qCWarning(DIGIKAM_WEBSERVICES_LOG) << "Job error: " << job->errorString();
+        qCWarning(DIGIKAM_WEBSERVICES_LOG) << "Job error: " << job->errorString();
     }
 
     if (error())
@@ -230,7 +230,7 @@ void UploadPhotosJob::saveJobFinished(KJob* kjob)
     {
         setError(job->error());
         setErrorText(job->errorText());
-        //qCWarning(DIGIKAM_WEBSERVICES_LOG) << "Job error: " << job->errorString();
+        qCWarning(DIGIKAM_WEBSERVICES_LOG) << "Job error: " << job->errorString();
     }
 
     if (error())
