@@ -35,6 +35,7 @@ set(libfacemanagement_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/detectionpipeline/extractionworker.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/detectionpipeline/databasewriter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/detectionpipeline/detectionpipeline.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/recognitionpipeline/databaseinterface.cpp
     #${CMAKE_CURRENT_SOURCE_DIR}/recognitionpipeline/recognitionworker.cpp
 )
 
