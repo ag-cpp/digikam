@@ -46,7 +46,13 @@
 namespace Digikam
 {
 
-class KDTree;
+struct FaceEmbeddingData
+{
+    int id;
+    cv::Mat embedding;
+    int identity;
+    QString tagId;
+};
 
 class FaceDb
 {
@@ -91,17 +97,15 @@ public:
      * @brief insertFaceVector : insert new face embeddings to database
      * @param faceEmbedding
      * @param tagID
-     * @param context 
      */
     void insertFaceVector(const cv::Mat& faceEmbedding,
-                          const QString& tagID,
-                          const QString& context) const;
+                          const QString& tagID) const;
 
     /**
-     * @brief trainData: extract train data from database
+     * @brief faceVectors: extract saved face embeddings from database
      * @return
      */
-    cv::Ptr<cv::ml::TrainData> trainData()                                      const;
+    QVector<FaceEmbeddingData> faceVectors()                                    const;
 
     /**
      * @brief insertToTreeDb : insert a new node to spatial database
@@ -133,10 +137,10 @@ public:
 
     /**
      * @brief clearDNNTraining : clear all trained data in the database
-     * @param context
+     * @param tagId
      */
-    void clearDNNTraining(const QString& context = QString());
-    void clearDNNTraining(const QList<int>& identities, const QString& context = QString());
+    void clearDNNTraining(const QString& tagId = QString());
+    void clearDNNTraining(const QList<int>& identities, const QString& tagId = QString());
 
 private:
 

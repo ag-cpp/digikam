@@ -72,8 +72,7 @@ FaceEmbeddingManager::~FaceEmbeddingManager()
 }
 
 void FaceEmbeddingManager::saveEmbedding(const cv::Mat& faceEmbedding,
-                                         const QString& tagID,
-                                         const QString& context) const
+                                         const QString& tagID) const
 {
     if (!d || !d->dbAvailable)
     {
@@ -81,19 +80,19 @@ void FaceEmbeddingManager::saveEmbedding(const cv::Mat& faceEmbedding,
     }
 
     QMutexLocker lock(&d->mutex);
-    FaceDbAccess().db()->insertFaceVector(faceEmbedding, tagID, context);
+    FaceDbAccess().db()->insertFaceVector(faceEmbedding, tagID);
 }
 
-cv::Ptr<cv::ml::TrainData> FaceEmbeddingManager::getFaceEmbedding() const
+QVector<FaceEmbeddingData> FaceEmbeddingManager::getFaceEmbeddings() const
 {
     if (!d || !d->dbAvailable)
     {
-        return cv::ml::TrainData::create(cv::Mat(), 0, cv::Mat());
+        return {};
     }
 
     QMutexLocker lock(&d->mutex);
     
-    return FaceDbAccess().db()->trainData();
+    return FaceDbAccess().db()->faceVectors();
 }
 
 }

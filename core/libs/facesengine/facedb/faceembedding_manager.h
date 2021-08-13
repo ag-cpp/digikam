@@ -36,6 +36,8 @@
 namespace Digikam
 {
 
+class FaceEmbeddingData;
+
 class DIGIKAM_GUI_EXPORT FaceEmbeddingManager
 {
 public:
@@ -49,27 +51,26 @@ public:
      * Save face embeddings extracted from face images
      */
     void saveEmbedding(const cv::Mat& faceEmbedding,
-                       const QString& tagID,
-                       const QString& context) const;
+                       const QString& tagID) const;
 
     /**
      * Retrieve face embeddings with their labels
      */
-    cv::Ptr<cv::ml::TrainData> getFaceEmbedding() const;
+    QVector<FaceEmbeddingData> getFaceEmbeddings() const;
 
     // TODO facesengine 4 review delete saved data
     /**
      * Deletes the training data for all identities,
      * leaving the identities as such in the database.
      */
-    void clearAllEmbedding(const QString& trainingContext = QString());
+    void clearAllEmbedding(const QString& tagId = QString());
 
     /**
      * Deletes the training data for the given identity,
      * leaving the identity as such in the database.
      */
     void clearEmbedding(const QList<Identity>& identitiesToClean,
-                        const QString& trainingContext = QString());
+                        const QString& tagId = QString());
 
 private:
 

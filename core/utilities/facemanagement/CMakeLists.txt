@@ -35,7 +35,7 @@ set(libfacemanagement_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/detectionpipeline/extractionworker.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/detectionpipeline/databasewriter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/detectionpipeline/detectionpipeline.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/recognitionpipeline/recognitionworker.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/recognitionpipeline/recognitionworker.cpp
 )
 
 include_directories($<TARGET_PROPERTY:Qt5::Sql,INTERFACE_INCLUDE_DIRECTORIES>

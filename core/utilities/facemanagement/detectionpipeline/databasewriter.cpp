@@ -81,7 +81,7 @@ void DatabaseWriter::run()
     while (!m_cancel)
     {
         DataPackage package = d->buffer.read();
-        d->db.saveEmbedding(package.embedding, package.tagID, QLatin1String("Face detection"));
+        d->db.saveEmbedding(package.embedding, package.tagID);
 
         qDebug() << "Save";
 
