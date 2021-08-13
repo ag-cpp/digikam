@@ -25,6 +25,7 @@
 
 #include "recognitionworker.h"
 #include "dimension_reducer.h"
+#include "opencvdnnfacerecognizer.h"
 
 namespace Digikam
 {
@@ -42,7 +43,7 @@ public:
     }
 };
 
-RecognitionWorker::RecognitionWorker(QObject* parent)
+RecognitionWorker::RecognitionWorker(const QVector<FaceEmbeddingData>& data, QObject* parent)
     : ActionJob(parent),
       d(new Private)
 {

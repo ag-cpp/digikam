@@ -25,7 +25,7 @@
 
 #include "databaseinterface.h"
 #include "faceembedding_manager.h"
-#include "facedb.h"
+#include "opencvdnnfacerecognizer.h"
 
 namespace Digikam
 {

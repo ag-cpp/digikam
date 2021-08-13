@@ -46,13 +46,7 @@
 namespace Digikam
 {
 
-struct FaceEmbeddingData
-{
-    int id;
-    cv::Mat embedding;
-    int identity;
-    QString tagId;
-};
+class FaceEmbeddingData;
 
 class FaceDb
 {

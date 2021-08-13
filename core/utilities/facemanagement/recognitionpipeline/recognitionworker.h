@@ -26,6 +26,8 @@
 #ifndef DIGIKAM_RECOGNITION_WORKER_H
 #define DIGIKAM_RECOGNITION_WORKER_H
 
+#include <QVector>
+
 #include "actionthreadbase.h"
 #include "iteminfo.h"
 #include "digikam_opencv.h"
@@ -33,12 +35,14 @@
 namespace Digikam
 {
 
+class FaceEmbeddingData;
+
 class Q_DECL_HIDDEN RecognitionWorker: public ActionJob
 {
     Q_OBJECT
 public:
 
-    explicit RecognitionWorker(QObject* parent = nullptr);
+    explicit RecognitionWorker(const QVector<FaceEmbeddingData>& data, QObject* parent = nullptr);
     ~RecognitionWorker();
 
 public:

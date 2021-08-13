@@ -31,6 +31,7 @@
 #include "facedbaccess.h"
 #include "facedb.h"
 #include "digikam_debug.h"
+#include "opencvdnnfacerecognizer.h"
 
 namespace Digikam
 {
