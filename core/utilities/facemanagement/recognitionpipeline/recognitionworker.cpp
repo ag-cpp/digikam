@@ -40,13 +40,35 @@ public:
 
     ~Private()
     {
+        delete recognizer;
     }
+
+public:
+
+    QMap<QString, FaceEmbeddingData> faceembeddingMap;
+    OpenCVDNNFaceRecognizer* recognizer;
 };
 
-RecognitionWorker::RecognitionWorker(const QVector<FaceEmbeddingData>& data, QObject* parent)
+RecognitionWorker::RecognitionWorker(QVector<FaceEmbeddingData>& data, QObject* parent)
     : ActionJob(parent),
       d(new Private)
 {
+    data = reduceDimension(data, 4);
+
+    cv::Mat predictors, labels;
+
+    for (int i = 0; i < data.size(); ++i)
+    {
+        d->faceembeddingMap[data[i].tagId] = data[i];
+
+        if (data[i].identity >= 0)
+        {
+            predictors.push_back(data[i].embedding);
+            labels.push_back(data[i].identity);
+        }
+    }
+
+    d->recognizer = new OpenCVDNNFaceRecognizer(cv::ml::TrainData::create(predictors, 0, labels));
 }
 
 RecognitionWorker::~RecognitionWorker()
@@ -63,9 +85,23 @@ void RecognitionWorker::run()
     }
 }
 
-cv::Mat RecognitionWorker::reduceDimension(cv::Mat data, int nbCPU) const
+QVector<FaceEmbeddingData>& RecognitionWorker::reduceDimension(QVector<FaceEmbeddingData>& data, int nbCPU) const
 {
-    return Digikam::DimensionReducer::reduceDimension(data, 2, nbCPU);
+    cv::Mat embeddings;
+
+    for (int i = 0; i < data.size(); ++i)
+    {
+        embeddings.push_back(data[i].embedding);
+    }
+
+    cv::Mat projectedEmbedings = Digikam::DimensionReducer::reduceDimension(embeddings, 2, nbCPU);
+
+    for (int i = 0; i < data.size(); ++i)
+    {
+        data[i].embedding = projectedEmbedings.row(i);
+    }
+
+    return data;
 }
 
 } // namespace Digikam

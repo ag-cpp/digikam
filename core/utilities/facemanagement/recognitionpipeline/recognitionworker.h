@@ -42,7 +42,7 @@ class Q_DECL_HIDDEN RecognitionWorker: public ActionJob
     Q_OBJECT
 public:
 
-    explicit RecognitionWorker(const QVector<FaceEmbeddingData>& data, QObject* parent = nullptr);
+    explicit RecognitionWorker(QVector<FaceEmbeddingData>& data, QObject* parent = nullptr);
     ~RecognitionWorker();
 
 public:
@@ -53,7 +53,7 @@ public:
 
 private:
 
-    cv::Mat reduceDimension(cv::Mat data, int nbCPU) const;
+    QVector<FaceEmbeddingData>& reduceDimension(QVector<FaceEmbeddingData>& data, int nbCPU = 1) const;
 
 private:
 
