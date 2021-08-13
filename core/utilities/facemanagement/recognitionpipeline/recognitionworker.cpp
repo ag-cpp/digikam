@@ -24,6 +24,7 @@
  * ============================================================ */
 
 #include "recognitionworker.h"
+#include "dimension_reducer.h"
 
 namespace Digikam
 {
@@ -34,8 +35,36 @@ public:
 
     explicit Private()
     {
-        
+    }
+
+    ~Private()
+    {
     }
 };
+
+RecognitionWorker::RecognitionWorker(QObject* parent)
+    : ActionJob(parent),
+      d(new Private)
+{
+}
+
+RecognitionWorker::~RecognitionWorker()
+{
+    delete d;
+}
+
+
+void RecognitionWorker::run()
+{
+    while (!m_cancel)
+    {
+        // TODO
+    }
+}
+
+cv::Mat RecognitionWorker::reduceDimension(cv::Mat data, int nbCPU) const
+{
+    return Digikam::DimensionReducer::reduceDimension(data, 2, nbCPU);
+}
 
 } // namespace Digikam

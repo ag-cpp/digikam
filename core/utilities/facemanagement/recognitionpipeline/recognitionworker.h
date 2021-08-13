@@ -28,6 +28,7 @@
 
 #include "actionthreadbase.h"
 #include "iteminfo.h"
+#include "digikam_opencv.h"
 
 namespace Digikam
 {
@@ -37,12 +38,18 @@ class Q_DECL_HIDDEN RecognitionWorker: public ActionJob
     Q_OBJECT
 public:
 
-    explicit RecognitionWorker();
+    explicit RecognitionWorker(QObject* parent = nullptr);
     ~RecognitionWorker();
 
 public:
 
     void run() override;
+
+public:
+
+private:
+
+    cv::Mat reduceDimension(cv::Mat data, int nbCPU) const;
 
 private:
 
