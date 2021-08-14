@@ -253,6 +253,7 @@ void FocusPointGroup::addPoint()
         return;
     }
 
+    setVisible(false);
     d->manuallyAddWrapItem = new ClickDragReleaseItem(d->view->previewItem());
     d->manuallyAddWrapItem->setFocus();
     d->view->setFocus();
@@ -272,7 +273,6 @@ void FocusPointGroup::addPoint()
 
 void FocusPointGroup::slotAddItemStarted(const QPointF& pos)
 {
-    setVisible(false);
     Q_UNUSED(pos);
 }
 

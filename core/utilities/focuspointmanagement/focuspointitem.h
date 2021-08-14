@@ -13,7 +13,7 @@
  * https://www.digikam.org
  *
  * Date        : 2010-09-17
- * Description : Face tag region item
+ * Description : Focus point tag region item
  *
  * Copyright (C) 2010-2011 by Marcel Wiesweg <marcel dot wiesweg at gmx dot de>
  *

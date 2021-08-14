@@ -34,7 +34,6 @@
 
 // Local inclues
 
-#include "facetagsiface.h"
 #include "assignnamewidget.h"
 #include "regionframeitem.h"
 
@@ -70,10 +69,6 @@ class FocusPointGroup : public QObject
 
 public:
 
-    /**
-     * Constructs a new face group, managing RegionFrameItems for faces
-     * of a particular image, displayed on a GraphicsDImgView.
-     */
     explicit FocusPointGroup(GraphicsDImgView* const view);
     ~FocusPointGroup() override;
 
@@ -114,13 +109,8 @@ protected:
 protected Q_SLOTS:
 
     void itemStateChanged(int);
-    // void startAutoSuggest();
     void slotAlbumsUpdated(int type);
-    // void slotAlbumRenamed(Album* album);
-    // void slotAssigned(const TaggingAction& action, const ItemInfo& info, const QVariant& faceIdentifier);
-    // void slotRejected(const ItemInfo& info, const QVariant& faceIdentifier);
-    // void slotLabelClicked(const ItemInfo& info, const QVariant& faceIdentifier);
-    // void slotIgnoredClicked(const ItemInfo& info, const QVariant& faceIdentifier);
+    
     void slotAddItemStarted(const QPointF& pos);
     void slotAddItemMoving(const QRectF& rect);
     void slotAddItemFinished(const QRectF& rect);

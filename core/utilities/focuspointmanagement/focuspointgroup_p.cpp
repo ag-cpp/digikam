@@ -51,8 +51,6 @@ void FocusPointGroup::Private::applyVisible()
     }
     else if (state == PointsLoaded)
     {
-        // show existing faces, if we have an image
-
         if (view->previewItem()->isLoaded())
         {
             visibilityController->show();
