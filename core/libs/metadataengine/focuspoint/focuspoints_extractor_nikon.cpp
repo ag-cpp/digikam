@@ -50,7 +50,7 @@ FocusPoint create_af_point(float imageWidth, float imageHeight,
 }
 
 // Main function to extract af point
-FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_nikon()
+FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_nikon() const
 {
     QString TagNameRoot = QLatin1String("MakerNotes.Nikon.Camera");
 

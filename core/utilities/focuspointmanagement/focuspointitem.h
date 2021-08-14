@@ -33,6 +33,8 @@
 #include "regionframeitem.h"
 #include "focuspoint.h"
 
+#include <QLabel>
+
 namespace Digikam
 {
 
@@ -55,6 +57,8 @@ protected:
 
     FocusPoint          m_point;
     QColor              m_color;
+    QLabel*             m_widgetName;
+    float               m_width;
 
 protected:
     void paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*);
@@ -62,7 +66,7 @@ protected:
 private:
 
     // Disable
-    FocusPointItem()                           = delete;
+    FocusPointItem()                                 = delete;
     FocusPointItem(const FocusPointItem&)            = delete;
     FocusPointItem& operator=(const FocusPointItem&) = delete;
 };

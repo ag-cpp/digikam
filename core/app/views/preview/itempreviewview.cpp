@@ -270,6 +270,7 @@ void ItemPreviewView::imageLoaded()
     d->faceGroup->setInfo(d->item->imageInfo());
 
     d->focusPointGroup->setInfo(d->item->imageInfo());
+    d->addFocusPointAction->setEnabled(d->focusPointGroup->isAllowedToAddFocusPoint());
 }
 
 void ItemPreviewView::imageLoadingFailed()

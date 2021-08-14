@@ -47,8 +47,10 @@ FocusPoint create_af_point(float afPointWidth, float afPointHeight,
 }
 
 // Main function to extract af point
-FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_default()
+FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_default() const
 {
+    setAFPointsReadOnly(false);
+    
     QString TagNameRoot = QLatin1String("XMP.XMP-mwg-rs.Image");
 
     QString desc = findValue(TagNameRoot, QLatin1String("RegionDescription")).toString();
@@ -66,7 +68,6 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_default()
         return ListAFPoints();
     }
 
-    //  Get size of point
     QVariant afPointWidth = findValue(TagNameRoot,  QLatin1String("RegionAreaW"));
     QVariant afPointHeight = findValue(TagNameRoot, QLatin1String("RegionAreaH"));
 

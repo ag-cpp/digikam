@@ -51,7 +51,7 @@ FocusPoint create_af_point(float imageWidth, float imageHeight,
 }
 
 // Main function to extract af point
-FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_sony()
+FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_sony() const
 {
     QString TagNameRoot = QLatin1String("MakerNotes.Sony.Camera");
 

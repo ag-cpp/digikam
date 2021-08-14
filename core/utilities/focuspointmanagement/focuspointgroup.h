@@ -85,6 +85,9 @@ public:
 
     void leaveEvent(QEvent*);
 
+public:
+    bool isAllowedToAddFocusPoint()                                      const;
+
 public Q_SLOTS:
 
     /**

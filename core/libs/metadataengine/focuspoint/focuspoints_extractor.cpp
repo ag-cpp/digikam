@@ -38,14 +38,17 @@ class Q_DECL_HIDDEN FocusPointsExtractor::Private
 {
 public:
     explicit Private() 
-      : exifToolAvailable(false)
-    {};
+      : exifToolAvailable(false),
+        afPointsReadOnly(true)
+    {}
 
     ListAFPoints                    af_points;
     
     bool                            exifToolAvailable;
 
     ExifToolParser::ExifToolData    metadata;
+
+    bool                            afPointsReadOnly;
 };
 
 FocusPointsExtractor::FocusPointsExtractor(QObject* const parent,const QString& image_path)
@@ -68,7 +71,7 @@ FocusPointsExtractor::~FocusPointsExtractor()
     delete d;
 }
 
-QVariant FocusPointsExtractor::findValue(const QString& tagName,bool isList)
+QVariant FocusPointsExtractor::findValue(const QString& tagName,bool isList) const
 {
     QVariantList result = d->metadata.value(tagName);
     
@@ -86,12 +89,12 @@ QVariant FocusPointsExtractor::findValue(const QString& tagName,bool isList)
     }
 }
 
-QVariant FocusPointsExtractor::findValue(const QString& tagNameRoot, const QString& key, bool isList)
+QVariant FocusPointsExtractor::findValue(const QString& tagNameRoot, const QString& key, bool isList) const
 {
     return findValue(tagNameRoot + QLatin1String(".") + key,isList);
 }
 
-QVariant FocusPointsExtractor::findValueFirstMatch(const QStringList& listTagNames,bool isList)
+QVariant FocusPointsExtractor::findValueFirstMatch(const QStringList& listTagNames,bool isList) const
 {
     for (const QString& tagName : listTagNames)
     {
@@ -105,7 +108,7 @@ QVariant FocusPointsExtractor::findValueFirstMatch(const QStringList& listTagNam
     return QVariant();
 }
 
-QVariant FocusPointsExtractor::findValueFirstMatch(const QString& tagNameRoot,const QStringList& keys, bool isList)
+QVariant FocusPointsExtractor::findValueFirstMatch(const QString& tagNameRoot,const QStringList& keys, bool isList) const
 {
     for (const QString& key : keys)
     {
@@ -119,39 +122,38 @@ QVariant FocusPointsExtractor::findValueFirstMatch(const QString& tagNameRoot,co
     return QVariant();
 }
 
-FocusPointsExtractor::ListAFPoints FocusPointsExtractor::findAFPoints()
+FocusPointsExtractor::ListAFPoints FocusPointsExtractor::findAFPoints() const
 {
-    QString model = findValue(QLatin1String("EXIF.IFD0.Camera.Make")).toString();
-
     if (!d->exifToolAvailable)
     {
         return ListAFPoints();
     }
 
-    if (model.isNull())
+    QString model = findValue(QLatin1String("EXIF.IFD0.Camera.Make")).toString();
+
+    if (!model.isNull())
     {
-        return getAFPoints_default();
+        model = model.split(QLatin1String(" "))[0].toUpper();
+
+        if (model == QLatin1String("CANON"))
+        {   
+            return getAFPoints_canon();
+        }
+        if (model == QLatin1String("NIKON"))
+        {
+            return getAFPoints_nikon();
+        }
+        if (model == QLatin1String("PANASONIC"))
+        {
+            return getAFPoints_panasonic();
+        }
+        if (model == QLatin1String("SONY"))
+        {
+            return getAFPoints_sony();
+        }
     }
     
-    model = model.split(QLatin1String(" "))[0].toUpper();
-    
-    if (model == QLatin1String("CANON"))
-    {   
-        return getAFPoints_canon();
-    }
-    if (model == QLatin1String("NIKON"))
-    {
-        return getAFPoints_nikon();
-    }
-    if (model == QLatin1String("PANASONIC"))
-    {
-        return getAFPoints_panasonic();
-    }
-    if (model == QLatin1String("SONY"))
-    {
-        return getAFPoints_sony();
-    }
-    return ListAFPoints();
+    return getAFPoints_default();
 }
 
 FocusPointsExtractor::ListAFPoints FocusPointsExtractor::get_af_points(FocusPoint::TypePoint type)
@@ -180,6 +182,17 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::get_af_points(FocusPoin
 FocusPointsExtractor::ListAFPoints FocusPointsExtractor::get_af_points()
 {
     return d->af_points;
+}
+
+bool FocusPointsExtractor::isAFPointsReadOnly() const
+{
+    findAFPoints();
+    return d->afPointsReadOnly;
+}
+
+void FocusPointsExtractor::setAFPointsReadOnly(bool readOnly) const
+{
+    d->afPointsReadOnly = readOnly;
 }
 
 }

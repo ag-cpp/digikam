@@ -3,6 +3,7 @@
 // Qt includes
 
 #include <QPainter>
+#include <QPen>
 
 // Local includes
 
@@ -14,35 +15,32 @@ namespace Digikam
 
 FocusPointItem::FocusPointItem(QGraphicsItem* const parent)
     : RegionFrameItem(parent),
-      m_color(QColor::fromRgb(0,0,0,255))
-    //   m_widget       (nullptr),
-    //   m_changer      (nullptr)
+      m_color(QColor::fromRgb(0,0,0,255)), // alpha is 100 to let more transparency
+      m_width(3)
 {
+    m_widgetName = new QLabel(nullptr);
+    // setHudWidget(m_widgetName);
 }
 
 FocusPointItem::~FocusPointItem()
 {
+    
 }
 
 void FocusPointItem::setPoint(const FocusPoint& point)
 {
     m_point = point;
-    // updateCurrentTag();
     setEditable(false);
 
-    switch(m_point.getType())
+    if(m_point.getType() == FocusPoint::TypePoint::Inactive)
     {
-        case FocusPoint::TypePoint::Inactive : 
-            break;
-        case FocusPoint::TypePoint::Selected :
-            m_color = QColor::fromRgb(200,0,0);
-            break;
-        case FocusPoint::TypePoint::Infocus :
-            m_color = QColor::fromRgb(0,200,0);
-            break;
-        case FocusPoint::TypePoint::SelectedInFocus :
-            m_color = QColor::fromRgb(0,0,200);
-            break;
+        m_color.setAlpha(130);
+        m_width = 1;
+    }
+
+    if((m_point.getType() & FocusPoint::TypePoint::Selected) == FocusPoint::TypePoint::Selected)
+    {
+        m_color.setRed(255);
     }
 }
 
@@ -53,13 +51,13 @@ FocusPoint FocusPointItem::point() const
 
 void FocusPointItem::paint(QPainter* painter, const QStyleOptionGraphicsItem*, QWidget*)
 {
-    const QColor borderColor = m_color;
-
-    // will paint to the left and bottom of logical coordinates
+    QPen pen;
+    pen.setWidth(m_width);
+    pen.setColor(m_color);
 
     QRectF drawRect          = boundingRect();
 
-    painter->setPen(borderColor);
+    painter->setPen(pen);
     painter->drawRect(drawRect);
 }
 

@@ -272,11 +272,14 @@ void FocusPointGroup::addPoint()
 
 void FocusPointGroup::slotAddItemStarted(const QPointF& pos)
 {
+    setVisible(false);
     Q_UNUSED(pos);
 }
 
 void FocusPointGroup::slotAddItemMoving(const QRectF& rect)
 {
+    d->visibilityController->setItemThatShallBeShown(d->manuallyAddedItem);
+
     if (!d->manuallyAddedItem)
     {
         d->manuallyAddedItem = d->createItem(FocusPoint());
@@ -303,12 +306,14 @@ void FocusPointGroup::slotAddItemFinished(const QRectF& rect)
             preview.rotateAndFlip(d->info.orientation());
         }
 
-        QRectF point = TagRegion::absoluteToRelative(pointRect, d->info.dimensions());
+        QRectF pointRectF = TagRegion::absoluteToRelative(pointRect, d->info.dimensions());
 
         QScopedPointer<FocusPointsWriter> writer (new FocusPointsWriter(this, d->info.filePath()));
-        writer->writeFocusPoint(point);
+        writer->writeFocusPoint(pointRectF);
 
-        FocusPointItem* item = d->addItem(FocusPoint(point));
+        FocusPoint point(pointRectF);
+        point.setType(FocusPoint::TypePoint::SelectedInFocus);
+        FocusPointItem* item = d->addItem(point);
 
         d->visibilityController->setItemDirectlyVisible(item, true);
         d->manuallyAddWrapItem->stackBefore(item);
@@ -328,6 +333,12 @@ void FocusPointGroup::cancelAddItem()
         d->manuallyAddWrapItem->deleteLater();
         d->manuallyAddWrapItem = nullptr;
     }
+}
+
+bool FocusPointGroup::isAllowedToAddFocusPoint() const
+{
+    FocusPointsExtractor extractor(nullptr, d->info.filePath());
+    return !extractor.isAFPointsReadOnly();
 }
 
 

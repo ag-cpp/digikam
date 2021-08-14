@@ -66,21 +66,23 @@ public:
 
     ListAFPoints get_af_points();
     ListAFPoints get_af_points(FocusPoint::TypePoint type);
+    bool isAFPointsReadOnly()               const;
         
 private:
     
-    QVariant findValue(const QString& tagName,bool isList = false);
-    QVariant findValue(const QString& tagNameRoot, const QString& key,bool isList = false);
-    QVariant findValueFirstMatch(const QStringList& listTagNames,bool isList = false);
-    QVariant findValueFirstMatch(const QString& tagNameRoot,const QStringList& keys, bool isList= false);
+    QVariant findValue(const QString& tagName,bool isList = false) const;
+    QVariant findValue(const QString& tagNameRoot, const QString& key,bool isList = false) const;
+    QVariant findValueFirstMatch(const QStringList& listTagNames,bool isList = false) const;
+    QVariant findValueFirstMatch(const QString& tagNameRoot,const QStringList& keys, bool isList= false) const;
+    void setAFPointsReadOnly(bool readOnly) const;
         
-    ListAFPoints findAFPoints();
+    ListAFPoints findAFPoints()             const;
     
-    ListAFPoints getAFPoints_default();
-    ListAFPoints getAFPoints_canon();
-    ListAFPoints getAFPoints_nikon();
-    ListAFPoints getAFPoints_panasonic();
-    ListAFPoints getAFPoints_sony();
+    ListAFPoints getAFPoints_default()      const;
+    ListAFPoints getAFPoints_canon()        const;
+    ListAFPoints getAFPoints_nikon()        const;
+    ListAFPoints getAFPoints_panasonic()    const;
+    ListAFPoints getAFPoints_sony()         const;
 
 private:
 

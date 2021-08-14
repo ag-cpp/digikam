@@ -50,7 +50,7 @@ FocusPoint create_af_point(float af_x_position, float af_y_position,
 }
 
 
-FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_panasonic()
+FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_panasonic() const
 {
     QString TagNameRoot = QLatin1String("MakerNotes.Panasonic.Camera");
 
