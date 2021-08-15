@@ -60,7 +60,8 @@ Q_SIGNALS:
 protected:
 
     FaceItemRetriever            imageRetriever;
-    FacialRecognitionWrapper     recognizer;
+    // TODO facesengine replace recognizer by opencvdnnrecognizer
+    //FacialRecognitionWrapper     recognizer;
     FacePipeline::Private* const d;
 
 private:

@@ -56,7 +56,8 @@ Q_SIGNALS:
 
 protected:
 
-    FacialRecognitionWrapper     recognizer;
+    // TODO replace recognizer with embedding manager
+    //FacialRecognitionWrapper     recognizer;
     FaceItemRetriever            imageRetriever;
     FacePipeline::Private* const d;
 };

@@ -286,10 +286,10 @@ QList<FaceTagsIface> FaceUtils::writeUnconfirmedResults(qlonglong imageid,
     return newFaces;
 }
 
-Identity FaceUtils::identityForTag(int tagId, FacialRecognitionWrapper& recognizer) const
+Identity FaceUtils::identityForTag(int tagId, IdentitiesManager& identityManager) const
 {
     QMultiMap<QString, QString> attributes = FaceTags::identityAttributes(tagId);
-    Identity identity                 = recognizer.findIdentity(attributes);
+    Identity identity                 = identityManager.findIdentity(attributes);
 
     if (!identity.isNull())
     {
@@ -298,7 +298,7 @@ Identity FaceUtils::identityForTag(int tagId, FacialRecognitionWrapper& recogniz
     }
 
     qCDebug(DIGIKAM_GENERAL_LOG) << "Adding new FacesEngine identity with attributes" << attributes;
-    identity                          = recognizer.addIdentity(attributes);
+    identity                          = identityManager.addIdentity(attributes);
 
     FaceTags::applyTagIdentityMapping(tagId, identity.attributesMap());
 

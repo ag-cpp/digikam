@@ -63,7 +63,8 @@ void RecognitionWorker::process(FacePipelineExtendedPackage::Ptr package)
 
     // NOTE: cropped faces will be deleted by training provider
 
-    package->recognitionResults  = recognizer.recognizeFaces(images);
+    // TODO facesengine: recognize by opencvdnnfacerecognizer
+    //package->recognitionResults  = recognizer.recognizeFaces(images);
     package->processFlags       |= FacePipelinePackage::ProcessedByRecognizer;
 
     emit processed(package);
@@ -71,7 +72,8 @@ void RecognitionWorker::process(FacePipelineExtendedPackage::Ptr package)
 
 void RecognitionWorker::setThreshold(double threshold, bool)
 {
-    recognizer.setParameter(QLatin1String("threshold"), threshold);
+    // TODO facesengine: set threshold for KNN
+    //recognizer.setParameter(QLatin1String("threshold"), threshold);
 }
 
 void RecognitionWorker::aboutToDeactivate()
