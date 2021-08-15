@@ -145,6 +145,7 @@ urpmi --auto \
 
 if [[ "$1" = "--use-qt6" ]] ; then
     DK_VERSION="6.2"
+fi
 
 if [[ "$DK_QTVERSION" = "5.14" ]] ; then
 
