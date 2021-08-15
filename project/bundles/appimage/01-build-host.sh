@@ -144,7 +144,7 @@ urpmi --auto \
       ${LIBSUFFIX}wayland-devel
 
 if [[ "$1" = "--use-qt6" ]] ; then
-    DK_VERSION="6.2"
+    DK_QTVERSION="6.2"
 fi
 
 if [[ "$DK_QTVERSION" = "5.14" ]] ; then
