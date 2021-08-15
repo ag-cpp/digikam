@@ -131,7 +131,7 @@ FacesDetector::FacesDetector(const FaceScanSettings& settings, ProgressItem* con
         */
 
         d->pipeline.plugDatabaseWriter(writeMode);
-        // TODO plug more
+        d->pipeline.plugExtractionWorker();
         d->pipeline.setAccuracyAndModel(settings.accuracy,
                                         settings.useYoloV3);
         d->pipeline.construct();

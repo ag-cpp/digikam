@@ -46,6 +46,7 @@ FacePipeline::Private::Private(FacePipeline* const q)
       recognitionWorker     (nullptr),
       databaseWriter        (nullptr),
       trainerWorker         (nullptr),
+      extractionWorker      (nullptr),
       //detectionBenchmarker  (nullptr),
       //recognitionBenchmarker(nullptr),
       priority              (QThread::LowPriority),

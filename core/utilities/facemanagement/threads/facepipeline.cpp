@@ -33,6 +33,7 @@
 //#include "recognitionbenchmarker.h"
 #include "recognitionworker.h"
 #include "trainerworker.h"
+#include "extractionworker.h"
 #include "facepreviewloader.h"
 #include "faceitemretriever.h"
 #include "parallelpipes.h"
@@ -164,6 +165,12 @@ void FacePipeline::plugTrainer()
     d->trainerWorker = new TrainerWorker(d);
 }
 
+void FacePipeline::plugExtractionWorker()
+{
+    d->extractionWorker = new ExtractionWorker;
+    d->extractionWorker->start();
+}
+
 /*
 void FacePipeline::plugDetectionBenchmarker()
 {
@@ -224,6 +231,12 @@ void FacePipeline::construct()
     {
         d->pipeline << d->databaseWriter;
         qCDebug(DIGIKAM_GENERAL_LOG) << "Face PipeLine: add database writer";
+    }
+
+    if (d->extractionWorker)
+    {
+        d->pipeline << d->extractionWorker;
+        qCDebug(DIGIKAM_GENERAL_LOG) << "Face PipeLine: add extraction worker";
     }
 
     if (d->trainerWorker)

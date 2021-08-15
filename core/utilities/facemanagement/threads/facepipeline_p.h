@@ -87,6 +87,7 @@ public:
     RecognitionWorker*                      recognitionWorker;
     DatabaseWriter*                         databaseWriter;
     TrainerWorker*                          trainerWorker;
+    ExtractionWorker*                       extractionWorker;
     //DetectionBenchmarker*                   detectionBenchmarker;
     //RecognitionBenchmarker*                 recognitionBenchmarker;
 

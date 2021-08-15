@@ -53,6 +53,7 @@ class FacePreviewLoader;
 class FaceItemRetriever;
 class ParallelPipes;
 class ScanStateFilter;
+class ExtractionWorker;
 
 class FacePipelineFaceTagsIface : public FaceTagsIface
 {

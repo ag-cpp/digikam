@@ -221,13 +221,14 @@ public:
 };
 
 ExtractionWorker::ExtractionWorker()
-    : d (new Private(1))
+    : QThread(),
+      d (new Private(1))
 {
 }
 
 ExtractionWorker::~ExtractionWorker()
 {
-    // TODO wait for finish
+    cancel();
     delete d;
 }
 
