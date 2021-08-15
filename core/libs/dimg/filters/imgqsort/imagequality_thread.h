@@ -80,8 +80,6 @@ public:
     void start();
     void end();
 
-    // void run() override;
-
 private:
 
     ImageQualityCalculator*     m_calculator;

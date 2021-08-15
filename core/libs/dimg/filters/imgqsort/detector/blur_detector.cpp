@@ -90,7 +90,7 @@ BlurDetector::BlurDetector(const DImg& image)
 {
     QScopedPointer<FocusPointsExtractor> const extractor (new FocusPointsExtractor(nullptr, image.originalFilePath()));
 
-    d->af_points = extractor->get_af_points(FocusPointsExtractor::TypePoint::Selected);
+    d->af_points = extractor->get_af_points(FocusPoint::TypePoint::Selected);
     
     d->have_focus_region = !d->af_points.isEmpty();
 }
@@ -258,14 +258,11 @@ cv::Mat BlurDetector::getWeightMap(const cv::Mat& image)                        
             QPointF pos = point.getPosition();
             QSizeF size = point.getSize();
 
-            int x_position_corner = std::max(static_cast<int>((pos.x() - size.width() * 0.5  *d->ratio_expand_af_point) * d->image.size().width), 0);
-            int y_position_corner = std::max(static_cast<int>((pos.y() - size.height() * 0.5 *d->ratio_expand_af_point) * d->image.size().height), 0);
+            int x_position_corner = std::max(static_cast<int>((pos.x() - size.width() * 0.5  *d->ratio_expand_af_point) * image.size().width), 0);
+            int y_position_corner = std::max(static_cast<int>((pos.y() - size.height() * 0.5 *d->ratio_expand_af_point) * image.size().height), 0);
 
-            int width = std::min(d->image.size().width - x_position_corner, static_cast<int>(size.width() * d->image.size().width * d->ratio_expand_af_point) );
-            int height = std::min(d->image.size().height - y_position_corner, static_cast<int>(size.height() * d->image.size().height * d->ratio_expand_af_point) );
-
-            int width = std::min(image.size().width - x_position_corner, static_cast<int>(point.width * image.size().width * d->ratio_expand_af_point) );
-            int height = std::min(image.size().height - y_position_corner, static_cast<int>(point.height * image.size().height * d->ratio_expand_af_point) );
+            int width = std::min(image.size().width - x_position_corner, static_cast<int>(size.width() * image.size().width * d->ratio_expand_af_point) );
+            int height = std::min(image.size().height - y_position_corner, static_cast<int>(size.height() * image.size().height * d->ratio_expand_af_point) );
 
             cv::Rect rect{x_position_corner, y_position_corner,
                           width, height};
