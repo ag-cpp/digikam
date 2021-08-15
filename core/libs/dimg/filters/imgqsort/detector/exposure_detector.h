@@ -4,7 +4,7 @@
  * https://www.digikam.org
  *
  * Date        : 
- * Description : Image Quality Parser - blur detection
+ * Description : Image Quality Parser - noise detection
  *
  * Copyright (C) 2013-2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
  *
@@ -23,38 +23,37 @@
  *
  * ============================================================ */
 
-#ifndef DIGIKAM_BLUR_DETECTOR_H
-#define DIGIKAM_BLUR_DETECTOR_H
+#ifndef DIGIKAM_EXPOSURE_DETECTOR_H
+#define DIGIKAM_EXPOSURE_DETECTOR_H
 
 // Local includes
 
 #include "dimg.h"
 #include "digikam_opencv.h"
+#include "detector.h"
 
 namespace Digikam
 {
 
-class BlurDetector 
+class ExposureDetector : public DetectorDistortion
 {
+    Q_OBJECT
+    
 public:
 
-    explicit BlurDetector(const DImg& image);
-    ~BlurDetector();
+    explicit ExposureDetector();
+    ~ExposureDetector();
 
-    float detect();
+    float detect(const cv::Mat& image)          const override;
 
 private:
-    cv::Mat prepareForDetection(const DImg& inputImage)         const;
 
-    cv::Mat edgeDetection(const cv::Mat& image)                 const;
-    cv::Mat detectDefocusMap(const cv::Mat& edgesMap)           const;
-    cv::Mat detectMotionBlurMap(const cv::Mat& edgesMap)        const;
-    bool    isMotionBlur(const cv::Mat& frag)                   const;
+    float percent_underexposed(const cv::Mat& image)    const;
+    float percent_overexposed(const cv::Mat& image)     const;
 
-    bool    haveFocusRegion(const DImg& image)                  const;
-    cv::Mat detectBackgroundRegion(const cv::Mat& image)        const;
-    cv::Mat getWeightMap()                                      const;
-
+    int count_by_condition(const cv::Mat& image, 
+                           int minVal, int maxVal)      const ;
+    
 private:
 
     class Private;
@@ -63,4 +62,4 @@ private:
 
 } // namespace Digikam
 
-#endif // DIGIKAM_BLUR_DETECTOR_H
+#endif // DIGIKAM_EXPOSURE_DETECTOR_H

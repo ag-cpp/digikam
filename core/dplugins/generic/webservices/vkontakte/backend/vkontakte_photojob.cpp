@@ -59,7 +59,7 @@ PhotoJob::~PhotoJob()
 
 void PhotoJob::start()
 {
-    //qCDebug(DIGIKAM_WEBSERVICES_LOG) << "Starting photo download" << d->url;
+    qCDebug(DIGIKAM_WEBSERVICES_LOG) << "Starting photo download" << d->url;
     KIO::StoredTransferJob* const job = KIO::storedGet(d->url, KIO::Reload, KIO::HideProgressInfo);
     m_job                             = job;
 
@@ -82,7 +82,7 @@ void PhotoJob::jobFinished(KJob* kjob)
     {
         setError(job->error());
         setErrorText(KIO::buildErrorString(error(), job->errorText()));
-        //qCWarning(DIGIKAM_WEBSERVICES_LOG) << "Job error:" << job->errorString();
+        qCWarning(DIGIKAM_WEBSERVICES_LOG) << "Job error:" << job->errorString();
     }
     else
     {

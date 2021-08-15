@@ -38,8 +38,10 @@
 namespace Digikam
 {
 
-class DIGIKAM_EXPORT ImageQualityParser
+class DIGIKAM_EXPORT ImageQualityParser : public QObject
 {
+    Q_OBJECT
+
 public:
 
     /** Standard constructor with picklabel container to fill at end of analyze.
@@ -54,26 +56,6 @@ public:
      */
     void startAnalyse();
     void cancelAnalyse();
-
-private:
-
-    /**
-     * Internal method dedicated to convert DImg pixels from integer values to float values.
-     * These ones will by used internally by ImageQualityParser through OpenCV API.
-     */
-    void readImage()                                    const;
-
-    // noise detection
-    double noiseDetector()                              const;
-    
-    // compresssion detection
-    int    compressionDetector()                        const;
-
-    /**
-     * Detect under and over exposure amount in image. A pure white mask is computed and
-     * a count of pure color pixels is used to evaluate the over-exposition of shot.
-     */
-    void exposureAmount(double& under, double& over)    const;
 
 private:
 

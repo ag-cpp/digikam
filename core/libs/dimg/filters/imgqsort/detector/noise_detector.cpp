@@ -24,7 +24,7 @@
  *
  * ============================================================ */
 
-#include "noise_detection.h"
+#include "noise_detector.h"
 
 // Qt includes
 
@@ -34,7 +34,7 @@
 
 #include "digikam_debug.h"
 
-namespace 
+namespace Digikam
 {
 
 using namespace Digikam;
@@ -83,9 +83,6 @@ public:
         beta(7.0)
     {
     }
-
-    cv::Mat image;
-
     int size_filter;
 
     float alpha;
@@ -94,10 +91,10 @@ public:
 };
 
 // Main noise detection
-NoiseDetector::NoiseDetector(const DImg& image)
-    :  d(new Private)
+NoiseDetector::NoiseDetector()
+    :  DetectorDistortion(),
+       d(new Private)
 {
-    d->image = prepareForDetection(image);
 }
 
 NoiseDetector::~NoiseDetector()
@@ -105,38 +102,15 @@ NoiseDetector::~NoiseDetector()
     delete d;
 }
 
-// Maybe this function will move to read_image() of imagequalityparser 
-// in case all detector of IQS use cv::Mat
-cv::Mat NoiseDetector::prepareForDetection(const DImg& inputImage) const
-{
-    if (inputImage.isNull() || !inputImage.size().isValid())
-    {
-        return cv::Mat();
-    }
-
-    cv::Mat cvImage;
-    int type               = inputImage.sixteenBit() ? CV_16UC4 : CV_8UC4;
-    cv::Mat cvImageWrapper = cv::Mat(inputImage.height(), inputImage.width(), type, inputImage.bits());
-
-    cv::cvtColor(cvImageWrapper, cvImage, cv::COLOR_RGBA2BGR);
-
-    if (type == CV_16UC4)
-    {
-        cvImage.convertTo(cvImage, CV_8UC3, 1 / 256.0);
-    }
-
-    cv::cvtColor( cvImage, cvImage, cv::COLOR_BGR2GRAY );
-
-    cvImage.convertTo(cvImage,CV_32F);
-
-    return cvImage;
-}
-
-float NoiseDetector::detect() const
+float NoiseDetector::detect(const cv::Mat& image) const
 {    
-    // Decompose to channels
+    cv::Mat image_float = image;
 
-    Mat3D channels = decompose_by_filter(filtersHaar);
+    image_float.convertTo(image_float,CV_32F);
+    
+    // Decompose to channels
+    
+    Mat3D channels = decompose_by_filter(image_float, filtersHaar);
     
     // Calculate variance and kurtosis
 
@@ -151,7 +125,7 @@ float NoiseDetector::detect() const
     return normalize(V);
 }
 
-NoiseDetector::Mat3D NoiseDetector::decompose_by_filter(const Mat3D& filters) const
+NoiseDetector::Mat3D NoiseDetector::decompose_by_filter(const cv::Mat& image, const Mat3D& filters) const
 {
     Mat3D filtersUsed = filters.mid(1); // do not use first filter
     
@@ -161,9 +135,9 @@ NoiseDetector::Mat3D NoiseDetector::decompose_by_filter(const Mat3D& filters) co
 
     for (const auto& filter: filtersUsed)
     {
-        cv::Mat tmp = cv::Mat(d->image.size().width, d->image.size().height, CV_32FC1 );
+        cv::Mat tmp = cv::Mat(image.size().width, image.size().height, CV_32FC1 );
    
-        cv::filter2D(d->image, tmp, -1, filter, cv::Point(-1,-1), 0.0, cv::BORDER_REPLICATE);
+        cv::filter2D(image, tmp, -1, filter, cv::Point(-1,-1), 0.0, cv::BORDER_REPLICATE);
         
         channels.push_back(tmp);
     }
@@ -210,7 +184,7 @@ float NoiseDetector::noise_variance(const cv::Mat& variance, const cv::Mat& kurt
 
 cv::Mat NoiseDetector::raw_moment(const NoiseDetector::Mat3D& mat, int order) const
 {
-    float taille_image = d->image.size().width * d->image.size().height;
+    float taille_image = mat[0].size().width * mat[0].size().height;
     
     std::vector<float> vec;
     vec.reserve(mat.size());
@@ -225,7 +199,7 @@ cv::Mat NoiseDetector::raw_moment(const NoiseDetector::Mat3D& mat, int order) co
 
 cv::Mat NoiseDetector::pow_mat(const cv::Mat& mat, float order) const
 {
-    cv::Mat res = cv::Mat(d->image.size().width, d->image.size().height, CV_32FC1 );
+    cv::Mat res = cv::Mat(mat.size().width, mat.size().height, CV_32FC1 );
     
     cv::pow(mat, order, res);
 
@@ -236,7 +210,6 @@ float NoiseDetector::mean_mat(const cv::Mat& mat) const
 {
     cv::Scalar mean,std;
     
-    // cv::Scalar mean = cv::mean(mat);
     cv::meanStdDev(mat,mean,std);
 
     return mean[0];

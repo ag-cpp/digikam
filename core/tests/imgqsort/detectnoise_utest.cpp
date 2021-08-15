@@ -33,76 +33,61 @@
 
 // Local includes
 
-#include "digikam_globals.h"
-#include "imagequalitycontainer.h"
-#include "dpluginloader.h"
+#include "digikam_debug.h"
+#include "imgqsorttest.h"
 
 using namespace Digikam;
 
 QTEST_MAIN(ImgQSortTestDetectNoise)
 
-ImgQSortTestDetectNoise::ImgQSortTestDetectNoise(QObject* const)
+ImgQSortTestDetectNoise::ImgQSortTestDetectNoise(QObject* const parent)
+  : ImgQSortTest(parent)
 {
-}
-
-void ImgQSortTestDetectNoise::testParseTestImages(const QString& testcase_name, DetectionType mode, bool expectedFail)
-{
-    QStringList imageNames;
-    QList<PairImageQuality> dataTest = dataTestCases.values(testcase_name);
-    
-    for (const auto& image_refQuality : dataTest)
-    {
-        imageNames << image_refQuality.first;
-    }
-
-    QFileInfoList list = imageDir().entryInfoList(imageNames,QDir::Files, QDir::Name);
-
-    QHash<QString, int> results = ImgQSortTest_ParseTestImages(mode, list);
-
-    for (const auto& image_refQuality : dataTest)
-    {
-        if (expectedFail)
-        {
-            QEXPECT_FAIL("", "Will fix in the next release", Continue);
-        }
-        QVERIFY(results.value(image_refQuality.first) == image_refQuality.second);
-    }
-}
-
-void ImgQSortTestDetectNoise::initTestCase()
-{
-    QDir dir(QFINDTESTDATA("../../dplugins/dimg"));
-    qputenv("DK_PLUGIN_PATH", dir.canonicalPath().toUtf8());
-    DPluginLoader::instance()->init();
-}
-
-void ImgQSortTestDetectNoise::cleanupTestCase()
-{
-}
-
-QDir ImgQSortTestDetectNoise::imageDir() const
-{
-    QDir dir(QFINDTESTDATA("data/"));
-    qDebug() << "Images Directory:" << dir;
-    return dir;
+    m_dataTestCases = dataTestCases;
 }
 
 void ImgQSortTestDetectNoise::testParseTestImagesForNoiseDetection()
 {
-    testParseTestImages(QLatin1String("noiseDetection"), DETECTNOISE);
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("noiseDetection"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTNOISE);
+
+    for (const auto& test_case : results.keys())
+    {
+        QVERIFY(results.value(test_case));
+    }
 }
 
 void ImgQSortTestDetectNoise::testParseTestImagesForImageHighSO()
 {
-    testParseTestImages(QLatin1String("highISO"), DETECTNOISE);
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("highISO"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTNOISE);
+
+    for (const auto& test_case : results.keys())
+    {
+        QVERIFY(results.value(test_case));
+    }
 }
 
 void ImgQSortTestDetectNoise::testParseTestImagesForVariousTypeNoise()
 {
-    testParseTestImages(QLatin1String("variousTypesNoise"), DETECTNOISE);
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("variousTypesNoise"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTNOISE);
+
+    for (const auto& test_case : results.keys())
+    {
+        QVERIFY(results.value(test_case));
+    }
 }
 
 void ImgQSortTestDetectNoise::testParseTestImagesForVariousTypeNoiseFailCase()
 {
-    testParseTestImages(QLatin1String("variousTypesNoiseFailCase"), DETECTNOISE, true);
+    QHash<QString, bool> results = testParseTestImages(QLatin1String("variousTypesNoiseFailCase"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTNOISE);
+
+    for (const auto& test_case : results.keys())
+    {
+        QEXPECT_FAIL("", "Will fix in the next release", Continue);
+
+        QVERIFY(results.value(test_case));
+    }
 }

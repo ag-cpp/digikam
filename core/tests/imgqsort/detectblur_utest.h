@@ -27,15 +27,17 @@
 // Qt includes
 
 #include <QObject>
-#include <QDir>
 #include <QMultiMap>
 #include <QString>
 
 // Local includes
 
-#include "imgqsorttest_shared.h"
+#include "imgqsorttest.h"
 
-class ImgQSortTestDetectBlur : public QObject
+using namespace Digikam;
+
+
+class ImgQSortTestDetectBlur : public ImgQSortTest
 {
     Q_OBJECT
 
@@ -43,36 +45,23 @@ public:
 
     explicit ImgQSortTestDetectBlur(QObject* const parent = nullptr);
 
-private:
-
-    QDir imageDir() const;
-    void testParseTestImages(const QString& testcase_name, DetectionType mode);
-
 private Q_SLOTS:
 
-    void initTestCase();
-    void cleanupTestCase();
-
     void testParseTestImagesForBlurDetection();
-
     void testParseTestImagesForBlurDetection_SharpImage();
     void testParseTestImagesForBlurDetection_MotionBlurImage();
     void testParseTestImagesForBlurDetection_DefocusImage();
     void testParseTestImagesForBlurDetection_BlurBackGroundImage();
+    void testParseTestImagesForBlurDetection_FailCase();
 };
 
-// pair name image - quality expected
-using PairImageQuality = QPair<QString, int>;
-using DataTestCases = QMultiMap<QString, PairImageQuality> ;
-
 DataTestCases const dataTestCases = 
-    {   
+    {
         {QLatin1String("blurDetection"), PairImageQuality(QLatin1String("test_blurred_1.jpg"),2)},
         {QLatin1String("blurDetection"), PairImageQuality(QLatin1String("test_blurred_2.jpg"),2)},
         {QLatin1String("blurDetection"), PairImageQuality(QLatin1String("test_blurred_5.jpg"),1)},
         {QLatin1String("blurDetection"), PairImageQuality(QLatin1String("test_blurred_9.jpg"),1)},
 
-        // {QLatin1String("sharpImage"), PairImageQuality(QLatin1String("blur_sky_1.jpg"),3)}, False case : Pending instead of Accepted
         {QLatin1String("sharpImage"), PairImageQuality(QLatin1String("blur_rock_1.jpg"),3)},
         {QLatin1String("sharpImage"), PairImageQuality(QLatin1String("blur_tree_1.jpg"),3)},
         {QLatin1String("sharpImage"), PairImageQuality(QLatin1String("blur_street_1.jpg"),3)},
@@ -83,13 +72,16 @@ DataTestCases const dataTestCases =
         {QLatin1String("motionBlurImage"), PairImageQuality(QLatin1String("blur_street_2.jpg"),2)},
 
         {QLatin1String("defocusImage"), PairImageQuality(QLatin1String("blur_sky_3.jpg"),1)},
-        // {QLatin1String("defocusImage"), PairImageQuality(QLatin1String("blur_rock_3.jpg"),1)}, False case : Pending instead of Rejected
-        // {QLatin1String("defocusImage"), PairImageQuality(QLatin1String("blur_tree_3.jpg"),1)}, False case : Pending instead of Rejected
         {QLatin1String("defocusImage"), PairImageQuality(QLatin1String("blur_street_3.jpg"),1)},
 
         {QLatin1String("blurBackGroundImage"), PairImageQuality(QLatin1String("blur_blurbackground_1.jpg"),3)},
         {QLatin1String("blurBackGroundImage"), PairImageQuality(QLatin1String("blur_blurbackground_2.jpg"),3)},
         {QLatin1String("blurBackGroundImage"), PairImageQuality(QLatin1String("blur_blurbackground_3.jpg"),3)},
+
+        {QLatin1String("blurDetectionFailTest"), PairImageQuality(QLatin1String("blur_rock_3.jpg"),1)}, //False case : Pending instead of Rejected
+        {QLatin1String("blurDetectionFailTest"), PairImageQuality(QLatin1String("blur_tree_3.jpg"),1)}, //False case : Pending instead of Rejected
+        {QLatin1String("blurDetectionFailTest"), PairImageQuality(QLatin1String("blur_sky_1.jpg"),3)}, //False case : Pending instead of Accepted
+
 
     };
 

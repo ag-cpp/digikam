@@ -24,10 +24,25 @@
 
 #include "imagequalityparser_p.h"
 
+// Qt includes
+
+#include <QScopedPointer>
+#include <QThread>
+#include <QThreadPool>
+#include <QFuture>
+#include <QtConcurrent>
+
 // Local includes 
+
+#include "noise_detector.h"
+#include "exposure_detector.h"
+#include "compression_detector.h"
 #include "blur_detector.h"
-#include "noise_detection.h"
-#include "exposure_detection.h"
+
+#include <thread>
+#include <memory>
+
+#include "imagequality_thread.h"
 
 namespace Digikam
 {
@@ -39,131 +54,108 @@ ImageQualityParser::ImageQualityParser(const DImg& image,
 {
     d->imq     = settings;
     d->image   = image;
-    d->neimage = image;
     d->label   = label;
 }
 
 ImageQualityParser::~ImageQualityParser()
 {
+    delete d->calculator;
     delete d;
-}
-
-void ImageQualityParser::readImage() const
-{
-    DColor col;
-    int j   = 0;
-
-    d->img8 = d->image;
-    d->img8.convertToEightBit();                        // Convert to 8 bits color depth.
-
-
-    // For Noise detection
-
-    if (d->imq.detectNoise)
-    {
-        for (int c = 0 ; d->running && (c < 3) ; ++c)
-        {
-            d->fimg[c] = new float[d->neimage.numPixels()];
-        }
-
-        j = 0;
-
-        for (uint y = 0 ; d->running && (y < d->neimage.height()) ; ++y)
-        {
-            for (uint x = 0 ; d->running && (x < d->neimage.width()) ; ++x)
-            {
-                col           = d->neimage.getPixelColor(x, y);
-                d->fimg[0][j] = col.red();
-                d->fimg[1][j] = col.green();
-                d->fimg[2][j] = col.blue();
-                ++j;
-            }
-        }
-    }
 }
 
 void ImageQualityParser::startAnalyse()
 {
-    // For Noise Estimation
-    // Use the Top/Left corner of 256x256 pixels to analyze noise contents from image.
-    // This will speed-up computation time with OpenCV.
 
-    readImage();
+    float finalQuality          = -1.0;
 
-    double blur             = 0.0;
-    double noise            = 0.0;
-    int    compressionLevel = 0;
-    double finalQuality     = 0.0;
-    float exposureLevel     = 0.0;
+    // const DetectorDistortion detector(d->image);
 
-    // If blur option is selected in settings, run the blur detection algorithms
+    cv::Mat cvImage = DetectorDistortion::prepareForDetection(d->image);
+
+    cv::Mat grayImage;
+
+    cv::cvtColor(cvImage, grayImage, cv::COLOR_BGR2GRAY);
+    //-----------------------------------------------------------------------------
+
+    std::unique_ptr<BlurDetector> blurDetector;
+    std::unique_ptr<NoiseDetector> noiseDetector;
+    std::unique_ptr<CompressionDetector> compressionDetector;
+    std::unique_ptr<ExposureDetector> exposureDetector;
+ 
+    ImageQualityThreadPool pool(this, d->calculator);
 
     if (d->running && d->imq.detectBlur)
-    {
-        // Returns blur value between 0 and 1.
-        // If NaN is returned just assign NoPickLabel
+    {        
+        blurDetector = std::unique_ptr<BlurDetector>(new BlurDetector(d->image));
 
-        blur  = BlurDetector(d->image).detect();
-        qCDebug(DIGIKAM_DIMG_LOG) << "Amount of Blur present in image is:" << blur;
+        pool.addDetector(cvImage, d->imq.blurWeight, blurDetector.get());
     }
 
     if (d->running && d->imq.detectNoise)
     {
-        // Some images give very low noise value. Assign NoPickLabel in that case.
-        // Returns noise value between 0 and 1.
-        noise = NoiseDetector(d->image).detect();
-        qCDebug(DIGIKAM_DIMG_LOG) << "Amount of Noise present in image is:" << noise;
+        noiseDetector = std::unique_ptr<NoiseDetector>(new NoiseDetector());
+
+        pool.addDetector(grayImage, d->imq.noiseWeight, noiseDetector.get());
     }
 
     if (d->running && d->imq.detectCompression)
     {
-        // Returns number of blocks in the image.
+        compressionDetector = std::unique_ptr<CompressionDetector>(new CompressionDetector());
 
-        compressionLevel = compressionDetector();
-        qCDebug(DIGIKAM_DIMG_LOG) << "Amount of compression artifacts present in image is:" << compressionLevel;
+        pool.addDetector(cvImage, d->imq.compressionWeight, compressionDetector.get());
     }
 
     if (d->running && d->imq.detectExposure)
     {
-        // Returns percents of over-exposure in the image
+        exposureDetector = std::unique_ptr<ExposureDetector>(new ExposureDetector());
 
-        exposureLevel = ExposureDetector(d->image).detect();
-        qCDebug(DIGIKAM_DIMG_LOG) << "Under/Over exposure percents in image is: " << exposureLevel;
+        pool.addDetector(grayImage, d->imq.exposureWeight, exposureDetector.get());
     }
+
+    pool.start();
+    pool.end();
+
+    // for(const auto& thread : pool)
+    // {
+    //     thread->quit();
+    //     thread->wait();
+    //     delete thread;
+    // }
+
 
 #ifdef TRACE
 
-    QFile filems("imgqsortresult.txt");
+    // QFile filems("imgqsortresult.txt");
 
-    if (filems.open(QIODevice::Append | QIODevice::Text))
-    {
-        QTextStream oms(&filems);
-        oms << "File:" << d->image.originalFilePath() << endl;
+    // if (filems.open(QIODevice::Append | QIODevice::Text))
+    // {
+    //     QTextStream oms(&filems);
+    //     oms << "File:" << d->image.originalFilePath() << endl;
 
-        if (d->imq.detectBlur)
-        {
-            oms << "Blur Present:" << blur << endl;
-            oms << "Blur Present(using LoG filter):"<< blur2 << endl;
-        }
+    //     if (d->imq.detectBlur)
+    //     {
+    //         oms << "Blur Present:" << blur << endl;
+    //         oms << "Blur Present(using LoG filter):"<< blur2 << endl;
+    //     }
 
-        if (d->imq.detectNoise)
-        {
-            oms << "Noise Present:" << noise << endl;
-        }
+    //     if (d->imq.detectNoise)
+    //     {
+    //         oms << "Noise Present:" << noise << endl;
+    //     }
 
-        if (d->imq.detectCompression)
-        {
-            oms << "Compression Present:" << compressionLevel << endl;
-        }
+    //     if (d->imq.detectCompression)
+    //     {
+    //         oms << "Compression Present:" << compressionLevel << endl;
+    //     }
 
-        if (d->imq.detectExposure)
-        {
-            oms << "Under-exposure Percents:" << underLevel << endl;
-            oms << "Over-exposure Percents:"  << overLevel << endl;
-        }
+    //     if (d->imq.detectExposure)
+    //     {
+    //         oms << "Under-exposure Percents:" << underLevel << endl;
+    //         oms << "Over-exposure Percents:"  << overLevel << endl;
+    //     }
 
-        filems.close();
-    }
+    //     filems.close();
+    // }
 
 #endif // TRACE
 
@@ -171,40 +163,22 @@ void ImageQualityParser::startAnalyse()
 
     if (d->running)
     {
-        // All the results to have a range of 1 to 100.
-        if (d->imq.detectBlur)
-        {
-            float finalBlur          = blur;
-
-            finalQuality            = (1 - finalBlur)          * d->imq.blurWeight;
-        }
-
-        if (d->imq.detectNoise)
-        {
-            double finalNoise         = noise * 100.0;
-
-            finalQuality            = 100 - finalNoise;
-        }
-
-        if (d->imq.detectExposure)
-        {
-            float finalExposure      = exposureLevel;
-
-            finalQuality            = (1 - finalExposure )* 100;
-        }
-        
+        finalQuality            =  d->calculator->calculateQuality();
 
         qCDebug(DIGIKAM_DIMG_LOG) << "Final Quality estimated: " << finalQuality;
 
         // Assigning PickLabels
 
-        if ((int)finalQuality <= d->imq.rejectedThreshold)
+        if      (finalQuality == -1.0)
+        {
+            *d->label = NoPickLabel;
+        }
+        else if ((int)finalQuality <= d->imq.rejectedThreshold)
         {
             *d->label = RejectedLabel;
         }
-        else if (((int)finalQuality > d->imq.rejectedThreshold) &&
-                 ((int)finalQuality <= d->imq.acceptedThreshold))
-
+        else if (((int)finalQuality >   d->imq.rejectedThreshold) &&
+                 ((int)finalQuality <=  d->imq.acceptedThreshold))
         {
             *d->label = PendingLabel;
         }

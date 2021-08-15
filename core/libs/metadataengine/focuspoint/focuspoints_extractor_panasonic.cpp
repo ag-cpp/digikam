@@ -66,7 +66,7 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_panasonic()
     // Get af point
     QStringList af_position =  findValue(TagNameRoot,QLatin1String("AFPointPosition")).toString().split(QLatin1String(" "));
 
-    if (af_position.isEmpty())
+    if (af_position.isEmpty() || af_position.count() ==1 )
     {
         return getAFPoints_default();
     }

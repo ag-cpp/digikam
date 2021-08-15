@@ -26,6 +26,10 @@
 // Qt includes
 
 #include <QStringList>
+#include <QObject>
+#include <QDir>
+#include <QMultiMap>
+#include <QTest>
 
 // Local includes
 
@@ -33,11 +37,20 @@
 #include "previewloadthread.h"
 #include "imagequalityparser.h"
 #include "digikam_debug.h"
+#include "digikam_globals.h"
+#include "imagequalitycontainer.h"
+#include "dpluginloader.h"
 
-using namespace Digikam;
+
+namespace Digikam
+{
 
 ImageQualityContainer ImgQSortTest_ArrangeSettings (DetectionType type)
 {
+    qCDebug(DIGIKAM_TESTS_LOG) << "Process images for detection type "<<type;
+
+    qCInfo(DIGIKAM_TESTS_LOG)  << "Detection type (0:Blur, 1:Noise, 2:Compression, 3:Exposure, 4: General)";
+
     ImageQualityContainer settings;
 
     settings.detectBlur         = false;
@@ -74,13 +87,26 @@ ImageQualityContainer ImgQSortTest_ArrangeSettings (DetectionType type)
     return settings;
 }
 
-QHash<QString, int> ImgQSortTest_ParseTestImages(DetectionType type, const QFileInfoList& list)
+ImageQualityContainer ImgQSortTest_ArrangeCustomSettings (const CustomDetection& customSetting)
 {
-    ImageQualityContainer settings = ImgQSortTest_ArrangeSettings(type);
+    qCInfo(DIGIKAM_TESTS_LOG)  << "Detection type activate Blur "<< customSetting.detectBlur
+                               << "Noise "      << customSetting.detectNoise
+                               << "Compression "<< customSetting.detectCompression
+                               << "Exposure "   << customSetting.detectExposure;
 
+    ImageQualityContainer settings;
+
+    settings.detectBlur         = customSetting.detectBlur;
+    settings.detectCompression  = customSetting.detectCompression;
+    settings.detectNoise        = customSetting.detectNoise;
+    settings.detectExposure     = customSetting.detectExposure;
+
+    return settings;
+}
+
+QHash<QString, int> ImgQSortTest_ParseTestImagesCore(const ImageQualityContainer& settings, const QFileInfoList& list)
+{
     qCDebug(DIGIKAM_TESTS_LOG) << "Quality Detection Settings:" << settings;
-    qCInfo(DIGIKAM_TESTS_LOG)  << "Detection type (0:Blur, 1:Noise, 2:Compression, 3:Exposure, 4: General)";
-    qCDebug(DIGIKAM_TESTS_LOG) << "Process images for detection type "<<type <<" ( size " << list.size() << ")";
 
     QHash<QString, int> results;
 
@@ -88,26 +114,42 @@ QHash<QString, int> ImgQSortTest_ParseTestImages(DetectionType type, const QFile
     {
         QString path = inf.filePath();
         qCDebug(DIGIKAM_TESTS_LOG) << path;
-
+        
         DImg dimg    = PreviewLoadThread::loadFastSynchronously(path, 1024);
 
         if (dimg.isNull())
         {
             qCDebug(DIGIKAM_TESTS_LOG) << path << "File cannot be loaded...";
         }
-
+        
         PickLabel pick;
         ImageQualityParser parser(dimg, settings, &pick);
         parser.startAnalyse();
-
         results.insert( path.split(QLatin1String("/")).last(), pick);
     }
 
     qCInfo(DIGIKAM_TESTS_LOG) << "Quality Results (0:None, 1:Rejected, 2:Pending, 3:Accepted):";
 
-    for (const auto& image_name: results.keys()) {
+    for (const auto& image_name: results.keys()) 
+    {
         qCInfo(DIGIKAM_TESTS_LOG) << "==>" << image_name << ":" << results.value(image_name);
     }
 
     return results;
+}
+
+QHash<QString, int> ImgQSortTest_ParseTestImagesDefautDetection(DetectionType type, const QFileInfoList& list)
+{
+    ImageQualityContainer settings = ImgQSortTest_ArrangeSettings(type);
+
+    return ImgQSortTest_ParseTestImagesCore(settings, list);
+}
+
+QHash<QString, int> ImgQSortTest_ParseTestImagesCustomDetection(const CustomDetection& customSetting, const QFileInfoList& list)
+{
+    ImageQualityContainer settings = ImgQSortTest_ArrangeCustomSettings(customSetting);
+
+    return ImgQSortTest_ParseTestImagesCore(settings, list);
+}
+
 }
