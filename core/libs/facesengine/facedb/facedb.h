@@ -130,7 +130,7 @@ public:
     void clearTreeDb()                                                          const;
 
     /**
-     * @brief clearDNNTraining : clear all trained data in the database
+     * @brief clearAllDNNTraining : clear all trained data in the database
      * @param tagId
      */
     void clearDNNTraining(const QString& tagId = QString());

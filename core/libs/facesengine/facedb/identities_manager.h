@@ -111,6 +111,8 @@ public:
      */
     void deleteIdentities(QList<Identity> identitiesToBeDeleted);
 
+    void clearIdentities() const;
+
     /**
      * Save identities assigned to saved face embeddings
      */

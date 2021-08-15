@@ -392,6 +392,19 @@ void IdentitiesManager::deleteIdentity(const Identity& identityToBeDeleted)
     d->identityCache.remove(identityToBeDeleted.id());
 }
 
+void IdentitiesManager::clearIdentities() const
+{
+    if (!d || !d->dbAvailable)
+    {
+        return;
+    }
+
+    QMutexLocker lock(&d->mutex);
+
+    FaceDbAccess().db()->clearIdentities();
+    d->identityCache.clear();
+}
+
 void IdentitiesManager::deleteIdentities(QList<Identity> identitiesToBeDeleted)
 {
     QList<Identity>::iterator identity = identitiesToBeDeleted.begin();

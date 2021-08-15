@@ -96,4 +96,16 @@ QVector<FaceEmbeddingData> FaceEmbeddingManager::getFaceEmbeddings() const
     return FaceDbAccess().db()->faceVectors();
 }
 
+void FaceEmbeddingManager::clearEmbedding(const QList<int>& idsToClean, const QString& tagId)
+{
+    if (idsToClean.isEmpty())
+    {
+        FaceDbAccess().db()->clearDNNTraining(tagId);
+    }
+    else
+    {
+        FaceDbAccess().db()->clearDNNTraining(idsToClean, tagId);
+    }
+}
+
 } // namespace Digikam

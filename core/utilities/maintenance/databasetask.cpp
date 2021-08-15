@@ -35,7 +35,7 @@
 #include "thumbsdbaccess.h"
 #include "coredb.h"
 #include "coredbaccess.h"
-#include "facialrecognition_wrapper.h"
+#include "identities_manager.h"
 #include "facetagseditor.h"
 #include "maintenancedata.h"
 #include "similaritydb.h"
@@ -190,11 +190,11 @@ void DatabaseTask::run()
             return;
         }
 
-        if (FacialRecognitionWrapper().integrityCheck())
+        if (IdentitiesManager().integrityCheck())
         {
-            FacialRecognitionWrapper().vacuum();
+            IdentitiesManager().vacuum();
 
-            if (!FacialRecognitionWrapper().integrityCheck())
+            if (!IdentitiesManager().integrityCheck())
             {
                 qCWarning(DIGIKAM_DATABASE_LOG) << "Integrity check for recognition DB failed after vacuum. Something went wrong.";
 
@@ -281,7 +281,7 @@ void DatabaseTask::run()
 
         if (d->scanRecognitionDb)
         {
-            additionalItemsToProcess += FacialRecognitionWrapper().allIdentities().size();
+            additionalItemsToProcess += IdentitiesManager().allIdentities().size();
         }
 
         if (d->scanSimilarityDb)
@@ -392,7 +392,7 @@ void DatabaseTask::run()
                 uuidSet << prop.value;
             }
 
-            QList<Identity> identities = FacialRecognitionWrapper().allIdentities();
+            QList<Identity> identities = IdentitiesManager().allIdentities();
 
             // Get all identities to remove. Don't remove now in order to make sure no side effects occur.
 
@@ -551,7 +551,7 @@ void DatabaseTask::run()
                 break;
             }
 
-            FacialRecognitionWrapper().deleteIdentity(identity);
+            IdentitiesManager().deleteIdentity(identity);
             emit signalFinished();
         }
     }

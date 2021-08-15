@@ -30,7 +30,6 @@
 
 // Local includes
 #include "digikam_export.h"
-#include "identity.h"
 #include "digikam_opencv.h"
 
 namespace Digikam
@@ -60,16 +59,10 @@ public:
 
     // TODO facesengine 4 review delete saved data
     /**
-     * Deletes the training data for all identities,
-     * leaving the identities as such in the database.
-     */
-    void clearAllEmbedding(const QString& tagId = QString());
-
-    /**
      * Deletes the training data for the given identity,
      * leaving the identity as such in the database.
      */
-    void clearEmbedding(const QList<Identity>& identitiesToClean,
+    void clearEmbedding(const QList<int>& idsToClean = {},
                         const QString& tagId = QString());
 
 private:
