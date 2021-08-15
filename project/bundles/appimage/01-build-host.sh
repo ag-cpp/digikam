@@ -143,6 +143,9 @@ urpmi --auto \
       ${LIBSUFFIX}magick-devel \
       ${LIBSUFFIX}wayland-devel
 
+if [[ "$1" = "--use-qt6" ]] ; then
+    DK_VERSION="6.2"
+
 if [[ "$DK_QTVERSION" = "5.14" ]] ; then
 
     urpmi --auto \
@@ -167,13 +170,13 @@ fi
 echo -e "---------- Clean-up Old Packages\n"
 
 # Remove system based devel package to prevent conflict with new one.
-#urpme --auto --force ${LIBSUFFIX}qt5core5 || true
+urpme --auto --force ${LIBSUFFIX}qt5core5 || true
 
 # Clean up previous openssl install
 
-#rm -fr /usr/local/lib/libssl.a    || true
-#rm -fr /usr/local/lib/libcrypto.a || true
-#rm -fr /usr/local/include/openssl || true
+rm -fr /usr/local/lib/libssl.a    || true
+rm -fr /usr/local/lib/libcrypto.a || true
+rm -fr /usr/local/include/openssl || true
 
 #################################################################################################
 
@@ -203,19 +206,19 @@ fi
 
 #################################################################################################
 
-#cd $BUILDING_DIR
+cd $BUILDING_DIR
 
-#rm -rf $BUILDING_DIR/* || true
+rm -rf $BUILDING_DIR/* || true
 
-#cmake $ORIG_WD/../3rdparty \
-#      -DCMAKE_INSTALL_PREFIX:PATH=/opt/cmake \
-#      -DINSTALL_ROOT=/opt/cmake \
-#      -DENABLE_QTVERSION=$DK_QTVERSION \
-#      -DEXTERNALS_DOWNLOAD_DIR=$DOWNLOAD_DIR
+cmake $ORIG_WD/../3rdparty \
+      -DCMAKE_INSTALL_PREFIX:PATH=/opt/cmake \
+      -DINSTALL_ROOT=/opt/cmake \
+      -DENABLE_QTVERSION=$DK_QTVERSION \
+      -DEXTERNALS_DOWNLOAD_DIR=$DOWNLOAD_DIR
 
 # Install new cmake recent version to /opt
 
-#cmake --build . --config RelWithDebInfo --target ext_cmake        -- -j$CPU_CORES
+cmake --build . --config RelWithDebInfo --target ext_cmake        -- -j$CPU_CORES
 
 #################################################################################################
 
@@ -233,8 +236,8 @@ rm -rf $BUILDING_DIR/* || true
 # Low level libraries and Qt5 dependencies
 # NOTE: The order to compile each component here is very important.
 
-#/opt/cmake/bin/cmake --build . --config RelWithDebInfo --target ext_libicu        -- -j$CPU_CORES
-#/opt/cmake/bin/cmake --build . --config RelWithDebInfo --target ext_openssl       -- -j$CPU_CORES
+/opt/cmake/bin/cmake --build . --config RelWithDebInfo --target ext_libicu        -- -j$CPU_CORES
+/opt/cmake/bin/cmake --build . --config RelWithDebInfo --target ext_openssl       -- -j$CPU_CORES
 
 /opt/cmake/bin/cmake --build . --config RelWithDebInfo --target ext_qt            -- -j$CPU_CORES    # depend of tiff, png, jpeg
 
