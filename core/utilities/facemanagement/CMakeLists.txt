@@ -25,8 +25,8 @@ set(libfacemanagement_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/widgets/assignnamewidget_p.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/widgets/assignnamewidgetstates.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/widgets/facemanagementhelpdlg.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/bench/detectionbenchmarker.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/bench/recognitionbenchmarker.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/bench/detectionbenchmarker.cpp
+    #${CMAKE_CURRENT_SOURCE_DIR}/bench/recognitionbenchmarker.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/workers/detectionworker.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/workers/recognitionworker.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/workers/databasewriter.cpp

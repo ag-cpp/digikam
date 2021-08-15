@@ -43,8 +43,8 @@
 namespace Digikam
 {
 
-class DetectionBenchmarker;
-class RecognitionBenchmarker;
+//class DetectionBenchmarker;
+//class RecognitionBenchmarker;
 class DetectionWorker;
 class RecognitionWorker;
 class TrainerWorker;

@@ -111,8 +111,8 @@ public:
     void plugDatabaseWriter(WriteMode mode);
     void plugDatabaseEditor();
     void plugTrainer();
-    void plugDetectionBenchmarker();
-    void plugRecognitionBenchmarker();
+    //void plugDetectionBenchmarker();
+    //void plugRecognitionBenchmarker();
     void construct();
 
     /**

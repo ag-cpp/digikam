@@ -87,8 +87,8 @@ public:
     RecognitionWorker*                      recognitionWorker;
     DatabaseWriter*                         databaseWriter;
     TrainerWorker*                          trainerWorker;
-    DetectionBenchmarker*                   detectionBenchmarker;
-    RecognitionBenchmarker*                 recognitionBenchmarker;
+    //DetectionBenchmarker*                   detectionBenchmarker;
+    //RecognitionBenchmarker*                 recognitionBenchmarker;
 
     QList<QObject*>                         pipeline;
     QThread::Priority                       priority;
