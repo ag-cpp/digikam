@@ -29,6 +29,7 @@ set(libfacemanagement_SRCS
     #${CMAKE_CURRENT_SOURCE_DIR}/bench/recognitionbenchmarker.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/workers/detectionworker.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/workers/recognitionworker.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/workers/extractionworker.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/workers/databasewriter.cpp
     #${CMAKE_CURRENT_SOURCE_DIR}/workers/trainerworker.cpp
 )

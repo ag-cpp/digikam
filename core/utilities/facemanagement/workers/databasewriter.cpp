@@ -81,6 +81,7 @@ void DatabaseWriter::process(FacePipelineExtendedPackage::Ptr package)
     }
     else if (package->processFlags & FacePipelinePackage::ProcessedByRecognizer)
     {
+        // Recognition save
         FaceUtils utils;
 
         for (int i = 0 ; i < package->databaseFaces.size() ; ++i)
