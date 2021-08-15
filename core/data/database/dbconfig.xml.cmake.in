@@ -577,7 +577,7 @@
                 <statement mode="plain">CREATE TABLE FaceMatrices
                 (id INTEGER PRIMARY KEY,
                 identity INTEGER NOT NULL,
-                context TEXT,
+                tagId TEXT NOT NULL,
                 embedding BLOB NOT NULL);
                 </statement>
             </dbaction>
@@ -1670,7 +1670,7 @@
                 <statement mode="plain">CREATE TABLE FaceMatrices
                     (id INTEGER PRIMARY KEY AUTO_INCREMENT,
                     identity INTEGER NOT NULL,
-                    `context` LONGTEXT CHARACTER SET utf8 COLLATE utf8_general_ci,
+                    `tagId` LONGTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
                     embedding BLOB NOT NULL,
                     CONSTRAINT FaceEmbedding_Identities FOREIGN KEY (identity) REFERENCES Identities (id) ON DELETE CASCADE ON UPDATE CASCADE)
                     ENGINE InnoDB;

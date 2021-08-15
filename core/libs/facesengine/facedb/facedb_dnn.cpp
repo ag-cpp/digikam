@@ -24,21 +24,21 @@
  * ============================================================ */
 
 #include "facedb_p.h"
+#include "opencvdnnfacerecognizer.h"
 
 namespace Digikam
 {
 
-int FaceDb::insertFaceVector(const cv::Mat& faceEmbedding,
-                             const int label,
-                             const QString& context) const
-{
+void FaceDb::insertFaceVector(const cv::Mat& faceEmbedding,
+                              const QString& tagID) const
+{    
     QVariantList bindingValues;
 
-    bindingValues << label;
-    bindingValues << context;
-    bindingValues << QByteArray::fromRawData((char*)faceEmbedding.ptr<float>(), (sizeof(float) * 128));
+    bindingValues << -1;
+    bindingValues << tagID;
+    bindingValues << QByteArray::fromRawData((char*)faceEmbedding.ptr<float>(), (sizeof(float) * faceEmbedding.cols));
 
-    DbEngineSqlQuery query = d->db->execQuery(QLatin1String("INSERT INTO FaceMatrices (identity, `context`, embedding) "
+    DbEngineSqlQuery query = d->db->execQuery(QLatin1String("INSERT INTO FaceMatrices (identity, tagId, embedding) "
                                                             "VALUES (?,?,?);"),
                                               bindingValues);
 
@@ -52,79 +52,58 @@ int FaceDb::insertFaceVector(const cv::Mat& faceEmbedding,
     else
     {
         qCDebug(DIGIKAM_FACEDB_LOG) << "Commit face mat data "
-                                    << query.lastInsertId().toInt()
-                                    << " for identity " << label;
+                                    << query.lastInsertId().toInt();
     }
-
-    return query.lastInsertId().toInt();
 }
 
-KDTree* FaceDb::reconstructTree() const
+QVector<FaceEmbeddingData> FaceDb::faceVectors() const
 {
-    KDTree* const tree     = new KDTree(128);
-    DbEngineSqlQuery query = d->db->execQuery(QLatin1String("SELECT id, identity, embedding FROM FaceMatrices;"));
+    QVector<FaceEmbeddingData> data;
 
-    while (query.next())
-    {
-        int nodeId                    = query.value(0).toInt();
-        int identity                  = query.value(1).toInt();
-        cv::Mat recordedFaceEmbedding = cv::Mat(1, 128, CV_32F, query.value(2).toByteArray().data()).clone();
-        KDNode* const newNode         = tree->add(recordedFaceEmbedding, identity);
-
-        if (newNode)
-        {
-            newNode->setNodeId(nodeId);
-        }
-        else
-        {
-            qCWarning(DIGIKAM_FACEDB_LOG) << "Error insert node" << nodeId;
-        }
-    }
-
-    return tree;
-}
-
-cv::Ptr<cv::ml::TrainData> FaceDb::trainData() const
-{
     cv::Mat feature, label;
-    DbEngineSqlQuery query = d->db->execQuery(QLatin1String("SELECT identity, embedding "
+    DbEngineSqlQuery query = d->db->execQuery(QLatin1String("SELECT id, identity, tagId, embedding "
                                                             "FROM FaceMatrices;"));
 
     while (query.next())
-    {
-        label.push_back(query.value(0).toInt());
-        feature.push_back(cv::Mat(1, 128, CV_32F, query.value(1).toByteArray().data()).clone());
+    {   
+        FaceEmbeddingData embeddingData;
+        embeddingData.id = query.value(0).toInt();
+        embeddingData.identity = query.value(1).toInt();
+        embeddingData.tagId = query.value(2).toString();
+        embeddingData.embedding = cv::Mat(1, 512, CV_32F, query.value(3).toByteArray().data()).clone();
+
+        data.append(embeddingData);
     }
 
-    return cv::ml::TrainData::create(feature, 0, label);
+    return data;
 }
 
-void FaceDb::clearDNNTraining(const QString& context)
+void FaceDb::clearDNNTraining(const QString& tagId)
 {
-    if (context.isNull())
+    if (tagId.isNull())
     {
         d->db->execSql(QLatin1String("DELETE FROM FaceMatrices;"));
     }
     else
     {
-        d->db->execSql(QLatin1String("DELETE FROM FaceMatrices WHERE `context`=?;"),
-                       context);
+        d->db->execSql(QLatin1String("DELETE FROM FaceMatrices WHERE tagId=?;"),
+                       tagId);
     }
 }
 
-void FaceDb::clearDNNTraining(const QList<int>& identities, const QString& context)
+void FaceDb::clearDNNTraining(const QList<int>& identities, const QString& tagId)
 {
     foreach (int id, identities)
     {
-        if (context.isNull())
+        if (tagId.isNull())
         {
             d->db->execSql(QLatin1String("DELETE FROM FaceMatrices WHERE identity=?;"),
                            id);
         }
         else
         {
-            d->db->execSql(QLatin1String("DELETE FROM FaceMatrices WHERE identity=? AND `context`=?;"),
-                           id, context);
+            d->db->execSql(QLatin1String("DELETE FROM FaceMatrices WHERE identity=? AND tagId=?;"),
+                           id, tagId);
         }
     }
 }

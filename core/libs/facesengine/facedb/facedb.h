@@ -46,7 +46,7 @@
 namespace Digikam
 {
 
-class KDTree;
+class FaceEmbeddingData;
 
 class FaceDb
 {
@@ -88,26 +88,18 @@ public:
     // --- OpenCV DNN
 
     /**
-     * @brief insertFaceVector : insert a new face embedding to database
+     * @brief insertFaceVector : insert new face embeddings to database
      * @param faceEmbedding
-     * @param label
-     * @return id of newly inserted entry
+     * @param tagID
      */
-    int insertFaceVector(const cv::Mat& faceEmbedding,
-                         const int label,
-                         const QString& context)                                const;
+    void insertFaceVector(const cv::Mat& faceEmbedding,
+                          const QString& tagID) const;
 
     /**
-     * @brief reconstructTree: reconstruct KD-Tree from data in the database
+     * @brief faceVectors: extract saved face embeddings from database
      * @return
      */
-    KDTree* reconstructTree()                                                   const;
-
-    /**
-     * @brief trainData: extract train data from database
-     * @return
-     */
-    cv::Ptr<cv::ml::TrainData> trainData()                                      const;
+    QVector<FaceEmbeddingData> faceVectors()                                    const;
 
     /**
      * @brief insertToTreeDb : insert a new node to spatial database
@@ -139,10 +131,10 @@ public:
 
     /**
      * @brief clearDNNTraining : clear all trained data in the database
-     * @param context
+     * @param tagId
      */
-    void clearDNNTraining(const QString& context = QString());
-    void clearDNNTraining(const QList<int>& identities, const QString& context = QString());
+    void clearDNNTraining(const QString& tagId = QString());
+    void clearDNNTraining(const QList<int>& identities, const QString& tagId = QString());
 
 private:
 

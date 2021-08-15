@@ -68,7 +68,7 @@ public:
     /**
      * Convert face embedding between different formats
      */
-    static cv::Mat            vectortomat(const std::vector<float>& vector);
+    static cv::Mat vectortomat(const std::vector<float>& vector);
 
 private:
 
