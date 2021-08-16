@@ -49,6 +49,9 @@ public:
     void run() override;
     void cancel();
 
+    void extract(const QVector<QString>& tagIDs, QList<QImage>& faces, const QVector<int>& identities = {}) const;
+    QString encodeTagID(int imageID, const FaceTagsIface& tag);
+
 public Q_SLOTS:
 
     void process(FacePipelineExtendedPackage::Ptr package);

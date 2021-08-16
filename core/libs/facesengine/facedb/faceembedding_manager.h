@@ -50,7 +50,8 @@ public:
      * Save face embeddings extracted from face images
      */
     void saveEmbedding(const cv::Mat& faceEmbedding,
-                       const QString& tagID) const;
+                       const QString& tagID,
+                       const int identity = -1) const;
 
     /**
      * Retrieve face embeddings with their labels

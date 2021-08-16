@@ -93,7 +93,8 @@ public:
      * @param tagID
      */
     void insertFaceVector(const cv::Mat& faceEmbedding,
-                          const QString& tagID) const;
+                          const QString& tagID,
+                          const int identityID = -1) const;
 
     /**
      * @brief faceVectors: extract saved face embeddings from database

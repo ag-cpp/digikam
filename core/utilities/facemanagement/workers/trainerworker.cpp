@@ -27,65 +27,42 @@
 // Local includes
 
 #include "digikam_debug.h"
+#include "identities_manager.h"
+#include "extractionworker.h"
+#include "faceitemretriever.h"
 
 namespace Digikam
 {
-
-class Q_DECL_HIDDEN MapListTrainingDataProvider : public TrainingDataProvider
+class Q_DECL_HIDDEN TrainerWorker::Private
 {
 public:
 
-    MapListTrainingDataProvider()
+    explicit Private(FacePipeline::Private* const dd)
+        : imageRetriever(dd)
     {
     }
 
-    ~MapListTrainingDataProvider() override
+    ~Private()
     {
-        qDeleteAll(imagesToTrain);
-        imagesToTrain.clear();
-    }
-
-    ImageListProvider* newImages(const Identity& identity) override
-    {
-        if (imagesToTrain.contains(identity.id()))
-        {
-            QListImageListProvider* const provider = imagesToTrain.value(identity.id());
-
-            if (provider)
-            {
-                provider->reset();
-            }
-
-            return provider;
-        }
-
-        return &empty;
-    }
-
-    ImageListProvider* images(const Identity&) override
-    {
-        // Not implemented. Would be needed if we use a backend with a "holistic" approach that needs all images to train.
-
-        return &empty;
     }
 
 public:
-
-    EmptyImageListProvider             empty;
-    QMap<int, QListImageListProvider*> imagesToTrain;
+    IdentitiesManager   identitiesManager;
+    ExtractionWorker    extractor;
+    FaceItemRetriever   imageRetriever;
 };
 
 // ----------------------------------------------------------------------------------------
 
 TrainerWorker::TrainerWorker(FacePipeline::Private* const dd)
-    : imageRetriever(dd),
-      d             (dd)
+    : d(new Private(dd))
 {
 }
 
 TrainerWorker::~TrainerWorker()
 {
     wait();    // protect detector
+    delete d;
 }
 
 /**
@@ -99,8 +76,8 @@ void TrainerWorker::process(FacePipelineExtendedPackage::Ptr package)
     // Get a list of faces with type FaceForTraining (probably type is ConfirmedFace)
 
     QList<FaceTagsIface> toTrain;
-    QList<int>           identities;
-    QList<Identity>      identitySet;
+    QVector<QString>     tagIDs;
+    QVector<int>         identities;
     FaceUtils            utils;
 
     foreach (const FacePipelineFaceTagsIface& face, package->databaseFaces)
@@ -110,45 +87,27 @@ void TrainerWorker::process(FacePipelineExtendedPackage::Ptr package)
             FaceTagsIface dbFace = face;
             dbFace.setType(FaceTagsIface::FaceForTraining);
             toTrain << dbFace;
+            tagIDs  << d->extractor.encodeTagID(package->info.id(), dbFace);
 
-            Identity identity    = utils.identityForTag(dbFace.tagId(), recognizer);
-
+            Identity identity = utils.identityForTag(dbFace.tagId(), d->identitiesManager);
             identities << identity.id();
-
-            if (!identitySet.contains(identity))
-            {
-                identitySet << identity;
-            }
         }
     }
 
     if (!toTrain.isEmpty())
     {
-        QList<QImage*> images;
+        QList<QImage> images;
 
         if (package->image.isNull())
         {
-            images = imageRetriever.getThumbnails(package->filePath, toTrain);
+            images = d->imageRetriever.getThumbnails(package->filePath, toTrain);
         }
         else
         {
-            images = imageRetriever.getDetails(package->image, toTrain);
+            images = d->imageRetriever.getDetails(package->image, toTrain);
         }
 
-        MapListTrainingDataProvider provider;
-
-        // Group images by identity
-
-        for (int i = 0 ; i < toTrain.size() ; ++i)
-        {
-            QListImageListProvider* const imageList = new QListImageListProvider;
-            imageList->setImages(QList<QImage*>() << images[i]);
-            provider.imagesToTrain[identities[i]] = imageList;
-        }
-
-        // NOTE: cropped faces will be deleted by training provider
-
-        recognizer.train(identitySet, &provider, QLatin1String("digikam"));
+        d->extractor.extract(tagIDs, images, identities);
     }
 
     utils.removeFaces(toTrain);
@@ -160,7 +119,7 @@ void TrainerWorker::process(FacePipelineExtendedPackage::Ptr package)
 
 void TrainerWorker::aboutToDeactivate()
 {
-    imageRetriever.cancel();
+    d->imageRetriever.cancel();
 }
 
 } // namespace Digikam

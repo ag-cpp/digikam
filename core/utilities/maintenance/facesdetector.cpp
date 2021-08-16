@@ -138,6 +138,7 @@ FacesDetector::FacesDetector(const FaceScanSettings& settings, ProgressItem* con
     }
     else // FaceScanSettings::RecognizeMarkedFaces
     {
+        // TODO facesengine: modifier recognizer
         d->pipeline.plugRerecognizingDatabaseFilter();
         d->pipeline.plugFaceRecognizer();
         d->pipeline.plugDatabaseWriter(FacePipeline::NormalWrite);

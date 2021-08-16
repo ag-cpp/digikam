@@ -40,14 +40,14 @@ void FaceItemRetriever::cancel()
     catcher->cancel();
 }
 
-QList<QImage*> FaceItemRetriever::getDetails(const DImg& src, const QList<QRectF>& rects) const
+QList<QImage> FaceItemRetriever::getDetails(const DImg& src, const QList<QRectF>& rects) const
 {
-    QList<QImage*> images;
+    QList<QImage> images;
 
     foreach (const QRectF& rect, rects)
     {
-        QImage* const croppedFace = new QImage();
-        (*croppedFace)            = src.copyQImage(rect);
+        QImage croppedFace;
+        croppedFace = src.copyQImage(rect);
 
         images << croppedFace;
     }
@@ -55,16 +55,16 @@ QList<QImage*> FaceItemRetriever::getDetails(const DImg& src, const QList<QRectF
     return images;
 }
 
-QList<QImage*> FaceItemRetriever::getDetails(const DImg& src, const QList<FaceTagsIface>& faces) const
+QList<QImage> FaceItemRetriever::getDetails(const DImg& src, const QList<FaceTagsIface>& faces) const
 {
-    QList<QImage*> images;
+    QList<QImage> images;
 
     foreach (const FaceTagsIface& face, faces)
     {
         QRect rect                = TagRegion::mapFromOriginalSize(src, face.region().toRect());
 
-        QImage* const croppedFace = new QImage();
-        (*croppedFace)            = src.copyQImage(rect);
+        QImage croppedFace;
+        croppedFace = src.copyQImage(rect);
 
         images << croppedFace;
     }
@@ -72,7 +72,7 @@ QList<QImage*> FaceItemRetriever::getDetails(const DImg& src, const QList<FaceTa
     return images;
 }
 
-QList<QImage*> FaceItemRetriever::getThumbnails(const QString& filePath, const QList<FaceTagsIface>& faces) const
+QList<QImage> FaceItemRetriever::getThumbnails(const QString& filePath, const QList<FaceTagsIface>& faces) const
 {
     Q_UNUSED(filePath)
     catcher->setActive(true);
@@ -86,12 +86,12 @@ QList<QImage*> FaceItemRetriever::getThumbnails(const QString& filePath, const Q
 
     QList<QImage> images = catcher->waitForThumbnails();
 
-    QList<QImage*> croppedFaces;
+    QList<QImage> croppedFaces;
 
     for (int i = 0 ; i < images.size() ; ++i)
     {
-        QImage* const croppedFace = new QImage();
-        (*croppedFace)            = images[i].copy();
+        QImage croppedFace;
+        croppedFace = images[i].copy();
 
         croppedFaces << croppedFace;
     }

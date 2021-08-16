@@ -30,11 +30,12 @@ namespace Digikam
 {
 
 void FaceDb::insertFaceVector(const cv::Mat& faceEmbedding,
-                              const QString& tagID) const
+                              const QString& tagID, 
+                              const int identityID) const
 {    
     QVariantList bindingValues;
 
-    bindingValues << -1;
+    bindingValues << identityID;
     bindingValues << tagID;
     bindingValues << QByteArray::fromRawData((char*)faceEmbedding.ptr<float>(), (sizeof(float) * faceEmbedding.cols));
 

@@ -28,7 +28,6 @@
 // Local includes
 
 #include "facepipeline_p.h"
-#include "faceitemretriever.h"
 
 namespace Digikam
 {
@@ -56,10 +55,8 @@ Q_SIGNALS:
 
 protected:
 
-    // TODO replace recognizer with embedding manager
-    //FacialRecognitionWrapper     recognizer;
-    FaceItemRetriever            imageRetriever;
-    FacePipeline::Private* const d;
+    class Private;
+    Private* d;
 };
 
 } // namespace Digikam

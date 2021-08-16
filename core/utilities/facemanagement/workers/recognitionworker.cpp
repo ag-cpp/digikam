@@ -47,8 +47,8 @@ RecognitionWorker::~RecognitionWorker()
  */
 void RecognitionWorker::process(FacePipelineExtendedPackage::Ptr package)
 {
-    FaceUtils      utils;
-    QList<QImage*> images;
+    FaceUtils     utils;
+    QList<QImage> images;
 
     if      (package->processFlags & FacePipelinePackage::ProcessedByDetector)
     {

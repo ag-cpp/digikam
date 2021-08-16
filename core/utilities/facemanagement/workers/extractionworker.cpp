@@ -146,11 +146,6 @@ cv::Mat prepareForRecognition(QImage& inputImage)
     return cvImage;
 }
 
-QString encodeTagID(int imageID, const FaceTagsIface& tag)
-{
-    return QString::number(imageID) + QLatin1Char('-') + tag.region().toXml();
-}
-
 class Q_DECL_HIDDEN ExtractionWorker::Private 
 {
 public:
@@ -190,8 +185,8 @@ public:
     public:
 
         ParallelExtractors(ExtractionWorker::Private* d,
-                        QList<QImage>& images,
-                        QVector<cv::Mat>& embeddings)
+                           QList<QImage>& images,
+                           QVector<cv::Mat>& embeddings)
             : images     (images),
               embeddings (embeddings),
               d          (d)
@@ -245,22 +240,13 @@ void ExtractionWorker::run()
             tagIDs.append(encodeTagID(package->info.id(), package->databaseFaces[i]));
         }
 
-        QVector<cv::Mat> embeddings;    
         QList<QImage> croppedFaces = crop(package->image, package->detectedFaces);
-
-        cv::parallel_for_(cv::Range(0, croppedFaces.size()), Private::ParallelExtractors(d, croppedFaces, embeddings));
-
-        qDebug() << "Extract" << embeddings.size() << "embedding from" << package->info.filePath();
-
-        for (int i = 0; i < embeddings  .size(); ++i)
-        {
-            qDebug() << "Save";
-            d->db.saveEmbedding(embeddings[i], tagIDs[i]);
-        }
+        extract(tagIDs, croppedFaces);
 
         emit processed(package);
     }
 }
+
 
 void ExtractionWorker::process(FacePipelineExtendedPackage::Ptr package)
 {
@@ -270,6 +256,25 @@ void ExtractionWorker::process(FacePipelineExtendedPackage::Ptr package)
 void ExtractionWorker::cancel()
 {
     d->cancel = true;
+}
+
+void ExtractionWorker::extract(const QVector<QString>& tagIDs, QList<QImage>& faces, const QVector<int>& identities) const
+{
+    QVector<cv::Mat> embeddings;    
+    cv::parallel_for_(cv::Range(0, faces.size()), Private::ParallelExtractors(d, faces, embeddings));
+
+    qDebug() << "Extract" << embeddings.size() << "embedding";
+
+    for (int i = 0; i < embeddings.size(); ++i)
+    {
+        qDebug() << "Save";
+        d->db.saveEmbedding(embeddings[i], tagIDs[i], identities[i]);
+    }
+}
+
+QString ExtractionWorker::encodeTagID(int imageID, const FaceTagsIface& tag)
+{
+    return QString::number(imageID) + QLatin1Char('-') + tag.region().toXml();
 }
 
 } // namespace Digikam

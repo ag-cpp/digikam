@@ -59,6 +59,7 @@ FacePipeline::~FacePipeline()
     delete d->recognitionWorker;
     delete d->databaseWriter;
     delete d->trainerWorker;
+    delete d->extractionWorker;
     qDeleteAll(d->thumbnailLoadThreads);
     //delete d->detectionBenchmarker;
     //delete d->recognitionBenchmarker;
