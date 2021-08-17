@@ -16,11 +16,18 @@ IF(NOT ENABLE_QTWEBENGINE)
         )
 ENDIF()
 
+# Set this policy to NEW to skip fetching all Qt6 submodules.
+# We want to update Qt6 submodules manually.
+cmake_policy(SET CMP0097 NEW)
+
 ExternalProject_Add(ext_qt
     DOWNLOAD_DIR ${EXTERNALS_DOWNLOAD_DIR}
 
-    GIT_REPOSITORY https://invent.kde.org/qt/qt/qt5.git
+    GIT_REPOSITORY https://code.qt.io/qt/qt5.git
     GIT_TAG v6.2.0-beta2
+
+    # Passing empty string here skips automatically fetching all Qt6 submodules.
+    GIT_SUBMODULES ""
 
     PATCH_COMMAND cp -f ${CMAKE_CURRENT_SOURCE_DIR}/qt6_setup.sh <SOURCE_DIR>/. &&
                   <SOURCE_DIR>/qt6_setup.sh                                    
