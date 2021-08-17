@@ -27,44 +27,101 @@
 // Local includes
 
 #include "digikam_debug.h"
+#include "dimension_reducer.h"
+#include "opencvdnnfacerecognizer.h"
+#include "faceitemretriever.h"
+#include "identities_manager.h"
+#include "faceembedding_manager.h"
+#include "extractionworker.h"
 
 namespace Digikam
 {
 
-RecognitionWorker::RecognitionWorker(FacePipeline::Private* const dd)
-    : imageRetriever(dd),
-      d             (dd)
+QVector<FaceEmbeddingData>& reduceDimension(QVector<FaceEmbeddingData>& data, int nbCPU)
 {
+    cv::Mat embeddings;
+
+    for (int i = 0; i < data.size(); ++i)
+    {
+        embeddings.push_back(data[i].embedding);
+    }
+
+    cv::Mat projectedEmbedings = Digikam::DimensionReducer::reduceDimension(embeddings, 2, nbCPU);
+
+    for (int i = 0; i < data.size(); ++i)
+    {
+        data[i].embedding = projectedEmbedings.row(i);
+    }
+
+    return data;
+}
+
+class RecognitionWorker::Private
+{
+public:
+    explicit Private(FacePipeline::Private* const dd)
+        : imageRetriever(dd)
+    {
+    }
+
+    ~Private()
+    {
+        delete recognizer;
+    }
+
+    FaceItemRetriever                   imageRetriever;
+    QMap<QString, FaceEmbeddingData>    faceembeddingMap;
+    OpenCVDNNFaceRecognizer*            recognizer;
+    IdentitiesManager                   identitiesManager;
+};
+
+RecognitionWorker::RecognitionWorker(FacePipeline::Private* const dd)
+    : d(new Private(dd))
+{
+    // TODO pull data from db
+    QVector<FaceEmbeddingData> data = FaceEmbeddingManager().getFaceEmbeddings();
+
+    data = reduceDimension(data, 4);
+
+    cv::Mat predictors, labels;
+
+    for (int i = 0; i < data.size(); ++i)
+    {
+        d->faceembeddingMap[data[i].tagId] = data[i];
+
+        if (data[i].identity >= 0)
+        {
+            predictors.push_back(data[i].embedding);
+            labels.push_back(data[i].identity);
+        }
+    }
+
+    d->recognizer = new OpenCVDNNFaceRecognizer(cv::ml::TrainData::create(predictors, 0, labels));
 }
 
 RecognitionWorker::~RecognitionWorker()
 {
-    wait();    // protect database
+    wait();    // protect database$
+    delete d;
 }
 
-/**
- *TODO: investigate this method
- */
 void RecognitionWorker::process(FacePipelineExtendedPackage::Ptr package)
 {
-    FaceUtils     utils;
-    QList<QImage> images;
+    QVector<cv::Mat> embeddings;
 
-    if      (package->processFlags & FacePipelinePackage::ProcessedByDetector)
+    foreach (const FacePipelineFaceTagsIface& face, package->databaseFaces)
     {
-        // assume we have an image
+        QString tagID = ExtractionWorker::encodeTagID(package->info.id(), face);
+        embeddings << d->faceembeddingMap[tagID].embedding;
+    } 
 
-        images = imageRetriever.getDetails(package->image, package->detectedFaces);
-    }
-    else if (!package->databaseFaces.isEmpty())
+    QVector<int> identitiesIDs = d->recognizer->recognize(embeddings);
+
+    for (int i = 0; i < identitiesIDs.size(); ++i)
     {
-        images = imageRetriever.getThumbnails(package->filePath, package->databaseFaces.toFaceTagsIfaceList());
+        package->recognitionResults << d->identitiesManager.identity(identitiesIDs[i]);
     }
 
-    // NOTE: cropped faces will be deleted by training provider
-
-    // TODO facesengine: recognize by opencvdnnfacerecognizer
-    //package->recognitionResults  = recognizer.recognizeFaces(images);
     package->processFlags       |= FacePipelinePackage::ProcessedByRecognizer;
 
     emit processed(package);
@@ -72,13 +129,12 @@ void RecognitionWorker::process(FacePipelineExtendedPackage::Ptr package)
 
 void RecognitionWorker::setThreshold(double threshold, bool)
 {
-    // TODO facesengine: set threshold for KNN
-    //recognizer.setParameter(QLatin1String("threshold"), threshold);
+    d->recognizer->setThreshold(threshold);
 }
 
 void RecognitionWorker::aboutToDeactivate()
 {
-    imageRetriever.cancel();
+    d->imageRetriever.cancel();
 }
 
 } // namespace Digikam

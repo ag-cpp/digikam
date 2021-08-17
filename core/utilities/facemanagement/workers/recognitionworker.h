@@ -28,7 +28,6 @@
 // Local includes
 
 #include "facepipeline_p.h"
-#include "faceitemretriever.h"
 
 namespace Digikam
 {
@@ -59,10 +58,8 @@ Q_SIGNALS:
 
 protected:
 
-    FaceItemRetriever            imageRetriever;
-    // TODO facesengine replace recognizer by opencvdnnrecognizer
-    //FacialRecognitionWrapper     recognizer;
-    FacePipeline::Private* const d;
+    class Private;
+    Private* d;
 
 private:
 

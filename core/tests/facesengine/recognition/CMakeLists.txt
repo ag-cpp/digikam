@@ -16,33 +16,33 @@ add_custom_target(scriptlink_rec ALL
 
 # -----------------------------------------------------------------------------
 
-set(recognize_cli_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/recognize_cli.cpp)
-add_executable(recognize_cli ${recognize_cli_SRCS})
+#set(recognize_cli_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/recognize_cli.cpp)
+#add_executable(recognize_cli ${recognize_cli_SRCS})
 
-target_link_libraries(recognize_cli
+#target_link_libraries(recognize_cli
 
-                      digikamcore
-                      digikamgui
-                      digikamfacesengine
-                      digikamdatabase
+#                      digikamcore
+#                      digikamgui
+#                      digikamfacesengine
+#                      digikamdatabase
 
-                      ${COMMON_TEST_LINK}
-)
+#                      ${COMMON_TEST_LINK}
+#)
 
 # -----------------------------------------------------------------------------
 
-set(facerec_cli_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/face_rec_cli.cpp)
-add_executable(face_rec_cli ${facerec_cli_SRCS})
+#set(facerec_cli_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/face_rec_cli.cpp)
+#add_executable(face_rec_cli ${facerec_cli_SRCS})
 
-target_link_libraries(face_rec_cli
+#target_link_libraries(face_rec_cli
 
-                      digikamcore
-                      digikamgui
-                      digikamfacesengine
-                      digikamdatabase
+#                      digikamcore
+#                      digikamgui
+#                      digikamfacesengine
+#                      digikamdatabase
 
-                      ${COMMON_TEST_LINK}
-)
+#                      ${COMMON_TEST_LINK}
+#)
 
 # -----------------------------------------------------------------------------
 
@@ -63,18 +63,18 @@ target_link_libraries(face_rec_cli
 
 # -----------------------------------------------------------------------------
 
-set(benchmark_recognition_cli_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/benchmark_recognition_cli.cpp)
-add_executable(benchmark_recognition_cli ${benchmark_recognition_cli_SRCS})
+#set(benchmark_recognition_cli_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/benchmark_recognition_cli.cpp)
+#add_executable(benchmark_recognition_cli ${benchmark_recognition_cli_SRCS})
 
-target_link_libraries(benchmark_recognition_cli
+#target_link_libraries(benchmark_recognition_cli
 
-                      digikamcore
-                      digikamgui
-                      digikamfacesengine
-                      digikamdatabase
+#                      digikamcore
+#                      digikamgui
+#                      digikamfacesengine
+#                      digikamdatabase
 
-                      ${COMMON_TEST_LINK}
-)
+#                      ${COMMON_TEST_LINK}
+#)
 
 # -----------------------------------------------------------------------------
 
@@ -112,34 +112,34 @@ target_link_libraries(extract_cli
 )
 
 # -----------------------------------------------------------------------------
+# TODO facesengine 3: reactivate tests
+#set(recognition_gui_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/recognition_gui.cpp)
+#add_executable(recognition_gui ${recognition_gui_SRCS})
 
-set(recognition_gui_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/recognition_gui.cpp)
-add_executable(recognition_gui ${recognition_gui_SRCS})
+#target_link_libraries(recognition_gui
 
-target_link_libraries(recognition_gui
+#                      digikamcore
+#                      digikamgui
+#                      digikamfacesengine
+#                      digikamdatabase
 
-                      digikamcore
-                      digikamgui
-                      digikamfacesengine
-                      digikamdatabase
-
-                      ${COMMON_TEST_LINK}
-)
+#                      ${COMMON_TEST_LINK}
+#)
 
 # -----------------------------------------------------------------------------
 
-set(traindb_cli_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/traindb_cli.cpp)
-add_executable(traindb_cli ${traindb_cli_SRCS})
+#set(traindb_cli_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/traindb_cli.cpp)
+#add_executable(traindb_cli ${traindb_cli_SRCS})
 
-target_link_libraries(traindb_cli
+#target_link_libraries(traindb_cli
 
-                      digikamcore
-                      digikamgui
-                      digikamfacesengine
-                      digikamdatabase
+#                      digikamcore
+#                      digikamgui
+#                      digikamfacesengine
+#                      digikamdatabase
 
-                      ${COMMON_TEST_LINK}
-)
+#                      ${COMMON_TEST_LINK}
+#)
 
 # -----------------------------------------------------------------------------
 

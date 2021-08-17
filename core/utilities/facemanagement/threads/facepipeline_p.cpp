@@ -156,6 +156,8 @@ void FacePipeline::Private::send(const FacePipelineExtendedPackage::Ptr& package
 
 void FacePipeline::Private::finishProcess(FacePipelineExtendedPackage::Ptr package)
 {
+    qDebug() << "Finish process";
+
     --packagesOnTheRoad;
 
     emit q->processed(*package);
@@ -196,7 +198,7 @@ void FacePipeline::Private::receiverFlowControl()
 
 bool FacePipeline::Private::hasFinished()
 {
-    return !packagesOnTheRoad && !infosForFiltering;
+    return packagesOnTheRoad <= 0 && !infosForFiltering;
 }
 
 void FacePipeline::Private::checkFinished()

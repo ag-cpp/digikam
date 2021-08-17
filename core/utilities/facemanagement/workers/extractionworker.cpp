@@ -52,6 +52,7 @@ public:
 
     T read();
     void append(const T& object);
+    void cancel();
 
 private:
 
@@ -60,11 +61,13 @@ private:
     QWaitCondition m_readWait;
     QWaitCondition m_writeWait;
     const int m_capacity;
+    bool m_cancel;
 };
 
 template <typename T>
 AsyncBuffer<T>::AsyncBuffer(int capacity)
-    : m_capacity(capacity)
+    : m_capacity(capacity),
+      m_cancel(false)
 {
     Q_ASSERT(capacity > 0);   
 }
@@ -72,6 +75,13 @@ AsyncBuffer<T>::AsyncBuffer(int capacity)
 template <typename T>
 AsyncBuffer<T>::~AsyncBuffer()
 {
+    cancel();
+}
+
+template <typename T>
+void AsyncBuffer<T>::cancel()
+{
+    m_cancel = true;
     m_writeWait.wakeAll();
     m_readWait.wakeAll();
 }
@@ -81,12 +91,17 @@ T AsyncBuffer<T>::read()
 {
     m_mutex.lock();
 
-    while (m_data.empty())
+    while (!m_cancel && m_data.empty())
     {
         m_readWait.wait(&m_mutex);
     }
 
-    T object = m_data.dequeue();
+    T object;
+
+    if (!m_cancel) 
+    {
+        object = m_data.dequeue();
+    }
 
     m_mutex.unlock();
     m_writeWait.wakeAll();
@@ -99,10 +114,10 @@ void AsyncBuffer<T>::append(const T& object)
 {
     m_mutex.lock();
 
-    while (m_data.size() >= m_capacity)
+    while (!m_cancel && m_data.size() >= m_capacity)
     {
         m_writeWait.wait(&m_mutex);
-    }
+    }    
 
     m_data.enqueue(object);
 
@@ -233,6 +248,11 @@ void ExtractionWorker::run()
     {
         FacePipelineExtendedPackage::Ptr package = d->buffer.read();
 
+        if (package == nullptr)
+        {
+            break;
+        }
+
         QVector<QString> tagIDs;
 
         for (int i = 0; i < package->databaseFaces.size(); ++i)
@@ -256,10 +276,14 @@ void ExtractionWorker::process(FacePipelineExtendedPackage::Ptr package)
 void ExtractionWorker::cancel()
 {
     d->cancel = true;
+    d->buffer.cancel();
+    wait();
 }
 
 void ExtractionWorker::extract(const QVector<QString>& tagIDs, QList<QImage>& faces, const QVector<int>& identities) const
 {
+    Q_ASSERT(tagIDs.size() == faces.size());
+
     QVector<cv::Mat> embeddings;    
     cv::parallel_for_(cv::Range(0, faces.size()), Private::ParallelExtractors(d, faces, embeddings));
 
@@ -267,8 +291,14 @@ void ExtractionWorker::extract(const QVector<QString>& tagIDs, QList<QImage>& fa
 
     for (int i = 0; i < embeddings.size(); ++i)
     {
+        int id = -1;
+        if (identities.size() > i)
+        {
+            id = identities[i];
+        }
+
         qDebug() << "Save";
-        d->db.saveEmbedding(embeddings[i], tagIDs[i], identities[i]);
+        d->db.saveEmbedding(embeddings[i], tagIDs[i], id);
     }
 }
 

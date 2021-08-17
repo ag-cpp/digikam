@@ -147,6 +147,8 @@ FacesDetector::FacesDetector(const FaceScanSettings& settings, ProgressItem* con
         d->pipeline.construct();
     }
 
+    qRegisterMetaType<FacePipelinePackage>("FacePipelinePackage");
+
     connect(&d->albumListing, SIGNAL(signalItemsInfo(ItemInfoList)),
             this, SLOT(slotItemsInfo(ItemInfoList)));
 
@@ -157,7 +159,7 @@ FacesDetector::FacesDetector(const FaceScanSettings& settings, ProgressItem* con
             this, SLOT(slotContinueAlbumListing()));
 
     connect(&d->pipeline, SIGNAL(processed(FacePipelinePackage)),
-            this, SLOT(slotShowOneDetected(FacePipelinePackage)));
+            this, SLOT(slotShowOneDetected(FacePipelinePackage)), Qt::DirectConnection);
 
     connect(&d->pipeline, SIGNAL(skipped(QList<ItemInfo>)),
             this, SLOT(slotImagesSkipped(QList<ItemInfo>)));

@@ -263,9 +263,10 @@ void FacePipeline::construct()
                 Qt::QueuedConnection);
     }
 
+    qRegisterMetaType<FacePipelineExtendedPackage::Ptr>("FacePipelineExtendedPackage::Ptr");
     connect(d->pipeline.last(), SIGNAL(processed(FacePipelineExtendedPackage::Ptr)),
             d, SLOT(finishProcess(FacePipelineExtendedPackage::Ptr)),
-            Qt::QueuedConnection);
+            Qt::DirectConnection);
 
     d->applyPriority();
 }
