@@ -11,9 +11,7 @@
 set -e
 set -C
 
-git checkout v6.2.0-beta2
-
-# initialize qt6 submodules
+# initialize Qt6 submodules which are needed for digikam
 
 perl init-repository --module-subset=qtbase,qt5compat,qtquickcontrols2,qtwebchannel,qtwebengine
 
