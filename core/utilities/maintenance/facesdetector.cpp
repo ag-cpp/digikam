@@ -86,6 +86,7 @@ FacesDetector::FacesDetector(const FaceScanSettings& settings, ProgressItem* con
         IdentitiesManager().clearIdentities();
         FaceEmbeddingManager().clearEmbedding();
         d->pipeline.plugRetrainingDatabaseFilter();
+        // TODO plug extractor
         d->pipeline.plugTrainer();
         d->pipeline.construct();
     }

@@ -96,6 +96,9 @@ public:
                           const QString& tagID,
                           const int identityID = -1) const;
 
+    void editFaceVectorIdentity(const QString& tagID,
+                                const int identityID) const;
+
     /**
      * @brief faceVectors: extract saved face embeddings from database
      * @return

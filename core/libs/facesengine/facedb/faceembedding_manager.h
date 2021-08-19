@@ -65,6 +65,9 @@ public:
     void clearEmbedding(const QList<int>& idsToClean = {},
                         const QString& tagId = QString());
 
+
+    void editIdentity(const QString& tagId, const int identity);
+    
 private:
 
     // Disable

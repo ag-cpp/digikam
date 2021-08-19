@@ -28,8 +28,9 @@
 
 #include "digikam_debug.h"
 #include "identities_manager.h"
-#include "extractionworker.h"
 #include "faceitemretriever.h"
+#include "faceembedding_manager.h"
+#include "extractionworker.h"
 
 namespace Digikam
 {
@@ -47,9 +48,9 @@ public:
     }
 
 public:
-    IdentitiesManager   identitiesManager;
-    ExtractionWorker    extractor;
-    FaceItemRetriever   imageRetriever;
+    IdentitiesManager    identitiesManager;
+    FaceEmbeddingManager db;
+    FaceItemRetriever    imageRetriever;
 };
 
 // ----------------------------------------------------------------------------------------
@@ -74,10 +75,6 @@ void TrainerWorker::process(FacePipelineExtendedPackage::Ptr package)
     qCDebug(DIGIKAM_GENERAL_LOG) << "TrainerWorker: processing one package";
 */
     // Get a list of faces with type FaceForTraining (probably type is ConfirmedFace)
-
-    QList<FaceTagsIface> toTrain;
-    QVector<QString>     tagIDs;
-    QVector<int>         identities;
     FaceUtils            utils;
 
     foreach (const FacePipelineFaceTagsIface& face, package->databaseFaces)
@@ -86,31 +83,13 @@ void TrainerWorker::process(FacePipelineExtendedPackage::Ptr package)
         {
             FaceTagsIface dbFace = face;
             dbFace.setType(FaceTagsIface::FaceForTraining);
-            toTrain << dbFace;
-            tagIDs  << d->extractor.encodeTagID(package->info.id(), dbFace);
 
             Identity identity = utils.identityForTag(dbFace.tagId(), d->identitiesManager);
-            identities << identity.id();
+
+            d->db.editIdentity(ExtractionWorker::encodeTagID(package->info.id(), dbFace), identity.id());
         }
     }
 
-    if (!toTrain.isEmpty())
-    {
-        QList<QImage> images;
-
-        if (package->image.isNull())
-        {
-            images = d->imageRetriever.getThumbnails(package->filePath, toTrain);
-        }
-        else
-        {
-            images = d->imageRetriever.getDetails(package->image, toTrain);
-        }
-
-        d->extractor.extract(tagIDs, images, identities);
-    }
-
-    utils.removeFaces(toTrain);
     package->databaseFaces.replaceRole(FacePipelineFaceTagsIface::ForTraining, FacePipelineFaceTagsIface::Trained);
     package->processFlags |= FacePipelinePackage::ProcessedByTrainer;
 

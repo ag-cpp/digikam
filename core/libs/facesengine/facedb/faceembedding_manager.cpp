@@ -109,4 +109,9 @@ void FaceEmbeddingManager::clearEmbedding(const QList<int>& idsToClean, const QS
     }
 }
 
+void FaceEmbeddingManager::editIdentity(const QString& tagId, const int identity)
+{
+    FaceDbAccess().db()->editFaceVectorIdentity(tagId, identity);
+}
+
 } // namespace Digikam

@@ -57,6 +57,24 @@ void FaceDb::insertFaceVector(const cv::Mat& faceEmbedding,
     }
 }
 
+void FaceDb::editFaceVectorIdentity(const QString& tagID,
+                                    const int identityID) const
+{
+    QVariantList bindingValues;
+    bindingValues << identityID;
+    bindingValues << tagID;
+
+    DbEngineSqlQuery query = d->db->execQuery(QLatin1String("UPDATE FaceMatrices SET identity=? WHERE tagId=?"), bindingValues);
+
+    if (query.lastError().isValid())
+    {
+        qCWarning(DIGIKAM_FACEDB_LOG) << "fail to edit identity, last query"
+                                      << query.lastQuery()
+                                      << "bound values" << query.boundValues()
+                                      << query.lastError();
+    }
+}
+
 QVector<FaceEmbeddingData> FaceDb::faceVectors() const
 {
     QVector<FaceEmbeddingData> data;
