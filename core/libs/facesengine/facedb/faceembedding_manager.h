@@ -58,7 +58,6 @@ public:
      */
     QVector<FaceEmbeddingData> getFaceEmbeddings() const;
 
-    // TODO facesengine 4 review delete saved data
     /**
      * Deletes the training data for the given identity,
      * leaving the identity as such in the database.
