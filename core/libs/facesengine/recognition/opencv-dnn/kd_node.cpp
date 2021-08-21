@@ -174,7 +174,6 @@ void KDNode::setNodeId(int id)
 double KDNode::getClosestNeighbors(QMap<double, QVector<int> >& neighborList,
                                    const cv::Mat&               position,
                                    float                        sqRange,
-                                   float                        cosThreshold,
                                    int                          maxNbNeighbors) const
 {
     // add current node to the list
@@ -183,8 +182,7 @@ double KDNode::getClosestNeighbors(QMap<double, QVector<int> >& neighborList,
 
     // NOTE: both Euclidian distance and cosine distance can help to avoid error in similarity prediction
 
-    if ((sqrDistanceToCurrentNode < sqRange) &&
-        (cosDistance(position.ptr<float>(), d->position.ptr<float>(), d->nbDimension) > cosThreshold))
+    if ((sqrDistanceToCurrentNode < sqRange))
     {
         neighborList[sqrDistanceToCurrentNode].append(d->identity);
 
@@ -271,7 +269,7 @@ double KDNode::getClosestNeighbors(QMap<double, QVector<int> >& neighborList,
 
             if (d->left)
             {
-                sqRange = d->left->getClosestNeighbors(neighborList, position, sqRange, cosThreshold, maxNbNeighbors);
+                sqRange = d->left->getClosestNeighbors(neighborList, position, sqRange, maxNbNeighbors);
 
                 if (sqrDistancerightTree < sqRange)
                 {
@@ -279,7 +277,7 @@ double KDNode::getClosestNeighbors(QMap<double, QVector<int> >& neighborList,
 
                     if (d->right)
                     {
-                        sqRange = d->right->getClosestNeighbors(neighborList, position, sqRange, cosThreshold, maxNbNeighbors);
+                        sqRange = d->right->getClosestNeighbors(neighborList, position, sqRange, maxNbNeighbors);
                     }
                 }
             }
@@ -293,7 +291,7 @@ double KDNode::getClosestNeighbors(QMap<double, QVector<int> >& neighborList,
 
             if (d->right)
             {
-                sqRange = d->right->getClosestNeighbors(neighborList, position, sqRange, cosThreshold, maxNbNeighbors);
+                sqRange = d->right->getClosestNeighbors(neighborList, position, sqRange, maxNbNeighbors);
 
                 if (sqrDistanceleftTree < sqRange)
                 {
@@ -301,7 +299,7 @@ double KDNode::getClosestNeighbors(QMap<double, QVector<int> >& neighborList,
 
                     if (d->left)
                     {
-                        sqRange = d->left->getClosestNeighbors(neighborList, position, sqRange, cosThreshold, maxNbNeighbors);
+                        sqRange = d->left->getClosestNeighbors(neighborList, position, sqRange, maxNbNeighbors);
                     }
                 }
             }

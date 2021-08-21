@@ -44,7 +44,6 @@ public:
      */
     QMap<double, QVector<int> > getClosestNeighbors(const cv::Mat& position,
                                                     float          sqRange,
-                                                    float          cosThreshold,
                                                     int            maxNbNeighbors) const;
 
     /**

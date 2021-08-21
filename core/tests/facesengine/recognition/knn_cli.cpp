@@ -98,7 +98,7 @@ Digikam::KDTree* trainKNN(cv::Mat samples, cv::Mat labels)
 
 int predict(std::shared_ptr<Digikam::KDTree> knn, cv::Mat predictors, double threshold) 
 {
-    QMap<double, QVector<int> > closestNeighbors = knn->getClosestNeighbors(predictors, threshold, 0.0, 5);
+    QMap<double, QVector<int> > closestNeighbors = knn->getClosestNeighbors(predictors, threshold, 5);
     QMap<int, QVector<double> > votingGroups;
 
     for (QMap<double, QVector<int> >::const_iterator iter  = closestNeighbors.cbegin();

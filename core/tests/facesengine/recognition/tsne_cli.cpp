@@ -107,8 +107,6 @@ int main(int argc, char** argv)
     std::shared_ptr<QCommandLineParser> parser = parseOptions(app);
 
     std::pair<cv::Mat, cv::Mat> data = loadData(parser->value(QLatin1String("in")));
-    cv::Mat trainData = extractTrainData(data, 100);
-
     cv::Mat samples = data.first;
     
     QElapsedTimer timer;
@@ -117,27 +115,6 @@ int main(int argc, char** argv)
     cv::Mat projectedData = Digikam::DimensionReducer::reduceDimension(samples, 2, 4);
 
     qDebug() << "Parse through" << samples.rows << "in" << timer.elapsed();
-    /*
-    Digikam::DimensionReducer reducer(1000, 2, 4);
-
-    int i = 0;
-    while (i < samples.rows)
-    {
-        QElapsedTimer timer;
-        timer.start();
-
-        cv::Mat buffer;
-        samples(cv::Range(i, std::min(i+100, samples.rows)), cv::Range(0, samples.cols)).copyTo(buffer);
-
-
-        cv::Mat projected = Digikam::DimensionReducer::reduceDimension(trainData, buffer, 2, 4);
-
-        projectedData.push_back(projected);
-        
-        qDebug() << "Parse through" << 100 << "in" << timer.elapsed();
-        i += 100;
-    }
-    */
     
     save(std::make_pair(projectedData, data.second),parser->value(QLatin1String("out")));
 }

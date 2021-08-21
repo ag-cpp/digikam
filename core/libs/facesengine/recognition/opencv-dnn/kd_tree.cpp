@@ -86,14 +86,13 @@ KDNode* KDTree::add(const cv::Mat& position, const int identity)
 
 QMap<double, QVector<int> > KDTree::getClosestNeighbors(const cv::Mat& position,
                                                         float sqRange,
-                                                        float cosThreshold,
                                                         int maxNbNeighbors) const
 {
     QMap<double, QVector<int> > closestNeighbors;
 
     if (d->root)
     {
-        d->root->getClosestNeighbors(closestNeighbors, position, sqRange, cosThreshold, maxNbNeighbors);
+        d->root->getClosestNeighbors(closestNeighbors, position, sqRange, maxNbNeighbors);
     }
 
     return closestNeighbors;

@@ -51,7 +51,7 @@ public:
         : method        (method),
           tree          (nullptr),
           kNeighbors    (5),
-          threshold     (0.4)
+          threshold     (50)
     {
         switch (method)
         {
@@ -140,6 +140,7 @@ public:
                 case KNN:
                 {
                     id = d->predictKNN(embeddings[i]);
+                    qDebug() << "id" << id;
                     break;
                 }
 
@@ -205,12 +206,14 @@ int OpenCVDNNFaceRecognizer::Private::predictKNN(const cv::Mat& faceEmbedding) c
 {
     if (!tree)
     {
+        qDebug() << "Tree is null";
         return -1;
     }
 
     // Look for K-nearest neighbor which have the cosine distance greater than the threshold.
 
-    QMap<double, QVector<int> > closestNeighbors = tree->getClosestNeighbors(faceEmbedding, threshold, 0.0, kNeighbors);
+    QMap<double, QVector<int> > closestNeighbors = tree->getClosestNeighbors(faceEmbedding, threshold, kNeighbors);
+    qDebug() << "Search with threshold" << threshold << "k" << kNeighbors;
     QMap<int, QVector<double> > votingGroups;
 
     for (QMap<double, QVector<int> >::const_iterator iter  = closestNeighbors.cbegin();
@@ -222,6 +225,7 @@ int OpenCVDNNFaceRecognizer::Private::predictKNN(const cv::Mat& faceEmbedding) c
                                         ++node)
         {
             int label = (*node);
+            qDebug() << "Close node" << label << "Distance" << iter.key();
             votingGroups[label].append(iter.key());
         }
     }
