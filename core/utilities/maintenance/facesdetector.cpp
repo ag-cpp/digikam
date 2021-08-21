@@ -31,6 +31,7 @@
 #include <QApplication>
 #include <QHash>
 #include <QMutex>
+#include <QMutexLocker>
 
 // KDE includes
 #include <kconfiggroup.h>
@@ -340,7 +341,14 @@ void FacesDetector::slotContinueAlbumListing()
 {
     if (d->source != FacesDetector::Albums)
     {
+        QMutexLocker locker(&d->mutex);
+
         d->endOfData = true;
+        if (d->endOfData && d->counter <= 0) 
+        {
+            slotDone();
+        }
+
         return;
     }
     /*
@@ -361,7 +369,14 @@ void FacesDetector::slotContinueAlbumListing()
     {
         if (d->albumTodoList.isEmpty())
         {
+            QMutexLocker locker(&d->mutex);
+
             d->endOfData = true;
+            if (d->endOfData && d->counter <= 0) 
+            {
+                slotDone();
+            }
+
             return;
         }
 
@@ -374,9 +389,9 @@ void FacesDetector::slotContinueAlbumListing()
 
 void FacesDetector::slotItemsInfo(const ItemInfoList& items)
 {
-    d->mutex.lock();
+    QMutexLocker locker(&d->mutex);
     d->counter += items.size();
-    d->mutex.unlock();
+    qDebug() << "inc counter" << d->counter;
 
     d->pipeline.process(items);
 }
@@ -400,28 +415,26 @@ void FacesDetector::slotImagesSkipped(const QList<ItemInfo>& infos)
 {
     advance(infos.size());
 
-    d->mutex.lock();
+    QMutexLocker locker(&d->mutex);
     d->counter -= infos.size();
+    qDebug() << "desc counter" << d->counter;
     if (d->endOfData && d->counter <= 0) 
     {
         slotDone();
     }
-
-    d->mutex.unlock();
 }
 
 void FacesDetector::slotShowOneDetected(const FacePipelinePackage& /*package*/)
 {
     advance(1);
 
-    d->mutex.lock();
+    QMutexLocker locker(&d->mutex);
     --d->counter;
+    qDebug() << "desc counter" << d->counter;
     if (d->endOfData && d->counter <= 0) 
     {
         slotDone();
     }
-
-    d->mutex.unlock();
 }
 
 } // namespace Digikam
