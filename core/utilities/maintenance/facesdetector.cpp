@@ -182,6 +182,13 @@ FacesDetector::FacesDetector(const FaceScanSettings& settings, ProgressItem* con
             getImagesWithImageTagProperty(FaceTags::unknownPersonTagId(),
                                           ImageTagPropertyName::autodetectedFace());
 
+        // TODO activate rescan option to include unconfirm faces into recognition
+        d->idsTodoList.append(CoreDbAccess().db()->
+                            getImagesWithImageTagProperty(FaceTags::unconfirmedPersonTagId(),
+                                                        ImageTagPropertyName::autodetectedFace()));
+
+        qDebug() << "nb of image" << d->idsTodoList.size();
+
         d->source = FacesDetector::Ids;
     }
     else if (settings.task == FaceScanSettings::RetrainAll)
