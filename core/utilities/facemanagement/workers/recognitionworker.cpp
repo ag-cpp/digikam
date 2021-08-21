@@ -64,6 +64,7 @@ class RecognitionWorker::Private
 public:
     explicit Private(FacePipeline::Private* const dd)
         : imageRetriever(dd),
+          recognizer(nullptr),
           buffer(1000),
           cancel(false)
     {
@@ -72,6 +73,33 @@ public:
     ~Private()
     {
         delete recognizer;
+    }
+
+    void init()
+    {
+        QVector<FaceEmbeddingData> data = FaceEmbeddingManager().getFaceEmbeddings();
+        qDebug() << "Start projection";
+        data = reduceDimension(data, 1);
+
+        cv::Mat predictors, labels;
+
+        for (int i = 0; i < data.size(); ++i)
+        {
+            faceembeddingMap[data[i].tagId] = data[i];
+
+            qDebug() << data[i].identity << data[i].tagId << data[i].embedding.at<float>(0) << data[i].embedding.at<float>(1);
+
+            if (data[i].identity >= 0)
+            {
+                predictors.push_back(data[i].embedding);
+                labels.push_back(data[i].identity);
+            }
+        }
+
+        qDebug() << "training size" << predictors.rows;
+
+        recognizer = new OpenCVDNNFaceRecognizer(cv::ml::TrainData::create(predictors, 0, labels));
+        recognizer->setThreshold(threshold);
     }
 
     FaceItemRetriever                               imageRetriever;
@@ -97,30 +125,6 @@ RecognitionWorker::~RecognitionWorker()
 
 void RecognitionWorker::run()
 {
-    QVector<FaceEmbeddingData> data = FaceEmbeddingManager().getFaceEmbeddings();
-    qDebug() << "Start projection";
-    data = reduceDimension(data, 1);
-
-    cv::Mat predictors, labels;
-
-    for (int i = 0; i < data.size(); ++i)
-    {
-        d->faceembeddingMap[data[i].tagId] = data[i];
-
-        qDebug() << data[i].identity << data[i].tagId << data[i].embedding.at<float>(0) << data[i].embedding.at<float>(1);
-
-        if (data[i].identity >= 0)
-        {
-            predictors.push_back(data[i].embedding);
-            labels.push_back(data[i].identity);
-        }
-    }
-
-    qDebug() << "training size" << predictors.rows;
-
-    d->recognizer = new OpenCVDNNFaceRecognizer(cv::ml::TrainData::create(predictors, 0, labels));
-    d->recognizer->setThreshold(d->threshold);
-
     while (!d->cancel)
     {
         FacePipelineExtendedPackage::Ptr package = d->buffer.read();
@@ -128,6 +132,11 @@ void RecognitionWorker::run()
         if (package == nullptr)
         {
             break;
+        }
+
+        if (!d->recognizer)
+        {
+            d->init();
         }
 
         QVector<cv::Mat> embeddings;

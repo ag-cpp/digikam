@@ -30,6 +30,7 @@
 #include <QIcon>
 #include <QApplication>
 #include <QHash>
+#include <QMutex>
 
 // KDE includes
 #include <kconfiggroup.h>
@@ -59,7 +60,9 @@ class Q_DECL_HIDDEN FacesDetector::Private
 public:
 
     explicit Private()
-      : source   (FacesDetector::Albums)
+      : source   (FacesDetector::Albums),
+        counter  (0),
+        endOfData(false)
     {
     }
 
@@ -71,6 +74,9 @@ public:
 
     ItemInfoJob                albumListing;
     FacePipeline               pipeline;
+    int                        counter;
+    bool                       endOfData;
+    QMutex                     mutex;
 };
 
 FacesDetector::FacesDetector(const FaceScanSettings& settings, ProgressItem* const parent)
@@ -156,8 +162,10 @@ FacesDetector::FacesDetector(const FaceScanSettings& settings, ProgressItem* con
     connect(&d->albumListing, SIGNAL(signalCompleted()),
             this, SLOT(slotContinueAlbumListing()));
 
+    /*
     connect(&d->pipeline, SIGNAL(finished()),
             this, SLOT(slotContinueAlbumListing()));
+    */
 
     connect(&d->pipeline, SIGNAL(processed(FacePipelinePackage)),
             this, SLOT(slotShowOneDetected(FacePipelinePackage)), Qt::DirectConnection);
@@ -325,10 +333,10 @@ void FacesDetector::slotContinueAlbumListing()
 {
     if (d->source != FacesDetector::Albums)
     {
-        slotDone();
+        d->endOfData = true;
         return;
     }
-
+    /*
     qCDebug(DIGIKAM_GENERAL_LOG) << d->albumListing.isRunning() << !d->pipeline.hasFinished();
 
     // we get here by the finished signal from both, and want both to have finished to continue
@@ -337,7 +345,7 @@ void FacesDetector::slotContinueAlbumListing()
     {
         return;
     }
-
+    */
     // list can have null pointer if album was deleted recently
 
     Album* album = nullptr;
@@ -346,7 +354,7 @@ void FacesDetector::slotContinueAlbumListing()
     {
         if (d->albumTodoList.isEmpty())
         {
-            slotDone();
+            d->endOfData = true;
             return;
         }
 
@@ -359,6 +367,10 @@ void FacesDetector::slotContinueAlbumListing()
 
 void FacesDetector::slotItemsInfo(const ItemInfoList& items)
 {
+    d->mutex.lock();
+    d->counter += items.size();
+    d->mutex.unlock();
+
     d->pipeline.process(items);
 }
 
@@ -380,11 +392,29 @@ void FacesDetector::slotCancel()
 void FacesDetector::slotImagesSkipped(const QList<ItemInfo>& infos)
 {
     advance(infos.size());
+
+    d->mutex.lock();
+    d->counter -= infos.size();
+    if (d->endOfData && d->counter <= 0) 
+    {
+        slotDone();
+    }
+
+    d->mutex.unlock();
 }
 
 void FacesDetector::slotShowOneDetected(const FacePipelinePackage& /*package*/)
 {
     advance(1);
+
+    d->mutex.lock();
+    --d->counter;
+    if (d->endOfData && d->counter <= 0) 
+    {
+        slotDone();
+    }
+
+    d->mutex.unlock();
 }
 
 } // namespace Digikam
