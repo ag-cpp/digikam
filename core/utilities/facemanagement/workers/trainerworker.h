@@ -25,14 +25,15 @@
 #ifndef DIGIKAM_TRAINER_WORKERS_H
 #define DIGIKAM_TRAINER_WORKERS_H
 
-// Local includes
+#include <QThread>
 
+// Local includes
 #include "facepipeline_p.h"
 
 namespace Digikam
 {
 
-class Q_DECL_HIDDEN TrainerWorker : public WorkerObject
+class Q_DECL_HIDDEN TrainerWorker : public QThread
 {
     Q_OBJECT
 
@@ -41,9 +42,10 @@ public:
     explicit TrainerWorker(FacePipeline::Private* const dd);
     ~TrainerWorker() override;
 
-protected:
+public:
 
-    void aboutToDeactivate() override;
+    void run() override;
+    void cancel();
 
 public Q_SLOTS:
 

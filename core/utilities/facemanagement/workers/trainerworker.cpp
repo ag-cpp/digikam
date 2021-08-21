@@ -31,15 +31,19 @@
 #include "faceitemretriever.h"
 #include "faceembedding_manager.h"
 #include "extractionworker.h"
+#include "asyncbuffer.h"
 
 namespace Digikam
 {
+    
 class Q_DECL_HIDDEN TrainerWorker::Private
 {
 public:
 
     explicit Private(FacePipeline::Private* const dd)
-        : imageRetriever(dd)
+        : imageRetriever(dd),
+          buffer(1000),
+          cancel(false)
     {
     }
 
@@ -48,57 +52,71 @@ public:
     }
 
 public:
-    IdentitiesManager    identitiesManager;
-    FaceEmbeddingManager db;
-    FaceItemRetriever    imageRetriever;
+
+    IdentitiesManager                               identitiesManager;
+    FaceEmbeddingManager                            db;
+    FaceItemRetriever                               imageRetriever;
+    AsyncBuffer<FacePipelineExtendedPackage::Ptr>   buffer;
+    bool                                            cancel;
 };
 
 // ----------------------------------------------------------------------------------------
 
 TrainerWorker::TrainerWorker(FacePipeline::Private* const dd)
-    : d(new Private(dd))
+    : QThread(),
+      d(new Private(dd))
 {
 }
 
 TrainerWorker::~TrainerWorker()
 {
-    wait();    // protect detector
+    cancel();
     delete d;
 }
 
-/**
- * TODO: investigate this method
- */
-void TrainerWorker::process(FacePipelineExtendedPackage::Ptr package)
+void TrainerWorker::run()
 {
-/*
-    qCDebug(DIGIKAM_GENERAL_LOG) << "TrainerWorker: processing one package";
-*/
-    // Get a list of faces with type FaceForTraining (probably type is ConfirmedFace)
-    FaceUtils            utils;
-
-    foreach (const FacePipelineFaceTagsIface& face, package->databaseFaces)
+    while (!d->cancel)
     {
-        if (face.roles & FacePipelineFaceTagsIface::ForTraining)
+        FacePipelineExtendedPackage::Ptr package = d->buffer.read();
+
+        if (package == nullptr)
         {
-            FaceTagsIface dbFace = face;
-            dbFace.setType(FaceTagsIface::FaceForTraining);
-
-            Identity identity = utils.identityForTag(dbFace.tagId(), d->identitiesManager);
-
-            d->db.editIdentity(ExtractionWorker::encodeTagID(package->info.id(), dbFace), identity.id());
+            break;
         }
+
+        FaceUtils            utils;
+
+        foreach (const FacePipelineFaceTagsIface& face, package->databaseFaces)
+        {
+            if (face.roles & FacePipelineFaceTagsIface::ForTraining)
+            {
+                FaceTagsIface dbFace = face;
+                dbFace.setType(FaceTagsIface::FaceForTraining);
+
+                Identity identity = utils.identityForTag(dbFace.tagId(), d->identitiesManager);
+
+                d->db.editIdentity(ExtractionWorker::encodeTagID(package->info.id(), dbFace), identity.id());
+            }
+        }
+
+        package->databaseFaces.replaceRole(FacePipelineFaceTagsIface::ForTraining, FacePipelineFaceTagsIface::Trained);
+        package->processFlags |= FacePipelinePackage::ProcessedByTrainer;
+
+        emit processed(package);
     }
-
-    package->databaseFaces.replaceRole(FacePipelineFaceTagsIface::ForTraining, FacePipelineFaceTagsIface::Trained);
-    package->processFlags |= FacePipelinePackage::ProcessedByTrainer;
-
-    emit processed(package);
 }
 
-void TrainerWorker::aboutToDeactivate()
+void TrainerWorker::process(FacePipelineExtendedPackage::Ptr package)
 {
-    d->imageRetriever.cancel();
+    d->buffer.append(package);
+}
+
+void TrainerWorker::cancel()
+{
+    d->cancel = true;
+    d->buffer.cancel();
+    wait();
 }
 
 } // namespace Digikam

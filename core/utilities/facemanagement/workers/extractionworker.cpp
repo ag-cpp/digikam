@@ -37,93 +37,10 @@
 #include "facetagsiface.h"
 #include "digikam_debug.h"
 #include "faceembedding_manager.h"
+#include "asyncbuffer.h"
+
 namespace Digikam
 {
-
-template <typename T>
-class Q_DECL_HIDDEN AsyncBuffer 
-{
-public:
-
-    explicit AsyncBuffer(int capacity);
-    ~AsyncBuffer();
-
-public:
-
-    T read();
-    void append(const T& object);
-    void cancel();
-
-private:
-
-    QQueue<T> m_data;
-    QMutex m_mutex;
-    QWaitCondition m_readWait;
-    QWaitCondition m_writeWait;
-    const int m_capacity;
-    bool m_cancel;
-};
-
-template <typename T>
-AsyncBuffer<T>::AsyncBuffer(int capacity)
-    : m_capacity(capacity),
-      m_cancel(false)
-{
-    Q_ASSERT(capacity > 0);   
-}
-
-template <typename T>
-AsyncBuffer<T>::~AsyncBuffer()
-{
-    cancel();
-}
-
-template <typename T>
-void AsyncBuffer<T>::cancel()
-{
-    m_cancel = true;
-    m_writeWait.wakeAll();
-    m_readWait.wakeAll();
-}
-
-template <typename T>
-T AsyncBuffer<T>::read()
-{
-    m_mutex.lock();
-
-    while (!m_cancel && m_data.empty())
-    {
-        m_readWait.wait(&m_mutex);
-    }
-
-    T object;
-
-    if (!m_cancel) 
-    {
-        object = m_data.dequeue();
-    }
-
-    m_mutex.unlock();
-    m_writeWait.wakeAll();
-
-    return object;
-}
-
-template <typename T>
-void AsyncBuffer<T>::append(const T& object)
-{
-    m_mutex.lock();
-
-    while (!m_cancel && m_data.size() >= m_capacity)
-    {
-        m_writeWait.wait(&m_mutex);
-    }    
-
-    m_data.enqueue(object);
-
-    m_mutex.unlock();
-    m_readWait.wakeAll();
-}
 
 QList<QImage> crop(const DImg& faceImg, const QList<QRectF>& detectedFaces)
 {
@@ -266,7 +183,6 @@ void ExtractionWorker::run()
         emit processed(package);
     }
 }
-
 
 void ExtractionWorker::process(FacePipelineExtendedPackage::Ptr package)
 {

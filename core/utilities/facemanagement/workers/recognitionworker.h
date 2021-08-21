@@ -25,14 +25,15 @@
 #ifndef DIGIKAM_RECOGNITION_WORKER_H
 #define DIGIKAM_RECOGNITION_WORKER_H
 
-// Local includes
+#include <QThread>
 
+// Local includes
 #include "facepipeline_p.h"
 
 namespace Digikam
 {
 
-class Q_DECL_HIDDEN RecognitionWorker : public WorkerObject
+class Q_DECL_HIDDEN RecognitionWorker : public QThread
 {
     Q_OBJECT
 
@@ -41,16 +42,15 @@ public:
     explicit RecognitionWorker(FacePipeline::Private* const dd);
     ~RecognitionWorker() override;
 
+public:
+
+    void run() override;
+    void cancel();
+
 public Q_SLOTS:
 
     void process(FacePipelineExtendedPackage::Ptr package);
     void setThreshold(double threshold, bool);
-
-    // TODO: add set K-Nearest method
-
-protected:
-
-    void aboutToDeactivate() override;
 
 Q_SIGNALS:
 

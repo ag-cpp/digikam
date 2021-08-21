@@ -33,6 +33,7 @@
 #include "identities_manager.h"
 #include "faceembedding_manager.h"
 #include "extractionworker.h"
+#include "asyncbuffer.h"
 
 namespace Digikam
 {
@@ -62,7 +63,9 @@ class RecognitionWorker::Private
 {
 public:
     explicit Private(FacePipeline::Private* const dd)
-        : imageRetriever(dd)
+        : imageRetriever(dd),
+          buffer(1000),
+          cancel(false)
     {
     }
 
@@ -71,18 +74,32 @@ public:
         delete recognizer;
     }
 
-    FaceItemRetriever                   imageRetriever;
-    QMap<QString, FaceEmbeddingData>    faceembeddingMap;
-    OpenCVDNNFaceRecognizer*            recognizer;
-    IdentitiesManager                   identitiesManager;
+    FaceItemRetriever                               imageRetriever;
+    QMap<QString, FaceEmbeddingData>                faceembeddingMap;
+    OpenCVDNNFaceRecognizer*                        recognizer;
+    IdentitiesManager                               identitiesManager;
+    AsyncBuffer<FacePipelineExtendedPackage::Ptr>   buffer;
+    bool                                            cancel;
+    float                                           threshold;
 };
 
 RecognitionWorker::RecognitionWorker(FacePipeline::Private* const dd)
-    : d(new Private(dd))
+    : QThread(),
+      d(new Private(dd))
+{
+}
+
+RecognitionWorker::~RecognitionWorker()
+{
+    cancel();
+    delete d;
+}
+
+void RecognitionWorker::run()
 {
     QVector<FaceEmbeddingData> data = FaceEmbeddingManager().getFaceEmbeddings();
-
-    data = reduceDimension(data, 4);
+    qDebug() << "Start projection";
+    data = reduceDimension(data, 1);
 
     cv::Mat predictors, labels;
 
@@ -102,47 +119,55 @@ RecognitionWorker::RecognitionWorker(FacePipeline::Private* const dd)
     qDebug() << "training size" << predictors.rows;
 
     d->recognizer = new OpenCVDNNFaceRecognizer(cv::ml::TrainData::create(predictors, 0, labels));
-}
+    d->recognizer->setThreshold(d->threshold);
 
-RecognitionWorker::~RecognitionWorker()
-{
-    wait();    // protect database$
-    delete d;
+    while (!d->cancel)
+    {
+        FacePipelineExtendedPackage::Ptr package = d->buffer.read();
+
+        if (package == nullptr)
+        {
+            break;
+        }
+
+        QVector<cv::Mat> embeddings;
+
+        foreach (const FacePipelineFaceTagsIface& face, package->databaseFaces)
+        {
+            QString tagID = ExtractionWorker::encodeTagID(package->info.id(), face);
+            embeddings << d->faceembeddingMap[tagID].embedding;
+            qDebug() << "recognize" << d->faceembeddingMap[tagID].embedding.at<float>(0) << d->faceembeddingMap[tagID].embedding.at<float>(1);
+        } 
+
+        QVector<int> identitiesIDs = d->recognizer->recognize(embeddings);
+        qDebug() << "Recognition result" << identitiesIDs;
+
+        for (int i = 0; i < identitiesIDs.size(); ++i)
+        {
+            package->recognitionResults << d->identitiesManager.identity(identitiesIDs[i]);
+        }
+
+        package->processFlags |= FacePipelinePackage::ProcessedByRecognizer;
+
+        emit processed(package);
+    }
 }
 
 void RecognitionWorker::process(FacePipelineExtendedPackage::Ptr package)
 {
-    QVector<cv::Mat> embeddings;
+    d->buffer.append(package);
+}
 
-    foreach (const FacePipelineFaceTagsIface& face, package->databaseFaces)
-    {
-        QString tagID = ExtractionWorker::encodeTagID(package->info.id(), face);
-        embeddings << d->faceembeddingMap[tagID].embedding;
-        qDebug() << "recognize" << d->faceembeddingMap[tagID].embedding.at<float>(0) << d->faceembeddingMap[tagID].embedding.at<float>(1);
-    } 
-
-    QVector<int> identitiesIDs = d->recognizer->recognize(embeddings);
-
-    qDebug() << "Recognition result" << identitiesIDs;
-
-    for (int i = 0; i < identitiesIDs.size(); ++i)
-    {
-        package->recognitionResults << d->identitiesManager.identity(identitiesIDs[i]);
-    }
-
-    package->processFlags       |= FacePipelinePackage::ProcessedByRecognizer;
-
-    emit processed(package);
+void RecognitionWorker::cancel()
+{
+    d->cancel = true;
+    d->buffer.cancel();
+    wait();
 }
 
 void RecognitionWorker::setThreshold(double threshold, bool)
 {
-    d->recognizer->setThreshold(threshold);
-}
-
-void RecognitionWorker::aboutToDeactivate()
-{
-    d->imageRetriever.cancel();
+    d->threshold = threshold;
 }
 
 } // namespace Digikam

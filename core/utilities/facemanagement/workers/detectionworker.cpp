@@ -25,45 +25,91 @@
 #include "detectionworker.h"
 
 // Local includes
-
 #include "digikam_debug.h"
+#include "asyncbuffer.h"
 
 namespace Digikam
 {
 
-DetectionWorker::DetectionWorker(FacePipeline::Private* const dd)
-    : d(dd)
+class Q_DECL_HIDDEN DetectionWorker::Private
 {
+public:
+
+    explicit Private()
+        : buffer(1000),
+          cancel(false)
+    {
+    }
+
+    ~Private()
+    {
+    }
+
+public:
+
+    FaceDetector                                    detector;
+    AsyncBuffer<FacePipelineExtendedPackage::Ptr>   buffer;
+    bool                                            cancel;
+};
+
+DetectionWorker::DetectionWorker(FacePipeline::Private* const dd)
+    : QThread(),
+      d(new Private())
+{
+    Q_UNUSED(dd);
 }
 
 DetectionWorker::~DetectionWorker()
 {
-    wait();    // protect detector
+    cancel();
+    delete d;
+}
+
+void DetectionWorker::run()
+{
+    while (!d->cancel)
+    {
+        FacePipelineExtendedPackage::Ptr package = d->buffer.read();
+
+        if (package == nullptr)
+        {
+            break;
+        }
+
+        if (!package->image.isNull())
+        {
+        /*
+            QImage detectionImage  = scaleForDetection(package->image);
+            package->detectedFaces = detector.detectFaces(detectionImage, package->image.originalSize());
+        */
+            package->detectedFaces = d->detector.detectFaces(package->image);
+
+            qCDebug(DIGIKAM_GENERAL_LOG) << "Found" << package->detectedFaces.size() << "faces in"
+                                        << package->info.name() << package->image.size()
+                                        << package->image.originalSize();
+        }
+
+        package->processFlags |= FacePipelinePackage::ProcessedByDetector;
+
+        emit processed(package);
+    }
 }
 
 void DetectionWorker::process(FacePipelineExtendedPackage::Ptr package)
 {
-    if (!package->image.isNull())
-    {
-/*
-        QImage detectionImage  = scaleForDetection(package->image);
-        package->detectedFaces = detector.detectFaces(detectionImage, package->image.originalSize());
-*/
-        package->detectedFaces = detector.detectFaces(package->image);
+    d->buffer.append(package);
+}
 
-        qCDebug(DIGIKAM_GENERAL_LOG) << "Found" << package->detectedFaces.size() << "faces in"
-                                     << package->info.name() << package->image.size()
-                                     << package->image.originalSize();
-    }
-
-    package->processFlags |= FacePipelinePackage::ProcessedByDetector;
-
-    emit processed(package);
+void DetectionWorker::cancel()
+{
+    d->cancel = true;
+    d->buffer.cancel();
+    wait();
 }
 
 QImage DetectionWorker::scaleForDetection(const DImg& image) const
 {
-    int recommendedSize = detector.recommendedImageSize(image.size());
+    int recommendedSize = d->detector.recommendedImageSize(image.size());
 
     if (qMax(image.width(), image.height()) > (uint)recommendedSize)
     {
@@ -79,7 +125,7 @@ void DetectionWorker::setAccuracyAndModel(double accuracy, bool yolo)
     params[QLatin1String("accuracy")]    = accuracy;
     params[QLatin1String("useyolov3")]   = yolo;
     params[QLatin1String("specificity")] = 0.8;     // TODO: add UI for sensitivity - specificity
-    detector.setParameters(params);
+    d->detector.setParameters(params);
 }
 
 } // namespace Digikam

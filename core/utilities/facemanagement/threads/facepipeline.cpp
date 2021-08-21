@@ -119,6 +119,7 @@ void FacePipeline::plugFacePreviewLoader()
 void FacePipeline::plugFaceDetector()
 {
     d->detectionWorker = new DetectionWorker(d);
+    d->detectionWorker->start();
 
     connect(d, SIGNAL(accuracyAndModel(double,bool)),
             d->detectionWorker, SLOT(setAccuracyAndModel(double,bool)));
@@ -151,6 +152,7 @@ void FacePipeline::plugParallelFaceDetectors()
 void FacePipeline::plugFaceRecognizer()
 {
     d->recognitionWorker = new RecognitionWorker(d);
+    d->recognitionWorker->start();
 
     connect(d, SIGNAL(accuracyAndModel(double,bool)),
             d->recognitionWorker, SLOT(setThreshold(double,bool)));
@@ -159,11 +161,13 @@ void FacePipeline::plugFaceRecognizer()
 void FacePipeline::plugDatabaseWriter(WriteMode mode)
 {
     d->databaseWriter = new DatabaseWriter(mode, d);
+    d->databaseWriter->start();
 }
 
 void FacePipeline::plugTrainer()
 {
     d->trainerWorker = new TrainerWorker(d);
+    d->trainerWorker->start();
 }
 
 void FacePipeline::plugExtractionWorker()
@@ -252,18 +256,19 @@ void FacePipeline::construct()
         return;
     }
 
+    qRegisterMetaType<FacePipelineExtendedPackage::Ptr>("FacePipelineExtendedPackage::Ptr");
+
     connect(d, SIGNAL(startProcess(FacePipelineExtendedPackage::Ptr)),
             d->pipeline.first(), SLOT(process(FacePipelineExtendedPackage::Ptr)),
-            Qt::QueuedConnection);
+            Qt::DirectConnection);
 
     for (int i = 0 ; i < (d->pipeline.size() - 1) ; ++i)
     {
         connect(d->pipeline.at(i), SIGNAL(processed(FacePipelineExtendedPackage::Ptr)),
                 d->pipeline.at(i + 1), SLOT(process(FacePipelineExtendedPackage::Ptr)),
-                Qt::QueuedConnection);
+                Qt::DirectConnection);
     }
 
-    qRegisterMetaType<FacePipelineExtendedPackage::Ptr>("FacePipelineExtendedPackage::Ptr");
     connect(d->pipeline.last(), SIGNAL(processed(FacePipelineExtendedPackage::Ptr)),
             d, SLOT(finishProcess(FacePipelineExtendedPackage::Ptr)),
             Qt::DirectConnection);

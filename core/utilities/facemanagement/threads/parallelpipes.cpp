@@ -37,7 +37,7 @@ ParallelPipes::ParallelPipes()
 
 ParallelPipes::~ParallelPipes()
 {
-    foreach (WorkerObject* const object, m_workers)
+    foreach (QThread* const object, m_workers)
     {
         delete object;
     }
@@ -45,23 +45,23 @@ ParallelPipes::~ParallelPipes()
 
 void ParallelPipes::schedule()
 {
-    foreach (WorkerObject* const object, m_workers)
+    foreach (QThread* const object, m_workers)
     {
-        object->schedule();
+        object->start();
     }
 }
 
 void ParallelPipes::deactivate(WorkerObject::DeactivatingMode mode)
 {
-    foreach (WorkerObject* const object, m_workers)
+    foreach (QThread* const object, m_workers)
     {
-        object->deactivate(mode);
+        object->terminate();
     }
 }
 
 void ParallelPipes::wait()
 {
-    foreach (WorkerObject* const object, m_workers)
+    foreach (QThread* const object, m_workers)
     {
         object->wait();
     }
@@ -69,13 +69,13 @@ void ParallelPipes::wait()
 
 void ParallelPipes::setPriority(QThread::Priority priority)
 {
-    foreach (WorkerObject* const object, m_workers)
+    foreach (QThread* const object, m_workers)
     {
         object->setPriority(priority);
     }
 }
 
-void ParallelPipes::add(WorkerObject* const worker)
+void ParallelPipes::add(QThread* const worker)
 {
     QByteArray normalizedSignature = QMetaObject::normalizedSignature("process(FacePipelineExtendedPackage::Ptr)");
     int methodIndex                = worker->metaObject()->indexOfMethod(normalizedSignature.constData());

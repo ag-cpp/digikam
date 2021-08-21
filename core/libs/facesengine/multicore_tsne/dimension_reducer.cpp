@@ -16,10 +16,10 @@ cv::Mat DimensionReducer::reduceDimension(cv::Mat data, int outputDimension, int
                           0.5, 
                           nbCPU);
     
-    cv::Mat normalizedData;
-    cv::normalize(projectedData, normalizedData, 1.0, 0.0, cv::NORM_L2);
+    //cv::Mat normalizedData;
+    //cv::normalize(projectedData, normalizedData, 1.0, 0.0, cv::NORM_L2);
 
-    return normalizedData;
+    return projectedData;
 }
 
 

@@ -25,15 +25,16 @@
 #ifndef DIGIKAM_DETECTION_WORKER_H
 #define DIGIKAM_DETECTION_WORKER_H
 
-// Local includes
+#include <QThread>
 
+// Local includes
 #include "facepipeline_p.h"
 #include "faceitemretriever.h"
 
 namespace Digikam
 {
 
-class Q_DECL_HIDDEN DetectionWorker : public WorkerObject
+class Q_DECL_HIDDEN DetectionWorker : public QThread
 {
     Q_OBJECT
 
@@ -43,6 +44,11 @@ public:
     ~DetectionWorker() override;
 
     QImage scaleForDetection(const DImg& image) const;
+
+public:
+
+    void run() override;
+    void cancel();
 
 public Q_SLOTS:
 
@@ -55,8 +61,8 @@ Q_SIGNALS:
 
 protected:
 
-    FaceDetector                 detector;
-    FacePipeline::Private* const d;
+    class Private;
+    Private* d;
 
 private:
 

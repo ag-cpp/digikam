@@ -24,8 +24,9 @@
 #ifndef DIGIKAM_PARALLEL_PIPES_H
 #define DIGIKAM_PARALLEL_PIPES_H
 
-// Local includes
+#include <QThread>
 
+// Local includes
 #include "facepipeline_p.h"
 
 namespace Digikam
@@ -44,12 +45,12 @@ public:
     void deactivate(WorkerObject::DeactivatingMode mode = WorkerObject::FlushSignals);
     void wait();
 
-    void add(WorkerObject* const worker);
+    void add(QThread* const worker);
     void setPriority(QThread::Priority priority);
 
 public:
 
-    QList<WorkerObject*> m_workers;
+    QList<QThread*> m_workers;
 
 public Q_SLOTS:
 

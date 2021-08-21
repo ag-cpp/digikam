@@ -25,15 +25,16 @@
 #ifndef DIGIKAM_DATABASE_WRITER_H
 #define DIGIKAM_DATABASE_WRITER_H
 
-// Local includes
+#include <QThread>
 
+// Local includes
 #include "facepipeline_p.h"
 #include "faceitemretriever.h"
 
 namespace Digikam
 {
 
-class Q_DECL_HIDDEN DatabaseWriter : public WorkerObject
+class Q_DECL_HIDDEN DatabaseWriter : public QThread
 {
     Q_OBJECT
 
@@ -41,6 +42,11 @@ public:
 
     DatabaseWriter(FacePipeline::WriteMode mode, FacePipeline::Private* const dd);
     ~DatabaseWriter() override;
+
+public:
+
+    void run() override;
+    void cancel();
 
 public Q_SLOTS:
 
@@ -52,9 +58,8 @@ Q_SIGNALS:
 
 protected:
 
-    FacePipeline::WriteMode      mode;
-    ThumbnailLoadThread*         thumbnailLoadThread;
-    FacePipeline::Private* const d;
+    class Private;
+    Private* d;
 
 private:
 

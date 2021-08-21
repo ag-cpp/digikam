@@ -43,6 +43,21 @@
 namespace Digikam
 {
 
+float getMaxDistance(const cv::Mat& vectors) 
+{
+    float maxD = 0.0;
+
+    for (int i = 0; i < vectors.rows; ++i)
+    {
+        for (int j = i+1; j < vectors.rows; ++j)
+        {
+            maxD = std::max(maxD, KDNode::sqrDistance(vectors.row(i).ptr<float>(), vectors.row(j).ptr<float>(), vectors.cols));
+        }
+    }
+
+    return maxD;
+}
+
 class Q_DECL_HIDDEN OpenCVDNNFaceRecognizer::Private
 {
 public:
@@ -79,6 +94,8 @@ public:
                 qFatal("Invalid classifier");
             }
         }
+
+        maxDistance = getMaxDistance(data->getSamples());
     }
 
     ~Private()
@@ -103,6 +120,7 @@ public:
     KDTree*                    tree;
     int                        kNeighbors;
     float                      threshold;
+    float                      maxDistance;
 
 public:
 
@@ -211,9 +229,10 @@ int OpenCVDNNFaceRecognizer::Private::predictKNN(const cv::Mat& faceEmbedding) c
     }
 
     // Look for K-nearest neighbor which have the cosine distance greater than the threshold.
+    float searchRange = (1 - threshold) * maxDistance;
 
-    QMap<double, QVector<int> > closestNeighbors = tree->getClosestNeighbors(faceEmbedding, threshold, kNeighbors);
-    qDebug() << "Search with threshold" << threshold << "k" << kNeighbors;
+    QMap<double, QVector<int> > closestNeighbors = tree->getClosestNeighbors(faceEmbedding, searchRange, kNeighbors);
+    qDebug() << "Search with threshold" << searchRange << "k" << kNeighbors;
     QMap<int, QVector<double> > votingGroups;
 
     for (QMap<double, QVector<int> >::const_iterator iter  = closestNeighbors.cbegin();
@@ -241,7 +260,7 @@ int OpenCVDNNFaceRecognizer::Private::predictKNN(const cv::Mat& faceEmbedding) c
 
         for (int i = 0 ; i < group.value().size() ; ++i)
         {
-            score += (threshold - group.value()[i]);
+            score += (searchRange - group.value()[i]);
         }
 
         if (score > maxScore)
