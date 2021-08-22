@@ -156,8 +156,6 @@ void FacePipeline::Private::send(const FacePipelineExtendedPackage::Ptr& package
 
 void FacePipeline::Private::finishProcess(FacePipelineExtendedPackage::Ptr package)
 {
-    qDebug() << "Finish process";
-
     --packagesOnTheRoad;
 
     emit q->processed(*package);

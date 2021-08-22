@@ -49,8 +49,6 @@ QVector<FaceEmbeddingData>& reduceDimension(QVector<FaceEmbeddingData>& data, in
 
     cv::Mat projectedEmbedings = Digikam::DimensionReducer::reduceDimension(embeddings, 2, nbCPU);
 
-    qDebug() << "Reduce dimension";
-
     for (int i = 0; i < data.size(); ++i)
     {
         data[i].embedding = projectedEmbedings.row(i);
@@ -78,8 +76,7 @@ public:
     void init()
     {
         QVector<FaceEmbeddingData> data = FaceEmbeddingManager().getFaceEmbeddings();
-        qDebug() << "Start projection";
-        data = reduceDimension(data, 1);
+        data = reduceDimension(data, 4);
 
         cv::Mat predictors, labels;
 
@@ -87,16 +84,12 @@ public:
         {
             faceembeddingMap[data[i].tagId] = data[i];
 
-            qDebug() << data[i].identity << data[i].tagId << data[i].embedding.at<float>(0) << data[i].embedding.at<float>(1);
-
             if (data[i].identity >= 0)
             {
                 predictors.push_back(data[i].embedding);
                 labels.push_back(data[i].identity);
             }
         }
-
-        qDebug() << "training size" << predictors.rows;
 
         recognizer = new OpenCVDNNFaceRecognizer(cv::ml::TrainData::create(predictors, 0, labels));
         recognizer->setThreshold(threshold);
@@ -145,11 +138,9 @@ void RecognitionWorker::run()
         {
             QString tagID = ExtractionWorker::encodeTagID(package->info.id(), face);
             embeddings << d->faceembeddingMap[tagID].embedding;
-            qDebug() << "recognize" << d->faceembeddingMap[tagID].embedding.at<float>(0) << d->faceembeddingMap[tagID].embedding.at<float>(1);
         } 
 
         QVector<int> identitiesIDs = d->recognizer->recognize(embeddings);
-        qDebug() << "Recognition result" << identitiesIDs;
 
         for (int i = 0; i < identitiesIDs.size(); ++i)
         {

@@ -73,8 +73,6 @@ void FaceDb::editFaceVectorIdentity(const QString& tagID,
                                       << "bound values" << query.boundValues()
                                       << query.lastError();
     }
-
-    qDebug() << "Assign identity" << identityID << "to" << tagID;
 }
 
 QVector<FaceEmbeddingData> FaceDb::faceVectors() const

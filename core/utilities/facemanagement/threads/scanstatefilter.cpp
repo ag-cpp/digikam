@@ -44,7 +44,6 @@ ScanStateFilter::~ScanStateFilter()
 
 FacePipelineExtendedPackage::Ptr ScanStateFilter::filter(const ItemInfo& info)
 {
-    qDebug() << "Filter";
     FaceUtils utils;
 
     switch (mode)
@@ -73,7 +72,6 @@ FacePipelineExtendedPackage::Ptr ScanStateFilter::filter(const ItemInfo& info)
             if      (mode == FacePipeline::ReadUnconfirmedFaces)
             {
                 databaseFaces = utils.unconfirmedFaceTagsIfaces(info.id());
-                qDebug() << "Retrieve unconfirmed face" << databaseFaces.size();
             }
             else if (mode == FacePipeline::ReadFacesForTraining)
             {

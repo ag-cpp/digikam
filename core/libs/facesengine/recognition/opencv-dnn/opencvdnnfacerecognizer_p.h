@@ -158,7 +158,6 @@ public:
                 case KNN:
                 {
                     id = d->predictKNN(embeddings[i]);
-                    qDebug() << "id" << id;
                     break;
                 }
 
@@ -224,7 +223,6 @@ int OpenCVDNNFaceRecognizer::Private::predictKNN(const cv::Mat& faceEmbedding) c
 {
     if (!tree)
     {
-        qDebug() << "Tree is null";
         return -1;
     }
 
@@ -232,7 +230,6 @@ int OpenCVDNNFaceRecognizer::Private::predictKNN(const cv::Mat& faceEmbedding) c
     float searchRange = (1 - threshold) * maxDistance;
 
     QMap<double, QVector<int> > closestNeighbors = tree->getClosestNeighbors(faceEmbedding, searchRange, kNeighbors);
-    qDebug() << "Search with threshold" << searchRange << "k" << kNeighbors;
     QMap<int, QVector<double> > votingGroups;
 
     for (QMap<double, QVector<int> >::const_iterator iter  = closestNeighbors.cbegin();
@@ -244,7 +241,6 @@ int OpenCVDNNFaceRecognizer::Private::predictKNN(const cv::Mat& faceEmbedding) c
                                         ++node)
         {
             int label = (*node);
-            qDebug() << "Close node" << label << "Distance" << iter.key();
             votingGroups[label].append(iter.key());
         }
     }

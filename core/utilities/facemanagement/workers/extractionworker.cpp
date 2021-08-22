@@ -203,8 +203,6 @@ void ExtractionWorker::extract(const QVector<QString>& tagIDs, QList<QImage>& fa
     QVector<cv::Mat> embeddings;    
     cv::parallel_for_(cv::Range(0, faces.size()), Private::ParallelExtractors(d, faces, embeddings));
 
-    qDebug() << "Extract" << embeddings.size() << "embedding";
-
     for (int i = 0; i < embeddings.size(); ++i)
     {
         int id = -1;
@@ -213,7 +211,6 @@ void ExtractionWorker::extract(const QVector<QString>& tagIDs, QList<QImage>& fa
             id = identities[i];
         }
 
-        qDebug() << "Save";
         d->db.saveEmbedding(embeddings[i], tagIDs[i], id);
     }
 }
