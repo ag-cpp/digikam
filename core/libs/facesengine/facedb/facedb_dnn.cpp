@@ -24,7 +24,7 @@
  * ============================================================ */
 
 #include "facedb_p.h"
-#include "opencvdnnfacerecognizer.h"
+#include "faceembeddingcache.h"
 
 namespace Digikam
 {

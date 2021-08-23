@@ -65,7 +65,7 @@ public:
     Private(cv::Ptr<cv::ml::TrainData> data, Classifier method)
         : method        (method),
           tree          (nullptr),
-          kNeighbors    (5),
+          kNeighbors    (1),
           threshold     (50)
     {
         switch (method)

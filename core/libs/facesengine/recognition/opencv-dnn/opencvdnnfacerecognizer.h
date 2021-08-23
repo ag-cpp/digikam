@@ -34,14 +34,6 @@
 namespace Digikam
 {
 
-struct Q_DECL_HIDDEN FaceEmbeddingData
-{
-    int id;
-    cv::Mat embedding;
-    int identity;
-    QString tagId;
-};
-
 class DIGIKAM_GUI_EXPORT OpenCVDNNFaceRecognizer
 {
 public:

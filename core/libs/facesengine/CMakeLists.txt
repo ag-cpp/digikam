@@ -91,7 +91,8 @@ set(facesengine_database_LIB_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/recognition/opencv
                                   ${CMAKE_CURRENT_SOURCE_DIR}/recognition/opencv-dnn/kd_tree.cpp
                                   ${CMAKE_CURRENT_SOURCE_DIR}/recognition/opencv-dnn/opencvdnnfacerecognizer.cpp
                                   ${CMAKE_CURRENT_SOURCE_DIR}/recognition/opencv-dnn/dnnfaceextractor.cpp
-                                  
+                                  ${CMAKE_CURRENT_SOURCE_DIR}/recognition/opencv-dnn/faceembeddingcache.cpp
+
                                   ${CMAKE_CURRENT_SOURCE_DIR}/multicore_tsne/splittree.cpp
                                   ${CMAKE_CURRENT_SOURCE_DIR}/multicore_tsne/tsne.cpp
                                   ${CMAKE_CURRENT_SOURCE_DIR}/multicore_tsne/dimension_reducer.cpp

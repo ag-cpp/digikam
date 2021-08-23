@@ -27,7 +27,7 @@
 // Local includes
 
 #include "digikam_debug.h"
-#include "dimension_reducer.h"
+#include "faceembeddingcache.h"
 #include "opencvdnnfacerecognizer.h"
 #include "faceitemretriever.h"
 #include "identities_manager.h"
@@ -37,25 +37,6 @@
 
 namespace Digikam
 {
-
-QVector<FaceEmbeddingData>& reduceDimension(QVector<FaceEmbeddingData>& data, int nbCPU)
-{
-    cv::Mat embeddings;
-
-    for (int i = 0; i < data.size(); ++i)
-    {
-        embeddings.push_back(data[i].embedding);
-    }
-
-    cv::Mat projectedEmbedings = Digikam::DimensionReducer::reduceDimension(embeddings, 2, nbCPU);
-
-    for (int i = 0; i < data.size(); ++i)
-    {
-        data[i].embedding = projectedEmbedings.row(i);
-    }
-
-    return data;
-}
 
 class RecognitionWorker::Private
 {
@@ -75,19 +56,16 @@ public:
 
     void init()
     {
-        QVector<FaceEmbeddingData> data = FaceEmbeddingManager().getFaceEmbeddings();
-        data = reduceDimension(data, 4);
+        faceembeddingMap = FaceEmbeddingCache::getData();
 
         cv::Mat predictors, labels;
 
-        for (int i = 0; i < data.size(); ++i)
+        for (QMap<QString, FaceEmbeddingData>::iterator it = faceembeddingMap.begin(); it != faceembeddingMap.end(); ++it)
         {
-            faceembeddingMap[data[i].tagId] = data[i];
-
-            if (data[i].identity >= 0)
+            if (it.value().identity >= 0)
             {
-                predictors.push_back(data[i].embedding);
-                labels.push_back(data[i].identity);
+                predictors.push_back(it.value().embedding);
+                labels.push_back(it.value().identity);
             }
         }
 

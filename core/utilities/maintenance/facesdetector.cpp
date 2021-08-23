@@ -188,8 +188,6 @@ FacesDetector::FacesDetector(const FaceScanSettings& settings, ProgressItem* con
                             getImagesWithImageTagProperty(FaceTags::unconfirmedPersonTagId(),
                                                         ImageTagPropertyName::autodetectedFace()));
 
-        qDebug() << "nb of image" << d->idsTodoList.size();
-
         d->source = FacesDetector::Ids;
     }
     else if (settings.task == FaceScanSettings::RetrainAll)
@@ -241,6 +239,8 @@ void FacesDetector::slotStart()
         }
 
         slotItemsInfo(d->infoTodoList);
+        endInput();
+
         return;
     }
     else if (d->source == FacesDetector::Ids)
@@ -259,6 +259,8 @@ void FacesDetector::slotStart()
         }
 
         slotItemsInfo(itemInfos);
+        endInput();
+
         return;
     }
 
@@ -341,13 +343,7 @@ void FacesDetector::slotContinueAlbumListing()
 {
     if (d->source != FacesDetector::Albums)
     {
-        QMutexLocker locker(&d->mutex);
-
-        d->endOfData = true;
-        if (d->endOfData && d->counter <= 0) 
-        {
-            slotDone();
-        }
+        endInput();
 
         return;
     }
@@ -369,13 +365,7 @@ void FacesDetector::slotContinueAlbumListing()
     {
         if (d->albumTodoList.isEmpty())
         {
-            QMutexLocker locker(&d->mutex);
-
-            d->endOfData = true;
-            if (d->endOfData && d->counter <= 0) 
-            {
-                slotDone();
-            }
+            endInput();
 
             return;
         }
@@ -391,7 +381,6 @@ void FacesDetector::slotItemsInfo(const ItemInfoList& items)
 {
     QMutexLocker locker(&d->mutex);
     d->counter += items.size();
-    qDebug() << "inc counter" << d->counter;
 
     d->pipeline.process(items);
 }
@@ -417,7 +406,7 @@ void FacesDetector::slotImagesSkipped(const QList<ItemInfo>& infos)
 
     QMutexLocker locker(&d->mutex);
     d->counter -= infos.size();
-    qDebug() << "desc counter" << d->counter;
+
     if (d->endOfData && d->counter <= 0) 
     {
         slotDone();
@@ -430,7 +419,18 @@ void FacesDetector::slotShowOneDetected(const FacePipelinePackage& /*package*/)
 
     QMutexLocker locker(&d->mutex);
     --d->counter;
-    qDebug() << "desc counter" << d->counter;
+
+    if (d->endOfData && d->counter <= 0) 
+    {
+        slotDone();
+    }
+}
+
+void FacesDetector::endInput()
+{
+    QMutexLocker locker(&d->mutex);
+
+    d->endOfData = true;
     if (d->endOfData && d->counter <= 0) 
     {
         slotDone();
