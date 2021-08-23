@@ -63,6 +63,8 @@ FaceEmbeddingCache::~FaceEmbeddingCache()
 void FaceEmbeddingCache::init()
 {
     QVector<FaceEmbeddingData> data = FaceEmbeddingManager().getFaceEmbeddings();
+    // NOTE: if the data set is large enough, T-SNE projection will take a very long time. 
+    // Plus, when the data is large enough, we can avoid the curse of dimensionality, thus there is no need to project data
     if (data.size() < 13000)
     {
         data = reduceDimension(data, 4);
