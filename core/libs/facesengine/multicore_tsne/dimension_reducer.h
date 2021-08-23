@@ -23,22 +23,19 @@
 #ifndef DIGIKAM_FACESENGINE_DIMENSIONREDUCER_H
 #define DIGIKAM_FACESENGINE_DIMENSIONREDUCER_H
 
+// Local includes
+
 #include "digikam_opencv.h"
 #include "digikam_export.h"
 
 namespace Digikam
 {
 
-class DIGIKAM_EXPORT DimensionReducer 
+class DIGIKAM_EXPORT DimensionReducer
 {
 public:
 
     static cv::Mat reduceDimension(cv::Mat data, int outputDimension, int nbCPU);
-    
-private:
-
-    class Private;
-    Private* d;
 };
 
 } // namespace Digikam
