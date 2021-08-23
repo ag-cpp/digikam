@@ -31,7 +31,6 @@
 #include "opencvdnnfacerecognizer.h"
 #include "faceitemretriever.h"
 #include "identities_manager.h"
-#include "faceembedding_manager.h"
 #include "extractionworker.h"
 #include "asyncbuffer.h"
 

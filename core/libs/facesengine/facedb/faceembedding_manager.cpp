@@ -83,6 +83,7 @@ void FaceEmbeddingManager::saveEmbedding(const cv::Mat& faceEmbedding,
 
     QMutexLocker lock(&d->mutex);
     FaceDbAccess().db()->insertFaceVector(faceEmbedding, tagID, identity);
+    FaceEmbeddingCache::invalidCache();
 }
 
 QVector<FaceEmbeddingData> FaceEmbeddingManager::getFaceEmbeddings() const
@@ -107,11 +108,14 @@ void FaceEmbeddingManager::clearEmbedding(const QList<int>& idsToClean, const QS
     {
         FaceDbAccess().db()->clearDNNTraining(idsToClean, tagId);
     }
+
+    FaceEmbeddingCache::invalidCache();
 }
 
 void FaceEmbeddingManager::editIdentity(const QString& tagId, const int identity)
 {
     FaceDbAccess().db()->editFaceVectorIdentity(tagId, identity);
+    FaceEmbeddingCache::invalidCache();
 }
 
 } // namespace Digikam
