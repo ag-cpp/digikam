@@ -109,10 +109,10 @@ FilesDownloader::FilesDownloader(QWidget* const parent)
 
     if (qApp->applicationName() == QLatin1String("digikam"))
     {
-        d->files << DownloadInfo(QLatin1String("facesengine/dnnface/"),
-                                 QLatin1String("openface_nn4.small2.v1.t7"),
-                                 QLatin1String("9b72d54aeb24a64a8135dca8e792f7cc675c99a884a6940350a6cedcf7b7ba08"),
-                                 31510785
+        d->files << DownloadInfo(QLatin1String("facesengine/facenet_opencv_dnn/"),
+                                 QLatin1String("graph_final.pb"),
+                                 QLatin1String("35820a8fb7a1631f5c261e10a096fd7a7433818632432ca66ab0fc9a25ce2445"),
+                                 94027862
                                 );
 
         d->files << DownloadInfo(QLatin1String("facesengine/dnnface/"),
