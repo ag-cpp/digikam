@@ -161,6 +161,8 @@ int main(int argc, char* argv[])
     aboutData.setCopyrightStatement(DAboutData::copyright());
     aboutData.setOtherText(additionalInformation());
     aboutData.setHomepage(DAboutData::webProjectUrl().url());
+    aboutData.setTranslator(i18nc("NAME OF TRANSLATORS", "Your names"),
+                            i18nc("EMAIL OF TRANSLATORS", "Your emails"));
 
     DAboutData::authorsRegistration(aboutData);
 
@@ -199,12 +201,14 @@ int main(int argc, char* argv[])
                                                QLatin1String("translations"),
                                                QStandardPaths::LocateDirectory);
 
-    QTranslator translator;
-
     if (loadTranslation && !transPath.isEmpty())
     {
         QString klanguagePath = QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) +
                                 QLatin1Char('/') + QLatin1String("klanguageoverridesrc");
+
+        qCDebug(DIGIKAM_GENERAL_LOG) << "Qt translations path:" << transPath;
+
+        QLocale locale;
 
         if (!klanguagePath.isEmpty())
         {
@@ -215,20 +219,30 @@ int main(int argc, char* argv[])
 
             if (!language.isEmpty())
             {
-                QLocale::setDefault(language.split(QLatin1Char(':')).first());
+                locale = QLocale(language.split(QLatin1Char(':')).first());
             }
         }
 
-        bool ret = translator.load(QLocale(), QLatin1String("qtbase"),
-                                   QLatin1String("_"), transPath);
+        QStringList qtCatalogs;
+        qtCatalogs << QLatin1String("qt");
+        qtCatalogs << QLatin1String("qtbase");
+        qtCatalogs << QLatin1String("qt_help");
 
-        qCDebug(DIGIKAM_GENERAL_LOG) << "Qt translations path:" << transPath;
-        qCDebug(DIGIKAM_GENERAL_LOG) << "Locale:"  << QLocale().name()
-                                     << "Loading:" << ret;
-
-        if (ret)
+        foreach (const QString& catalog, qtCatalogs)
         {
-            app.installTranslator(&translator);
+            QTranslator* const translator = new QTranslator(&app);
+
+            if (translator->load(locale, catalog, QLatin1String("_"), transPath))
+            {
+                qCDebug(DIGIKAM_GENERAL_LOG) << "Loaded locale:" << locale.name()
+                                             << "from catalog:"  << catalog;
+
+                app.installTranslator(translator);
+            }
+            else
+            {
+                delete translator;
+            }
         }
     }
 

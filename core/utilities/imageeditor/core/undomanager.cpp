@@ -74,6 +74,7 @@ UndoManager::UndoManager(EditorCore* const core)
 UndoManager::~UndoManager()
 {
     clear(true);
+
     delete d->undoCache;
     delete d;
 }
@@ -93,7 +94,7 @@ void UndoManager::addAction(UndoAction* const action)
 
     UndoAction* const lastAction               = d->undoActions.isEmpty() ? nullptr : d->undoActions.last();
 
-    d->undoActions << action;
+    d->undoActions.append(action);
 
     // action has already read the "history before step" from EditorCore in its constructor
 
@@ -214,7 +215,7 @@ void UndoManager::undoStep(bool saveRedo, bool execute, bool flyingRollback)
     DImageHistory originHistoryAfterStep       = d->core->getResolvedInitialHistory();
     DImageHistory originHistoryBeforeStep;
 
-    int lastOrigin = 0;
+    int lastOrigin                             = 0;
 
     if (isAtOrigin())
     {
@@ -311,7 +312,6 @@ void UndoManager::undoStep(bool saveRedo, bool execute, bool flyingRollback)
     {
         d->origin--;
     }
-
 }
 
 void UndoManager::redoStep(bool execute, bool flyingRollback)
@@ -328,7 +328,7 @@ void UndoManager::redoStep(bool execute, bool flyingRollback)
 
     if (execute)
     {
-        if (irreversible || flyingRollback)
+        if      (irreversible || flyingRollback)
         {
             restoreSnapshot(d->undoActions.size() + 1, dataAfterStep);
         }
@@ -524,22 +524,22 @@ void UndoManager::clearRedoActions()
 
 bool UndoManager::anyMoreUndo() const
 {
-    return !d->undoActions.isEmpty();
+    return (!d->undoActions.isEmpty());
 }
 
 bool UndoManager::anyMoreRedo() const
 {
-    return !d->redoActions.isEmpty();
+    return (!d->redoActions.isEmpty());
 }
 
 int UndoManager::availableUndoSteps() const
 {
-    return d->undoActions.isEmpty();
+    return (d->undoActions.isEmpty());
 }
 
 int UndoManager::availableRedoSteps() const
 {
-    return d->redoActions.isEmpty();
+    return (d->redoActions.isEmpty());
 }
 
 QStringList UndoManager::getUndoHistory() const
@@ -588,7 +588,7 @@ bool UndoManager::hasChanges() const
         }
         else
         {
-            return currentHistory.actionCount() > initialHistory.actionCount();
+            return (currentHistory.actionCount() > initialHistory.actionCount());
         }
     }
 }
@@ -602,10 +602,10 @@ DImageHistory UndoManager::getImageHistoryOfFullRedo() const
 {
     if (!d->redoActions.isEmpty())
     {
-        return d->redoActions.first()->getMetadata().history;
+        return (d->redoActions.first()->getMetadata().history);
     }
 
-    return d->core->getItemHistory();
+    return (d->core->getItemHistory());
 }
 
 } // namespace Digikam

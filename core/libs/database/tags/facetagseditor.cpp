@@ -465,11 +465,20 @@ void FaceTagsEditor::removeFaceAndTag(ItemTagPair& pair, const FaceTagsIface& fa
 
     // Tag assigned and no other entry left?
 
-    if (touchTags            &&
-        pair.isAssigned()    &&
-        !pair.hasProperty(FaceTagsIface::attributeForType(FaceTagsIface::ConfirmedName)))
+    if      (touchTags            &&
+             pair.isAssigned()    &&
+             !pair.hasProperty(FaceTagsIface::attributeForType(FaceTagsIface::ConfirmedName)))
     {
         removeNormalTag(face.imageId(), pair.tagId());
+    }
+    else if (touchTags                                           &&
+             (face.type() != FaceTagsIface::FaceForTraining)     &&
+             pair.hasProperty(FaceTagsIface::attributeForType(FaceTagsIface::ConfirmedName)))
+    {
+        // The tag exists several times, we write it again
+        // to trigger the writing of the metadata.
+
+        addNormalTag(face.imageId(), pair.tagId());
     }
 }
 

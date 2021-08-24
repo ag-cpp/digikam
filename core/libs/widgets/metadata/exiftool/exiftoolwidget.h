@@ -30,6 +30,7 @@
 #include <QStackedWidget>
 #include <QString>
 #include <QUrl>
+#include <QAction>
 
 // Local includes
 
@@ -44,6 +45,15 @@ class DIGIKAM_EXPORT ExifToolWidget : public QStackedWidget
 
 public:
 
+    enum TagFilters
+    {
+        NONE = 0,
+        PHOTO,
+        CUSTOM
+    };
+
+public:
+
     explicit ExifToolWidget(QWidget* const parent);
     ~ExifToolWidget() override;
 
@@ -52,20 +62,31 @@ public:
     QString getCurrentItemKey() const;
     void    setCurrentItemByKey(const QString& itemKey);
 
+    QStringList getTagsFilter() const;
+    void        setTagsFilter(const QStringList& list);
+
+    int     getMode()           const;
+    void    setMode(int mode);
+
 Q_SIGNALS:
 
     void signalSetupExifTool();
+    void signalSetupMetadataFilters();
 
 private Q_SLOTS:
 
+    void slotLoadingResult(bool ok);
+    void slotPreLoadingTimerDone();
     void slotCopy2Clipboard();
     void slotPrintMetadata();
     void slotSaveMetadataToFile();
+    void slotFilterChanged(QAction*);
 
 private:
 
     void setup();
     QString metadataToText() const;
+    void buildView();
 
 private:
 

@@ -30,21 +30,27 @@
 #include <QDir>
 #include <QUrl>
 #include <QMap>
-#include <QDebug>
 #include <QProgressDialog>
 
 // Local includes
 
+#include "digikam_debug.h"
 #include "dfiledialog.h"
 #include "dmediaservermngr.h"
+#include "metaengine.h"
+#include "dpluginloader.h"
 
 using namespace Digikam;
+using namespace DigikamGenericMediaServerPlugin;
 
 int main(int argc, char* argv[])
 {
     QApplication   app(argc, argv);
     QList<QUrl>    list;
     MediaServerMap map;
+
+    MetaEngine::initializeExiv2();
+    DPluginLoader::instance()->init();
 
     QDir().mkpath(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation));
 
@@ -76,6 +82,8 @@ int main(int argc, char* argv[])
     {
         if (!DMediaServerMngr::instance()->load())
         {
+            DPluginLoader::instance()->cleanUp();
+
             return -1;
         }
     }
@@ -93,11 +101,13 @@ int main(int argc, char* argv[])
     }
     else
     {
-        qDebug() << "Failed to start the Media Server...";
+        qCDebug(DIGIKAM_TESTS_LOG) << "Failed to start the Media Server...";
     }
 
     DMediaServerMngr::instance()->save();
     DMediaServerMngr::instance()->cleanUp();
+
+    DPluginLoader::instance()->cleanUp();
 
     return 0;
 }

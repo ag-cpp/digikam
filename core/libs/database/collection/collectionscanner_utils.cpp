@@ -126,8 +126,8 @@ void CollectionScanner::copyFileProperties(const ItemInfo& source, const ItemInf
     // Rating, creation dates
 
     DatabaseFields::ItemInformation imageInfoFields = DatabaseFields::Rating       |
-                                                       DatabaseFields::CreationDate |
-                                                       DatabaseFields::DigitizationDate;
+                                                      DatabaseFields::CreationDate |
+                                                      DatabaseFields::DigitizationDate;
 
     QVariantList imageInfos = CoreDbAccess().db()->getItemInformation(source.id(), imageInfoFields);
 
@@ -204,16 +204,37 @@ void CollectionScanner::itemsWereRemoved(const QList<qlonglong>& removedIds)
     }
 }
 
-int CollectionScanner::countItemsInFolder(const QString& directory)
+int CollectionScanner::countItemsInFolder(const QString& path)
 {
-    int items = 0;
-
-    QDir dir(directory);
+    QDir dir(path);
 
     if (!dir.exists() || !dir.isReadable())
     {
         return 0;
     }
+
+    CollectionLocation location = CollectionManager::instance()->locationForPath(path);
+
+    if (!location.isNull())
+    {
+        QString album = CollectionManager::instance()->album(path);
+        int albumID   = CoreDbAccess().db()->getAlbumForPath(location.id(), album, false);
+
+        if (albumID != -1)
+        {
+            QPair<int, int> numberPair = CoreDbAccess().db()->
+                                         getNumberOfAllItemsAndAlbums(albumID);
+
+            if (numberPair.first)
+            {
+                return (numberPair.first + numberPair.second);
+            }
+        }
+    }
+
+    // Also count the current folder
+
+    int items = 1;
 
     QDirIterator it(dir.path(), QDir::Dirs    |
                                 QDir::Files   |

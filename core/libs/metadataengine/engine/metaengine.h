@@ -158,11 +158,6 @@ public:
     MetaEngine();
 
     /**
-     * Copy constructor.
-     */
-    MetaEngine(const MetaEngine& metadata);
-
-    /**
      * Constructor to load from parsed data.
      */
     explicit MetaEngine(const MetaEngineData& data);
@@ -175,12 +170,7 @@ public:
     /**
      * Standard destructor
      */
-    ~MetaEngine();
-
-    /**
-     * Create a copy of container
-     */
-    MetaEngine& operator=(const MetaEngine& metadata);
+    virtual ~MetaEngine();
 
 public:
 
@@ -741,9 +731,13 @@ public:
      *   if 'inverSelection' is false.
      * - not include "Iop", or "Thumbnail", or "Image", or "Photo" in the Exif tag keys
      * if 'inverSelection' is true.
+     * if 'extractBinary" is true, tags with undefined types of data are extracted (default),
+     * else contents is replaced by "Binary data ... bytes". Take a care as large binary data as
+     * origianl RAW data from DNG container can be huge and listing Exif tags from GUI can take a while.
      */
     MetaEngine::MetaDataMap getExifTagsDataList(const QStringList& exifKeysFilter = QStringList(),
-                                                bool invertSelection = false) const;
+                                                bool invertSelection = false,
+                                                bool extractBinary = true) const;
 
     //@}
 
@@ -1315,6 +1309,17 @@ protected:
      * information in Exif and Iptc metadata
      */
     bool setProgramId() const;
+
+private:
+
+    // Disable copy constructor and operator to prevent potential slicing with this class, reported by Clazy static analyzer.
+    // https://github.com/KDE/clazy/blob/master/docs/checks/README-copyable-polymorphic.md
+    // This methods was implemented to be able to pass this class or a derived version to signals and slots. This is very
+    // Dangerous as virtual methods are present in this polymorphic class and is copyable.
+    // Instead to use this class in signals and slots, use MetaEngineData container.
+    // TODO: remove legacy implementations for these methods later if no side effect.
+    MetaEngine(const MetaEngine& metadata);
+    MetaEngine& operator=(const MetaEngine& metadata);
 
 private:
 

@@ -12,6 +12,7 @@ include_directories(
     $<TARGET_PROPERTY:Qt5::Gui,INTERFACE_INCLUDE_DIRECTORIES>
     $<TARGET_PROPERTY:Qt5::Widgets,INTERFACE_INCLUDE_DIRECTORIES>
     $<TARGET_PROPERTY:Qt5::Core,INTERFACE_INCLUDE_DIRECTORIES>
+    $<TARGET_PROPERTY:Qt5::Concurrent,INTERFACE_INCLUDE_DIRECTORIES>
 
     $<TARGET_PROPERTY:KF5::I18n,INTERFACE_INCLUDE_DIRECTORIES>
     $<TARGET_PROPERTY:KF5::Solid,INTERFACE_INCLUDE_DIRECTORIES>
@@ -60,6 +61,7 @@ set(libitempropertiesdigikam_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/import/importitempropertiestab.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/captions/itemdescedittab.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/captions/disjointmetadata.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/captions/disjointmetadata_p.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/captions/captionedit.cpp
 )
 

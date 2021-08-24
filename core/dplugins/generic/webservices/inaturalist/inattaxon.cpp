@@ -36,7 +36,7 @@ public:
     Private()
         : id       (-1),
           parentId (-1),
-          rankLevel(-1)
+          rankLevel(-1.0)
     {
     }
 
@@ -44,7 +44,7 @@ public:
     int          parentId;
     QString      name;
     QString      rank;
-    int          rankLevel;
+    double       rankLevel;
     QString      commonName;
     QString      matchedTerm;
     QUrl         squareUrl;
@@ -55,7 +55,7 @@ Taxon::Taxon(int id,
              int parentId,
              const QString& name,
              const QString& rank,
-             int rankLevel,
+             double rankLevel,
              const QString& commonName,
              const QString& matchedTerm,
              const QUrl& squareUrl,
@@ -73,11 +73,13 @@ Taxon::Taxon(int id,
     d->ancestors   = ancestors;
 }
 
-Taxon::Taxon() : d(new Private)
+Taxon::Taxon()
+    : d(new Private)
 {
 }
 
-Taxon::Taxon(const Taxon& other) : d(new Private)
+Taxon::Taxon(const Taxon& other)
+    : d(new Private)
 {
     *d = *other.d;
 }
@@ -92,6 +94,16 @@ Taxon& Taxon::operator=(const Taxon& other)
     *d = *other.d;
 
     return *this;
+}
+
+bool Taxon::operator!=(const Taxon& other) const
+{
+    return (d->id != other.d->id);
+}
+
+bool Taxon::operator==(const Taxon& other) const
+{
+    return (d->id == other.d->id);
 }
 
 int Taxon::id() const
@@ -164,7 +176,7 @@ const QString& Taxon::rank() const
     return d->rank;
 }
 
-int Taxon::rankLevel() const
+double Taxon::rankLevel() const
 {
     return d->rankLevel;
 }
@@ -192,16 +204,6 @@ const QList<Taxon>& Taxon::ancestors() const
 bool Taxon::isValid() const
 {
     return (d->id != -1);
-}
-
-bool Taxon::operator==(const Taxon& other) const
-{
-    return (d->id == other.d->id);
-}
-
-bool Taxon::operator!=(const Taxon& other) const
-{
-    return (d->id != other.d->id);
 }
 
 } // namespace DigikamGenericINatPlugin

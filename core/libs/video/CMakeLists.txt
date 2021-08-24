@@ -14,20 +14,41 @@ include_directories($<TARGET_PROPERTY:Qt5::Widgets,INTERFACE_INCLUDE_DIRECTORIES
                     $<TARGET_PROPERTY:KF5::Service,INTERFACE_INCLUDE_DIRECTORIES>
 )
 
-set(libvideotools_SRCS
-    ${CMAKE_CURRENT_SOURCE_DIR}/manager/vidslidesettings.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/manager/vidslidethread.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/manager/vidslidetask.cpp
+###
 
-    ${CMAKE_CURRENT_SOURCE_DIR}/player/vidplayerdlg.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/player/mediaplayerview.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/player/slidevideo.cpp
+set(libvideotoolscommon_SRCS
+    ${CMAKE_CURRENT_SOURCE_DIR}/manager/vidslidesettings.cpp
 )
 
 # Used by digikamcore
-add_library(core_videotools_obj OBJECT ${libvideotools_SRCS})
+add_library(core_videotoolscommon_obj OBJECT ${libvideotoolscommon_SRCS})
 
-target_compile_definitions(core_videotools_obj
+target_compile_definitions(core_videotoolscommon_obj
                            PRIVATE
                            digikamcore_EXPORTS
 )
+
+###
+
+# NOTE: this part depends of QtAv dependency
+
+if(ENABLE_MEDIAPLAYER)
+
+    set(libvideotools_SRCS
+        ${CMAKE_CURRENT_SOURCE_DIR}/manager/vidslidethread.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/manager/vidslidetask.cpp
+
+        ${CMAKE_CURRENT_SOURCE_DIR}/player/vidplayerdlg.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/player/mediaplayerview.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/player/slidevideo.cpp
+    )
+
+    # Used by digikamcore
+    add_library(core_videotools_obj OBJECT ${libvideotools_SRCS})
+
+    target_compile_definitions(core_videotools_obj
+                               PRIVATE
+                               digikamcore_EXPORTS
+    )
+
+endif()

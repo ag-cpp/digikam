@@ -111,15 +111,15 @@ static QJsonObject parseJsonResponse(const QByteArray& data)
 
     if (err.error != QJsonParseError::NoError)
     {
-        qWarning() << "parseJsonResponse: Failed to parse json response:"
-                   << err.errorString();
+        qCWarning(DIGIKAM_WEBSERVICES_LOG) << "parseJsonResponse: Failed to parse json response:"
+                                           << err.errorString();
 
         return QJsonObject();
     }
 
     if (!doc.isObject())
     {
-        qWarning() << "parseJsonResponse: Json response is not an object!";
+        qCWarning(DIGIKAM_WEBSERVICES_LOG) << "parseJsonResponse: Json response is not an object!";
 
         return QJsonObject();
     }
@@ -129,9 +129,9 @@ static QJsonObject parseJsonResponse(const QByteArray& data)
 
 static Taxon parseTaxon(const QJsonObject& taxon)
 {
-    int id        = -1;
-    int parentId  = -1;
-    int rankLevel = -1;
+    int id           = -1;
+    int parentId     = -1;
+    double rankLevel = -1.0;
     QString name;
     QString rank;
     QString commonName;
@@ -161,7 +161,7 @@ static Taxon parseTaxon(const QJsonObject& taxon)
 
     if (taxon.contains(RANK_LEVEL))
     {
-        rankLevel = taxon[RANK_LEVEL].toInt();
+        rankLevel = taxon[RANK_LEVEL].toDouble();
     }
 
     if      (taxon.contains(PREFERRED_COMMON_NAME))
@@ -197,10 +197,12 @@ static Taxon parseTaxon(const QJsonObject& taxon)
                  matchedTerm, squareUrl, ancestors);
 }
 
+// ------------------------------------------------------------------------------------------
+
 /**
  * A request consists in state and a function that is called with the response.
  */
-class Request
+class Q_DECL_HIDDEN Request
 {
 public:
 
@@ -220,6 +222,10 @@ public:
 
     virtual void parseResponse(INatTalker& talker,
                                const QByteArray& data) const = 0;
+
+private:
+
+    Q_DISABLE_COPY(Request)
 };
 
 // --------------------------------------------------------------------------------
@@ -392,7 +398,10 @@ int INatTalker::apiTokenExpiresIn() const
 
     uint time = (uint)(QDateTime::currentMSecsSinceEpoch() / 1000);
 
-    return ((d->apiTokenExpires <= time) ? -1 : (d->apiTokenExpires - time));
+    return (
+            (d->apiTokenExpires <= time) ? -1
+                                         : (d->apiTokenExpires - time)
+           );
 }
 
 /**
@@ -418,14 +427,16 @@ void INatTalker::slotApiToken(const QString& apiToken,
     }
 }
 
+// ------------------------------------------------------------------------------------------
+
 /**
  * Get login, name, and icon of authorized user.
  */
-class UserRequest : public Request
+class Q_DECL_HIDDEN UserRequest : public Request
 {
 public:
 
-    UserRequest(const QList<QNetworkCookie>& cookies)
+    explicit UserRequest(const QList<QNetworkCookie>& cookies)
         : m_cookies(cookies)
     {
     }
@@ -451,6 +462,7 @@ public:
             // save api token expiration
 
             talker.d->store->setValue(talker.d->keyExpires, QString::number(talker.d->apiTokenExpires));
+
             // save cookies
 
             QDateTime now(QDateTime::currentDateTime());
@@ -505,10 +517,10 @@ void INatTalker::userInfo(const QList<QNetworkCookie>& cookies)
 
     if (m_authProgressDlg)
     {
-        m_authProgressDlg->
-            setLabelText(QLatin1String("<font color=\"#74ac00\">") +
-                         i18n("iNaturalist") + QLatin1String("</font> ") +
-                         i18n("Login"));
+        m_authProgressDlg->setLabelText(QLatin1String("<font color=\"#74ac00\">") +
+                                        i18n("iNaturalist")                       +
+                                        QLatin1String("</font> ")                 +
+                                        i18n("Login"));
         m_authProgressDlg->setMaximum(2);
         m_authProgressDlg->setValue(1);
         m_authProgressDlg->show();
@@ -523,10 +535,12 @@ void INatTalker::userInfo(const QList<QNetworkCookie>& cookies)
                               new UserRequest(cookies));
 }
 
+// ------------------------------------------------------------------------------------------
+
 /**
  * Load a URL and return result as QByteArry; used for images (icons).
  */
-class LoadUrlRequest : public Request
+class Q_DECL_HIDDEN LoadUrlRequest : public Request
 {
 public:
 
@@ -535,24 +549,30 @@ public:
     {
     }
 
-    void reportError(INatTalker& talker, int error,
+    void reportError(INatTalker&, int,
                      const QString& errorString) const override
     {
+        // A debug message suffices when an image for a taxon cannot be loaded.
+
         qCDebug(DIGIKAM_WEBSERVICES_LOG) << "Url" << m_url << "error:"
                                          << errorString;
-        Request::reportError(talker, error, errorString);
     }
 
     void parseResponse(INatTalker& talker,
                        const QByteArray& data) const override
     {
         talker.d->cachedLoadUrls.insert(m_url, data);
+
         emit talker.signalLoadUrlSucceeded(m_url, data);
     }
 
 private:
 
     QUrl m_url;
+
+private:
+
+    Q_DISABLE_COPY(LoadUrlRequest)
 };
 
 void INatTalker::loadUrl(const QUrl& imgUrl)
@@ -579,10 +599,12 @@ void INatTalker::loadUrl(const QUrl& imgUrl)
                               new LoadUrlRequest(imgUrl));
 }
 
+// ------------------------------------------------------------------------------------------
+
 /**
  *  taxon auto-completion
  */
-class AutoCompletionRequest : public Request
+class Q_DECL_HIDDEN AutoCompletionRequest : public Request
 {
 public:
 
@@ -616,6 +638,10 @@ public:
 private:
 
     QString m_partialName;
+
+private:
+
+    Q_DISABLE_COPY(AutoCompletionRequest)
 };
 
 void INatTalker::taxonAutoCompletions(const QString& partialName)
@@ -627,6 +653,7 @@ void INatTalker::taxonAutoCompletions(const QString& partialName)
     {
         qCDebug(DIGIKAM_WEBSERVICES_LOG) << "Taxon auto-completions for"
                                          <<  partialName << "found in cache.";
+
         emit signalTaxonAutoCompletions(d->cachedAutoCompletions.
                                         value(partialName));
         return;
@@ -634,10 +661,10 @@ void INatTalker::taxonAutoCompletions(const QString& partialName)
 
     QUrl url(d->apiUrl + QLatin1String("taxa/autocomplete"));
     QUrlQuery query;
-    query.addQueryItem(QLatin1String("q"), partialName);
+    query.addQueryItem(QLatin1String("q"),         partialName);
     query.addQueryItem(QLatin1String("is_active"), QLatin1String("true"));
-    query.addQueryItem(QLatin1String("per_page"), QString::number(12));
-    query.addQueryItem(QLatin1String("locale"), locale.name());
+    query.addQueryItem(QLatin1String("per_page"),  QString::number(12));
+    query.addQueryItem(QLatin1String("locale"),    locale.name());
     url.setQuery(query.query());
 
     QNetworkRequest netRequest(url);
@@ -648,18 +675,20 @@ void INatTalker::taxonAutoCompletions(const QString& partialName)
                               new AutoCompletionRequest(partialName));
 }
 
+// ------------------------------------------------------------------------------------------
+
 /**
  * get nearby places
  */
-class NearbyPlacesRequest : public Request
+class Q_DECL_HIDDEN NearbyPlacesRequest : public Request
 {
 
 public:
 
     NearbyPlacesRequest(double latitude, double longitude, const QString& query)
-        : m_latitude(latitude),
+        : m_latitude (latitude),
           m_longitude(longitude),
-          m_query(query)
+          m_query    (query)
     {
     }
 
@@ -710,7 +739,7 @@ private:
         }
 
         Place(const QString& n, double ba)
-            : m_name(n),
+            : m_name    (n),
               m_bboxArea(ba)
         {
         }
@@ -726,6 +755,10 @@ private:
     double  m_latitude;
     double  m_longitude;
     QString m_query;
+
+private:
+
+    Q_DISABLE_COPY(NearbyPlacesRequest)
 };
 
 void INatTalker::nearbyPlaces(double latitude, double longitude)
@@ -737,10 +770,10 @@ void INatTalker::nearbyPlaces(double latitude, double longitude)
     qCDebug(DIGIKAM_WEBSERVICES_LOG) << "Requesting nearby places for lat"
                                      << lat << "lon" << lng;
     QUrlQuery query;
-    query.addQueryItem(QLatin1String("nelat"), lat);
-    query.addQueryItem(QLatin1String("nelng"), lng);
-    query.addQueryItem(QLatin1String("swlat"), lat);
-    query.addQueryItem(QLatin1String("swlng"), lng);
+    query.addQueryItem(QLatin1String("nelat"),    lat);
+    query.addQueryItem(QLatin1String("nelng"),    lng);
+    query.addQueryItem(QLatin1String("swlat"),    lat);
+    query.addQueryItem(QLatin1String("swlng"),    lng);
     query.addQueryItem(QLatin1String("per_page"), QString::number(100));
     url.setQuery(query.query());
 
@@ -762,12 +795,14 @@ void INatTalker::nearbyPlaces(double latitude, double longitude)
                               new NearbyPlacesRequest(latitude, longitude, query.query()));
 }
 
+// ------------------------------------------------------------------------------------------
+
 /**
  * Find the closest observation; used as a sanity check for identifications:
  * when the closest known observation is hundreds of kilometers away, we
  * have likely misidentified the organism in our photo.
  */
-class NearbyObservationRequest : public Request
+class Q_DECL_HIDDEN NearbyObservationRequest : public Request
 {
 
 public:
@@ -814,13 +849,29 @@ public:
             }
             else
             {
-                INatTalker::NearbyObservation closestObscured(
-                    -1, 0.0, 0.0, MAX_DISTANGE_KM * 1000.0,
-                    true, m_taxon, m_latitude, m_longitude);
+                INatTalker::NearbyObservation closestObscured
+                (
+                    -1,
+                    0.0,
+                    0.0,
+                    MAX_DISTANGE_KM * 1000.0,
+                    true,
+                    m_taxon,
+                    m_latitude,
+                    m_longitude
+                );
 
-                INatTalker::NearbyObservation closestOpen(
-                    -1, 0.0, 0.0, MAX_DISTANGE_KM * 1000.0,
-                    false, m_taxon, m_latitude, m_longitude);
+                INatTalker::NearbyObservation closestOpen
+                (
+                    -1,
+                    0.0,
+                    0.0,
+                    MAX_DISTANGE_KM * 1000.0,
+                    false,
+                    m_taxon,
+                    m_latitude,
+                    m_longitude
+                );
 
                 QJsonArray results = json[RESULTS].toArray();
 
@@ -844,7 +895,7 @@ public:
                                                             latitude,
                                                             longitude);
 
-                    if (obscured)
+                    if      (obscured)
                     {
                         if (distanceMeters < closestObscured.m_distanceMeters)
                         {
@@ -895,6 +946,10 @@ private:
     double  m_longitude;
     double  m_radiusKm;
     QString m_query;
+
+private:
+
+    Q_DISABLE_COPY(NearbyObservationRequest)
 };
 
 void INatTalker::closestObservation(uint taxon, double latitude,
@@ -904,6 +959,7 @@ void INatTalker::closestObservation(uint taxon, double latitude,
     qCDebug(DIGIKAM_WEBSERVICES_LOG) << "Requesting closest observation of"
                                      << taxon << "to" << latitude << longitude
                                      << "with radius" << radiusKm << "km.";
+
     QUrl url(d->apiUrl + QLatin1String("observations"));
 
     QUrlQuery query;
@@ -943,17 +999,19 @@ void INatTalker::closestObservation(uint taxon, double latitude,
                                                                                : origQuery));
 }
 
+// ------------------------------------------------------------------------------------------
 
 /**
  *  get taxon suggestions for an image
  */
-class ComputerVisionRequest : public Request
+class Q_DECL_HIDDEN ComputerVisionRequest : public Request
 {
 
 public:
 
     ComputerVisionRequest(const QString& imgPath, const QString& tmpFile)
-        : m_imagePath(imgPath), m_tmpFilePath(tmpFile)
+        : m_imagePath  (imgPath),
+          m_tmpFilePath(tmpFile)
     {
     }
 
@@ -965,15 +1023,15 @@ public:
         }
     }
 
-    void parseScore(QJsonObject json, QList<ComputerVisionScore>& scores) const
+    void parseScore(const QJsonObject& json, QList<ComputerVisionScore>& scores) const
     {
         static const QString FREQUENCY_SCORE = QLatin1String("frequency_score");
         static const QString VISION_SCORE    = QLatin1String("vision_score");
         static const QString COMBINED_SCORE  = QLatin1String("combined_score");
 
-        double frequency_score = 0.0;
-        double vision_score    = 0.0;
-        double combined_score  = 0.0;
+        double frequency_score               = 0.0;
+        double vision_score                  = 0.0;
+        double combined_score                = 0.0;
         Taxon  taxon;
 
         if (json.contains(FREQUENCY_SCORE))
@@ -1030,6 +1088,10 @@ private:
 
     QString m_imagePath;
     QString m_tmpFilePath;
+
+private:
+
+    Q_DISABLE_COPY(ComputerVisionRequest)
 };
 
 void INatTalker::computerVision(const QUrl& localImage)
@@ -1048,12 +1110,12 @@ void INatTalker::computerVision(const QUrl& localImage)
         WIDTH  = 299
     };
 
-    QString path = localImage.path();
+    QString path = localImage.toLocalFile();
 
     if (d->cachedImageScores.contains(path))
     {
         qCDebug(DIGIKAM_WEBSERVICES_LOG) << "Vision identification for"
-                                         << localImage.path()
+                                         << localImage.toLocalFile()
                                          << "found in cache.";
         emit signalComputerVisionResults(d->cachedImageScores.value(path));
 
@@ -1105,12 +1167,12 @@ void INatTalker::computerVision(const QUrl& localImage)
 
     QNetworkReply* const reply = d->netMngr->post(netRequest, multiPart);
     multiPart->setParent(reply);
-    d->pendingRequests.insert(reply, new ComputerVisionRequest(localImage.path(), path));
+    d->pendingRequests.insert(reply, new ComputerVisionRequest(localImage.toLocalFile(), path));
 }
 
 QString INatTalker::tmpFileName(const QString& path)
 {
-    QString suffix(QLatin1String(""));
+    QString suffix;
 
     for ( ; ; )
     {
@@ -1126,11 +1188,13 @@ QString INatTalker::tmpFileName(const QString& path)
     }
 }
 
-class CreateObservationRequest : public Request
+// ------------------------------------------------------------------------------------------
+
+class Q_DECL_HIDDEN CreateObservationRequest : public Request
 {
 public:
 
-    CreateObservationRequest(const INatTalker::PhotoUploadRequest& req)
+    explicit CreateObservationRequest(const INatTalker::PhotoUploadRequest& req)
         : m_uploadRequest(req)
     {
     }
@@ -1152,6 +1216,10 @@ public:
 private:
 
     INatTalker::PhotoUploadRequest m_uploadRequest;
+
+private:
+
+    Q_DISABLE_COPY(CreateObservationRequest)
 };
 
 void INatTalker::createObservation(const QByteArray& parameters,
@@ -1170,7 +1238,9 @@ void INatTalker::createObservation(const QByteArray& parameters,
                               new CreateObservationRequest(upload));
 }
 
-class UploadPhotoRequest : public Request
+// ------------------------------------------------------------------------------------------
+
+class Q_DECL_HIDDEN UploadPhotoRequest : public Request
 {
 public:
 
@@ -1207,6 +1277,10 @@ private:
 
     INatTalker::PhotoUploadRequest m_request;
     QString                        m_tmpImage;
+
+private:
+
+    Q_DISABLE_COPY(UploadPhotoRequest)
 };
 
 void INatTalker::uploadNextPhoto(const PhotoUploadRequest& request)
@@ -1215,7 +1289,7 @@ void INatTalker::uploadNextPhoto(const PhotoUploadRequest& request)
     parameters << Parameter(QLatin1String("observation_photo[observation_id]"),
                             QString::number(request.m_observationId));
     QString tmpImage;
-    QString path = request.m_images.front().path();
+    QString path = request.m_images.front().toLocalFile();
 
     if (request.m_rescale)
     {
@@ -1244,8 +1318,7 @@ void INatTalker::uploadNextPhoto(const PhotoUploadRequest& request)
         }
     }
 
-    QHttpMultiPart* multiPart = getMultiPart(parameters, QLatin1String("file"),
-                                path);
+    QHttpMultiPart* multiPart  = getMultiPart(parameters, QLatin1String("file"), path);
     QUrl url(d->apiUrl + QLatin1String("observation_photos"));
     QNetworkRequest netRequest(url);
     netRequest.setRawHeader("Authorization", request.m_apiKey.toLatin1());
@@ -1254,12 +1327,13 @@ void INatTalker::uploadNextPhoto(const PhotoUploadRequest& request)
     d->pendingRequests.insert(reply, new UploadPhotoRequest(request, tmpImage));
 }
 
+// ------------------------------------------------------------------------------------------
 
-class DeleteObservationRequest : public Request
+class Q_DECL_HIDDEN DeleteObservationRequest : public Request
 {
 public:
 
-    DeleteObservationRequest(int id)
+    explicit DeleteObservationRequest(int id)
         : m_observationId(id)
     {
     }
@@ -1272,6 +1346,10 @@ public:
 private:
 
     int m_observationId;
+
+private:
+
+    Q_DISABLE_COPY(DeleteObservationRequest)
 };
 
 /**

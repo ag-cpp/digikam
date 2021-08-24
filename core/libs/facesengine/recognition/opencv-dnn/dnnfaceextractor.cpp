@@ -26,6 +26,7 @@
 
 // Qt includes
 
+#include <QUrl>
 #include <QMutex>
 #include <QString>
 #include <QDataStream>
@@ -96,9 +97,12 @@ DNNFaceExtractor::~DNNFaceExtractor()
 
 bool DNNFaceExtractor::loadModels()
 {
+    QString appPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QUrl    appUrl  = QUrl::fromLocalFile(appPath).adjusted(QUrl::RemoveFilename);
+    appUrl.setPath(appUrl.path() + QLatin1String("digikam/facesengine/"));
+
     QString name    = QLatin1String("graph_final.pb");
-    QString nnmodel = QStandardPaths::locate(QStandardPaths::AppDataLocation,
-                                             QString::fromLatin1("facesengine/%1").arg(name));
+    QString nnmodel = appUrl.toLocalFile() + name;
 
     if (!nnmodel.isEmpty())
     {

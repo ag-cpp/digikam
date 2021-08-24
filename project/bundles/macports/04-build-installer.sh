@@ -340,7 +340,22 @@ for FILE in $FILES ; do
     rsync -R "./$FILE" "$TEMPROOT/digikam.app/Contents/Resources/"
 done
 
+# Move Qt translation data files at the right place in the bundle. See Bug #438701.
+
+mv -v $TEMPROOT/libexec/qt5/translations $TEMPROOT/digikam.app/Contents/Resources/
+
+# To support localized system menu entries from MacOS. See bug #432650.
+
+FILES=$(find "$TEMPROOT/digikam.app/Contents/Resources/locale" -type d -depth 1)
+
+for FILE in $FILES ; do
+    BASE=$(basename $FILE)
+    echo "Create localized system menu entry for $BASE"
+    mkdir "$TEMPROOT/digikam.app/Contents/Resources/$BASE.lproj"
+done
+
 # Showfoto resources dir must be merged with digiKam.
+
 cp -a "$TEMPROOT/showfoto.app/Contents/Resources/" "$TEMPROOT/digikam.app/Contents/Resources/"
 rm -rf "$TEMPROOT/showfoto.app/Contents/Resources"
 

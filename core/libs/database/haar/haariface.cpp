@@ -27,6 +27,8 @@
 
 #include "haariface_p.h"
 
+// C++ includes
+
 #include <functional>
 
 namespace Digikam
@@ -461,9 +463,6 @@ bool HaarIface::fulfillsRestrictions(qlonglong imageId, int albumId,
     }
 }
 
-/**
- * This method is the core functionality: It assigns a score to every image in the database.
- */
 QMap<qlonglong, double> HaarIface::searchDatabase(Haar::SignatureData* const querySig,
                                                   SketchType type, const QList<int>& targetAlbums,
                                                   DuplicatesSearchRestrictions searchResultRestriction,
@@ -494,7 +493,7 @@ QMap<qlonglong, double> HaarIface::searchDatabase(Haar::SignatureData* const que
         d->rebuildSignatureCache();
     }
 
-    for (auto it = d->signatureCache()->cbegin() ; it != d->signatureCache()->cend() ; ++it)
+    for (auto it = d->signatureCache()->constBegin() ; it != d->signatureCache()->constEnd() ; ++it)
     {
         // If the image is the original one or
         // No restrictions apply or
@@ -609,7 +608,7 @@ QMap<QString, QString> HaarIface::writeSAlbumQueries(const DuplicatesResultsMap&
 
     QMap<QString, QString> queries;
 
-    for (auto it = searchResults.cbegin() ; it != searchResults.cend(); ++it)
+    for (auto it = searchResults.constBegin() ; it != searchResults.constEnd() ; ++it)
     {
         SearchXmlWriter writer;
         writer.writeGroup();
@@ -773,8 +772,8 @@ HaarIface::DuplicatesResultsMap HaarIface::findDuplicates(const QSet<qlonglong>&
     QPair<double, QMap<qlonglong, double> > bestMatches;
     QList<qlonglong>                        duplicates;
     QSet<qlonglong>                         resultsCandidates;
-    const bool                              singleThread = rangeBegin == images2Scan.cbegin() &&
-                                                           rangeEnd == images2Scan.cend();
+    const bool                              singleThread = ((rangeBegin == images2Scan.constBegin()) &&
+                                                            (rangeEnd   == images2Scan.constEnd()));
 
     // create signature cache map for fast lookup
 
@@ -836,7 +835,7 @@ HaarIface::DuplicatesResultsMap HaarIface::findDuplicates(const QSet<qlonglong>&
 
 double HaarIface::calculateScore(const Haar::SignatureData& querySig,
                                  const Haar::SignatureData& targetSig,
-                                 Haar::Weights& weights,
+                                 const Haar::Weights& weights,
                                  std::reference_wrapper<Haar::SignatureMap>* const queryMaps)
 {
     double score = 0.0;

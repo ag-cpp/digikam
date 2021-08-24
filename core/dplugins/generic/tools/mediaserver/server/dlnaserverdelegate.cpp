@@ -38,7 +38,7 @@
 
 NPT_SET_LOCAL_LOGGER("digiKam.media.server.delegate")
 
-namespace Digikam
+namespace DigikamGenericMediaServerPlugin
 {
 
 class Q_DECL_HIDDEN DLNAMediaServerDelegate::Private
@@ -745,7 +745,7 @@ NPT_Result DLNAMediaServerDelegate::ServeFile(const NPT_HttpRequest&        requ
     // prevent hackers from accessing files outside of our root
 
     if (
-        (file_path.Find("/..") >= 0)  ||
+        (file_path.Find("/..")  >= 0) ||
         (file_path.Find("\\..") >= 0) ||
         NPT_FAILED(NPT_File::GetInfo(file_path, &file_info))
        )
@@ -830,4 +830,4 @@ bool DLNAMediaServerDelegate::ProcessFile(const NPT_String&, const char*)
     return true;
 }
 
-} // namespace Digikam
+} // namespace DigikamGenericMediaServerPlugin

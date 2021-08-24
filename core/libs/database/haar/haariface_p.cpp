@@ -124,10 +124,10 @@ void HaarIface::Private::rebuildSignatureCache(const QSet<qlonglong>& imageIds)
 
     // reference for easier access
 
-    SignatureCache& signatureCache = *m_signatureCache;
-    AlbumCache&     albumCache     = *m_albumCache;
+    SignatureCache& sigCache = *m_signatureCache;
+    AlbumCache&     albCache = *m_albumCache;
 
-    DbEngineSqlQuery query         = SimilarityDbAccess().backend()->prepareQuery(signatureQuery);
+    DbEngineSqlQuery query   = SimilarityDbAccess().backend()->prepareQuery(signatureQuery);
 
     if (!SimilarityDbAccess().backend()->exec(query))
     {
@@ -162,7 +162,8 @@ void HaarIface::Private::rebuildSignatureCache(const QSet<qlonglong>& imageIds)
 
         if (itemAlbumHash.contains(imageid))
         {
-            // <albumroootid, albumid>
+            // Pair storage of <albumroootid, albumid>
+
             const QPair<int, int>& albumPair = itemAlbumHash.value(imageid);
 
             if (filterByAlbumRoots)
@@ -174,9 +175,9 @@ void HaarIface::Private::rebuildSignatureCache(const QSet<qlonglong>& imageIds)
             }
 
             blob.read(query.value(1).toByteArray(), targetSig);
-            albumid                 = albumPair.second;
-            signatureCache[imageid] = targetSig;
-            albumCache[imageid]     = albumid;
+            albumid           = albumPair.second;
+            sigCache[imageid] = targetSig;
+            albCache[imageid] = albumid;
         }
     }
 }
@@ -195,7 +196,7 @@ bool HaarIface::Private::retrieveSignatureFromCache(qlonglong imageId, Haar::Sig
 
     if (m_signatureCache->contains(imageId))
     {
-        data = m_signatureCache.get()->value(imageId);
+        data = m_signatureCache.data()->value(imageId);
 
         return true;
     }
@@ -215,17 +216,17 @@ void HaarIface::Private::setImageDataFromImage(const DImg& image)
 
 SignatureCache* HaarIface::Private::signatureCache() const
 {
-    return m_signatureCache.get();
+    return m_signatureCache.data();
 }
 
 AlbumCache* HaarIface::Private::albumCache() const
 {
-    return m_albumCache.get();
+    return m_albumCache.data();
 }
 
 Haar::ImageData* HaarIface::Private::imageData() const
 {
-    return m_data.get();
+    return m_data.data();
 }
 
 void HaarIface::Private::setAlbumRootsToSearch(const QSet<int>& albumRootIds)

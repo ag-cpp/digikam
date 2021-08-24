@@ -44,6 +44,7 @@
 #include "digikam-lcms.h"
 #include "metaengine.h"
 #include "dngwriter.h"
+#include "exiftoolparser.h"
 
 #ifdef HAVE_LENSFUN
 #   include "lensfuniface.h"
@@ -148,6 +149,20 @@ LibsInfoDlg::LibsInfoDlg(QWidget* const parent)
                 SUPPORTED_YES : SUPPORTED_NO);
     list.insert(i18nc(CONTEXT, "Exiv2 supports Base Media"),   MetaEngine::supportBmff() ?
                 SUPPORTED_YES : SUPPORTED_NO);
+
+    ExifToolParser* const parser = new ExifToolParser(this);
+    ExifToolParser::ExifToolData parsed;
+
+    if (parser->version())
+    {
+        parsed            = parser->currentData();
+        QString etVersion = parsed.find(QLatin1String("VERSION_STRING")).value()[0].toString();
+        list.insert(i18nc(CONTEXT, "ExifTool"),                etVersion);
+    }
+    else
+    {
+        list.insert(i18nc(CONTEXT, "ExifTool support"),        SUPPORTED_NO);
+    }
 
 #ifdef HAVE_LENSFUN
     list.insert(i18nc(CONTEXT, "LensFun"),                     LensFunIface::lensFunVersion());

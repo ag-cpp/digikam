@@ -41,8 +41,6 @@ int main(int argc, char** argv)
     // Create ExifTool parser instance.
 
     ExifToolParser* const parser = new ExifToolParser(qApp);
-    QString ext;
-    QString desc;
     ExifToolParser::ExifToolData parsed;
     QStringList lst;
 

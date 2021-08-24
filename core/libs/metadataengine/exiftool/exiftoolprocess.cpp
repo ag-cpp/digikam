@@ -101,20 +101,18 @@ QString ExifToolProcess::program() const
     return d->etExePath;
 }
 
-void ExifToolProcess::start()
+bool ExifToolProcess::start()
 {
     // Check if ExifTool is starting or running
 
     if (d->process->state() != QProcess::NotRunning)
     {
-        qCWarning(DIGIKAM_METAENGINE_LOG) << "ExifToolProcess::start(): ExifTool is already running";
-
-        return;
+        return true;
     }
 
     if (!checkExifToolProgram())
     {
-        return;
+        return false;
     }
 
     // Prepare command for ExifTool
@@ -138,6 +136,18 @@ void ExifToolProcess::start()
     args << QLatin1String("-@");
     args << QLatin1String("-");
 
+    //-- Define common arguments
+
+    args << QLatin1String("-common_args");
+
+    //-- Use UTF-8 for file names
+
+    args << QLatin1String("-charset");
+    args << QLatin1String("filename=UTF8");
+
+    args << QLatin1String("-charset");
+    args << QLatin1String("iptc=UTF8");
+
     // Clear queue before start
 
     d->cmdQueue.clear();
@@ -156,11 +166,13 @@ void ExifToolProcess::start()
     qCDebug(DIGIKAM_METAENGINE_LOG) << "ExifToolProcess::start(): create new ExifTool instance:" << program << args;
 
     d->process->start(program, args, QProcess::ReadWrite);
+
+    return d->process->waitForStarted(1000);
 }
 
 void ExifToolProcess::terminate()
 {
-    if      (d->process->state() == QProcess::Running)
+    if (d->process->state() == QProcess::Running)
     {
         // If process is in running state, close ExifTool normally
 
@@ -170,35 +182,36 @@ void ExifToolProcess::terminate()
         d->process->write(QByteArray("-stay_open\nfalse\n"));
         d->process->closeWriteChannel();
         d->writeChannelIsClosed = true;
-        d->exifToolHasFinished  = d->process->waitForFinished(5000);
-    }
-    else if (!d->exifToolHasFinished)
-    {
-        // Otherwise, close ExifTool using OS system call
-        // (WM_CLOSE [Windows] or SIGTERM [Unix])
 
-        // Console applications on Windows that do not run an event loop,
-        // or whose event loop does not handle the WM_CLOSE message,
-        // can only be terminated by calling kill().
+        if (!d->process->waitForFinished(5000))
+        {
+            // Otherwise, close ExifTool using OS system call
+            // (WM_CLOSE [Windows] or SIGTERM [Unix])
+
+            // Console applications on Windows that do not run an event loop,
+            // or whose event loop does not handle the WM_CLOSE message,
+            // can only be terminated by calling kill().
 
 #ifdef Q_OS_WIN
 
-        kill();
+            kill();
 
 #else
 
-        qCDebug(DIGIKAM_METAENGINE_LOG) << "ExifToolProcess::terminate(): closing ExifTool instance...";
+            qCDebug(DIGIKAM_METAENGINE_LOG) << "ExifToolProcess::terminate(): closing ExifTool instance...";
 
-        d->process->terminate();
+            d->process->terminate();
 
 #endif
 
+        }
     }
 }
 
 void ExifToolProcess::kill()
 {
     qCDebug(DIGIKAM_METAENGINE_LOG) << "ExifToolProcess::kill(): shutdown ExifTool instance...";
+
     d->process->kill();
 }
 
@@ -249,9 +262,11 @@ bool ExifToolProcess::waitForFinished(int msecs) const
 
 int ExifToolProcess::command(const QByteArrayList& args, Action ac)
 {
-    if ((d->process->state() != QProcess::Running) ||
+    if (
+        (d->process->state() != QProcess::Running) ||
         d->writeChannelIsClosed                    ||
-        args.isEmpty())
+        args.isEmpty()
+       )
     {
         qCWarning(DIGIKAM_METAENGINE_LOG) << "ExifToolProcess::command(): cannot process command with ExifTool" << args;
 
@@ -288,10 +303,12 @@ int ExifToolProcess::command(const QByteArrayList& args, Action ac)
     cmdStr.append(QByteArray("-echo1\n{await") + cmdIdStr + QByteArray("}\n"));     // Echo text to stdout before processing is complete
     cmdStr.append(QByteArray("-echo2\n{await") + cmdIdStr + QByteArray("}\n"));     // Echo text to stderr before processing is complete
 
-    if (cmdStr.contains(QByteArray("-q"))               ||
+    if (
+        cmdStr.contains(QByteArray("-q"))               ||
         cmdStr.toLower().contains(QByteArray("-quiet")) ||
         cmdStr.contains(QByteArray("-T"))               ||
-        cmdStr.toLower().contains(QByteArray("-table")))
+        cmdStr.toLower().contains(QByteArray("-table"))
+       )
     {
         cmdStr.append(QByteArray("-echo3\n{ready}\n"));                 // Echo text to stdout after processing is complete
     }
@@ -387,8 +404,11 @@ bool ExifToolProcess::checkExifToolProgram()
 
     // If perl path is defined, check if Perl program exists and have execution permissions
 
-    if (!d->perlExePath.isEmpty() && (!QFile::exists(d->perlExePath) ||
-        !(QFile::permissions(d->perlExePath) & QFile::ExeUser)))
+    if (
+        !d->perlExePath.isEmpty()                            &&
+        (!QFile::exists(d->perlExePath)                      ||
+        !(QFile::permissions(d->perlExePath) & QFile::ExeUser))
+       )
     {
         d->setProcessErrorAndEmit(QProcess::FailedToStart,
                                   QString::fromLatin1("Perl does not exists or exec permission is missing"));

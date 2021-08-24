@@ -45,6 +45,7 @@
 
 namespace
 {
+
 static const char* ICCHumanList[] =
 {
     "Icc.Header.ColorSpace",
@@ -64,7 +65,8 @@ static const char* ICCEntryList[] =
     "Header",
     "-1"
 };
-}
+
+} // namespace
 
 namespace Digikam
 {
@@ -131,6 +133,7 @@ ICCProfileWidget::ICCProfileWidget(QWidget* const parent, int w, int h)
     dkCmsErrorAction(LCMS_ERROR_SHOW);
 
     // Set the translated ICC tags titles/descriptions list
+
     d->iccTagsDescription[QLatin1String("Icc.Header.Name")]            = ICCTagInfo(i18nc("@item: icc profile properties", "Name"),
                                                                                     i18nc("@info: icc profile properties", "The ICC profile product name"));
     d->iccTagsDescription[QLatin1String("Icc.Header.Description")]     = ICCTagInfo(i18nc("@item: icc profile properties", "Description"),
@@ -214,6 +217,7 @@ bool ICCProfileWidget::setProfile(const IccProfile& profile)
         setMetadataEmpty();
         d->cieTongue->setProfileData();
         d->profile = IccProfile();
+
         return false;
     }
 
@@ -248,7 +252,7 @@ void ICCProfileWidget::setUncalibratedColor()
     d->cieTongue->uncalibratedColor();
 }
 
-QString ICCProfileWidget::getMetadataTitle()
+QString ICCProfileWidget::getMetadataTitle() const
 {
     return i18nc("@title: icc profile properties", "ICC Color Profile Information");
 }
@@ -261,6 +265,7 @@ bool ICCProfileWidget::loadFromURL(const QUrl& url)
     {
         setProfile(IccProfile());
         d->cieTongue->setProfileData();
+
         return false;
     }
     else
@@ -271,6 +276,7 @@ bool ICCProfileWidget::loadFromURL(const QUrl& url)
         {
             setProfile(IccProfile());
             d->cieTongue->setProfileData();
+
             return false;
         }
     }
@@ -351,40 +357,58 @@ bool ICCProfileWidget::decodeMetadata()
     switch (dkCmsGetColorSpace(hProfile))
     {
         case icSigLabData:
+        {
             colorSpace = i18nc("@info: icc profile color space", "Lab");
             break;
+        }
 
         case icSigLuvData:
+        {
             colorSpace = i18nc("@info: icc profile color space", "Luv");
             break;
+        }
 
         case icSigRgbData:
+        {
             colorSpace = i18nc("@info: icc profile color space", "RGB");
             break;
+        }
 
         case icSigGrayData:
+        {
             colorSpace = i18nc("@info: icc profile color space", "GRAY");
             break;
+        }
 
         case icSigHsvData:
+        {
             colorSpace = i18nc("@info: icc profile color space", "HSV");
             break;
+        }
 
         case icSigHlsData:
+        {
             colorSpace = i18nc("@info: icc profile color space", "HLS");
             break;
+        }
 
         case icSigCmykData:
+        {
             colorSpace = i18nc("@info: icc profile color space", "CMYK");
             break;
+        }
 
         case icSigCmyData:
+        {
             colorSpace= i18nc("@info: icc profile color space", "CMY");
             break;
+        }
 
         default:
+        {
             colorSpace = i18nc("@info: icc profile color space", "Unknown");
             break;
+        }
     }
 
     metaDataMap.insert(QLatin1String("Icc.Header.ColorSpace"), colorSpace);
@@ -394,39 +418,58 @@ bool ICCProfileWidget::decodeMetadata()
     switch (dkCmsGetPCS(hProfile))
     {
         case icSigLabData:
+        {
             connectionSpace = i18nc("@info: icc profile color space", "Lab");
             break;
+        }
 
         case icSigLuvData:
+        {
             connectionSpace = i18nc("@info: icc profile color space", "Luv");
             break;
+        }
 
         case icSigRgbData:
+        {
             connectionSpace = i18nc("@info: icc profile color space", "RGB");
             break;
+        }
 
         case icSigGrayData:
+        {
             connectionSpace = i18nc("@info: icc profile color space", "GRAY");
             break;
+        }
 
         case icSigHsvData:
+        {
             connectionSpace = i18nc("@info: icc profile color space", "HSV");
             break;
+        }
 
         case icSigHlsData:
+        {
             connectionSpace = i18nc("@info: icc profile color space", "HLS");
             break;
+        }
+
         case icSigCmykData:
+        {
             connectionSpace = i18nc("@info: icc profile color space", "CMYK");
             break;
+        }
 
         case icSigCmyData:
+        {
             connectionSpace= i18nc("@info: icc profile color space", "CMY");
             break;
+        }
 
         default:
+        {
             connectionSpace = i18nc("@info: icc profile color space", "Unknown");
             break;
+        }
     }
 
     metaDataMap.insert(QLatin1String("Icc.Header.ConnectionSpace"), connectionSpace);
@@ -436,36 +479,52 @@ bool ICCProfileWidget::decodeMetadata()
     switch ((int)dkCmsGetDeviceClass(hProfile))
     {
         case icSigInputClass:
+        {
             device = i18nc("@info: icc profile class", "Input device");
             break;
+        }
 
         case icSigDisplayClass:
+        {
             device = i18nc("@info: icc profile class", "Display device");
             break;
+        }
 
         case icSigOutputClass:
+        {
             device = i18nc("@info: icc profile class", "Output device");
             break;
+        }
 
         case icSigColorSpaceClass:
+        {
             device = i18nc("@info: icc profile class", "Color space");
             break;
+        }
 
         case icSigLinkClass:
+        {
             device = i18nc("@info: icc profile class", "Link device");
             break;
+        }
 
         case icSigAbstractClass:
+        {
             device = i18nc("@info: icc profile class", "Abstract");
             break;
+        }
 
         case icSigNamedColorClass:
+        {
             device = i18nc("@info: icc profile class", "Named color");
             break;
+        }
 
         default:
+        {
             device = i18nc("@info: icc profile class", "Unknown");
             break;
+        }
     }
 
     metaDataMap.insert(QLatin1String("Icc.Header.DeviceClass"), device);
@@ -475,24 +534,34 @@ bool ICCProfileWidget::decodeMetadata()
     switch (dkCmsTakeRenderingIntent(hProfile))
     {
         case 0:
+        {
             intent = i18nc("@info: icc profile redering", "Perceptual");
             break;
+        }
 
         case 1:
+        {
             intent = i18nc("@info: icc profile redering", "Relative Colorimetric");
             break;
+        }
 
         case 2:
+        {
             intent = i18nc("@info: icc profile redering", "Saturation");
             break;
+        }
 
         case 3:
+        {
             intent = i18nc("@info: icc profile redering", "Absolute Colorimetric");
             break;
+        }
 
         default:
+        {
             intent = i18nc("@info: icc profile redering", "Unknown");
             break;
+        }
     }
 
     metaDataMap.insert(QLatin1String("Icc.Header.RenderingIntent"), intent);
@@ -533,7 +602,8 @@ QString ICCProfileWidget::getTagTitle(const QString& key)
 void ICCProfileWidget::slotSaveMetadataToFile()
 {
     QUrl url = saveMetadataToFile(i18nc("@title: file open dialog", "ICC color profile File to Save"),
-                                  QString(QLatin1String("*.icc *.icm|") + i18nc("@info: file open filters", "ICC Files (*.icc; *.icm)")));
+                                  QString(QLatin1String("*.icc *.icm|") +
+                                  i18nc("@info: file open filters", "ICC Files (*.icc; *.icm)")));
     storeMetadataToFile(url, d->profile.data());
 }
 

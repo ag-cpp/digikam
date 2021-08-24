@@ -33,12 +33,11 @@ QMutex ExifToolProcess::Private::s_cmdIdMutex;
 int    ExifToolProcess::Private::s_nextCmdId = ExifToolProcess::Private::CMD_ID_MIN;
 
 ExifToolProcess::Private::Private(ExifToolProcess* const q)
-    : parent              (q),
+    : pp                  (q),
       process             (nullptr),
       cmdRunning          (0),
       cmdAction           (ExifToolProcess::LOAD_METADATA),
       writeChannelIsClosed(true),
-      exifToolHasFinished (true),
       processError        (QProcess::UnknownError)
 {
     outAwait[0] = false;
@@ -150,10 +149,10 @@ void ExifToolProcess::Private::readOutput(const QProcess::ProcessChannel channel
     {
         qCDebug(DIGIKAM_METAENGINE_LOG) << "ExifToolProcess::readOutput(): ExifTool command completed";
 
-        parent->emit signalCmdCompleted(cmdAction,
-                                        execTimer.elapsed(),
-                                        outBuff[QProcess::StandardOutput],
-                                        outBuff[QProcess::StandardError]);
+        Q_EMIT pp->signalCmdCompleted(cmdAction,
+                                      execTimer.elapsed(),
+                                      outBuff[QProcess::StandardOutput],
+                                      outBuff[QProcess::StandardError]);
     }
 
     cmdRunning = 0; // No command is running
@@ -166,7 +165,7 @@ void ExifToolProcess::Private::setProcessErrorAndEmit(QProcess::ProcessError err
     processError = error;
     errorString  = description;
 
-    parent->emit signalErrorOccurred(cmdAction, error);
+    Q_EMIT pp->signalErrorOccurred(cmdAction, error);
 }
 
 } // namespace Digikam

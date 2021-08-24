@@ -450,6 +450,12 @@ void CoreDB::setAlbumDate(int albumID, const QDate& date)
     d->db->recordChangeset(AlbumChangeset(albumID, AlbumChangeset::PropertiesChanged));
 }
 
+void CoreDB::setAlbumModificationDate(int albumID, const QDateTime& modificationDate)
+{
+    d->db->execSql(QString::fromUtf8("UPDATE Albums SET modificationDate=? WHERE id=?;"),
+                   modificationDate, albumID);
+}
+
 void CoreDB::setAlbumIcon(int albumID, qlonglong iconID)
 {
     if (iconID == 0)
@@ -639,7 +645,7 @@ QList<TagProperty> CoreDB::getTagProperties(int tagId) const
     {
         TagProperty property;
 
-        property.tagId = tagId;
+        property.tagId    = tagId;
 
         property.property = (*it).toString();
         ++it;
@@ -668,16 +674,16 @@ QList<TagProperty> CoreDB::getTagProperties(const QString& property) const
 
     for (QList<QVariant>::const_iterator it = values.constBegin() ; it != values.constEnd() ; )
     {
-        TagProperty property;
+        TagProperty prop;
 
-        property.tagId    = (*it).toInt();
+        prop.tagId    = (*it).toInt();
         ++it;
-        property.property = (*it).toString();
+        prop.property = (*it).toString();
         ++it;
-        property.value    = (*it).toString();
+        prop.value    = (*it).toString();
         ++it;
 
-        properties << property;
+        properties << prop;
     }
 
     return properties;
@@ -1518,8 +1524,6 @@ QVariantList CoreDB::getImageMetadata(qlonglong imageID, DatabaseFields::ImageMe
         query                 += QString::fromUtf8(" FROM ImageMetadata WHERE imageid=?;");
 
         d->db->execSql(query, imageID, &values);
-
-        // For some reason, if REAL values may be required from variables stored as QString QVariants. Convert code will come here.
     }
 
     return values;
@@ -1537,31 +1541,6 @@ QVariantList CoreDB::getVideoMetadata(qlonglong imageID, DatabaseFields::VideoMe
         query                 += QString::fromUtf8(" FROM VideoMetadata WHERE imageid=?;");
 
         d->db->execSql(query, imageID, &values);
-
-        // For some reason REAL values may come as QString QVariants. Convert here.
-
-        if (values.size() == fieldNames.size()        &&
-            ((fields & DatabaseFields::Aperture)      ||
-             (fields & DatabaseFields::FocalLength)   ||
-             (fields & DatabaseFields::FocalLength35) ||
-             (fields & DatabaseFields::ExposureTime)  ||
-             (fields & DatabaseFields::SubjectDistance))
-           )
-        {
-            for (int i = 0 ; i < values.size() ; ++i)
-            {
-                if (values.at(i).type() == QVariant::String             &&
-                    (fieldNames.at(i) == QLatin1String("aperture")      ||
-                     fieldNames.at(i) == QLatin1String("focalLength")   ||
-                     fieldNames.at(i) == QLatin1String("focalLength35") ||
-                     fieldNames.at(i) == QLatin1String("exposureTime")  ||
-                     fieldNames.at(i) == QLatin1String("subjectDistance"))
-                   )
-                {
-                    values[i] = values.at(i).toDouble();
-                }
-            }
-        }
     }
 
     return values;
@@ -1605,7 +1584,9 @@ QVariantList CoreDB::getItemPosition(qlonglong imageID, DatabaseFields::ItemPosi
                    )
                 {
                     if (!values.at(i).isNull())
+                    {
                         values[i] = values.at(i).toDouble();
+                    }
                 }
             }
         }
@@ -2008,7 +1989,7 @@ QList<CopyrightInfo> CoreDB::getItemCopyright(qlonglong imageID, const QString& 
     for (QList<QVariant>::const_iterator it = values.constBegin() ; it != values.constEnd() ; )
     {
         CopyrightInfo info;
-        info.id = imageID;
+        info.id         = imageID;
 
         info.property   = (*it).toString();
         ++it;
@@ -2069,28 +2050,36 @@ void CoreDB::removeItemCopyrightProperties(qlonglong imageID, const QString& pro
     switch (removeBy)
     {
         case 0:
+        {
             d->db->execSql(QString::fromUtf8("DELETE FROM ImageCopyright "
                                              "WHERE imageid=?;"),
                            imageID);
             break;
+        }
 
         case 1:
+        {
             d->db->execSql(QString::fromUtf8("DELETE FROM ImageCopyright "
                                              "WHERE imageid=? AND property=?;"),
                            imageID, property);
             break;
+        }
 
         case 2:
+        {
             d->db->execSql(QString::fromUtf8("DELETE FROM ImageCopyright "
                                              "WHERE imageid=? AND property=? AND extraValue=?;"),
                            imageID, property, extraValue);
             break;
+        }
 
         case 3:
+        {
             d->db->execSql(QString::fromUtf8("DELETE FROM ImageCopyright "
                                              "WHERE imageid=? AND property=? AND extraValue=? AND value=?;"),
                            imageID, property, extraValue, value);
             break;
+        }
     }
 }
 
@@ -2404,7 +2393,7 @@ QList<QPair<qlonglong, qlonglong> > CoreDB::getRelationCloud(qlonglong imageId, 
         {
             subject = (*it).toLongLong();
             ++it;
-            object = (*it).toLongLong();
+            object  = (*it).toLongLong();
             ++it;
 
             pairs << qMakePair(subject, object);
@@ -2589,9 +2578,9 @@ QStringList CoreDB::getDirtyOrMissingFaceImageUrls() const
     {
         albumRootPath = CollectionManager::instance()->albumRootPath((*it).toInt());
         ++it;
-        relativePath = (*it).toString();
+        relativePath  = (*it).toString();
         ++it;
-        name = (*it).toString();
+        name          = (*it).toString();
         ++it;
 
         if (relativePath == QLatin1String("/"))
@@ -3234,6 +3223,95 @@ QVariantList CoreDB::getAllCreationDates() const
     return values;
 }
 
+QDateTime CoreDB::getAlbumModificationDate(int albumID) const
+{
+    QVariantList values;
+
+    d->db->execSql(QString::fromUtf8("SELECT modificationDate FROM Albums "
+                                     " WHERE id=?;"),
+                   albumID, &values);
+
+    if (values.isEmpty())
+    {
+        return QDateTime();
+    }
+
+    return values.first().toDateTime();
+}
+
+QMap<QString, QDateTime> CoreDB::getAlbumModificationMap(int albumRootId) const
+{
+    QList<QVariant> values;
+    QMap<QString, QDateTime> pathDateMap;
+
+    d->db->execSql(QString::fromUtf8("SELECT relativePath, modificationDate FROM Albums "
+                                     " WHERE albumRoot=?;"),
+                   albumRootId, &values);
+
+    for (QList<QVariant>::const_iterator it = values.constBegin() ; it != values.constEnd() ; )
+    {
+        QString relativePath = (*it).toString();
+        ++it;
+        QDateTime dateTime   = (*it).toDateTime();
+        ++it;
+
+        pathDateMap.insert(relativePath, dateTime);
+    }
+
+    return pathDateMap;
+
+}
+
+QPair<int, int> CoreDB::getNumberOfAllItemsAndAlbums(int albumID) const
+{
+    int items  = 0;
+    int albums = 0;
+    QVariantList values;
+
+    int rootId   = getAlbumRootId(albumID);
+    QString path = getAlbumRelativePath(albumID);
+    d->db->execSql(QString::fromUtf8("SELECT COUNT(*) FROM Images WHERE Images.album IN "
+                                     " (SELECT DISTINCT id FROM Albums "
+                                     "  WHERE albumRoot=? AND (relativePath=? OR relativePath LIKE ?));"),
+                   rootId, path, path == QLatin1String("/") ? QLatin1String("/%")
+                                                            : QString(path + QLatin1String("/%")), &values);
+
+    if (!values.isEmpty())
+    {
+        items = values.first().toInt();
+    }
+
+    values.clear();
+
+    d->db->execSql(QString::fromUtf8("SELECT DISTINCT COUNT(*) FROM Albums "
+                                     " WHERE albumRoot=? AND (relativePath=? OR relativePath LIKE ?);"),
+                   rootId, path, path == QLatin1String("/") ? QLatin1String("/%")
+                                                            : QString(path + QLatin1String("/%")), &values);
+
+    if (!values.isEmpty())
+    {
+        albums = values.first().toInt();
+    }
+
+    return qMakePair(items, albums);
+}
+
+int CoreDB::getNumberOfItemsInAlbum(int albumID) const
+{
+    QVariantList values;
+
+    d->db->execSql(QString::fromUtf8("SELECT COUNT(*) FROM Images "
+                                     "WHERE album=?;"),
+                   albumID, &values);
+
+    if (values.isEmpty())
+    {
+        return 0;
+    }
+
+    return values.first().toInt();
+}
+
 QMap<int, int> CoreDB::getNumberOfImagesInAlbums() const
 {
     QList<QVariant> values, allAbumIDs;
@@ -3495,7 +3573,7 @@ QList<int> CoreDB::getAlbumAndSubalbumsForPath(int albumRootId, const QString& r
 
     for (QList<QVariant>::const_iterator it = values.constBegin() ; it != values.constEnd() ; )
     {
-        id = (*it).toInt();
+        id                = (*it).toInt();
         ++it;
         albumRelativePath = (*it).toString();
         ++it;
@@ -3678,34 +3756,43 @@ QStringList CoreDB::getItemURLsInAlbum(int albumID, ItemSortOrder sortOrder) con
     switch (sortOrder)
     {
         case ByItemName:
+        {
             d->db->execDBAction(d->db->getDBAction(QString::fromUtf8("getItemURLsInAlbumByItemName")),
                                 bindingMap, &values);
             break;
+        }
 
         case ByItemPath:
-
+        {
             // Don't collate on the path - this is to maintain the same behavior
             // that happens when sort order is "By Path"
 
             d->db->execDBAction(d->db->getDBAction(QString::fromUtf8("getItemURLsInAlbumByItemPath")),
                                 bindingMap, &values);
             break;
+        }
 
         case ByItemDate:
+        {
             d->db->execDBAction(d->db->getDBAction(QString::fromUtf8("getItemURLsInAlbumByItemDate")),
                                 bindingMap, &values);
             break;
+        }
 
         case ByItemRating:
+        {
             d->db->execDBAction(d->db->getDBAction(QString::fromUtf8("getItemURLsInAlbumByItemRating")),
                                 bindingMap, &values);
             break;
+        }
 
         case NoItemSorting:
         default:
+        {
             d->db->execDBAction(d->db->getDBAction(QString::fromUtf8("getItemURLsInAlbumNoItemSorting")),
                                 bindingMap, &values);
             break;
+        }
     }
 
     QStringList urls;
@@ -3715,7 +3802,7 @@ QStringList CoreDB::getItemURLsInAlbum(int albumID, ItemSortOrder sortOrder) con
     {
         relativePath = (*it).toString();
         ++it;
-        name = (*it).toString();
+        name         = (*it).toString();
         ++it;
 
         if (relativePath == QLatin1String("/"))
@@ -3778,11 +3865,11 @@ QMap<qlonglong, QString> CoreDB::getItemIDsAndURLsInAlbum(int albumID) const
 
     for (QList<QVariant>::const_iterator it = values.constBegin() ; it != values.constEnd() ; )
     {
-        id = (*it).toLongLong();
+        id           = (*it).toLongLong();
         ++it;
         relativePath = (*it).toString();
         ++it;
-        name = (*it).toString();
+        name         = (*it).toString();
         ++it;
 
         if (relativePath == QLatin1String("/"))
@@ -4132,7 +4219,7 @@ void CoreDB::removeItemsPermanently(QList<qlonglong> itemIDs, const QList<int>& 
 
     foreach (const qlonglong& id, itemIDs)
     {
-        status << (int)DatabaseItem::Obsolete;
+        status   << (int)DatabaseItem::Obsolete;
         imageIds << id;
     }
 

@@ -61,7 +61,7 @@ public:
           int parentId,
           const QString& name,
           const QString& rank,
-          int rankLevel,
+          double rankLevel,
           const QString& commonName,
           const QString& matchedTerm,
           const QUrl& squareUrl,
@@ -76,15 +76,15 @@ public:
     const QString&      name()        const;
     QString             htmlName()    const;
     const QString&      rank()        const;
-    int                 rankLevel()   const;
+    double              rankLevel()   const;
     const QString&      commonName()  const;
     const QList<Taxon>& ancestors()   const;
     const QUrl&         squareUrl()   const;
     const QString&      matchedTerm() const;
 
     Taxon& operator= (const Taxon&);
-    bool   operator==(const Taxon&)   const;
     bool   operator!=(const Taxon&)   const;
+    bool   operator==(const Taxon&)   const;
 
 private:
 

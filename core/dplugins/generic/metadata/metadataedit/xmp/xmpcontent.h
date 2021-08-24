@@ -26,7 +26,12 @@
 // Qt includes
 
 #include <QWidget>
-#include <QByteArray>
+
+// Local includes
+
+#include "dmetadata.h"
+
+using namespace Digikam;
 
 namespace DigikamGenericMetadataEditPlugin
 {
@@ -40,8 +45,8 @@ public:
     explicit XMPContent(QWidget* const parent);
     ~XMPContent() override;
 
-    void applyMetadata(QByteArray& exifData, QByteArray& xmpData);
-    void readMetadata(QByteArray& xmpData);
+    void applyMetadata(const DMetadata& meta);
+    void readMetadata(const DMetadata& meta);
 
     bool syncJFIFCommentIsChecked()   const;
     bool syncEXIFCommentIsChecked()   const;
