@@ -92,16 +92,16 @@ enum ItemInformationField
     ColorLabel            = 1 << 9,
     PickLabel             = 1 << 10,
     ItemInformationAll   = Rating           |
-                            CreationDate     |
-                            DigitizationDate |
-                            Orientation      |
-                            Width            |
-                            Height           |
-                            Format           |
-                            ColorDepth       |
-                            ColorModel       |
-                            ColorLabel       |
-                            PickLabel,
+                           CreationDate     |
+                           DigitizationDate |
+                           Orientation      |
+                           Width            |
+                           Height           |
+                           Format           |
+                           ColorDepth       |
+                           ColorModel       |
+                           ColorLabel       |
+                           PickLabel,
     ItemInformationFirst = Rating,
     ItemInformationLast  = PickLabel
 };
@@ -168,8 +168,8 @@ enum ItemPositionsField
                           LongitudeNumber     |
                           Altitude            |
                           PositionOrientation |
-                          PositionRoll        |
                           PositionTilt        |
+                          PositionRoll        |
                           PositionAccuracy    |
                           PositionDescription,
     ItemPositionsFirst = Latitude,
@@ -187,10 +187,10 @@ enum ItemCommentsField
     CommentDate       = 1 << 3,
     Comment           = 1 << 4,
     ItemCommentsAll   = CommentType     |
-                         CommentAuthor   |
-                         CommentLanguage |
-                         CommentDate     |
-                         Comment,
+                        CommentLanguage |
+                        CommentAuthor   |
+                        CommentDate     |
+                        Comment,
     ItemCommentsFirst = CommentType,
     ItemCommentsLast  = Comment
 };

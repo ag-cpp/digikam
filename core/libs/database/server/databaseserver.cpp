@@ -27,8 +27,9 @@
 
 // Qt includes
 
-#include <QCoreApplication>
 #include <QStandardPaths>
+#include <QApplication>
+#include <QMessageBox>
 #include <QDateTime>
 #include <QFileInfo>
 #include <QFile>
@@ -36,6 +37,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QtGlobal>
+#include <QPointer>
 #include <QDir>
 
 // KDE includes
@@ -181,6 +183,8 @@ void DatabaseServer::stopDatabaseProcess()
     }
 
     QStringList mysqlShutDownArgs;
+    mysqlShutDownArgs << QLatin1String("-u");
+    mysqlShutDownArgs << QLatin1String("root");
     mysqlShutDownArgs << QLatin1String("shutdown");
 
 #ifdef Q_OS_WIN
@@ -224,8 +228,6 @@ bool DatabaseServer::isRunning() const
 
 DatabaseServerError DatabaseServer::startMysqlDatabaseProcess()
 {
-    DatabaseServerError result;
-
     DatabaseServerError error = checkDatabaseDirs();
 
     if (error.getErrorType() != DatabaseServerError::NoErrors)
@@ -240,7 +242,7 @@ DatabaseServerError DatabaseServer::startMysqlDatabaseProcess()
         return error;
     }
 
-    removeMysqlLogs();
+    bool needUpgrade = checkAndRemoveMysqlLogs();
 
     error = createMysqlFiles();
 
@@ -256,6 +258,16 @@ DatabaseServerError DatabaseServer::startMysqlDatabaseProcess()
         return error;
     }
 
+    if (needUpgrade)
+    {
+        error = upgradeMysqlDatabase();
+
+        if (error.getErrorType() != DatabaseServerError::NoErrors)
+        {
+            return error;
+        }
+    }
+
     error = initMysqlDatabase();
 
     if (error.getErrorType() != DatabaseServerError::NoErrors)
@@ -265,7 +277,7 @@ DatabaseServerError DatabaseServer::startMysqlDatabaseProcess()
 
     databaseServerStateEnum = running;
 
-    return result;
+    return error;
 }
 
 DatabaseServerError DatabaseServer::checkDatabaseDirs() const
@@ -278,7 +290,7 @@ DatabaseServerError DatabaseServer::checkDatabaseDirs() const
 
         return DatabaseServerError(DatabaseServerError::StartError,
                                    i18n("No path to mysql server command set "
-                                        "in configuration file!"));
+                                        "in configuration file."));
     }
 
     if (d->mysqldInitPath.isEmpty())
@@ -287,7 +299,7 @@ DatabaseServerError DatabaseServer::checkDatabaseDirs() const
 
         return DatabaseServerError(DatabaseServerError::StartError,
                                    i18n("No path to mysql initialization "
-                                        "command set in configuration file!."));
+                                        "command set in configuration file."));
     }
 
     if (d->mysqlAdminPath.isEmpty())
@@ -296,7 +308,7 @@ DatabaseServerError DatabaseServer::checkDatabaseDirs() const
 
         return DatabaseServerError(DatabaseServerError::StartError,
                                    i18n("No path to mysql administration "
-                                        "command set in configuration file!."));
+                                        "command set in configuration file."));
     }
 
     if (!QFile::exists(d->dataDir) && !QDir().mkpath(d->dataDir))
@@ -434,12 +446,14 @@ DatabaseServerError DatabaseServer::initMysqlConfig() const
     return result;
 }
 
-void DatabaseServer::removeMysqlLogs() const
+bool DatabaseServer::checkAndRemoveMysqlLogs() const
 {
     // Move mysql error log file out of the way
 
     const QFileInfo errorLog(d->dataDir,
                              QLatin1String("mysql.err"));
+
+    bool needUpgrade = false;
 
     if (errorLog.exists())
     {
@@ -448,7 +462,11 @@ void DatabaseServer::removeMysqlLogs() const
 
         if (logFile.open(QFile::ReadOnly) && oldLogFile.open(QFile::Append))
         {
-            oldLogFile.write(logFile.readAll());
+            QByteArray run("run mysql_upgrade");
+            QByteArray ba = logFile.readAll();
+            needUpgrade   = ba.contains(run);
+
+            oldLogFile.write(ba);
             oldLogFile.close();
             logFile.close();
             logFile.remove();
@@ -463,6 +481,8 @@ void DatabaseServer::removeMysqlLogs() const
 
     QFile(QDir(d->dataDir).absoluteFilePath(QLatin1String("ib_logfile0"))).remove();
     QFile(QDir(d->dataDir).absoluteFilePath(QLatin1String("ib_logfile1"))).remove();
+
+    return needUpgrade;
 }
 
 DatabaseServerError DatabaseServer::createMysqlFiles() const
@@ -682,6 +702,73 @@ DatabaseServerError DatabaseServer::initMysqlDatabase() const
     QSqlDatabase::removeDatabase(initCon);
 
     return result;
+}
+
+DatabaseServerError DatabaseServer::upgradeMysqlDatabase()
+{
+    QApplication::restoreOverrideCursor();
+
+    QPointer<QMessageBox> msgBox = new QMessageBox(QMessageBox::Information,
+             qApp->applicationName(),
+             i18n("The database is now upgraded to the current "
+                  "server version, this can take a while."),
+             QMessageBox::Ok | QMessageBox::Cancel,
+             qApp->activeWindow());
+
+    int msgResult = msgBox->exec();
+    delete msgBox;
+
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+
+    if (msgResult == QMessageBox::Cancel)
+    {
+        return DatabaseServerError();
+    }
+
+    // Synthesize the mysql upgrade command line arguments
+
+    QStringList upgradeCmdArgs;
+
+#ifdef Q_OS_WIN
+
+    upgradeCmdArgs << QLatin1String("--port=3307");
+
+#else
+
+    upgradeCmdArgs << QString::fromLatin1("--socket=%1/mysql.socket").arg(d->miscDir);
+
+#endif
+
+    // Start the upgrade ptogram
+
+    QUrl upgradeUrl = QUrl::fromLocalFile(d->mysqlAdminPath).adjusted(QUrl::RemoveFilename);
+    upgradeUrl.setPath(upgradeUrl.path() + QLatin1String("mysql_upgrade"));
+
+    QProcess* const upgradeProcess = new QProcess();
+    upgradeProcess->setProcessEnvironment(adjustedEnvironmentForAppImage());
+    upgradeProcess->start(upgradeUrl.toLocalFile(), upgradeCmdArgs);
+
+    qCDebug(DIGIKAM_DATABASESERVER_LOG) << "Upgrade database:"
+                                        << upgradeProcess->program()
+                                        << upgradeProcess->arguments();
+
+    if (!upgradeProcess->waitForFinished(-1) || (upgradeProcess->exitCode() != 0))
+    {
+        QString errorMsg = processErrorLog(upgradeProcess,
+                                           i18n("Could not upgrade database."));
+
+        delete upgradeProcess;
+
+        return DatabaseServerError(DatabaseServerError::StartError, errorMsg);
+    }
+
+    delete upgradeProcess;
+
+    // Restart the database server.
+
+    stopDatabaseProcess();
+
+    return startMysqlServer();
 }
 
 QString DatabaseServer::getcurrentAccountUserName() const

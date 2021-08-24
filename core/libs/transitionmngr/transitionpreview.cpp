@@ -28,6 +28,7 @@
 #include <QTimer>
 #include <QImage>
 #include <QPixmap>
+#include <QStandardPaths>
 
 // Local includes
 
@@ -42,9 +43,9 @@ class Q_DECL_HIDDEN TransitionPreview::Private
 public:
 
     explicit Private()
-      : mngr(nullptr),
+      : mngr         (nullptr),
         curTransition(TransitionMngr::None),
-        previewSize(QSize(192, 144))
+        previewSize  (QSize(192, 144))
     {
     }
 
@@ -57,7 +58,7 @@ public:
 
 TransitionPreview::TransitionPreview(QWidget* const parent)
     : QLabel(parent),
-      d(new Private)
+      d     (new Private)
 {
     setFixedSize(d->previewSize);
     setContentsMargins(QMargins());
@@ -97,6 +98,16 @@ void TransitionPreview::setImagesList(const QList<QUrl>& images)
             blank.fill(Qt::black);
             d->mngr->setOutImage(blank);
         }
+    }
+    else
+    {
+        QImage sample = QImage(QStandardPaths::locate(QStandardPaths::GenericDataLocation,
+                                                      QLatin1String("digikam/data/sample-aix.png")));
+        d->mngr->setInImage(sample);
+
+        QImage blank(d->previewSize, QImage::Format_ARGB32);
+        blank.fill(Qt::black);
+        d->mngr->setOutImage(blank);
     }
 }
 

@@ -57,7 +57,7 @@ namespace Digikam
 
 int CoreDbSchemaUpdater::schemaVersion()
 {
-    return 13;
+    return 14;
 }
 
 int CoreDbSchemaUpdater::filterSettingsVersion()
@@ -454,11 +454,25 @@ bool CoreDbSchemaUpdater::makeUpdates()
                 return false;
             }
 
-            QString errorMsg = i18n("Failed to update the database schema from version %1 to version %2. "
-                                    "Please read the error messages printed on the console and "
-                                    "report this error as a bug at bugs.kde.org. ",
-                                    d->currentVersion.toInt(),
-                                    targetVersion);
+            QString errorMsg;
+
+            if (d->parameters.internalServer)
+            {
+                errorMsg = i18n("Failed to update the database schema from version %1 to version %2.\n"
+                                "The cause could be a missing upgrade of the database to the current "
+                                "server version. Now start digiKam again to perform a required "
+                                "upgrade of the database.",
+                                d->currentVersion.toInt(),
+                                targetVersion);
+            }
+            else
+            {
+                errorMsg = i18n("Failed to update the database schema from version %1 to version %2.\n"
+                                "Please read the error messages printed on the console and "
+                                "report this error as a bug at bugs.kde.org.",
+                                d->currentVersion.toInt(),
+                                targetVersion);
+            }
 
             if (!endWrapSchemaUpdateStep(updateToVersion(targetVersion), errorMsg))
             {
@@ -770,6 +784,14 @@ bool CoreDbSchemaUpdater::updateToVersion(int targetVersion)
             // add index to the TagsTree table for MySQL.
 
             return performUpdateToVersion(QLatin1String("UpdateSchemaFromV12ToV13"), 13, 5);
+        }
+
+        case 14:
+        {
+            // digiKam for database version 13 can work with version 14,
+            // add modificationDate column to the Albums table.
+
+            return performUpdateToVersion(QLatin1String("UpdateSchemaFromV13ToV14"), 14, 5);
         }
 
         default:
