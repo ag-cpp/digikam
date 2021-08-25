@@ -78,6 +78,11 @@ void FaceEmbeddingCache::init()
 
 void FaceEmbeddingCache::invalidCache()
 {
+    if (!instance)
+    {
+        instance = new FaceEmbeddingCache();
+    }
+    
     QMutexLocker locker(&instance->mutex);
     instance->isValid = false;
 }
