@@ -58,13 +58,13 @@ private:
 
 private:
 
-    QMap<QString, FaceEmbeddingData> faceembeddingMap;
-    QMutex mutex;
-    bool isValid = false;
+    QMap<QString, FaceEmbeddingData> m_faceembeddingMap;
+    bool m_isValid = false;
 
 private:
 
-    static FaceEmbeddingCache* instance;
+    static QMutex s_mutex;
+    static FaceEmbeddingCache* s_instance;
 };
 
 } // namespace Digikam
