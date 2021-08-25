@@ -50,9 +50,11 @@ QVector<FaceEmbeddingData>& reduceDimension(QVector<FaceEmbeddingData>& data, in
     return data;
 }
 
-FaceEmbeddingCache* FaceEmbeddingCache::instance = nullptr;
+FaceEmbeddingCache* FaceEmbeddingCache::s_instance = nullptr;
+QMutex FaceEmbeddingCache::s_mutex;
 
 FaceEmbeddingCache::FaceEmbeddingCache()
+    : m_isValid(false)
 {
 }
 
@@ -72,37 +74,38 @@ void FaceEmbeddingCache::init()
 
     for (int i = 0; i < data.size(); ++i)
     {
-        instance->faceembeddingMap[data[i].tagId] = data[i];
+        s_instance->m_faceembeddingMap[data[i].tagId] = data[i];
     }
 }
 
 void FaceEmbeddingCache::invalidCache()
 {
-    if (!instance)
+    QMutexLocker locker(&s_mutex);
+
+    if (!s_instance)
     {
-        instance = new FaceEmbeddingCache();
+        return;
     }
     
-    QMutexLocker locker(&instance->mutex);
-    instance->isValid = false;
+    s_instance->m_isValid = false;
 }
 
 QMap<QString, FaceEmbeddingData> FaceEmbeddingCache::getData()
 {
-    if (!instance)
+    QMutexLocker locker(&s_mutex);
+
+    if (!s_instance)
     {
-        instance = new FaceEmbeddingCache();
+        s_instance = new FaceEmbeddingCache();
     }
 
-    QMutexLocker locker(&instance->mutex);
-
-    if (!instance->isValid)
+    if (!s_instance->m_isValid)
     {
         init();
-        instance->isValid = true;
+        s_instance->m_isValid = true;
     }
     
-    return instance->faceembeddingMap;
+    return s_instance->m_faceembeddingMap;
 }
 
 
