@@ -359,8 +359,7 @@ QString MetadataWidget::metadataToText() const
 
             do
             {
-                item2 = dynamic_cast<QTreeWidgetItem*>(lvItem);
-                item2 = item2 ? item2->child(j) : nullptr;
+                item2 = dynamic_cast<QTreeWidgetItem*>(lvItem)->child(j);
 
                 if (item2)
                 {

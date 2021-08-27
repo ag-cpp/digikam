@@ -208,8 +208,6 @@ int main(int argc, char* argv[])
 
         qCDebug(DIGIKAM_GENERAL_LOG) << "Qt translations path:" << transPath;
 
-        QLocale locale;
-
         if (!klanguagePath.isEmpty())
         {
             QSettings settings(klanguagePath, QSettings::IniFormat);
@@ -219,7 +217,7 @@ int main(int argc, char* argv[])
 
             if (!language.isEmpty())
             {
-                locale = QLocale(language.split(QLatin1Char(':')).first());
+                QLocale::setDefault(language.split(QLatin1Char(':')).first());
             }
         }
 
@@ -232,9 +230,9 @@ int main(int argc, char* argv[])
         {
             QTranslator* const translator = new QTranslator(&app);
 
-            if (translator->load(locale, catalog, QLatin1String("_"), transPath))
+            if (translator->load(QLocale(), catalog, QLatin1String("_"), transPath))
             {
-                qCDebug(DIGIKAM_GENERAL_LOG) << "Loaded locale:" << locale.name()
+                qCDebug(DIGIKAM_GENERAL_LOG) << "Loaded locale:" << QLocale().name()
                                              << "from catalog:"  << catalog;
 
                 app.installTranslator(translator);

@@ -39,6 +39,9 @@
 
 #include "altlangstringedit.h"
 #include "multistringsedit.h"
+#include "dmetadata.h"
+
+using namespace Digikam;
 
 namespace DigikamGenericMetadataEditPlugin
 {
@@ -48,13 +51,13 @@ class Q_DECL_HIDDEN XMPStatus::Private
 public:
 
     explicit Private()
-      : nicknameCheck          (nullptr),
-        specialInstructionCheck(nullptr),
-        nicknameEdit           (nullptr),
-        specialInstructionEdit (nullptr),
-        identifiersEdit        (nullptr),
-        objectNameEdit         (nullptr)
     {
+        objectNameEdit          = nullptr;
+        specialInstructionEdit  = nullptr;
+        specialInstructionCheck = nullptr;
+        nicknameEdit            = nullptr;
+        nicknameCheck           = nullptr;
+        identifiersEdit         = nullptr;
     }
 
     QCheckBox*          nicknameCheck;
@@ -71,7 +74,7 @@ public:
 
 XMPStatus::XMPStatus(QWidget* const parent)
     : QWidget(parent),
-      d      (new Private)
+      d(new Private)
 {
     QGridLayout* const grid  = new QGridLayout(this);
 
@@ -150,9 +153,11 @@ XMPStatus::~XMPStatus()
     delete d;
 }
 
-void XMPStatus::readMetadata(const DMetadata& meta)
+void XMPStatus::readMetadata(QByteArray& xmpData)
 {
     blockSignals(true);
+    QScopedPointer<DMetadata> meta(new DMetadata);
+    meta->setXmp(xmpData);
 
     QString            data;
     QStringList        list;
@@ -160,7 +165,7 @@ void XMPStatus::readMetadata(const DMetadata& meta)
 
     d->objectNameEdit->setValues(map);
     d->objectNameEdit->setValid(false);
-    map = meta.getXmpTagStringListLangAlt("Xmp.dc.title", false);
+    map = meta->getXmpTagStringListLangAlt("Xmp.dc.title", false);
 
     if (!map.isEmpty())
     {
@@ -170,7 +175,7 @@ void XMPStatus::readMetadata(const DMetadata& meta)
 
     d->nicknameEdit->clear();
     d->nicknameCheck->setChecked(false);
-    data = meta.getXmpTagString("Xmp.xmp.Nickname", false);
+    data = meta->getXmpTagString("Xmp.xmp.Nickname", false);
 
     if (!data.isNull())
     {
@@ -180,12 +185,12 @@ void XMPStatus::readMetadata(const DMetadata& meta)
 
     d->nicknameEdit->setEnabled(d->nicknameCheck->isChecked());
 
-    list = meta.getXmpTagStringSeq("Xmp.xmp.Identifier", false);
+    list = meta->getXmpTagStringSeq("Xmp.xmp.Identifier", false);
     d->identifiersEdit->setValues(list);
 
     d->specialInstructionEdit->clear();
     d->specialInstructionCheck->setChecked(false);
-    data = meta.getXmpTagString("Xmp.photoshop.Instructions", false);
+    data = meta->getXmpTagString("Xmp.photoshop.Instructions", false);
 
     if (!data.isNull())
     {
@@ -198,47 +203,35 @@ void XMPStatus::readMetadata(const DMetadata& meta)
     blockSignals(false);
 }
 
-void XMPStatus::applyMetadata(const DMetadata& meta)
+void XMPStatus::applyMetadata(QByteArray& xmpData)
 {
     QStringList oldList, newList;
+    QScopedPointer<DMetadata> meta(new DMetadata);
+    meta->setXmp(xmpData);
 
     DMetadata::AltLangMap oldAltLangMap, newAltLangMap;
 
-    if      (d->objectNameEdit->getValues(oldAltLangMap, newAltLangMap))
-    {
-        meta.setXmpTagStringListLangAlt("Xmp.dc.title", newAltLangMap);
-    }
+    if (d->objectNameEdit->getValues(oldAltLangMap, newAltLangMap))
+        meta->setXmpTagStringListLangAlt("Xmp.dc.title", newAltLangMap);
     else if (d->objectNameEdit->isValid())
-    {
-        meta.removeXmpTag("Xmp.dc.title");
-    }
+        meta->removeXmpTag("Xmp.dc.title");
 
     if (d->nicknameCheck->isChecked())
-    {
-        meta.setXmpTagString("Xmp.xmp.Nickname", d->nicknameEdit->text());
-    }
+        meta->setXmpTagString("Xmp.xmp.Nickname", d->nicknameEdit->text());
     else
-    {
-        meta.removeXmpTag("Xmp.xmp.Nickname");
-    }
+        meta->removeXmpTag("Xmp.xmp.Nickname");
 
     if (d->identifiersEdit->getValues(oldList, newList))
-    {
-        meta.setXmpTagStringSeq("Xmp.xmp.Identifier", newList);
-    }
+        meta->setXmpTagStringSeq("Xmp.xmp.Identifier", newList);
     else
-    {
-        meta.removeXmpTag("Xmp.xmp.Identifier");
-    }
+        meta->removeXmpTag("Xmp.xmp.Identifier");
 
     if (d->specialInstructionCheck->isChecked())
-    {
-        meta.setXmpTagString("Xmp.photoshop.Instructions", d->specialInstructionEdit->toPlainText());
-    }
+        meta->setXmpTagString("Xmp.photoshop.Instructions", d->specialInstructionEdit->toPlainText());
     else
-    {
-        meta.removeXmpTag("Xmp.photoshop.Instructions");
-    }
+        meta->removeXmpTag("Xmp.photoshop.Instructions");
+
+    xmpData = meta->getXmp();
 }
 
 } // namespace DigikamGenericMetadataEditPlugin

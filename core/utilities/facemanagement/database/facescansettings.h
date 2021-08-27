@@ -62,9 +62,6 @@ public:
 
 public:
 
-    /// whole albums checked
-    bool                                    wholeAlbums;
-
     /// Processing power
     bool                                    useFullCpu;
 

@@ -48,8 +48,8 @@ public:
     explicit IPTCSubjects(QWidget* const parent);
     ~IPTCSubjects() override;
 
-    void applyMetadata(const DMetadata& meta);
-    void readMetadata(const DMetadata& meta);
+    void applyMetadata(QByteArray& iptcData);
+    void readMetadata(QByteArray& iptcData);
 
 private Q_SLOTS:
 

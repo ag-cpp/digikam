@@ -178,7 +178,7 @@ public:
     bool tagsDatabase();
 
     /**
-     * Return the current version of ExifTool.
+     * Return the xurrent version of ExifTool.
      * Use currentData() to get the container as QString.
      */
     bool version();

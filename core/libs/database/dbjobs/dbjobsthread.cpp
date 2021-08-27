@@ -247,7 +247,7 @@ void SearchesDBJobsThread::searchesListing(const SearchesDBJobInfo& info)
 
             end = (i == threadsCount - 1) ? info.imageIds().cend() : begin + images2ScanPerThread;
 
-            SearchesJob* const job = new SearchesJob(info, begin, end, m_haarIface.data());
+            SearchesJob* const job = new SearchesJob(info, begin, end, m_haarIface.get());
 
             begin = end;
 

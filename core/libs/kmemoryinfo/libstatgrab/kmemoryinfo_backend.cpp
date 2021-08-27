@@ -89,12 +89,7 @@ static int fillMemoryInfo(Digikam::KMemoryInfo::KMemoryInfoData* const data)
 #ifdef Q_OS_WIN
 #include <windows.h>
 #endif
-#ifdef Q_OS_MACOS
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/sysctl.h>
-#include <sys/vmmeter.h>
-#endif
+
 
 #if defined(Q_OS_LINUX)
 char* sg_f_read_line(FILE* f, const char* string)
@@ -249,10 +244,7 @@ int get_mem_stats(Digikam::KMemoryInfo::KMemoryInfoData* const data)
 #endif
 
 #ifdef Q_OS_MACOS
-    size_t vmt_size;
-    size_t uint_size;
-    u_int  page_size;
-    struct vmtotal vmt;
+    Q_UNUSED(data);
 #endif
 
 #ifdef Q_OS_HPUX
@@ -520,31 +512,7 @@ int get_mem_stats(Digikam::KMemoryInfo::KMemoryInfoData* const data)
     return 1;
 #endif // Q_OS_WIN
 
-#ifdef Q_OS_MACOS
-    data->platform = QLatin1String("MACOS");
-
-    vmt_size       = sizeof(vmt);
-    uint_size      = sizeof(page_size);
-
-    if (sysctlbyname("vm.vmtotal", &vmt, &vmt_size, NULL, 0) < 0)
-    {
-        return 0;
-    }
-
-    if (sysctlbyname("vm.stats.vm.v_page_size", &page_size, &uint_size, NULL, 0) < 0)
-    {
-        return 0;
-    }
-
-    data->freeRam  = vmt.t_free * (u_int64_t)page_size);
-    data->totalRam = vmt.t_avm * (u_int64_t)page_size);
-    data->usedRam  = data->totalRam - data->freeRam;
-    data->cacheRam = 0;
-
-    return 1;
-#endif // Q_OS_MACOS
-
-return -1;
+    return -1;
 }
 
 // ----------------------------------------------------------------------------
@@ -828,15 +796,7 @@ int get_swap_stats(Digikam::KMemoryInfo::KMemoryInfoData* const data)
     data->usedSwap  = data->totalSwap - data->freeSwap;
 
     return 1;
-#endif // Q_OS_WIN
-
-#ifdef Q_OS_MACOS
-    data->totalSwap = 0;
-    data->usedSwap  = 0;
-    data->freeSwap  = 0;
-
-    return 1;
-#endif // Q_OS_MACOS
+#endif
 
     return -1;
 }

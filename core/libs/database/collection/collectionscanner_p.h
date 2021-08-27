@@ -176,8 +176,6 @@ public:
     bool                                          deferredFileScanning;
     QSet<QString>                                 deferredAlbumPaths;
 
-    QHash<QString, QDateTime>                     albumDateCache;
-
     CollectionScannerObserver*                    observer;
 };
 

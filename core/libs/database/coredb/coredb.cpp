@@ -450,12 +450,6 @@ void CoreDB::setAlbumDate(int albumID, const QDate& date)
     d->db->recordChangeset(AlbumChangeset(albumID, AlbumChangeset::PropertiesChanged));
 }
 
-void CoreDB::setAlbumModificationDate(int albumID, const QDateTime& modificationDate)
-{
-    d->db->execSql(QString::fromUtf8("UPDATE Albums SET modificationDate=? WHERE id=?;"),
-                   modificationDate, albumID);
-}
-
 void CoreDB::setAlbumIcon(int albumID, qlonglong iconID)
 {
     if (iconID == 0)
@@ -1524,6 +1518,8 @@ QVariantList CoreDB::getImageMetadata(qlonglong imageID, DatabaseFields::ImageMe
         query                 += QString::fromUtf8(" FROM ImageMetadata WHERE imageid=?;");
 
         d->db->execSql(query, imageID, &values);
+
+        // For some reason, if REAL values may be required from variables stored as QString QVariants. Convert code will come here.
     }
 
     return values;
@@ -1541,6 +1537,31 @@ QVariantList CoreDB::getVideoMetadata(qlonglong imageID, DatabaseFields::VideoMe
         query                 += QString::fromUtf8(" FROM VideoMetadata WHERE imageid=?;");
 
         d->db->execSql(query, imageID, &values);
+
+        // For some reason REAL values may come as QString QVariants. Convert here.
+
+        if (values.size() == fieldNames.size()        &&
+            ((fields & DatabaseFields::Aperture)      ||
+             (fields & DatabaseFields::FocalLength)   ||
+             (fields & DatabaseFields::FocalLength35) ||
+             (fields & DatabaseFields::ExposureTime)  ||
+             (fields & DatabaseFields::SubjectDistance))
+           )
+        {
+            for (int i = 0 ; i < values.size() ; ++i)
+            {
+                if (values.at(i).type() == QVariant::String             &&
+                    (fieldNames.at(i) == QLatin1String("aperture")      ||
+                     fieldNames.at(i) == QLatin1String("focalLength")   ||
+                     fieldNames.at(i) == QLatin1String("focalLength35") ||
+                     fieldNames.at(i) == QLatin1String("exposureTime")  ||
+                     fieldNames.at(i) == QLatin1String("subjectDistance"))
+                   )
+                {
+                    values[i] = values.at(i).toDouble();
+                }
+            }
+        }
     }
 
     return values;
@@ -3221,95 +3242,6 @@ QVariantList CoreDB::getAllCreationDates() const
                    &values);
 
     return values;
-}
-
-QDateTime CoreDB::getAlbumModificationDate(int albumID) const
-{
-    QVariantList values;
-
-    d->db->execSql(QString::fromUtf8("SELECT modificationDate FROM Albums "
-                                     " WHERE id=?;"),
-                   albumID, &values);
-
-    if (values.isEmpty())
-    {
-        return QDateTime();
-    }
-
-    return values.first().toDateTime();
-}
-
-QMap<QString, QDateTime> CoreDB::getAlbumModificationMap(int albumRootId) const
-{
-    QList<QVariant> values;
-    QMap<QString, QDateTime> pathDateMap;
-
-    d->db->execSql(QString::fromUtf8("SELECT relativePath, modificationDate FROM Albums "
-                                     " WHERE albumRoot=?;"),
-                   albumRootId, &values);
-
-    for (QList<QVariant>::const_iterator it = values.constBegin() ; it != values.constEnd() ; )
-    {
-        QString relativePath = (*it).toString();
-        ++it;
-        QDateTime dateTime   = (*it).toDateTime();
-        ++it;
-
-        pathDateMap.insert(relativePath, dateTime);
-    }
-
-    return pathDateMap;
-
-}
-
-QPair<int, int> CoreDB::getNumberOfAllItemsAndAlbums(int albumID) const
-{
-    int items  = 0;
-    int albums = 0;
-    QVariantList values;
-
-    int rootId   = getAlbumRootId(albumID);
-    QString path = getAlbumRelativePath(albumID);
-    d->db->execSql(QString::fromUtf8("SELECT COUNT(*) FROM Images WHERE Images.album IN "
-                                     " (SELECT DISTINCT id FROM Albums "
-                                     "  WHERE albumRoot=? AND (relativePath=? OR relativePath LIKE ?));"),
-                   rootId, path, path == QLatin1String("/") ? QLatin1String("/%")
-                                                            : QString(path + QLatin1String("/%")), &values);
-
-    if (!values.isEmpty())
-    {
-        items = values.first().toInt();
-    }
-
-    values.clear();
-
-    d->db->execSql(QString::fromUtf8("SELECT DISTINCT COUNT(*) FROM Albums "
-                                     " WHERE albumRoot=? AND (relativePath=? OR relativePath LIKE ?);"),
-                   rootId, path, path == QLatin1String("/") ? QLatin1String("/%")
-                                                            : QString(path + QLatin1String("/%")), &values);
-
-    if (!values.isEmpty())
-    {
-        albums = values.first().toInt();
-    }
-
-    return qMakePair(items, albums);
-}
-
-int CoreDB::getNumberOfItemsInAlbum(int albumID) const
-{
-    QVariantList values;
-
-    d->db->execSql(QString::fromUtf8("SELECT COUNT(*) FROM Images "
-                                     "WHERE album=?;"),
-                   albumID, &values);
-
-    if (values.isEmpty())
-    {
-        return 0;
-    }
-
-    return values.first().toInt();
 }
 
 QMap<int, int> CoreDB::getNumberOfImagesInAlbums() const

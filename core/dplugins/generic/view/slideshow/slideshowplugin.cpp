@@ -343,7 +343,6 @@ void SlideShowPlugin::slideshow(SlideShowSettings* const settings, bool autoPlay
         else
         {
             // no current selection, do nothing.
-
             return;
         }
     }

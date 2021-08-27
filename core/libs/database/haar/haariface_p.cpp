@@ -196,7 +196,7 @@ bool HaarIface::Private::retrieveSignatureFromCache(qlonglong imageId, Haar::Sig
 
     if (m_signatureCache->contains(imageId))
     {
-        data = m_signatureCache.data()->value(imageId);
+        data = m_signatureCache.get()->value(imageId);
 
         return true;
     }
@@ -216,17 +216,17 @@ void HaarIface::Private::setImageDataFromImage(const DImg& image)
 
 SignatureCache* HaarIface::Private::signatureCache() const
 {
-    return m_signatureCache.data();
+    return m_signatureCache.get();
 }
 
 AlbumCache* HaarIface::Private::albumCache() const
 {
-    return m_albumCache.data();
+    return m_albumCache.get();
 }
 
 Haar::ImageData* HaarIface::Private::imageData() const
 {
-    return m_data.data();
+    return m_data.get();
 }
 
 void HaarIface::Private::setAlbumRootsToSearch(const QSet<int>& albumRootIds)

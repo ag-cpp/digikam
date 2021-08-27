@@ -40,4 +40,7 @@ add_subdirectory(album)
 add_subdirectory(tags)
 add_subdirectory(transitionmngr)
 add_subdirectory(timeadjust)
-add_subdirectory(video)
+
+if(ENABLE_MEDIAPLAYER)
+    add_subdirectory(video)
+endif()
