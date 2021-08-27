@@ -27,6 +27,7 @@
 // Qt includes
 
 #include <QPair>
+#include <QScopedPointer>
 
 // Local includes
 
@@ -40,14 +41,10 @@ class Q_DECL_HIDDEN AbstractMarkerTiler::Private
 {
 public:
 
-    explicit Private()
-        : rootTile(nullptr),
-          isDirty(true)
-    {
-    }
+    explicit Private() = default;
 
-    AbstractMarkerTiler::Tile* rootTile;
-    bool                       isDirty;
+    QScopedPointer<AbstractMarkerTiler::Tile>  rootTile;
+    bool                                       isDirty = true;
 };
 
 AbstractMarkerTiler::AbstractMarkerTiler(QObject* const parent)
@@ -58,10 +55,6 @@ AbstractMarkerTiler::AbstractMarkerTiler(QObject* const parent)
 
 AbstractMarkerTiler::~AbstractMarkerTiler()
 {
-    // delete all tiles
-
-    clear();
-
     delete d;
 }
 
@@ -72,7 +65,7 @@ AbstractMarkerTiler::Tile* AbstractMarkerTiler::rootTile()
         regenerateTiles();
     }
 
-    return d->rootTile;
+    return d->rootTile.get();
 }
 
 bool AbstractMarkerTiler::isDirty() const
@@ -93,12 +86,9 @@ void AbstractMarkerTiler::setDirty(const bool state)
     }
 }
 
-AbstractMarkerTiler::Tile* AbstractMarkerTiler::resetRootTile()
+void AbstractMarkerTiler::resetRootTile()
 {
-    tileDelete(d->rootTile);
-    d->rootTile = tileNew();
-
-    return d->rootTile;
+    d->rootTile.reset(tileNew());
 }
 
 void AbstractMarkerTiler::onIndicesClicked(const ClickInfo& clickInfo)
@@ -115,65 +105,9 @@ void AbstractMarkerTiler::onIndicesMoved(const TileIndex::List& tileIndicesList,
     Q_UNUSED(targetSnapIndex);
 }
 
-AbstractMarkerTiler::Tile* AbstractMarkerTiler::tileNew()
-{
-    return new Tile();
-}
-
-void AbstractMarkerTiler::tileDelete(AbstractMarkerTiler::Tile* const tile)
-{
-    tileDeleteChildren(tile);
-
-    // NOTE: use dynamic binding as this virtual method can be re-implemented in derived classes.
-
-    this->tileDeleteInternal(tile);
-}
-
-void AbstractMarkerTiler::tileDeleteInternal(AbstractMarkerTiler::Tile* const tile)
-{
-    delete tile;
-}
-
-void AbstractMarkerTiler::tileDeleteChildren(AbstractMarkerTiler::Tile* const tile)
-{
-    if (!tile)
-    {
-        return;
-    }
-
-    QVector<Tile*> tileChildren = tile->takeChildren();
-
-    foreach (Tile* tilec, tileChildren)
-    {
-        tileDelete(tilec);
-    }
-}
-
-void AbstractMarkerTiler::tileDeleteChild(AbstractMarkerTiler::Tile* const parentTile,
-                                          AbstractMarkerTiler::Tile* const childTile,
-                                          const int knownLinearIndex)
-{
-    int tileIndex = knownLinearIndex;
-
-    if (tileIndex < 0)
-    {
-        tileIndex = parentTile->indexOfChildTile(childTile);
-    }
-
-    parentTile->clearChild(tileIndex);
-
-    tileDelete(childTile);
-}
-
 AbstractMarkerTiler::TilerFlags AbstractMarkerTiler::tilerFlags() const
 {
     return FlagNull;
-}
-
-void AbstractMarkerTiler::clear()
-{
-    tileDelete(d->rootTile);
-    d->rootTile = nullptr;
 }
 
 // -------------------------------------------------------------------------
@@ -188,8 +122,7 @@ public:
           startIndex(),
           endIndex(),
           currentIndex(),
-          atEnd(false),
-          atStartOfLevel(true)
+          atEnd(false)
     {
     }
 
@@ -203,7 +136,6 @@ public:
     TileIndex                           currentIndex;
 
     bool                                atEnd;
-    bool                                atStartOfLevel;
 };
 
 AbstractMarkerTiler::NonEmptyIterator::~NonEmptyIterator()
@@ -246,7 +178,7 @@ AbstractMarkerTiler::NonEmptyIterator::NonEmptyIterator(AbstractMarkerTiler* con
     d->level = level;
 
     GEOIFACE_ASSERT(startIndex.level() == level);
-    GEOIFACE_ASSERT(endIndex.level() == level);
+    GEOIFACE_ASSERT(endIndex.level()   == level);
     d->boundsList << QPair<TileIndex, TileIndex>(startIndex, endIndex);
 
     initializeNextBounds();
@@ -269,7 +201,7 @@ AbstractMarkerTiler::NonEmptyIterator::NonEmptyIterator(AbstractMarkerTiler* con
         GEOIFACE_ASSERT(currentBounds.first.lat() < currentBounds.second.lat());
         GEOIFACE_ASSERT(currentBounds.first.lon() < currentBounds.second.lon());
 
-        const TileIndex startIndex = TileIndex::fromCoordinates(currentBounds.first, d->level);
+        const TileIndex startIndex = TileIndex::fromCoordinates(currentBounds.first,  d->level);
         const TileIndex endIndex   = TileIndex::fromCoordinates(currentBounds.second, d->level);
 /*
          qCDebug(DIGIKAM_GEOIFACE_LOG) << currentBounds.first.geoUrl()
@@ -288,18 +220,23 @@ bool AbstractMarkerTiler::NonEmptyIterator::initializeNextBounds()
     if (d->boundsList.isEmpty())
     {
         d->atEnd = true;
+
         return false;
     }
 
     QPair<TileIndex, TileIndex> nextBounds = d->boundsList.takeFirst();
-    d->startIndex = nextBounds.first;
-    d->endIndex   = nextBounds.second;
+    d->startIndex                          = nextBounds.first;
+    d->endIndex                            = nextBounds.second;
 
     GEOIFACE_ASSERT(d->startIndex.level() == d->level);
-    GEOIFACE_ASSERT(d->endIndex.level() == d->level);
+    GEOIFACE_ASSERT(d->endIndex.level()   == d->level);
 
-    d->currentIndex   = d->startIndex.mid(0, 1);
-    d->atStartOfLevel = true;
+    d->currentIndex.clear();
+    d->currentIndex.appendLinearIndex(-1);
+
+    // make sure the root tile is split, using linear index -1 is ok here as
+    // this is handled in Tile::getChild
+    d->model->getTile(d->currentIndex, true);
 
     nextIndex();
 
@@ -319,25 +256,17 @@ TileIndex AbstractMarkerTiler::NonEmptyIterator::nextIndex()
 /*
         qCDebug(DIGIKAM_GEOIFACE_LOG) << d->level
                                       << currentLevel
-                                      << d->atStartOfLevel
                                       << d->currentIndex;
 */
-        if (d->atStartOfLevel)
-        {
-            d->atStartOfLevel = false;
-        }
-        else
-        {
-            // go to the next tile at the current level, if that is possible:
+        // determine the limits in the current level:
+        int limitLatBL   = 0;
+        int limitLonBL   = 0;
+        int limitLatTR   = TileIndex::Tiling-1;
+        int limitLonTR   = TileIndex::Tiling-1;
 
-            // determine the limits in the current tile:
+        {
 
-            int limitLatBL   = 0;
-            int limitLonBL   = 0;
-            int limitLatTR   = TileIndex::Tiling-1;
-            int limitLonTR   = TileIndex::Tiling-1;
             int compareLevel = currentLevel - 1;
-
             // check limit on the left side:
 
             bool onLimit = true;
@@ -393,61 +322,81 @@ TileIndex AbstractMarkerTiler::NonEmptyIterator::nextIndex()
             {
                 limitLonTR = d->endIndex.indexLon(currentLevel);
             }
+        }
 
-            GEOIFACE_ASSERT(limitLatBL <= limitLatTR);
-            GEOIFACE_ASSERT(limitLonBL <= limitLonTR);
-/*
-            qCDebug(DIGIKAM_GEOIFACE_LOG) << limitLatBL
-                                          << limitLonBL
-                                          << limitLatTR
-                                          << limitLonTR
-                                          << compareLevel
-                                          << currentLevel;
-*/
-            int currentLat = d->currentIndex.indexLat(d->currentIndex.level());
-            int currentLon = d->currentIndex.indexLon(d->currentIndex.level());
+        // get the parent tile of the current level
 
-            currentLon++;
+        int levelLinearIndex = d->currentIndex.lastIndex();
 
-            if (currentLon>limitLonTR)
-            {
-                currentLon = limitLonBL;
-                currentLat++;
+        d->currentIndex.oneUp();
 
-                if (currentLat>limitLatTR)
-                {
-                    if (currentLevel == 0)
-                    {
-                        // we are at the end!
-                        // are there other bounds to iterate over?
+        Tile* tile           = d->model->getTile(d->currentIndex, true);
 
-                        initializeNextBounds();
-
-                        // initializeNextBounds() call nextIndex which updates d->currentIndexLinear, if possible:
-
-                        return d->currentIndex;
-                    }
-
-                    // we need to go one level up, trim the indices:
-
-                    d->currentIndex.oneUp();
-
-                    continue;
-                }
-            }
-
-            // save the new position:
+        if (!tile)
+        {
+            // this can only happen if the model has changed during iteration. handle gracefully...
 
             d->currentIndex.oneUp();
-            d->currentIndex.appendLatLonIndex(currentLat, currentLon);
-        }
 
-        // is the tile empty?
-
-        if (d->model->getTileMarkerCount(d->currentIndex) == 0)
-        {
             continue;
         }
+        else
+        {
+            d->currentIndex.appendLinearIndex(levelLinearIndex);
+        }
+
+        // helper function to check if index is inside bounds of the current level
+
+        auto inBounds = [&](int idx)
+                        {
+                            int currentLat = idx / TileIndex::Tiling;
+                            int currentLon = idx % TileIndex::Tiling;
+
+                            return (
+                                    currentLat >= limitLatBL &&
+                                    currentLat <= limitLatTR &&
+                                    currentLon >= limitLonBL &&
+                                    currentLon <= limitLonTR
+                                   );
+                        };
+
+        // get the next linear index on the level which is in Bounds
+
+        levelLinearIndex = tile->nextNonEmptyIndex(levelLinearIndex);
+
+        while ((levelLinearIndex != -1) && !inBounds(levelLinearIndex))
+        {
+            levelLinearIndex = tile->nextNonEmptyIndex(levelLinearIndex);
+        }
+
+
+        if (levelLinearIndex == -1)
+        {
+            // no index in bound anymore on this level
+
+            if (currentLevel == 0)
+            {
+                // we are at the end!
+                // are there other bounds to iterate over?
+
+                initializeNextBounds();
+
+                // initializeNextBounds() call nextIndex which updates d->currentIndex, if possible:
+
+                return d->currentIndex;
+            }
+
+            // we need to go one level up, trim the indices:
+
+            d->currentIndex.oneUp();
+
+            continue;
+        }
+
+        // save the new position:
+
+        d->currentIndex.oneUp();
+        d->currentIndex.appendLinearIndex(levelLinearIndex);
 
         // are we at the target level?
 
@@ -460,78 +409,12 @@ TileIndex AbstractMarkerTiler::NonEmptyIterator::nextIndex()
 
         // go one level down:
 
-        int compareLevel = currentLevel;
+        d->currentIndex.appendLinearIndex(-1);
 
-        // determine the limits for the next level:
+        // make sure the current level is split,using linear index -1 is ok here
+        // as this is handled in Tile::getChild
 
-        int limitLatBL  = 0;
-        int limitLonBL  = 0;
-        int limitLatTR  = TileIndex::Tiling-1;
-        int limitLonTR  = TileIndex::Tiling-1;
-
-        // check limit on the left side:
-
-        bool onLimit    = true;
-
-        for (int i = 0 ; onLimit&&(i <= compareLevel) ; ++i)
-        {
-            onLimit = (d->currentIndex.indexLat(i) == d->startIndex.indexLat(i));
-        }
-
-        if (onLimit)
-        {
-            limitLatBL = d->startIndex.indexLat(currentLevel+1);
-        }
-
-        // check limit on the bottom side:
-
-        onLimit = true;
-
-        for (int i = 0 ; onLimit && (i <= compareLevel) ; ++i)
-        {
-            onLimit = (d->currentIndex.indexLon(i) == d->startIndex.indexLon(i));
-        }
-
-        if (onLimit)
-        {
-            limitLonBL = d->startIndex.indexLon(currentLevel+1);
-        }
-
-        // check limit on the right side:
-
-        onLimit = true;
-
-        for (int i = 0 ; onLimit && (i <= compareLevel) ; ++i)
-        {
-            onLimit = (d->currentIndex.indexLat(i) == d->endIndex.indexLat(i));
-        }
-
-        if (onLimit)
-        {
-            limitLatTR = d->endIndex.indexLat(currentLevel+1);
-        }
-
-        // check limit on the top side:
-
-        onLimit = true;
-
-        for (int i = 0 ; onLimit && (i <= compareLevel) ; ++i)
-        {
-            onLimit = (d->currentIndex.indexLon(i) == d->endIndex.indexLon(i));
-        }
-
-        if (onLimit)
-        {
-            limitLonTR = d->endIndex.indexLon(currentLevel+1);
-        }
-
-        GEOIFACE_ASSERT(limitLatBL <= limitLatTR);
-        GEOIFACE_ASSERT(limitLonBL <= limitLonTR);
-
-        // go one level down:
-
-        d->currentIndex.appendLatLonIndex(limitLatBL, limitLonBL);
-        d->atStartOfLevel = true;
+        d->model->getTile(d->currentIndex, true);
     }
 }
 
@@ -552,13 +435,17 @@ AbstractMarkerTiler* AbstractMarkerTiler::NonEmptyIterator::model() const
 
 // -------------------------------------------------------------------------
 
-AbstractMarkerTiler::Tile::Tile()
-    : children()
-{
-}
+AbstractMarkerTiler::Tile::Tile() = default;
 
 AbstractMarkerTiler::Tile::~Tile()
 {
+    for (auto* tile : children)
+    {
+        if (tile)
+        {
+            delete tile;
+        }
+    }
 }
 
 int AbstractMarkerTiler::Tile::maxChildCount()
@@ -573,47 +460,63 @@ AbstractMarkerTiler::Tile* AbstractMarkerTiler::Tile::getChild(const int linearI
         return nullptr;
     }
 
+    if ((linearIndex < 0) || (linearIndex >= maxChildCount()))
+    {
+        return nullptr;
+    }
+
     return children.at(linearIndex);
 }
 
-void AbstractMarkerTiler::Tile::addChild(const int linearIndex, Tile* const tilePointer)
+AbstractMarkerTiler::Tile* AbstractMarkerTiler::Tile::addChild(const int linearIndex, Tile* tilePointer)
 {
     if ((tilePointer == nullptr) && children.isEmpty())
     {
-        return;
+        return nullptr;
     }
 
     prepareForChildren();
 
+    GEOIFACE_ASSERT(!children[linearIndex]);
+
+    if (!children[linearIndex])
+    {
+        nonEmptyIndices.insert(std::upper_bound(nonEmptyIndices.begin(), nonEmptyIndices.end(), linearIndex), linearIndex);
+    }
+
     children[linearIndex] = tilePointer;
+
+    return tilePointer;
 }
 
-void AbstractMarkerTiler::Tile::clearChild(const int linearIndex)
+
+void AbstractMarkerTiler::Tile::deleteChild(Tile* const childTile,
+                                            const int knownLinearIndex)
 {
     if (children.isEmpty())
     {
         return;
     }
 
-    children[linearIndex] = 0;
-}
+    int tileIndex = knownLinearIndex;
 
-int AbstractMarkerTiler::Tile::indexOfChildTile(Tile* const tile)
-{
-    return children.indexOf(tile);
+    if (tileIndex < 0)
+    {
+        tileIndex = std::distance(children.begin(), std::find(children.begin(), children.end(), childTile));
+    }
+
+    if (children[tileIndex])
+    {
+        nonEmptyIndices.erase(std::lower_bound(nonEmptyIndices.begin(), nonEmptyIndices.end(), tileIndex));
+    }
+
+    delete children[tileIndex];
+    children[tileIndex] = nullptr;
 }
 
 bool AbstractMarkerTiler::Tile::childrenEmpty() const
 {
-    return children.isEmpty();
-}
-
-QVector<AbstractMarkerTiler::Tile*> AbstractMarkerTiler::Tile::takeChildren()
-{
-    QVector<Tile*> childrenCopy = children;
-    children.clear();
-
-    return childrenCopy;
+    return children.empty();
 }
 
 void AbstractMarkerTiler::Tile::prepareForChildren()
@@ -623,7 +526,19 @@ void AbstractMarkerTiler::Tile::prepareForChildren()
         return;
     }
 
-    children = QVector<Tile*>(maxChildCount(), 0);
+    children = QVector<Tile*>(maxChildCount(), nullptr);
+}
+
+int AbstractMarkerTiler::Tile::nextNonEmptyIndex(int linearIndex) const
+{
+    auto it = std::upper_bound(nonEmptyIndices.begin(), nonEmptyIndices.end(), linearIndex);
+
+    if (it != nonEmptyIndices.end())
+    {
+        return *it;
+    }
+
+    return -1;
 }
 
 } // namespace Digikam
