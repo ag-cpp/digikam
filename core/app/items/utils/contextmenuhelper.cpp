@@ -1114,7 +1114,7 @@ QList<QAction*> ContextMenuHelper::groupMenuActions(const imageIds& ids)
     else
     {
         QAction* const closeAction = new QAction(i18nc("@action:inmenu", "Group Selected Here"), this);
-        connect(closeAction, SIGNAL(triggered()), 
+        connect(closeAction, SIGNAL(triggered()),
                 this, SIGNAL(signalCreateGroup()));
         actions << closeAction;
 
@@ -1256,6 +1256,17 @@ void ContextMenuHelper::addStandardActionItemDelete(QObject* recv, const char* s
             recv, slot);
 
     addAction(trashAction);
+}
+
+void ContextMenuHelper::addIQSAction(QObject* recv, const char* slot)
+{
+    QAction* const IQSAction = new QAction(QIcon::fromTheme(QLatin1String("")),
+                                           i18ncp("@action:inmenu Pluralized",
+                                                    "Image Quality Sort", "Image Quality Sort",1), d->parent);
+    connect(IQSAction, SIGNAL(triggered()),
+            recv, slot);
+
+    addAction(IQSAction);
 }
 
 QAction* ContextMenuHelper::exec(const QPoint& pos, QAction* at)

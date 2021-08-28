@@ -294,6 +294,11 @@ void ItemIconView::slotShowContextMenuOnInfo(QContextMenuEvent* event, const Ite
 
     // --------------------------------------------------------
 
+    cmHelper.addIQSAction(this, SLOT(slotImageQualitySorter()));
+    cmHelper.addSeparator();
+
+    // --------------------------------------------------------
+
     cmHelper.addStandardActionThumbnail(selectedImageIds, currentAlbum());
     cmHelper.addAssignTagsMenu(selectedImageIds);
     cmHelper.addRemoveTagsMenu(selectedImageIds);

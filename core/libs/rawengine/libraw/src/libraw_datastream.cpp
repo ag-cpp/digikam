@@ -51,7 +51,7 @@ typedef struct
 
 typedef lr_jpg_source_mgr *lr_jpg_src_ptr;
 
-#define LR_JPEG_INPUT_BUF_SIZE 16384 
+#define LR_JPEG_INPUT_BUF_SIZE 16384
 
 static void f_init_source(j_decompress_ptr cinfo)
 {
@@ -628,7 +628,7 @@ char *LibRaw_bigfile_datastream::gets(char *str, int sz)
 int LibRaw_bigfile_datastream::scanf_one(const char *fmt, void *val)
 {
   LR_BF_CHK();
-  return 
+  return
 #ifndef WIN32SECURECALLS
                    fscanf(f, fmt, val)
 #else
@@ -912,6 +912,7 @@ int LibRaw_bigfile_buffered_datastream::read(void *data, size_t size, size_t nme
 
 bool LibRaw_bigfile_buffered_datastream::fillBufferAt(int bi, INT64 off)
 {
+    if (off < 0LL) return false;
     iobuffers[bi]._bstart = off;
     if (iobuffers[bi].size() >= LIBRAW_BUFFER_ALIGN * 2)// Align to a file block.
         iobuffers[bi]._bstart &= (INT64)~((INT64)(LIBRAW_BUFFER_ALIGN - 1));
@@ -941,7 +942,6 @@ int LibRaw_bigfile_buffered_datastream::seek(INT64 o, int whence)
     if (whence == SEEK_SET) _fpos = o;
     else if (whence == SEEK_END) _fpos = o > 0 ? _fsize : _fsize + o;
     else if (whence == SEEK_CUR) _fpos += o;
-
     return 0;
 }
 
