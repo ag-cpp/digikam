@@ -116,6 +116,9 @@ Q_SIGNALS:
     void accuracyAndModel(double accuracy, bool yolo);
     void thresholdChanged(double threshold);
 
+    /// Emitted internally to cancel internal threads
+    void canceled();
+
 private:
 
     FacePipeline* const q;

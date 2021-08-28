@@ -39,8 +39,7 @@ public:
     explicit Private(FacePipeline::WriteMode mode, FacePipeline::Private* const dd)
         : mode               (mode),
           thumbnailLoadThread(dd->createThumbnailLoadThread()),
-          buffer(1000),
-          cancel(false)
+          buffer(100)
     {
     }
 
@@ -53,7 +52,6 @@ public:
     FacePipeline::WriteMode                         mode;
     ThumbnailLoadThread*                            thumbnailLoadThread;
     AsyncBuffer<FacePipelineExtendedPackage::Ptr>   buffer;
-    bool                                            cancel;
 };
 
 DatabaseWriter::DatabaseWriter(FacePipeline::WriteMode mode, FacePipeline::Private* const dd)
@@ -65,12 +63,14 @@ DatabaseWriter::DatabaseWriter(FacePipeline::WriteMode mode, FacePipeline::Priva
 DatabaseWriter::~DatabaseWriter()
 {
     cancel();
+    wait();
+
     delete d;
 }
 
 void DatabaseWriter::run()
 {
-    while (!d->cancel)
+    while (true)
     {
         FacePipelineExtendedPackage::Ptr package = d->buffer.read();
 
@@ -202,6 +202,8 @@ void DatabaseWriter::run()
 
         emit processed(package);
     }
+
+    emit canceled();
 }
 
 void DatabaseWriter::process(FacePipelineExtendedPackage::Ptr package)
@@ -211,9 +213,7 @@ void DatabaseWriter::process(FacePipelineExtendedPackage::Ptr package)
 
 void DatabaseWriter::cancel()
 {
-    d->cancel = true;
     d->buffer.cancel();
-    wait();
 }
 
 } // namespace Digikam

@@ -48,16 +48,17 @@ public:
 public:
 
     void run() override;
-    void cancel();
 
 public Q_SLOTS:
 
     void process(FacePipelineExtendedPackage::Ptr package);
+    void cancel();
     void setAccuracyAndModel(double value, bool yolo);
 
 Q_SIGNALS:
 
     void processed(FacePipelineExtendedPackage::Ptr package);
+    void canceled();
 
 protected:
 

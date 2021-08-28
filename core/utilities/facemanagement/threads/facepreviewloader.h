@@ -40,18 +40,19 @@ public:
     explicit FacePreviewLoader(FacePipeline::Private* const dd);
     ~FacePreviewLoader() override;
 
-    void cancel();
     bool sentOutLimitReached();
     void checkRestart();
 
 public Q_SLOTS:
 
     void process(FacePipelineExtendedPackage::Ptr package);
+    void cancel();
     void slotImageLoaded(const LoadingDescription& loadingDescription, const DImg& img);
 
 Q_SIGNALS:
 
     void processed(FacePipelineExtendedPackage::Ptr package);
+    void canceled();
 
 protected:
 

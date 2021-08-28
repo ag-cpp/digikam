@@ -45,17 +45,18 @@ public:
 public:
 
     void run() override;
-    void cancel();
 
 public Q_SLOTS:
 
     void process(FacePipelineExtendedPackage::Ptr package);
+    void cancel();
     void setThreshold(double threshold, bool);
 
 Q_SIGNALS:
 
     void processed(FacePipelineExtendedPackage::Ptr package);
-
+    void canceled();
+    
 protected:
 
     class Private;

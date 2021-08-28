@@ -229,11 +229,7 @@ void FacePipeline::Private::start()
 
     foreach (QObject* const element, pipeline)
     {
-        if      ((workerObject = qobject_cast<WorkerObject*>(element)))
-        {
-            workerObject->schedule();
-        }
-        else if ((pipes = qobject_cast<ParallelPipes*>(element)))
+        if ((pipes = qobject_cast<ParallelPipes*>(element)))
         {
             pipes->schedule();
         }
@@ -249,11 +245,6 @@ void FacePipeline::Private::stop()
     if (!started)
     {
         return;
-    }
-
-    if (previewThread)
-    {
-        previewThread->cancel();
     }
 
     foreach (ThumbnailLoadThread* const thread, thumbnailLoadThreads)
@@ -279,6 +270,8 @@ void FacePipeline::Private::stop()
         {
             thread->stop();
         }
+
+        // TODO facesengine: desactivate threads
     }
 
     started = false;
@@ -302,9 +295,10 @@ void FacePipeline::Private::wait()
         thread->wait();
     }
 
-    WorkerObject* workerObject = nullptr;
-    ParallelPipes* pipes       = nullptr;
-    DynamicThread* thread      = nullptr;
+    WorkerObject* workerObject      = nullptr;
+    ParallelPipes* pipes            = nullptr;
+    DynamicThread* dynamicThread    = nullptr;
+    QThread* thread                 = nullptr;
 
     foreach (QObject* const element, pipeline)
     {
@@ -316,10 +310,16 @@ void FacePipeline::Private::wait()
         {
             pipes->wait();
         }
-        else if ((thread = qobject_cast<DynamicThread*>(element)))
+        else if ((dynamicThread = qobject_cast<DynamicThread*>(element)))
+        {
+            dynamicThread->wait();
+        }
+        else if ((thread = qobject_cast<QThread*>(element)))
         {
             thread->wait();
         }
+
+        // TODO facesengine: wait for thread to exit
     }
 
     waiting = false;

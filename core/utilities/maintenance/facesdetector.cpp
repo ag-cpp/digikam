@@ -93,7 +93,7 @@ FacesDetector::FacesDetector(const FaceScanSettings& settings, ProgressItem* con
         IdentitiesManager().clearIdentities();
         FaceEmbeddingManager().clearEmbedding();
         d->pipeline.plugRetrainingDatabaseFilter();
-        // TODO plug extractor
+        // TODO facesengine plug extractor
         d->pipeline.plugTrainer();
         d->pipeline.construct();
     }
@@ -146,7 +146,6 @@ FacesDetector::FacesDetector(const FaceScanSettings& settings, ProgressItem* con
     }
     else // FaceScanSettings::RecognizeMarkedFaces
     {
-        // TODO facesengine: modifier recognizer
         d->pipeline.plugRerecognizingDatabaseFilter();
         d->pipeline.plugFaceRecognizer();
         d->pipeline.plugDatabaseWriter(FacePipeline::NormalWrite);
@@ -184,7 +183,7 @@ FacesDetector::FacesDetector(const FaceScanSettings& settings, ProgressItem* con
             getImagesWithImageTagProperty(FaceTags::unknownPersonTagId(),
                                           ImageTagPropertyName::autodetectedFace());
 
-        // TODO activate rescan option to include unconfirm faces into recognition
+        // TODO facesengine activate rescan option to include unconfirm faces into recognition
         d->idsTodoList.append(CoreDbAccess().db()->
                             getImagesWithImageTagProperty(FaceTags::unconfirmedPersonTagId(),
                                                         ImageTagPropertyName::autodetectedFace()));
@@ -389,6 +388,7 @@ void FacesDetector::slotItemsInfo(const ItemInfoList& items)
 void FacesDetector::slotDone()
 {
     // Switch on scanned for faces flag on digiKam config file.
+    qDebug() << "Done";
 
     KSharedConfig::openConfig()->group("General Settings").writeEntry("Face Scanner First Run", true);
 
@@ -397,6 +397,8 @@ void FacesDetector::slotDone()
 
 void FacesDetector::slotCancel()
 {
+    qDebug() << "ShutDown";
+
     d->pipeline.shutDown();
     MaintenanceTool::slotCancel();
 }

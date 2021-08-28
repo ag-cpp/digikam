@@ -83,8 +83,7 @@ class Q_DECL_HIDDEN ExtractionWorker::Private
 public:
 
     explicit Private(int nbExtractor)
-        : buffer(1000),
-          cancel(false)
+        : buffer(100)
     {
         for (int i = 0 ; i < nbExtractor; ++i)
         {
@@ -108,7 +107,6 @@ public:
     QVector<DNNFaceExtractor*> extractors;
     AsyncBuffer<FacePipelineExtendedPackage::Ptr> buffer;
     FaceEmbeddingManager db;
-    bool cancel;
 
 public:
 
@@ -156,12 +154,16 @@ ExtractionWorker::ExtractionWorker()
 ExtractionWorker::~ExtractionWorker()
 {
     cancel();
+    wait();
+
+    qDebug() << "ExtractionWorker deleted";
+
     delete d;
 }
 
 void ExtractionWorker::run()
 {
-    while (!d->cancel)
+    while (true)
     {
         FacePipelineExtendedPackage::Ptr package = d->buffer.read();
 
@@ -182,6 +184,9 @@ void ExtractionWorker::run()
 
         emit processed(package);
     }
+
+    qDebug() << "ExtractionWorker exited";
+    emit canceled();
 }
 
 void ExtractionWorker::process(FacePipelineExtendedPackage::Ptr package)
@@ -191,9 +196,7 @@ void ExtractionWorker::process(FacePipelineExtendedPackage::Ptr package)
 
 void ExtractionWorker::cancel()
 {
-    d->cancel = true;
     d->buffer.cancel();
-    wait();
 }
 
 void ExtractionWorker::extract(const QVector<QString>& tagIDs, QList<QImage>& faces, const QVector<int>& identities) const

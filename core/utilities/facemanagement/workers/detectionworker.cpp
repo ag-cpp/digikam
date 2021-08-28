@@ -36,8 +36,7 @@ class Q_DECL_HIDDEN DetectionWorker::Private
 public:
 
     explicit Private()
-        : buffer(1000),
-          cancel(false)
+        : buffer(100)
     {
     }
 
@@ -49,7 +48,6 @@ public:
 
     FaceDetector                                    detector;
     AsyncBuffer<FacePipelineExtendedPackage::Ptr>   buffer;
-    bool                                            cancel;
 };
 
 DetectionWorker::DetectionWorker(FacePipeline::Private* const dd)
@@ -62,12 +60,16 @@ DetectionWorker::DetectionWorker(FacePipeline::Private* const dd)
 DetectionWorker::~DetectionWorker()
 {
     cancel();
+    wait();
+
+    qDebug() << "DetectionWorker deleted";
+
     delete d;
 }
 
 void DetectionWorker::run()
 {
-    while (!d->cancel)
+    while (true)
     {
         FacePipelineExtendedPackage::Ptr package = d->buffer.read();
 
@@ -93,6 +95,9 @@ void DetectionWorker::run()
 
         emit processed(package);
     }
+
+    qDebug() << "DetectionWorker exited";
+    emit canceled();
 }
 
 void DetectionWorker::process(FacePipelineExtendedPackage::Ptr package)
@@ -102,9 +107,7 @@ void DetectionWorker::process(FacePipelineExtendedPackage::Ptr package)
 
 void DetectionWorker::cancel()
 {
-    d->cancel = true;
     d->buffer.cancel();
-    wait();
 }
 
 QImage DetectionWorker::scaleForDetection(const DImg& image) const

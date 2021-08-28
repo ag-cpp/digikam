@@ -42,8 +42,7 @@ public:
 
     explicit Private(FacePipeline::Private* const dd)
         : imageRetriever(dd),
-          buffer(1000),
-          cancel(false)
+          buffer(100)
     {
     }
 
@@ -57,7 +56,6 @@ public:
     FaceEmbeddingManager                            db;
     FaceItemRetriever                               imageRetriever;
     AsyncBuffer<FacePipelineExtendedPackage::Ptr>   buffer;
-    bool                                            cancel;
 };
 
 // ----------------------------------------------------------------------------------------
@@ -71,12 +69,15 @@ TrainerWorker::TrainerWorker(FacePipeline::Private* const dd)
 TrainerWorker::~TrainerWorker()
 {
     cancel();
+    wait();
+
+    qDebug() << "TrainerWorker deleted";
     delete d;
 }
 
 void TrainerWorker::run()
 {
-    while (!d->cancel)
+    while (true)
     {
         FacePipelineExtendedPackage::Ptr package = d->buffer.read();
 
@@ -85,7 +86,7 @@ void TrainerWorker::run()
             break;
         }
 
-        FaceUtils            utils;
+        FaceUtils utils;
 
         foreach (const FacePipelineFaceTagsIface& face, package->databaseFaces)
         {
@@ -105,6 +106,9 @@ void TrainerWorker::run()
 
         emit processed(package);
     }
+
+    qDebug() << "TrainerWorker exited";
+    emit canceled();
 }
 
 void TrainerWorker::process(FacePipelineExtendedPackage::Ptr package)
@@ -114,9 +118,7 @@ void TrainerWorker::process(FacePipelineExtendedPackage::Ptr package)
 
 void TrainerWorker::cancel()
 {
-    d->cancel = true;
     d->buffer.cancel();
-    wait();
 }
 
 } // namespace Digikam

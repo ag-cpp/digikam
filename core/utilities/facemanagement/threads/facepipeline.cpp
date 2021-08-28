@@ -262,10 +262,18 @@ void FacePipeline::construct()
             d->pipeline.first(), SLOT(process(FacePipelineExtendedPackage::Ptr)),
             Qt::DirectConnection);
 
+    connect(d, SIGNAL(canceled()),
+            d->pipeline.first(), SLOT(cancel()),
+            Qt::DirectConnection);
+
     for (int i = 0 ; i < (d->pipeline.size() - 1) ; ++i)
     {
         connect(d->pipeline.at(i), SIGNAL(processed(FacePipelineExtendedPackage::Ptr)),
                 d->pipeline.at(i + 1), SLOT(process(FacePipelineExtendedPackage::Ptr)),
+                Qt::DirectConnection);
+        
+        connect(d->pipeline.at(i), SIGNAL(canceled()),
+                d->pipeline.at(i + 1), SLOT(cancel()),
                 Qt::DirectConnection);
     }
 
@@ -294,6 +302,7 @@ QThread::Priority FacePipeline::priority() const
 
 void FacePipeline::cancel()
 {
+    emit d->canceled();
     d->stop();
 }
 

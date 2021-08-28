@@ -43,8 +43,7 @@ public:
     explicit Private(FacePipeline::Private* const dd)
         : imageRetriever(dd),
           recognizer(nullptr),
-          buffer(1000),
-          cancel(false)
+          buffer(100)
     {
     }
 
@@ -77,7 +76,6 @@ public:
     OpenCVDNNFaceRecognizer*                        recognizer;
     IdentitiesManager                               identitiesManager;
     AsyncBuffer<FacePipelineExtendedPackage::Ptr>   buffer;
-    bool                                            cancel;
     float                                           threshold;
 };
 
@@ -90,12 +88,14 @@ RecognitionWorker::RecognitionWorker(FacePipeline::Private* const dd)
 RecognitionWorker::~RecognitionWorker()
 {
     cancel();
+    wait();
+    qDebug() << "RecognitionWorker deleted";
     delete d;
 }
 
 void RecognitionWorker::run()
 {
-    while (!d->cancel)
+    while (true)
     {
         FacePipelineExtendedPackage::Ptr package = d->buffer.read();
 
@@ -128,6 +128,9 @@ void RecognitionWorker::run()
 
         emit processed(package);
     }
+
+    qDebug() << "RecognitionWorker exited";
+    emit canceled();
 }
 
 void RecognitionWorker::process(FacePipelineExtendedPackage::Ptr package)
@@ -137,9 +140,7 @@ void RecognitionWorker::process(FacePipelineExtendedPackage::Ptr package)
 
 void RecognitionWorker::cancel()
 {
-    d->cancel = true;
     d->buffer.cancel();
-    wait();
 }
 
 void RecognitionWorker::setThreshold(double threshold, bool)

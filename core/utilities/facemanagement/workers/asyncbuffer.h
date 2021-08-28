@@ -83,11 +83,6 @@ T AsyncBuffer<T>::read()
 {
     T object;
 
-    if (m_cancel) 
-    {
-        return object;
-    }
-
     m_mutex.lock();
 
     while (!m_cancel && m_data.empty())
@@ -95,7 +90,7 @@ T AsyncBuffer<T>::read()
         m_readWait.wait(&m_mutex);
     }
 
-    if (!m_cancel) 
+    if (!m_data.empty()) 
     {
         object = m_data.dequeue();
     }

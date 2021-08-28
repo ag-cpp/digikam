@@ -53,6 +53,8 @@ void FacePreviewLoader::cancel()
 {
     stopAllTasks();
     scheduledPackages.clear();
+
+    emit canceled();
 }
 
 void FacePreviewLoader::process(FacePipelineExtendedPackage::Ptr package)
