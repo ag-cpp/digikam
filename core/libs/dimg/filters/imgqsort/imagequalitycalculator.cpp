@@ -7,7 +7,7 @@
  * Description : Image Quality Calculor
  *
  * Copyright (C) 2013-2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
- * Copyright (C) 2013-2021 by Phuoc Khanh Le <phuockhanhnk94 at gmail dot com>
+ * Copyright (C) 2021      by Phuoc Khanh Le <phuockhanhnk94 at gmail dot com>
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -24,7 +24,7 @@
 
 #include "imagequalitycalculator.h"
 
-// Local includes 
+// Local includes
 
 // Qt includes
 
@@ -40,7 +40,7 @@ public:
 
     explicit Private()
       : threshold_punish(0.9),
-        weight_punish(20.0)
+        weight_punish   (20.0)
     {
     }
 
@@ -61,11 +61,12 @@ ImageQualityCalculator::~ImageQualityCalculator()
     delete d;
 }
 
-
-void ImageQualityCalculator::addDetectionResult(const QString& name, const float score, const float weight) const
+void ImageQualityCalculator::addDetectionResult(const QString& name,
+                                                const float score,
+                                                const float weight) const
 {
     ResultDetection result;
-    
+
     result.detetionType = name;
     result.weight       = weight;
     result.score        = score;
@@ -94,7 +95,7 @@ float ImageQualityCalculator::calculateQuality() const
     {
         return -1;
     }
-    
+
     adjustWeightByQualityLevel();
 
     normalizeWeight();
@@ -120,9 +121,9 @@ void ImageQualityCalculator::adjustWeightByQualityLevel() const
     {
         if (result.score > d->threshold_punish)
         {
-            result.weight *= d->weight_punish;  
+            result.weight *= d->weight_punish;
         }
     }
 }
 
-}
+} // namespace Digikam
