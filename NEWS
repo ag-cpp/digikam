@@ -6,6 +6,7 @@ NEW FEATURES:
 Bundle : AppImage is now compiled under Mageia 7.1 instead 6.1 for a better binary compatibility with recent Linux.
 Bundle : AppImage use last Qt 5.15.2 and KF5 5.84 libraries.
 Plugins: New tool to share items on the network with a Motion JPEG stream server.
+General: Update internal Libraw to snapshot 20210827.
 
 *****************************************************************************************************
 BUGFIXES:
@@ -59,5 +60,103 @@ BUGFIXES:
 048 ==> 347018 - Add collapsable albums to the tag view.
 049 ==> 438794 - Feature request: collapse all.
 050 ==> 268059 - Showfoto is unable to display TIF file in non RGB color space.
-051 ==> 
-
+051 ==> 295334 - Add some way to tag a face result as "ignore this one" in database for future scans.
+052 ==> 296649 - digiKam insists on generating thumbs for all photos before it lets me "download/delete all".
+053 ==> 312540 - Crash when closing Rajce.net.
+054 ==> 314950 - Import window should show thumbnails as they are read, not per folder as is now.
+055 ==> 314951 - Import window should immediately display a list of photo filenames.
+056 ==> 316063 - digiKam crash when importing from Nikon D7000.
+057 ==> 316441 - File renaming options do not have any effect.
+058 ==> 317178 - Import dialog: Renaming rules don't work.
+059 ==> 317179 - Import dialog: Download New doesn't work.
+060 ==> 317606 - SCAN : When adding 1444 pics to an registered directory, it takes time for ever.
+061 ==> 317658 - black white batch conversion delivers a black image.
+062 ==> 441521 - Where to find package called digikam-doc?
+063 ==> 317940 - Autorotation after import doesn't work.
+064 ==> 319026 - Organize tags works badly in long lists.
+065 ==> 319605 - Crashes while starting up.
+066 ==> 319655 - digiKam "starting-up-crashing-loop".
+067 ==> 319690 - digiKam crashes at startup after configuration.
+068 ==> 319745 - digiKam crashes after using the space bar in image editor to jump to next image.
+069 ==> 335293 - digiKam crashed on initial startup.
+070 ==> 328827 - digiKam keeps on crashin at start-up.
+071 ==> 319762 - Starting up crashes.
+072 ==> 325609 - Crashes on Startup - prev. crash while creating DB.
+073 ==> 329829 - digiKam crashes on first run.
+074 ==> 319859 - Import curves settings in Batch Q.
+075 ==> 295724 - Crash after save of edited picture.
+076 ==> 306162 - Crash after selecting another image.
+077 ==> 317670 - Crash after turning image, save and going to the next image.
+078 ==> 303174 - digiKam crashed when saving image changes.
+079 ==> 307398 - digiKam crashes in image editing modus when I save an edited image.
+080 ==> 290889 - Always crash.
+081 ==> 319948 - Crash after saving modified picture.
+082 ==> 315709 - Crash in Edit mode when using space bar.
+083 ==> 287700 - Bug after saving.
+084 ==> 298953 - digiKam crashes during saving photo.
+085 ==> 289389 - digiKam crash upon saving changes to images.
+086 ==> 323633 - digiKam crashes at startup.
+087 ==> 320325 - digiKam crashed when rotating photo in album view.
+088 ==> 308507 - digiKam crashes when browsing images.
+089 ==> 338056 - Autocrop RAW Image crashes.
+090 ==> 326357 - digiKam crashes at start up.
+091 ==> 314152 - Crash after deleting unassinged tag.
+092 ==> 310950 - digiKam Crashed when deleting tag.
+093 ==> 317545 - digiKam se cierra al editar tags.
+094 ==> 312372 - Crash while deleting all tags known to digiKam.
+095 ==> 321342 - digiKam crashes when deleting a tag.
+096 ==> 333523 - digiKam crashes when automatic lensdingens is used.
+097 ==> 321517 - Similar to 319383.
+098 ==> 322539 - Auto rename does not work when importing pictures.
+099 ==> 324350 - Segmentation Fault when starting.
+100 ==> 324183 - digiKam: Crash when importing Database.
+101 ==> 322556 - digiKam Crash with open Suse 12.3.
+102 ==> 322557 - Export to Rajce.net crashes when pressing close.
+103 ==> 324515 - digiKam crash at start.
+104 ==> 325925 - Importer: Sorting order is not remembered.
+105 ==> 281758 - Images on camera always marked as new if imported via autodetected camera.
+106 ==> 327969 - New pictures are no more recognized while trying to import them from an automatically detected USB storage device.
+108 ==> 329135 - digiKam crashes while editing tag information.
+109 ==> 315497 - digiKam crashes when inserting tags.
+110 ==> 439207 - FR: Make Background of transparent png configurable.
+111 ==> 398252 - Langage configuration should be in settings not in help.
+112 ==> 343263 - While attempting a Galley Export to Smug Mug error: Smug Mug call failed: invalid method.
+113 ==> 342489 - digiKam crashes when tagging photos
+114 ==> 342426 - Lookup of missing altitude values fails.
+115 ==> 342150 - Unify google service authentication.
+116 ==> 338511 - After batch-resizing the "start"-button is missing.
+117 ==> 336268 - Crash of "Stich images into a panorama"
+118 ==> 335574 - Crash when opening an image in the viewer.
+119 ==> 333790 - digiKam crashes in sqlite backend.
+120 ==> 441598 - There are two actions that use the same shortcut Ctrl + Alt + I.
+121 ==> 441600 - Attempting to look at configuration causes crash.
+122 ==> 
+123 ==> 
+124 ==> 
+125 ==> 
+126 ==> 
+127 ==> 
+128 ==> 
+129 ==> 
+130 ==> 
+131 ==> 
+132 ==> 
+133 ==> 
+134 ==> 
+135 ==> 
+136 ==> 
+137 ==> 
+138 ==> 
+139 ==> 
+140 ==> 
+141 ==> 
+142 ==> 
+143 ==> 
+144 ==> 
+145 ==> 
+146 ==> 
+147 ==> 
+148 ==> 
+149 ==> 
+150 ==> 
+151 ==> 
