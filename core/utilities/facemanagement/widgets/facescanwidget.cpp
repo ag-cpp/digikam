@@ -272,8 +272,8 @@ void FaceScanWidget::setupUi()
     specificityLabel->setAlignment(Qt::AlignTop | Qt::AlignRight);
 
     d->accuracyInput                  = new DIntNumInput(settingsTab);
-    d->accuracyInput->setDefaultValue(70);
-    d->accuracyInput->setRange(0, 100, 10);
+    d->accuracyInput->setDefaultValue(940);
+    d->accuracyInput->setRange(0, 1000, 10);
     d->accuracyInput->setToolTip(i18nc("@info:tooltip",
                                        "Adjust sensitivity versus specificity: the higher the value, the more accurately faces will\n"
                                        "be recognized, but less faces will be recognized\n"
@@ -328,7 +328,7 @@ void FaceScanWidget::setupConnections()
     connect(d->accuracyInput, &DIntNumInput::valueChanged,
             this, [this](int value)
         {
-            ApplicationSettings::instance()->setFaceDetectionAccuracy(double(value) / 100);
+            ApplicationSettings::instance()->setFaceDetectionAccuracy(double(value) / 1000.0);
         }
     );
 

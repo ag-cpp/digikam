@@ -224,7 +224,6 @@ void FacePipeline::Private::start()
 
     emit q->scheduled();
 
-    WorkerObject*  workerObject = nullptr;
     ParallelPipes* pipes        = nullptr;
 
     foreach (QObject* const element, pipeline)
@@ -270,8 +269,6 @@ void FacePipeline::Private::stop()
         {
             thread->stop();
         }
-
-        // TODO facesengine: desactivate threads
     }
 
     started = false;
@@ -318,8 +315,6 @@ void FacePipeline::Private::wait()
         {
             thread->wait();
         }
-
-        // TODO facesengine: wait for thread to exit
     }
 
     waiting = false;

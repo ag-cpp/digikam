@@ -62,8 +62,6 @@ DetectionWorker::~DetectionWorker()
     cancel();
     wait();
 
-    qDebug() << "DetectionWorker deleted";
-
     delete d;
 }
 
@@ -96,7 +94,6 @@ void DetectionWorker::run()
         emit processed(package);
     }
 
-    qDebug() << "DetectionWorker exited";
     emit canceled();
 }
 

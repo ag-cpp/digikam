@@ -156,8 +156,6 @@ ExtractionWorker::~ExtractionWorker()
     cancel();
     wait();
 
-    qDebug() << "ExtractionWorker deleted";
-
     delete d;
 }
 
@@ -185,7 +183,6 @@ void ExtractionWorker::run()
         emit processed(package);
     }
 
-    qDebug() << "ExtractionWorker exited";
     emit canceled();
 }
 

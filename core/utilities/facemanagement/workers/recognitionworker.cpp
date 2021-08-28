@@ -56,8 +56,6 @@ public:
     {
         faceembeddingMap = FaceEmbeddingCache::getData();
 
-        qDebug() << "retrieve" << faceembeddingMap.size();
-
         cv::Mat predictors, labels;
 
         for (QMap<QString, FaceEmbeddingData>::iterator it = faceembeddingMap.begin(); it != faceembeddingMap.end(); ++it)
@@ -91,7 +89,7 @@ RecognitionWorker::~RecognitionWorker()
 {
     cancel();
     wait();
-    qDebug() << "RecognitionWorker deleted";
+
     delete d;
 }
 
@@ -138,7 +136,6 @@ void RecognitionWorker::run()
         emit processed(package);
     }
 
-    qDebug() << "RecognitionWorker exited";
     emit canceled();
 }
 

@@ -71,7 +71,6 @@ TrainerWorker::~TrainerWorker()
     cancel();
     wait();
 
-    qDebug() << "TrainerWorker deleted";
     delete d;
 }
 
@@ -107,7 +106,6 @@ void TrainerWorker::run()
         emit processed(package);
     }
 
-    qDebug() << "TrainerWorker exited";
     emit canceled();
 }
 

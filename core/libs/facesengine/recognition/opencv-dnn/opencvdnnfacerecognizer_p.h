@@ -95,7 +95,7 @@ public:
             }
         }
 
-        maxDistance = getMaxDistance(data->getSamples());
+        maxDistance = getMaxDistance(data->getSamples()) / 10.0;
     }
 
     ~Private()
@@ -227,7 +227,7 @@ int OpenCVDNNFaceRecognizer::Private::predictKNN(const cv::Mat& faceEmbedding) c
     }
 
     // Look for K-nearest neighbor which have the cosine distance greater than the threshold.
-    float searchRange = (1 - threshold) * maxDistance;
+    float searchRange = (1.0 - threshold) * maxDistance;
 
     QMap<double, QVector<int> > closestNeighbors = tree->getClosestNeighbors(faceEmbedding, searchRange, kNeighbors);
     QMap<int, QVector<double> > votingGroups;
