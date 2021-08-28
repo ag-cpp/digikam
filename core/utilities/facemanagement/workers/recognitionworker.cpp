@@ -56,6 +56,8 @@ public:
     {
         faceembeddingMap = FaceEmbeddingCache::getData();
 
+        qDebug() << "retrieve" << faceembeddingMap.size();
+
         cv::Mat predictors, labels;
 
         for (QMap<QString, FaceEmbeddingData>::iterator it = faceembeddingMap.begin(); it != faceembeddingMap.end(); ++it)
@@ -114,7 +116,14 @@ void RecognitionWorker::run()
         foreach (const FacePipelineFaceTagsIface& face, package->databaseFaces)
         {
             QString tagID = ExtractionWorker::encodeTagID(package->info.id(), face);
-            embeddings << d->faceembeddingMap[tagID].embedding;
+            if (d->faceembeddingMap.contains(tagID))
+            {
+                embeddings << d->faceembeddingMap[tagID].embedding;
+            }
+            else
+            {
+                qDebug() << "Fail to find face embedding for tag" << tagID;
+            }
         } 
 
         QVector<int> identitiesIDs = d->recognizer->recognize(embeddings);
