@@ -38,7 +38,7 @@ namespace Digikam
 {
 
 DetectorDistortion::DetectorDistortion(QObject* const parent)
-  : QObject(parent)
+    : QObject(parent)
 {
 }
 
@@ -72,4 +72,4 @@ cv::Mat DetectorDistortion::prepareForDetection(const DImg& inputImage)
 //     emit resultReady(detect(m_image));
 // }
 
-}
+} // namespace Digikam
