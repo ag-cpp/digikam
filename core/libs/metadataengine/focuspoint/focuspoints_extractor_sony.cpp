@@ -61,7 +61,7 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_sony() cons
     QStringList af_info = findValue(TagNameRoot, QLatin1String("FocusLocation")).toString()
                                                                                 .split(QLatin1String(" "));
 
-    qCDebug(DIGIKAM_DIMG_LOG) << "Sony Makernotes Foucus Location:" << af_info;
+    qCDebug(DIGIKAM_DIMG_LOG) << "Sony Makernotes Focus Location:" << af_info;
 
     if (af_info.size() < 5)
     {
@@ -83,12 +83,18 @@ FocusPointsExtractor::ListAFPoints FocusPointsExtractor::getAFPoints_sony() cons
     float af_x_position = af_info[3].toFloat();
     float af_y_position = af_info[4].toFloat();
 
-    return ListAFPoints{SonyInternal::create_af_point(imageWidth,
-                                                      imageHeight,
-                                                      afPointWidth,
-                                                      afPointHeight,
-                                                      af_x_position,
-                                                      af_y_position)};
+    return
+    (
+        ListAFPoints
+        {
+            SonyInternal::create_af_point(imageWidth,
+                                          imageHeight,
+                                          afPointWidth,
+                                          afPointHeight,
+                                          af_x_position,
+                                          af_y_position)
+        }
+    );
 }
 
 } // namespace Digikam
