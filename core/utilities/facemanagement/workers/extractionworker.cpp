@@ -24,6 +24,8 @@
 
 #include "extractionworker.h"
 
+// Qt includes
+
 #include <QList>
 #include <QVector>
 #include <QQueue>
@@ -31,6 +33,7 @@
 #include <QWaitCondition>
 
 // Local includes
+
 #include "dnnfaceextractor.h"
 #include "faceutils.h"
 #include "iteminfo.h"
@@ -51,7 +54,7 @@ QList<QImage> crop(const DImg& faceImg, const QList<QRectF>& detectedFaces)
 
     QList<QImage> croppedFaces;
 
-    for (int i = 0; i < detectedFaces.size(); ++i) 
+    for (int i = 0 ; i < detectedFaces.size() ; ++i)
     {
         QImage face;
         face = faceImg.copyQImage(detectedFaces[i]);
@@ -85,7 +88,7 @@ public:
     explicit Private(int nbExtractor)
         : buffer(100)
     {
-        for (int i = 0 ; i < nbExtractor; ++i)
+        for (int i = 0 ; i < nbExtractor ; ++i)
         {
             extractors << new DNNFaceExtractor;
         }
@@ -147,7 +150,7 @@ public:
 
 ExtractionWorker::ExtractionWorker()
     : QThread(),
-      d (new Private(1))
+      d      (new Private(1))
 {
 }
 
@@ -172,7 +175,7 @@ void ExtractionWorker::run()
 
         QVector<QString> tagIDs;
 
-        for (int i = 0; i < package->databaseFaces.size(); ++i)
+        for (int i = 0 ; i < package->databaseFaces.size() ; ++i)
         {
             tagIDs.append(encodeTagID(package->info.id(), package->databaseFaces[i]));
         }
@@ -200,10 +203,10 @@ void ExtractionWorker::extract(const QVector<QString>& tagIDs, QList<QImage>& fa
 {
     Q_ASSERT(tagIDs.size() == faces.size());
 
-    QVector<cv::Mat> embeddings;    
+    QVector<cv::Mat> embeddings;
     cv::parallel_for_(cv::Range(0, faces.size()), Private::ParallelExtractors(d, faces, embeddings));
 
-    for (int i = 0; i < embeddings.size(); ++i)
+    for (int i = 0 ; i < embeddings.size() ; ++i)
     {
         int id = -1;
         if (identities.size() > i)

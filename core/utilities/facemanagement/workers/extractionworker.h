@@ -25,10 +25,13 @@
 #ifndef DIGIKAM_EXTRACTION_WORKER_H
 #define DIGIKAM_EXTRACTION_WORKER_H
 
+// Qt includes
+
 #include <QImage>
 #include <QThread>
 
 // Local includes
+
 #include "digikam_opencv.h"
 #include "iteminfo.h"
 #include "facepipeline_p.h"
@@ -39,6 +42,7 @@ namespace Digikam
 class Q_DECL_HIDDEN ExtractionWorker: public QThread
 {
     Q_OBJECT
+
 public:
 
     explicit ExtractionWorker();
@@ -63,12 +67,14 @@ Q_SIGNALS:
 
 private:
 
-    class Private;
-    Private* d;
-
     // Disable
     ExtractionWorker(const ExtractionWorker&)            = delete;
     ExtractionWorker& operator=(const ExtractionWorker&) = delete;
+
+private:
+
+    class Private;
+    Private* d;
 };
 
 } // namespace Digikam

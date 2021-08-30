@@ -24,6 +24,8 @@
 #ifndef DIGIKAM_ASYNCBUFFER_H
 #define DIGIKAM_ASYNCBUFFER_H
 
+// Qt includes
+
 #include <QQueue>
 #include <QMutex>
 #include <QWaitCondition>
@@ -48,20 +50,20 @@ public:
 
 private:
 
-    QQueue<T> m_data;
-    QMutex m_mutex;
-    QWaitCondition m_readWait;
-    QWaitCondition m_writeWait;
-    const int m_capacity;
-    bool m_cancel;
+    QQueue<T>       m_data;
+    QMutex          m_mutex;
+    QWaitCondition  m_readWait;
+    QWaitCondition  m_writeWait;
+    const int       m_capacity;
+    bool            m_cancel;
 };
 
 template <typename T>
 AsyncBuffer<T>::AsyncBuffer(int capacity)
     : m_capacity(capacity),
-      m_cancel(false)
+      m_cancel  (false)
 {
-    Q_ASSERT(capacity > 0);   
+    Q_ASSERT(capacity > 0);
 }
 
 template <typename T>
@@ -111,10 +113,10 @@ void AsyncBuffer<T>::append(const T& object)
 
     m_mutex.lock();
 
-    while (!m_cancel && m_data.size() >= m_capacity)
+    while (!m_cancel && (m_data.size() >= m_capacity))
     {
         m_writeWait.wait(&m_mutex);
-    }    
+    }
 
     m_data.enqueue(object);
 
@@ -122,6 +124,6 @@ void AsyncBuffer<T>::append(const T& object)
     m_readWait.wakeAll();
 }
 
-}
+} // namsepace Digikam
 
 #endif // DIGIKAM_ASYNCBUFFER_H
