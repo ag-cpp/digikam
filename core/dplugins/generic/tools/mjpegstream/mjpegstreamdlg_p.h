@@ -7,6 +7,7 @@
  * Description : MJPEG Stream Server configuration dialog - Private container
  *
  * Copyright (C) 2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
+ * Copyright (C) 2021 by Quoc Hưng Tran <quochungtran1999 at gmail dot com>
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -59,6 +60,7 @@
 #include "transitionpreview.h"
 #include "effectpreview.h"
 #include "dcombobox.h"
+#include "dfontselect.h"
 
 namespace DigikamGenericMjpegStreamPlugin
 {
@@ -73,7 +75,8 @@ public:
         Server = 0,
         Stream,
         Transition,
-        Effect
+        Effect,
+        OSD             ///< On Screen Display options
     };
 
 public:
@@ -110,6 +113,19 @@ public:
     DComboBox*          transVal;
     TransitionPreview*  transPreview;
     QTabWidget*         tabView;
+    QCheckBox*          showName;
+    QCheckBox*          showDate;
+    QCheckBox*          showApertureFocal;
+    QCheckBox*          showExpoSensitivity;
+    QCheckBox*          showMakeModel;
+    QCheckBox*          showLensModel;
+    QCheckBox*          showComment;
+    QCheckBox*          showTitle;
+    QCheckBox*          showTags;
+    QCheckBox*          showRating;
+    QCheckBox*          showCapIfNoTitle;
+    DFontSelect*        osdFont;
+
     MjpegStreamSettings settings;
 };
 
