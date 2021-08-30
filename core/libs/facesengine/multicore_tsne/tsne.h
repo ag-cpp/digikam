@@ -53,6 +53,7 @@ class DataPoint;
 template <class treeT, float (*dist_fn)( const DataPoint&, const DataPoint&)>
 class TSNE
 {
+
 public:
 
     void run(float* X, int N, int D, float* Y,
@@ -68,8 +69,8 @@ private:
 
     float computeGradient(int* inp_row_P, int* inp_col_P, float* inp_val_P, float* Y, int N, int D, float* dC, float theta, bool eval_error);
     float evaluateError(int* row_P, int* col_P, float* val_P, float* Y, int N, int no_dims, float theta);
-    void zeroMean(float* X, int N, int D);
-    void computeGaussianPerplexity(float* X, int N, int D, int** _row_P, int** _col_P, float** _val_P, float perplexity, int K, int verbose);
+    void  zeroMean(float* X, int N, int D);
+    void  computeGaussianPerplexity(float* X, int N, int D, int** _row_P, int** _col_P, float** _val_P, float perplexity, int K, int verbose);
     float randn();
 };
 
