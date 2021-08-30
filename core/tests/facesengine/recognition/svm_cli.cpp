@@ -21,13 +21,21 @@
  *
  * ============================================================ */
 
+// C++ includes
+
 #include <memory>
+
+// Qt includes
+
 #include <QCoreApplication>
 #include <QCommandLineParser>
 #include <QString>
 #include <QStringList>
 #include <QFile>
 #include <QDebug>
+
+// Local includes
+
 #include "digikam_opencv.h"
 
 
@@ -52,27 +60,34 @@ std::pair<cv::Ptr<cv::ml::TrainData>, cv::Ptr<cv::ml::TrainData>> loadData(const
     cv::Mat leftoutPredictors, leftoutLabels;
 
     QFile file(fileName);
-    if (!file.open(QIODevice::ReadOnly)) {
+    if (!file.open(QIODevice::ReadOnly))
+    {
         qDebug() << file.errorString();
-        return {cv::ml::TrainData::create(predictors, 0, labels),cv::ml::TrainData::create(leftoutPredictors, 0, leftoutLabels)};
+
+        return
+        {
+            cv::ml::TrainData::create(predictors, 0, labels), cv::ml::TrainData::create(leftoutPredictors, 0, leftoutLabels)
+        };
     }
 
-    while (!file.atEnd()) {
+    while (!file.atEnd())
+    {
         QByteArray line = file.readLine();
         QList<QByteArray> data = line.split(',');
 
         cv::Mat predictor(1, data.size()-1, CV_32F);
-        for (int i = 1; i < data.size(); ++i) 
+
+        for (int i = 1 ; i < data.size() ; ++i)
         {
             predictor.at<float>(i-1) = data[i].toFloat();
         }
 
-        if (data[0].toInt() == 0) 
+        if (data[0].toInt() == 0)
         {
             leftoutLabels.push_back(data[0].toInt());
             leftoutPredictors.push_back(predictor);
         }
-        else 
+        else
         {
             labels.push_back(data[0].toInt());
             predictors.push_back(predictor);
@@ -85,9 +100,10 @@ std::pair<cv::Ptr<cv::ml::TrainData>, cv::Ptr<cv::ml::TrainData>> loadData(const
 cv::Ptr<cv::ml::TrainData> filter(cv::Mat samples, cv::Mat labels, int selectedLabel) 
 {
     cv::Mat predictors, y;
-    for (int i = 0; i < samples.rows; ++i) 
+
+    for (int i = 0 ; i < samples.rows ; ++i)
     {
-        if (labels.row(i).at<int>(0) == selectedLabel) 
+        if (labels.row(i).at<int>(0) == selectedLabel)
         {
             predictors.push_back(samples.row(i));
             y.push_back(selectedLabel);
@@ -100,7 +116,8 @@ cv::Ptr<cv::ml::TrainData> filter(cv::Mat samples, cv::Mat labels, int selectedL
 std::vector<cv::Ptr<cv::ml::SVM>> oneclassClassifiers(cv::Mat samples, cv::Mat labels) 
 {
     std::vector<cv::Ptr<cv::ml::SVM>> classifier(27);
-    for (int i = 1; i <= 27; ++i)
+
+    for (int i = 1 ; i <= 27 ; ++i)
     {
         cv::Ptr<cv::ml::SVM> svm = cv::ml::SVM::create();
         svm->setType(cv::ml::SVM::ONE_CLASS);
@@ -129,16 +146,17 @@ double testClassification(cv::Ptr<cv::ml::TrainData> data)
     svm->train(cv::ml::TrainData::create(data->getTrainSamples(), 0, data->getTrainResponses()));
 
     double error = 0;
-    for (int i = 0; i < data->getTestSamples().rows; ++i) 
+
+    for (int i = 0 ; i < data->getTestSamples().rows ; ++i)
     {
         int prediction = svm->predict(data->getTestSamples().row(i));
-        if (prediction != data->getTestResponses().row(i).at<int>(0)) 
+        if (prediction != data->getTestResponses().row(i).at<int>(0))
         {
             ++error;
         }
     }
 
-    return error / data->getTestSamples().rows;
+    return (error / data->getTestSamples().rows);
 }
 
 double testNoveltyDetection(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::TrainData> leftout)
@@ -155,19 +173,22 @@ double testNoveltyDetection(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::Tra
     svm->train(cv::ml::TrainData::create(data->getTrainSamples(), 0, data->getTrainResponses()));
 
     double falseNegative = 0, falsePositive = 0;
-    for (int i = 0; i < data->getTestSamples().rows; ++i) 
+
+    for (int i = 0 ; i < data->getTestSamples().rows ; ++i)
     {
         int prediction = svm->predict(data->getTestSamples().row(i));
+
         if (prediction != 1) 
         {
             ++falseNegative;
         }
     }
 
-    for (int i = 0; i < leftout->getSamples().rows; ++i) 
+    for (int i = 0 ; i < leftout->getSamples().rows ; ++i)
     {
         int prediction = svm->predict(leftout->getSamples().row(i));
-        if (prediction != 0) 
+
+        if (prediction != 0)
         {
             ++falsePositive;
         }
@@ -192,10 +213,13 @@ double testMultipleClassifiers(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::
     classifier->train(cv::ml::TrainData::create(data->getTrainSamples(), 0, data->getTrainResponses()));
 
     double falseNegative = 0, falsePositive = 0;
-    for (int i = 0; i < data->getTestSamples().rows; ++i) 
+
+    for (int i = 0 ; i < data->getTestSamples().rows ; ++i)
     {
         int prediction = classifier->predict(data->getTestSamples().row(i));
-        if (prediction == data->getTestResponses().row(i).at<int>(0) && noveltyClassifiers[prediction-1]->predict(data->getTestSamples().row(i)) != 1) 
+
+        if      ((prediction == data->getTestResponses().row(i).at<int>(0)) &&
+                 (noveltyClassifiers[prediction-1]->predict(data->getTestSamples().row(i)) != 1))
         {
             ++falseNegative;
         }
@@ -205,10 +229,11 @@ double testMultipleClassifiers(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::
         }
     }
 
-    for (int i = 0; i < leftout->getSamples().rows; ++i) 
+    for (int i = 0 ; i < leftout->getSamples().rows ; ++i)
     {
         int prediction = classifier->predict(leftout->getSamples().row(i));
-        if (noveltyClassifiers[prediction-1]->predict(leftout->getSamples().row(i)) != 0) 
+
+        if (noveltyClassifiers[prediction-1]->predict(leftout->getSamples().row(i)) != 0)
         {
             ++falsePositive;
         }
@@ -239,15 +264,17 @@ double test2Classifiers(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::TrainDa
     noveltyClassifier->train(cv::ml::TrainData::create(data->getTrainSamples(), 0, data->getTrainResponses()));
 
     double falseNegative = 0, falsePositive = 0;
-    for (int i = 0; i < data->getTestSamples().rows; ++i) 
+
+    for (int i = 0 ; i < data->getTestSamples().rows ; ++i)
     {
         if (noveltyClassifier->predict(data->getTestSamples().row(i)) != 1)
         {
             ++falseNegative;
         }
-        else 
+        else
         {
             int prediction = classifier->predict(data->getTestSamples().row(i));
+
             if (prediction != data->getTestResponses().row(i).at<int>(0))
             {
                 ++falsePositive;
@@ -255,7 +282,7 @@ double test2Classifiers(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::TrainDa
         }
     }
 
-    for (int i = 0; i < leftout->getSamples().rows; ++i) 
+    for (int i = 0 ; i < leftout->getSamples().rows ; ++i)
     {
         if (noveltyClassifier->predict(leftout->getSamples().row(i)) != 0)
         {

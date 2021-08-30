@@ -21,7 +21,11 @@
  *
  * ============================================================ */
 
+// C++ includes
+
 #include <memory>
+
+// Qt includes
 
 #include <QCoreApplication>
 #include <QCommandLineParser>
@@ -29,6 +33,8 @@
 #include <QFile>
 #include <QDebug>
 #include <QElapsedTimer>
+
+// Local includes
 
 #include "digikam_opencv.h"
 #include "kd_tree.h"
@@ -55,17 +61,25 @@ std::pair<cv::Ptr<cv::ml::TrainData>, cv::Ptr<cv::ml::TrainData>> loadData(const
     cv::Mat leftoutPredictors, leftoutLabels;
 
     QFile file(fileName);
-    if (!file.open(QIODevice::ReadOnly)) {
+
+    if (!file.open(QIODevice::ReadOnly))
+    {
         qDebug() << file.errorString();
-        return {cv::ml::TrainData::create(predictors, 0, labels),cv::ml::TrainData::create(leftoutPredictors, 0, leftoutLabels)};
+
+        return
+        {
+            cv::ml::TrainData::create(predictors, 0, labels), cv::ml::TrainData::create(leftoutPredictors, 0, leftoutLabels)
+        };
     }
 
-    while (!file.atEnd()) {
+    while (!file.atEnd())
+    {
         QByteArray line = file.readLine();
         QList<QByteArray> data = line.split(',');
 
         cv::Mat predictor(1, data.size()-1, CV_32F);
-        for (int i = 1; i < data.size(); ++i) 
+
+        for (int i = 1 ; i < data.size() ; ++i)
         {
             predictor.at<float>(i-1) = data[i].toFloat();
         }
@@ -75,20 +89,24 @@ std::pair<cv::Ptr<cv::ml::TrainData>, cv::Ptr<cv::ml::TrainData>> loadData(const
             leftoutLabels.push_back(data[0].toInt());
             leftoutPredictors.push_back(predictor);
         }
-        else 
+        else
         {
             labels.push_back(data[0].toInt());
             predictors.push_back(predictor);
         }
     }
 
-    return {cv::ml::TrainData::create(predictors, 0, labels),cv::ml::TrainData::create(leftoutPredictors, 0, leftoutLabels)};
+    return
+    {
+        cv::ml::TrainData::create(predictors, 0, labels), cv::ml::TrainData::create(leftoutPredictors, 0, leftoutLabels)
+    };
 }
 
 Digikam::KDTree* trainKNN(cv::Mat samples, cv::Mat labels) 
 {
-    Digikam::KDTree* tree = new Digikam::KDTree(samples.cols);
-    for (int i = 0; i < samples.rows; ++i) 
+    Digikam::KDTree* const tree = new Digikam::KDTree(samples.cols);
+
+    for (int i = 0 ; i < samples.rows ; ++i)
     {
         tree->add(samples.row(i), labels.row(i).at<int>(0));
     }
@@ -138,7 +156,6 @@ int predict(std::shared_ptr<Digikam::KDTree> knn, cv::Mat predictors, double thr
     return prediction;
 }
 
-
 double testClassification(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::TrainData> leftout, double threshold)
 {
     data->setTrainTestSplitRatio(0.2);
@@ -146,11 +163,13 @@ double testClassification(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::Train
 
     QElapsedTimer timer;
     timer.start();
-    
+
     double falseNegative = 0, falsePositive = 0;
-    for (int i = 0; i < data->getTestSamples().rows; ++i) 
-    {   
+
+    for (int i = 0 ; i < data->getTestSamples().rows ; ++i) 
+    {
         int pred = predict(knn, data->getTestSamples().row(i), threshold);
+
         if (pred != data->getTestResponses().row(i).at<int>(0)) 
         {
             qDebug() << pred << "!=" << data->getTestResponses().row(i).at<int>(0);
@@ -159,7 +178,7 @@ double testClassification(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::Train
         }
     }
 
-    for (int i = 0; i < leftout->getSamples().rows; ++i) 
+    for (int i = 0 ; i < leftout->getSamples().rows ; ++i)
     {
         if (predict(knn, leftout->getSamples().row(i), threshold) != -1) 
         {
@@ -177,17 +196,18 @@ int main(int argc, char** argv)
 {
     QCoreApplication app(argc, argv);
     app.setApplicationName(QString::fromLatin1("digikam"));
-    std::shared_ptr<QCommandLineParser> parser = parseOptions(app);
-
+    std::shared_ptr<QCommandLineParser> parser                             = parseOptions(app);
     std::pair<cv::Ptr<cv::ml::TrainData>, cv::Ptr<cv::ml::TrainData>> data = loadData(parser->value(QLatin1String("data")));
 
     float threshold = 10;
+
     if (parser->isSet(QLatin1String("threshold")))
     {
         threshold = parser->value(QLatin1String("threshold")).toDouble();
     }
 
     qDebug() << "Classification Error rate" << testClassification(data.first, data.second, threshold);
+
     return 0;
 }
 

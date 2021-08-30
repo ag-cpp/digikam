@@ -21,8 +21,13 @@
  *
  * ============================================================ */
 
+// C++ includes
+
 #include <memory>
-#include <algorithm> 
+#include <algorithm>
+
+// Qt includes
+
 #include <QCoreApplication>
 #include <QCommandLineParser>
 #include <QString>
@@ -33,6 +38,9 @@
 #include <QImage>
 #include <QDir>
 #include <QElapsedTimer>
+
+// Local includes
+
 #include "digikam_opencv.h"
 #include "opencvdnnfacedetector.h"
 #include "facedetector.h"
@@ -50,11 +58,14 @@ std::shared_ptr<QCommandLineParser> parseOptions(const QCoreApplication& app)
     return std::shared_ptr<QCommandLineParser>(parser);
 }
 
-class Extractor {
+class Extractor
+{
 public:
-    explicit Extractor() {
+
+    explicit Extractor()
+    {
         m_detector = new Digikam::FaceDetector();
-        m_net = cv::dnn::readNetFromTensorflow("../scripts/facenet_opencv_dnn/models/graph_final.pb");
+        m_net      = cv::dnn::readNetFromTensorflow("../scripts/facenet_opencv_dnn/models/graph_final.pb");
     }
 
     QImage* detect(const QImage& faceImg) const;
@@ -74,6 +85,7 @@ QImage* Extractor::detect(const QImage& faceImg) const
     }
 
     QList<QRectF> faces = m_detector->detectFaces(faceImg);
+
     if (faces.isEmpty())
     {
         return nullptr;
@@ -104,7 +116,7 @@ cv::Mat normalize(cv::Mat mat)
 cv::Mat Extractor::getFaceEmbedding(cv::Mat faceImage)
 {
     cv::Size imageSize = cv::Size(160, 160);
-    /*
+/*
     cv::Mat resizedImage;
     cv::resize(faceImage.clone(), resizedImage, imageSize, 0, 0, cv::INTER_LINEAR);
 
@@ -112,10 +124,11 @@ cv::Mat Extractor::getFaceEmbedding(cv::Mat faceImage)
     cv::meanStdDev(resizedImage, mean, std);
 
     std::cout << "Mean " << mean << "std " << std << std::endl;
-    */
-    cv::Mat blob = cv::dnn::blobFromImage(faceImage, 1.0/127.5, imageSize, cv::Scalar(127.5,127.5,127.5), true, false);
+*/
+    cv::Mat blob             = cv::dnn::blobFromImage(faceImage, 1.0/127.5, imageSize, cv::Scalar(127.5,127.5,127.5), true, false);
     m_net.setInput(blob);
     cv::Mat face_descriptors = m_net.forward();
+
     return face_descriptors;
 }
 
@@ -135,7 +148,8 @@ cv::Mat prepareForRecognition(QImage& inputImage)
     return cvImage;
 }
 
-cv::Ptr<cv::ml::TrainData> extract(const QDir& dataDir) {
+cv::Ptr<cv::ml::TrainData> extract(const QDir& dataDir)
+{
     cv::Mat predictors, labels;
 
     Extractor extractor;
@@ -145,7 +159,7 @@ cv::Ptr<cv::ml::TrainData> extract(const QDir& dataDir) {
     for (int i = 0 ; i < subDirs.size() ; ++i)
     {
         QDir subDir(subDirs[i].absoluteFilePath());
-        QFileInfoList filesInfo = subDir.entryInfoList(QDir::Files | QDir::Readable);       
+        QFileInfoList filesInfo = subDir.entryInfoList(QDir::Files | QDir::Readable);
 
         for (int j = 0 ; j < filesInfo.size() ; ++j)
         {
@@ -155,6 +169,7 @@ cv::Ptr<cv::ml::TrainData> extract(const QDir& dataDir) {
             if (croppedFace && !croppedFace->isNull())
             {
                 // extract face embedding
+
                 cv::Mat faceEmbedding = extractor.getFaceEmbedding(prepareForRecognition(*croppedFace)); 
                 labels.push_back(i);
                 predictors.push_back(faceEmbedding);
@@ -168,9 +183,12 @@ cv::Ptr<cv::ml::TrainData> extract(const QDir& dataDir) {
 }
 
 
-void save(cv::Ptr<cv::ml::TrainData> data, const QString& fileName) {
+void save(cv::Ptr<cv::ml::TrainData> data, const QString& fileName)
+{
     QFile file(fileName);
-    if (!file.open(QIODevice::WriteOnly)) {
+
+    if (!file.open(QIODevice::WriteOnly))
+    {
         qDebug() << file.errorString();
         return;
     }
@@ -178,17 +196,17 @@ void save(cv::Ptr<cv::ml::TrainData> data, const QString& fileName) {
     QTextStream streamOut(&file);
 
     cv::Mat samples = data->getSamples();
-    cv::Mat labels = data->getResponses();
+    cv::Mat labels  = data->getResponses();
 
-    for (int i = 0; i < samples.rows; ++i) 
+    for (int i = 0 ; i < samples.rows ; ++i)
     {
         QStringList line;
         line << QString::number(labels.row(i).at<int>(0));
 
-        for(int j=0; j<samples.row(i).cols; ++j)
+        for (int j = 0 ; j < samples.row(i).cols ; ++j)
         {
             line << QString::number(double(samples.row(i).at<float>(j)));
-        } 
+        }
 
         streamOut << line.join(QLatin1Char(',')) << "\n"; 
     }
