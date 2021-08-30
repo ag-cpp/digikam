@@ -1,10 +1,36 @@
+/* ============================================================
+ *
+ * This file is a part of digiKam
+ *
+ * Date        : 2021-07-04
+ * Description : TSNE Quadtree
+ *
+ * Copyright (C) 2021 by Nghia Duong <minhnghiaduong997 at gmail dot com>
+ * Copyright (C) 2012 by Laurens van der Maaten from Delft University of Technology
+ * Copyright (C) 2016 by Dmitry Ulyanov <dmitry dot ulyanov dot msu at gmail.com> for the Multicore version
+ *
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software Foundation;
+ * either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * ============================================================ */
+
+#include "splittree.h"
+
+// C++ includes
+
 #include <cmath>
 #include <cfloat>
 #include <cstdlib>
 #include <cstdio>
 #include <iostream>
-
-#include "splittree.h"
 
 namespace TSNE
 {

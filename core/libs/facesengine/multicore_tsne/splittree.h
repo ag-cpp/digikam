@@ -1,18 +1,34 @@
-/*
- *  quadtree.h
- *  Header file for a quadtree.
+/* ============================================================
  *
- *  Created by Laurens van der Maaten.
- *  Copyright 2012, Delft University of Technology. All rights reserved.
+ * This file is a part of digiKam
  *
- *  Multicore version by Dmitry Ulyanov, 2016. dmitry.ulyanov.msu@gmail.com
- */
+ * Date        : 2021-07-04
+ * Description : TSNE Quadtree
+ *
+ * Copyright (C) 2021 by Nghia Duong <minhnghiaduong997 at gmail dot com>
+ * Copyright (C) 2012 by Laurens van der Maaten from Delft University of Technology
+ * Copyright (C) 2016 by Dmitry Ulyanov <dmitry dot ulyanov dot msu at gmail.com> for the Multicore version
+ *
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software Foundation;
+ * either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * ============================================================ */
+
+#ifndef DIGIKAM_FACESENGINE_SPLITTREE_H
+#define DIGIKAM_FACESENGINE_SPLITTREE_H
+
+// C++ includes
 
 #include <cstdlib>
 #include <vector>
-
-#ifndef SPLITTREE_H
-#define SPLITREE_H
 
 namespace TSNE
 {
@@ -21,7 +37,8 @@ static inline float min(float x, float y) { return (x <= y ? x : y); }
 static inline float max(float x, float y) { return (x <= y ? y : x); }
 static inline float abs_d(float x) { return (x <= 0 ? -x : x); }
 
-class Cell {
+class Cell
+{
 
 public:
 	float* center;
@@ -75,4 +92,4 @@ private:
 
 } // namespace TSNE
 
-#endif
+#endif // DIGIKAM_FACESENGINE_SPLITTREE_H

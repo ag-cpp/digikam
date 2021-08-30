@@ -1,12 +1,30 @@
-/*
- *  tsne.cpp
- *  Implementation of both standard and Barnes-Hut-SNE.
+/* ============================================================
  *
- *  Created by Laurens van der Maaten.
- *  Copyright 2012, Delft University of Technology. All rights reserved.
+ * This file is a part of digiKam
  *
- *  Multicore version by Dmitry Ulyanov, 2016. dmitry.ulyanov.msu@gmail.com
- */
+ * Date        : 2021-07-04
+ * Description : Implementation of both standard and Barnes-Hut-SNE.
+ *
+ * Copyright (C) 2021 by Nghia Duong <minhnghiaduong997 at gmail dot com>
+ * Copyright (C) 2012 by Laurens van der Maaten from Delft University of Technology
+ * Copyright (C) 2016 by Dmitry Ulyanov <dmitry dot ulyanov dot msu at gmail.com> for the Multicore version
+ *
+ * This program is free software; you can redistribute it
+ * and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software Foundation;
+ * either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * ============================================================ */
+
+#include "tsne.h"
+
+// C++ includes
 
 #include <cmath>
 #include <cfloat>
@@ -17,17 +35,17 @@
 #include <iostream>
 
 #ifdef _OPENMP
-    #include <omp.h>
-    #define NUM_THREADS(N) ((N) >= 0 ? (N) : omp_get_num_procs() + (N) + 1)
+#   include <omp.h>
+#   define NUM_THREADS(N) ((N) >= 0 ? (N) : omp_get_num_procs() + (N) + 1)
 #else
-    #define NUM_THREADS(N) (1)
+#   define NUM_THREADS(N) (1)
 #endif
 
+// Local includes
 
 // #include "quadtree.h"
 #include "vptree.h"
 #include "splittree.h"
-#include "tsne.h"
 
 namespace TSNE
 {
