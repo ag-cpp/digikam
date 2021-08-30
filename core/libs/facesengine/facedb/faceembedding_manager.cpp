@@ -24,7 +24,11 @@
 
 #include "faceembedding_manager.h"
 
+// Qt includes
+
 #include <QMutex>
+
+// Local includes
 
 #include "coredbaccess.h"
 #include "dbengineparameters.h"
@@ -41,13 +45,13 @@ class Q_DECL_HIDDEN FaceEmbeddingManager::Private
 public:
 
     explicit Private()
-        : mutex (QMutex::Recursive)
+        : mutex(QMutex::Recursive)
     {
         DbEngineParameters params = CoreDbAccess::parameters().faceParameters();
         params.setFaceDatabasePath(CoreDbAccess::parameters().faceParameters().getFaceDatabaseNameOrDir());
         FaceDbAccess::setParameters(params);
 
-        dbAvailable = FaceDbAccess::checkReadyForUse(nullptr);
+        dbAvailable               = FaceDbAccess::checkReadyForUse(nullptr);
     }
 
     ~Private()
@@ -94,7 +98,7 @@ QVector<FaceEmbeddingData> FaceEmbeddingManager::getFaceEmbeddings() const
     }
 
     QMutexLocker lock(&d->mutex);
-    
+
     return FaceDbAccess().db()->faceVectors();
 }
 

@@ -24,8 +24,12 @@
 
 #include "identities_manager.h"
 
+// Qt includes
+
 #include <QMutex>
 #include <QUuid>
+
+// Local includes
 
 #include "coredbaccess.h"
 #include "dbengineparameters.h"
@@ -42,13 +46,14 @@ class Q_DECL_HIDDEN IdentitiesManager::Private
 public:
 
     explicit Private()
-        : mutex (QMutex::Recursive)
+        : mutex(QMutex::Recursive)
     {
         DbEngineParameters params = CoreDbAccess::parameters().faceParameters();
         params.setFaceDatabasePath(CoreDbAccess::parameters().faceParameters().getFaceDatabaseNameOrDir());
         FaceDbAccess::setParameters(params);
 
         dbAvailable = FaceDbAccess::checkReadyForUse(nullptr);
+
         if (dbAvailable)
         {
             qCDebug(DIGIKAM_FACESENGINE_LOG) << "Face database ready for use";
@@ -69,6 +74,7 @@ public:
     }
 
 public:
+
     // --- Identity management (facesengine_interface_identity.cpp) -----------------------------------------
 
     static bool identityContains(const Identity& identity,
@@ -164,6 +170,7 @@ void IdentitiesManager::vacuum()
 }
 
 // --- Identity management -----------------------------------------
+
 QList<Identity> IdentitiesManager::allIdentities() const
 {
     if (!d || !d->dbAvailable)

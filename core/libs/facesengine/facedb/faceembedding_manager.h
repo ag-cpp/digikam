@@ -22,13 +22,15 @@
  *
  * ============================================================ */
 
-#ifndef FACE_EMBEDDING_MANAGER_H
-#define FACE_EMBEDDING_MANAGER_H
+#ifndef DIGIKAM_FACE_EMBEDDING_MANAGER_H
+#define DIGIKAM_FACE_EMBEDDING_MANAGER_H
 
 // Qt includes
+
 #include <QList>
 
 // Local includes
+
 #include "digikam_export.h"
 #include "digikam_opencv.h"
 
@@ -67,12 +69,12 @@ public:
 
 
     void editIdentity(const QString& tagId, const int identity);
-    
+
 private:
 
     // Disable
     FaceEmbeddingManager& operator=(const FaceEmbeddingManager&) = delete;
-    FaceEmbeddingManager(const FaceEmbeddingManager&) = delete;
+    FaceEmbeddingManager(const FaceEmbeddingManager&)            = delete;
 
 private:
 
@@ -82,4 +84,4 @@ private:
 
 } // namespace Digikam
 
-#endif // FACE_EMBEDDING_MANAGER_H
+#endif // DIGIKAM_FACE_EMBEDDING_MANAGER_H

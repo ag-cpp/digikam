@@ -22,9 +22,8 @@
  *
  * ============================================================ */
 
-
-#ifndef IDENTITIES_MANAGER_H
-#define IDENTITIES_MANAGER_H
+#ifndef DIGIKAM_IDENTITIES_MANAGER_H
+#define DIGIKAM_IDENTITIES_MANAGER_H
 
 // Qt includes
 
@@ -123,7 +122,7 @@ private:
 
     // Disable
     IdentitiesManager& operator=(const IdentitiesManager&) = delete;
-    IdentitiesManager(const IdentitiesManager&) = delete;
+    IdentitiesManager(const IdentitiesManager&)            = delete;
 
 private:
 
@@ -133,4 +132,4 @@ private:
 
 } // namespace Digikam
 
-#endif // IDENTITIES_MANAGER_H
+#endif // DIGIKAM_IDENTITIES_MANAGER_H
