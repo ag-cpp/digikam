@@ -51,7 +51,7 @@ std::shared_ptr<QCommandLineParser> parseOptions(const QCoreApplication& app)
 {
     QCommandLineParser* const parser = new QCommandLineParser();
     parser->addOption(QCommandLineOption(QLatin1String("data"), QLatin1String("Data directory"), QLatin1String("path relative to data directory")));
-    parser->addOption(QCommandLineOption(QLatin1String("out"), QLatin1String("Output file"), QLatin1String("path relative to output file")));
+    parser->addOption(QCommandLineOption(QLatin1String("out"),  QLatin1String("Output file"),    QLatin1String("path relative to output file")));
     parser->addHelpOption();
     parser->process(app);
 
@@ -63,10 +63,12 @@ class Extractor
 public:
 
     explicit Extractor()
+        : m_detector(new Digikam::FaceDetector()),
+          m_net(cv::dnn::readNetFromTensorflow("../scripts/facenet_opencv_dnn/models/graph_final.pb"))
     {
-        m_detector = new Digikam::FaceDetector();
-        m_net      = cv::dnn::readNetFromTensorflow("../scripts/facenet_opencv_dnn/models/graph_final.pb");
     }
+
+    ~Extractor() = default;
 
     QImage* detect(const QImage& faceImg) const;
     cv::Mat getFaceEmbedding(cv::Mat faceImage);
@@ -75,6 +77,12 @@ private:
 
     Digikam::FaceDetector* m_detector;
     cv::dnn::Net           m_net;
+
+private:
+
+    // Disable
+    Extractor(const Extractor&)            = delete;
+    Extractor& operator=(const Extractor&) = delete;
 };
 
 QImage* Extractor::detect(const QImage& faceImg) const
@@ -84,7 +92,7 @@ QImage* Extractor::detect(const QImage& faceImg) const
         return nullptr;
     }
 
-    QList<QRectF> faces = m_detector->detectFaces(faceImg);
+    QList<QRectF> faces       = m_detector->detectFaces(faceImg);
 
     if (faces.isEmpty())
     {
@@ -112,10 +120,9 @@ cv::Mat normalize(cv::Mat mat)
     return normalizedMat;
 }
 
-
 cv::Mat Extractor::getFaceEmbedding(cv::Mat faceImage)
 {
-    cv::Size imageSize = cv::Size(160, 160);
+    cv::Size imageSize       = cv::Size(160, 160);
 /*
     cv::Mat resizedImage;
     cv::resize(faceImage.clone(), resizedImage, imageSize, 0, 0, cv::INTER_LINEAR);
@@ -153,7 +160,9 @@ cv::Ptr<cv::ml::TrainData> extract(const QDir& dataDir)
     cv::Mat predictors, labels;
 
     Extractor extractor;
+
     // Each subdirectory in data directory should match with a label
+
     QFileInfoList subDirs = dataDir.entryInfoList(QDir::NoDotAndDotDot | QDir::Dirs, QDir::Name);
 
     for (int i = 0 ; i < subDirs.size() ; ++i)
@@ -181,7 +190,6 @@ cv::Ptr<cv::ml::TrainData> extract(const QDir& dataDir)
 
     return cv::ml::TrainData::create(predictors, 0, labels);
 }
-
 
 void save(cv::Ptr<cv::ml::TrainData> data, const QString& fileName)
 {
