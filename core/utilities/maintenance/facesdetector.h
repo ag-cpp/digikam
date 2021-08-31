@@ -74,7 +74,7 @@ private Q_SLOTS:
 private:
 
     void endInput();
-    
+
 private:
 
     class Private;

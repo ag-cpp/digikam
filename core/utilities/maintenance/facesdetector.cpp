@@ -34,6 +34,7 @@
 #include <QMutexLocker>
 
 // KDE includes
+
 #include <kconfiggroup.h>
 #include <klocalizedstring.h>
 #include <ksharedconfig.h>
@@ -90,10 +91,13 @@ FacesDetector::FacesDetector(const FaceScanSettings& settings, ProgressItem* con
     if      (settings.task == FaceScanSettings::RetrainAll)
     {
         // clear all training data in the database
+
         IdentitiesManager().clearIdentities();
         FaceEmbeddingManager().clearEmbedding();
         d->pipeline.plugRetrainingDatabaseFilter();
+
         // TODO facesengine plug extractor
+
         d->pipeline.plugTrainer();
         d->pipeline.construct();
     }
@@ -185,8 +189,8 @@ FacesDetector::FacesDetector(const FaceScanSettings& settings, ProgressItem* con
 
         // TODO facesengine activate rescan option to include unconfirm faces into recognition
         d->idsTodoList.append(CoreDbAccess().db()->
-                            getImagesWithImageTagProperty(FaceTags::unconfirmedPersonTagId(),
-                                                        ImageTagPropertyName::autodetectedFace()));
+            getImagesWithImageTagProperty(FaceTags::unconfirmedPersonTagId(),
+                                          ImageTagPropertyName::autodetectedFace()));
 
         d->source = FacesDetector::Ids;
     }
@@ -410,7 +414,7 @@ void FacesDetector::slotImagesSkipped(const QList<ItemInfo>& infos)
     QMutexLocker locker(&d->mutex);
     d->counter -= infos.size();
 
-    if (d->endOfData && d->counter <= 0) 
+    if (d->endOfData && (d->counter <= 0))
     {
         slotDone();
     }
@@ -423,7 +427,7 @@ void FacesDetector::slotShowOneDetected(const FacePipelinePackage& /*package*/)
     QMutexLocker locker(&d->mutex);
     --d->counter;
 
-    if (d->endOfData && d->counter <= 0) 
+    if (d->endOfData && (d->counter <= 0))
     {
         slotDone();
     }
@@ -434,12 +438,11 @@ void FacesDetector::endInput()
     QMutexLocker locker(&d->mutex);
 
     d->endOfData = true;
-    if (d->endOfData && d->counter <= 0) 
+
+    if (d->endOfData && (d->counter <= 0))
     {
         slotDone();
     }
 }
 
 } // namespace Digikam
-
-#include "facesdetector.moc"
