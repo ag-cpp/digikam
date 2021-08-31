@@ -98,7 +98,7 @@ QImage* Extractor::detect(const QImage& faceImg) const
     return croppedFace;
 }
 
-cv::Mat normalize(cv::Mat mat) 
+cv::Mat normalize(cv::Mat mat)
 {
     cv::Mat floatMat;
     mat.convertTo(floatMat, CV_32F);
@@ -170,7 +170,7 @@ cv::Ptr<cv::ml::TrainData> extract(const QDir& dataDir)
             {
                 // extract face embedding
 
-                cv::Mat faceEmbedding = extractor.getFaceEmbedding(prepareForRecognition(*croppedFace)); 
+                cv::Mat faceEmbedding = extractor.getFaceEmbedding(prepareForRecognition(*croppedFace));
                 labels.push_back(i);
                 predictors.push_back(faceEmbedding);
             }
@@ -208,7 +208,7 @@ void save(cv::Ptr<cv::ml::TrainData> data, const QString& fileName)
             line << QString::number(double(samples.row(i).at<float>(j)));
         }
 
-        streamOut << line.join(QLatin1Char(',')) << "\n"; 
+        streamOut << line.join(QLatin1Char(',')) << "\n";
     }
 }
 

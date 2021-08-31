@@ -54,14 +54,14 @@ std::shared_ptr<QCommandLineParser> parseOptions(const QCoreApplication& app)
 
 /**
  * @brief loadData: load data from csv file into a train dataset
- */ 
-std::pair<cv::Mat, cv::Mat> loadData(const QString& fileName) 
+ */
+std::pair<cv::Mat, cv::Mat> loadData(const QString& fileName)
 {
     cv::Mat predictors, labels;
 
     QFile file(fileName);
 
-    if (!file.open(QIODevice::ReadOnly)) 
+    if (!file.open(QIODevice::ReadOnly))
     {
         qDebug() << file.errorString();
         return std::make_pair(predictors, labels);
@@ -103,10 +103,10 @@ cv::Mat extractTrainData(std::pair<cv::Mat, cv::Mat> data, int nbPoints)
     return trainData;
 }
 
-void save(std::pair<cv::Mat, cv::Mat> data, const QString& fileName) 
+void save(std::pair<cv::Mat, cv::Mat> data, const QString& fileName)
 {
     QFile file(fileName);
-    if (!file.open(QIODevice::WriteOnly)) 
+    if (!file.open(QIODevice::WriteOnly))
     {
         qDebug() << file.errorString();
         return;
@@ -117,7 +117,7 @@ void save(std::pair<cv::Mat, cv::Mat> data, const QString& fileName)
     cv::Mat samples = data.first;
     cv::Mat labels = data.second;
 
-    for (int i = 0 ; i < samples.rows ; ++i) 
+    for (int i = 0 ; i < samples.rows ; ++i)
     {
         QStringList line;
         line << QString::number(labels.row(i).at<int>(0));
@@ -125,13 +125,13 @@ void save(std::pair<cv::Mat, cv::Mat> data, const QString& fileName)
         for(int j = 0 ; j < samples.row(i).cols ; ++j)
         {
             line << QString::number(double(samples.row(i).at<float>(j)));
-        } 
+        }
 
-        streamOut << line.join(QLatin1Char(',')) << "\n"; 
+        streamOut << line.join(QLatin1Char(',')) << "\n";
     }
 }
 
-int main(int argc, char** argv) 
+int main(int argc, char** argv)
 {
     QCoreApplication app(argc, argv);
     app.setApplicationName(QString::fromLatin1("digikam"));

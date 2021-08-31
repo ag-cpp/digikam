@@ -43,7 +43,7 @@
 namespace Digikam
 {
 
-float getMaxDistance(const cv::Mat& vectors) 
+float getMaxDistance(const cv::Mat& vectors)
 {
     float maxD = 0.0;
 
@@ -204,7 +204,7 @@ bool OpenCVDNNFaceRecognizer::Private::trainKNN(cv::Ptr<cv::ml::TrainData> data)
     cv::Mat labels = data->getResponses();
 
     tree = new KDTree(samples.cols);
-    for (int i = 0; i < samples.rows; ++i) 
+    for (int i = 0; i < samples.rows; ++i)
     {
         tree->add(samples.row(i), labels.row(i).at<int>(0));
     }

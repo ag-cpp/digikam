@@ -271,7 +271,7 @@ void FacePipeline::construct()
         connect(d->pipeline.at(i), SIGNAL(processed(FacePipelineExtendedPackage::Ptr)),
                 d->pipeline.at(i + 1), SLOT(process(FacePipelineExtendedPackage::Ptr)),
                 Qt::DirectConnection);
-        
+
         connect(d->pipeline.at(i), SIGNAL(canceled()),
                 d->pipeline.at(i + 1), SLOT(cancel()),
                 Qt::DirectConnection);

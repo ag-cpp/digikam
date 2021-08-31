@@ -56,7 +56,7 @@ Q_SIGNALS:
 
     void processed(FacePipelineExtendedPackage::Ptr package);
     void canceled();
-    
+
 protected:
 
     class Private;

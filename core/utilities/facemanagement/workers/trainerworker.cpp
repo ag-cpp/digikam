@@ -35,7 +35,7 @@
 
 namespace Digikam
 {
-    
+
 class Q_DECL_HIDDEN TrainerWorker::Private
 {
 public:

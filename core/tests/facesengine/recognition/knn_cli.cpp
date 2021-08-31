@@ -54,8 +54,8 @@ std::shared_ptr<QCommandLineParser> parseOptions(const QCoreApplication& app)
 
 /**
  * @brief loadData: load data from csv file into a train dataset and a leftout dataset to simulate unknown label
- */ 
-std::pair<cv::Ptr<cv::ml::TrainData>, cv::Ptr<cv::ml::TrainData>> loadData(const QString& fileName) 
+ */
+std::pair<cv::Ptr<cv::ml::TrainData>, cv::Ptr<cv::ml::TrainData>> loadData(const QString& fileName)
 {
     cv::Mat predictors, labels;
     cv::Mat leftoutPredictors, leftoutLabels;
@@ -84,7 +84,7 @@ std::pair<cv::Ptr<cv::ml::TrainData>, cv::Ptr<cv::ml::TrainData>> loadData(const
             predictor.at<float>(i-1) = data[i].toFloat();
         }
 
-        if (data[0].toInt() == 0) 
+        if (data[0].toInt() == 0)
         {
             leftoutLabels.push_back(data[0].toInt());
             leftoutPredictors.push_back(predictor);
@@ -102,7 +102,7 @@ std::pair<cv::Ptr<cv::ml::TrainData>, cv::Ptr<cv::ml::TrainData>> loadData(const
     };
 }
 
-Digikam::KDTree* trainKNN(cv::Mat samples, cv::Mat labels) 
+Digikam::KDTree* trainKNN(cv::Mat samples, cv::Mat labels)
 {
     Digikam::KDTree* const tree = new Digikam::KDTree(samples.cols);
 
@@ -114,7 +114,7 @@ Digikam::KDTree* trainKNN(cv::Mat samples, cv::Mat labels)
     return tree;
 }
 
-int predict(std::shared_ptr<Digikam::KDTree> knn, cv::Mat predictors, double threshold) 
+int predict(std::shared_ptr<Digikam::KDTree> knn, cv::Mat predictors, double threshold)
 {
     QMap<double, QVector<int> > closestNeighbors = knn->getClosestNeighbors(predictors, threshold, 5);
     QMap<int, QVector<double> > votingGroups;
@@ -166,11 +166,11 @@ double testClassification(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::Train
 
     double falseNegative = 0, falsePositive = 0;
 
-    for (int i = 0 ; i < data->getTestSamples().rows ; ++i) 
+    for (int i = 0 ; i < data->getTestSamples().rows ; ++i)
     {
         int pred = predict(knn, data->getTestSamples().row(i), threshold);
 
-        if (pred != data->getTestResponses().row(i).at<int>(0)) 
+        if (pred != data->getTestResponses().row(i).at<int>(0))
         {
             qDebug() << pred << "!=" << data->getTestResponses().row(i).at<int>(0);
 
@@ -180,13 +180,13 @@ double testClassification(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::Train
 
     for (int i = 0 ; i < leftout->getSamples().rows ; ++i)
     {
-        if (predict(knn, leftout->getSamples().row(i), threshold) != -1) 
+        if (predict(knn, leftout->getSamples().row(i), threshold) != -1)
         {
             ++falseNegative;
         }
     }
 
-    qDebug() << falseNegative << "false negative," << falsePositive << "false positive"; 
+    qDebug() << falseNegative << "false negative," << falsePositive << "false positive";
     qDebug() << "Timer per face" << timer.elapsed() / (data->getTestSamples().rows + leftout->getSamples().rows);
 
     return (falseNegative + falsePositive) / (data->getTestSamples().rows + leftout->getSamples().rows);

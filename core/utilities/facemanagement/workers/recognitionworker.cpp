@@ -122,7 +122,7 @@ void RecognitionWorker::run()
             {
                 qDebug() << "Fail to find face embedding for tag" << tagID;
             }
-        } 
+        }
 
         QVector<int> identitiesIDs = d->recognizer->recognize(embeddings);
 

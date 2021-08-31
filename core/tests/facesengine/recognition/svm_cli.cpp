@@ -53,8 +53,8 @@ std::shared_ptr<QCommandLineParser> parseOptions(const QCoreApplication& app)
 
 /**
  * @brief loadData: load data from csv file into a train dataset and a leftout dataset to simulate unknown label
- */ 
-std::pair<cv::Ptr<cv::ml::TrainData>, cv::Ptr<cv::ml::TrainData>> loadData(const QString& fileName) 
+ */
+std::pair<cv::Ptr<cv::ml::TrainData>, cv::Ptr<cv::ml::TrainData>> loadData(const QString& fileName)
 {
     cv::Mat predictors, labels;
     cv::Mat leftoutPredictors, leftoutLabels;
@@ -97,7 +97,7 @@ std::pair<cv::Ptr<cv::ml::TrainData>, cv::Ptr<cv::ml::TrainData>> loadData(const
     return {cv::ml::TrainData::create(predictors, 0, labels),cv::ml::TrainData::create(leftoutPredictors, 0, leftoutLabels)};
 }
 
-cv::Ptr<cv::ml::TrainData> filter(cv::Mat samples, cv::Mat labels, int selectedLabel) 
+cv::Ptr<cv::ml::TrainData> filter(cv::Mat samples, cv::Mat labels, int selectedLabel)
 {
     cv::Mat predictors, y;
 
@@ -113,7 +113,7 @@ cv::Ptr<cv::ml::TrainData> filter(cv::Mat samples, cv::Mat labels, int selectedL
     return cv::ml::TrainData::create(predictors, 0, y);
 }
 
-std::vector<cv::Ptr<cv::ml::SVM>> oneclassClassifiers(cv::Mat samples, cv::Mat labels) 
+std::vector<cv::Ptr<cv::ml::SVM>> oneclassClassifiers(cv::Mat samples, cv::Mat labels)
 {
     std::vector<cv::Ptr<cv::ml::SVM>> classifier(27);
 
@@ -178,7 +178,7 @@ double testNoveltyDetection(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::Tra
     {
         int prediction = svm->predict(data->getTestSamples().row(i));
 
-        if (prediction != 1) 
+        if (prediction != 1)
         {
             ++falseNegative;
         }
@@ -194,7 +194,7 @@ double testNoveltyDetection(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::Tra
         }
     }
 
-    qDebug() << falseNegative << "false negative," << falsePositive << "false positive"; 
+    qDebug() << falseNegative << "false negative," << falsePositive << "false positive";
 
     return (falseNegative + falsePositive) / (data->getTestSamples().rows + leftout->getSamples().rows);
 }
@@ -239,7 +239,7 @@ double testMultipleClassifiers(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::
         }
     }
 
-    qDebug() << falseNegative << "false negative," << falsePositive << "false positive"; 
+    qDebug() << falseNegative << "false negative," << falsePositive << "false positive";
 
     return (falseNegative + falsePositive) / (data->getTestSamples().rows + leftout->getSamples().rows);
 }
@@ -290,7 +290,7 @@ double test2Classifiers(cv::Ptr<cv::ml::TrainData> data, cv::Ptr<cv::ml::TrainDa
         }
     }
 
-    qDebug() << falseNegative << "false negative," << falsePositive << "false positive"; 
+    qDebug() << falseNegative << "false negative," << falsePositive << "false positive";
 
     return (falseNegative + falsePositive) / (data->getTestSamples().rows + leftout->getSamples().rows);
 }

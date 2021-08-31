@@ -35,7 +35,7 @@ namespace Digikam
 {
 
 template <typename T>
-class Q_DECL_HIDDEN AsyncBuffer 
+class Q_DECL_HIDDEN AsyncBuffer
 {
 public:
 
@@ -92,7 +92,7 @@ T AsyncBuffer<T>::read()
         m_readWait.wait(&m_mutex);
     }
 
-    if (!m_data.empty()) 
+    if (!m_data.empty())
     {
         object = m_data.dequeue();
     }
