@@ -7,6 +7,7 @@
  * Description : MJPEG frame on screen display.
  *
  * Copyright (C) 2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
+ * Copyright (C) 2021 by Quoc Hưng Tran <quochungtran1999 at gmail dot com>
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -31,159 +32,414 @@
 #include <QPainter>
 #include <QDateTime>
 
+// KDE includes
+
+#include <klocalizedstring.h>
+
 // Local includes
 
 #include "digikam_debug.h"
+#include "itempropertiestab.h"
 
 namespace DigikamGenericMjpegStreamPlugin
 {
 
 MjpegFrameOsd::MjpegFrameOsd()
-  : m_titleShowDate   (true),
-    m_titleShowRelDate(false),
-    m_titleRelDate    (0),
-    m_titlePos        (QPoint(30, 30)),
-    m_titleFnt        (QFont(QLatin1String("Monospace"))),
-    m_titleAlign      (Qt::AlignLeft),
-    m_titleBg         (Qt::darkGray),
-    m_descPos         (QPoint(30, 500)),
-    m_descFnt         (QFont(QLatin1String("Monospace"))),
-    m_descAlign       (Qt::AlignLeft),
-    m_descBg          (Qt::darkGray),
-    m_commentPos      (QPoint(30, 560)),
-    m_commentFnt      (QFont(QLatin1String("Monospace"))),
-    m_commentAlign    (Qt::AlignLeft),
-    m_commentBg       (Qt::darkGray)
+  : m_desc           (QLatin1String("")),
+    m_descPos        (QPoint(0, 0)),
+    m_descFnt        (QFont(QLatin1String("Monospace"))),
+    m_descAlign      (Qt::AlignLeft),
+    m_descBg         (Qt::darkGray),
+    m_messPos        (QPoint(0, 0)),
+    m_messFnt        (QFont(QLatin1String("Monospace"))),
+    m_messAlign      (Qt::AlignLeft),
+    m_messBg         (Qt::darkGray)
 {
-    m_titleFnt.setStyleHint(QFont::Monospace);
-    m_titleFnt.setPixelSize(12);
-    m_titleFnt.setBold(true);
     m_descFnt.setStyleHint(QFont::Monospace);
-    m_descFnt.setPixelSize(12);
+    m_descFnt.setPixelSize(8);
     m_descFnt.setBold(true);
-    m_commentFnt.setStyleHint(QFont::Monospace);
-    m_commentFnt.setPixelSize(12);
-    m_commentFnt.setBold(true);
+    m_messFnt.setStyleHint(QFont::Monospace);
+    m_messFnt.setPixelSize(8);
+    m_messFnt.setBold(true);
 }
 
 MjpegFrameOsd::~MjpegFrameOsd()
 {
 }
 
-void MjpegFrameOsd::insertOsdToFrame(QImage& frm,
-                                     const QUrl& /*url*/,
-                                     const MjpegStreamSettings& /*settings*/)
+void MjpegFrameOsd::PopulateOSD(QImage& frm,
+                                const QUrl& url,
+                                const MjpegStreamSettings& settings)
 {
-    // TODO: use settings.iface to populate items properties based on url,
+    // First stage is to get the information map from host application.
+
+    DInfoInterface::DInfoMap info = settings.iface->itemInfo(url);
+    DItemInfo item(info);
+
+    QString comment               = item.comment();
+    QString title                 = item.title();
+    QStringList tags              = item.keywords();
+    int rating                    = item.rating();
+    m_descFnt                     = settings.osdFont;
+
+    QString str;
+
+    // Display tag names.
+
+    if (settings.printTags)
+    {
+        printTags(tags);
+    }
+
+    // Display descs.
+
+    if (settings.printTitle)
+    {
+        str.clear();
+
+        if (!title.isEmpty())
+        {
+            str     += title;
+            m_desc.append(QString::fromLatin1("\n%1").arg(str));
+        }
+    }
+
+    // Display Captions if no Titles.
+
+    if (settings.printCapIfNoTitle)
+    {
+        str.clear();
+
+        if (title.isEmpty())
+        {
+            str     += comment;
+            printComments(str);
+        }
+    }
+
+    // Display image File Name.
+
+    if (settings.printName)
+    {
+        str.clear();
+        QString name = url.fileName();
+
+        if (!name.isEmpty())
+        {
+            str     += name;
+            m_desc.append(QString::fromLatin1("\n%1").arg(str));
+        }
+    }
+
+    //  Display Comments.
+
+    if (settings.printComment)
+    {
+        str.clear();
+
+        if (title.isEmpty())
+        {
+            str     += comment;
+            printComments(str);
+        }
+    }
+
+    // Display Make and Model.
+
+    if (settings.printMakeModel)
+    {
+        str.clear();
+
+        QString make  = item.make();
+        QString model = item.model();
+
+        if (!make.isEmpty())
+        {
+            ItemPropertiesTab::shortenedMakeInfo(make);
+            str      = make;
+        }
+
+        if (!model.isEmpty())
+        {
+            if (!make.isEmpty())
+            {
+                str += QLatin1String(" / ");
+            }
+
+            ItemPropertiesTab::shortenedModelInfo(model);
+            str     += model;
+        }
+
+        if (!str.isEmpty())
+        {
+            m_desc.append(QString::fromLatin1("\n%1").arg(str));
+        }
+    }
+
+    // Display Lens model.
+
+    if (settings.printLensModel)
+    {
+        str.clear();
+
+        QString lens = item.lens();
+
+        if (!lens.isEmpty())
+        {
+            str     += lens;
+            m_desc.append(QString::fromLatin1("\n%1").arg(str));
+        }
+    }
+
+    // Display Exposure and Sensitivity.
+
+    if (settings.printExpoSensitivity)
+    {
+        str.clear();
+
+        QString exposureTime = item.exposureTime();
+        QString sensitivity  = item.sensitivity();
+
+        if (!exposureTime.isEmpty())
+        {
+            str = exposureTime;
+        }
+
+        if (!sensitivity.isEmpty())
+        {
+            if (!exposureTime.isEmpty())
+            {
+                str += QLatin1String(" / ");
+            }
+
+            str += i18n("%1 ISO", sensitivity);
+        }
+
+        if (!str.isEmpty())
+        {
+            m_desc.append(QString::fromLatin1("\n%1").arg(str));
+        }
+    }
+
+    // Display Aperture and Focal.
+
+    if (settings.printApertureFocal)
+    {
+        str.clear();
+
+        QString aperture        = item.aperture();
+        QString focalLength     = item.focalLength();
+        QString focalLength35mm = item.focalLength35mm();
+
+        if (!aperture.isEmpty())
+        {
+            str = aperture;
+        }
+
+        if (focalLength35mm.isEmpty())
+        {
+            if (!focalLength.isEmpty())
+            {
+                if (!aperture.isEmpty())
+                {
+                    str += QLatin1String(" / ");
+                }
+
+                str += focalLength;
+            }
+        }
+        else
+        {
+            if (!aperture.isEmpty())
+            {
+                str += QLatin1String(" / ");
+            }
+
+            if (!focalLength.isEmpty())
+            {
+                str += QString::fromUtf8("%1 (%2)").arg(focalLength).arg(focalLength35mm);
+            }
+            else
+            {
+                str += QString::fromUtf8("%1").arg(focalLength35mm);
+            }
+        }
+
+        if (!str.isEmpty())
+        {
+            m_desc.append(QString::fromLatin1("\n%1").arg(str));
+        }
+    }
+
+    // Display Creation Date.
+
+    if (settings.printDate)
+    {
+        QDateTime dateTime = item.dateTime();
+
+        if (dateTime.isValid())
+        {
+            str = QLocale().toString(dateTime, QLocale::ShortFormat);
+            m_desc.append(QString::fromLatin1("\n%1").arg(str));
+        }
+    }
+
+    // Display rating
+
+    if (settings.printRating)
+    {
+        if (rating != -1)
+        {
+            m_desc.append(QString::fromLatin1("\n%1/5").arg(rating));
+        }
+    }
+}
+
+void MjpegFrameOsd::printTags(QStringList& tags)
+{
+    tags.sort();
+
+    QString str = tags.join(QLatin1String(", "));
+
+    if (!str.isEmpty())
+    {
+        m_desc.append(QString::fromLatin1("%1").arg(str));
+    }
+}
+
+void MjpegFrameOsd::printComments(const QString& comments)
+{
+    QStringList commentsByLines;
+
+    uint commentsIndex = 0;     // Comments QString index
+
+    while (commentsIndex < (uint)comments.length())
+    {
+        QString newLine;
+        bool breakLine = false; // End Of Line found
+        uint currIndex;         // Comments QString current index
+
+        // Check minimal lines dimension
+
+        uint maxStringLen = 80;
+
+        uint commentsLinesLengthLocal = maxStringLen;
+
+        for (currIndex = commentsIndex ;
+             (currIndex < (uint)comments.length()) && !breakLine ; ++currIndex)
+        {
+            if ((comments.at(currIndex) == QLatin1Char('\n')) || comments.at(currIndex).isSpace())
+            {
+                breakLine = true;
+            }
+        }
+
+        if (commentsLinesLengthLocal <= (currIndex - commentsIndex))
+        {
+            commentsLinesLengthLocal = (currIndex - commentsIndex);
+        }
+
+        breakLine = false;
+
+        for (currIndex = commentsIndex ;
+             (currIndex <= (commentsIndex + commentsLinesLengthLocal)) &&
+             (currIndex < (uint)comments.length()) && !breakLine ;
+             ++currIndex)
+        {
+            breakLine = (comments.at(currIndex) == QLatin1Char('\n')) ? true : false;
+
+            if (breakLine)
+            {
+                newLine.append(QLatin1Char(' '));
+            }
+            else
+            {
+                newLine.append(comments.at(currIndex));
+            }
+        }
+
+        commentsIndex = currIndex; // The line is ended
+
+        if (commentsIndex != (uint)comments.length())
+        {
+            while (!newLine.endsWith(QLatin1Char(' ')))
+            {
+                newLine.truncate(newLine.length() - 1);
+                --commentsIndex;
+            }
+        }
+
+        commentsByLines.prepend(newLine.trimmed());
+    }
+
+    for (int i = 0 ; i < (int)commentsByLines.count() ; ++i)
+    {
+        m_desc.append(QString::fromLatin1("\n%1").arg(commentsByLines.at(i)));
+    }
+}
+
+void MjpegFrameOsd::insertOsdToFrame(QImage& frm,
+                                     const QUrl& url,
+                                     const MjpegStreamSettings& settings)
+{
+    // Populate items properties based on url,
     // eg. album name, rating, tags, labels, date, etc.
 
-    // Title section
-
-    QString mess = m_title;
-
-    if (m_titleShowDate)
-    {
-        // date must be provided by caller
-
-        mess.append(m_titleDate.toString(QLatin1String("\ndd-MM-yyyy hh:mm:ss.zzz\n")));
-    }
-
-    if (m_titleShowRelDate)
-    {
-        // jour = 24 * 60 * 60 * 1000 = 86 400 000
-
-        int nbj   = m_titleRelDate  / 86400000;
-        int reste = m_titleRelDate  % 86400000;
-
-        // h = 60 * 60 * 1000 = 3600000
-
-        int nbh   = reste  / 3600000;
-        reste     = reste % 3600000;
-
-        // m =  60 * 1000 = 60000
-
-        int nbm   = reste  / 60000;
-        reste     = reste % 60000;
-
-        // s =  1000
-
-        int nbs   = reste  / 1000;
-        int nbms  = reste % 1000;
-        QString extraDateFormat = QString::number(nbj) +
-                                  QLatin1String(":")   +
-                                  QString::number(nbh) +
-                                  QLatin1String(":")   +
-                                  QString::number(nbm) +
-                                  QLatin1String(":")   +
-                                  QString::number(nbs) +
-                                  QLatin1String(":")   +
-                                  QString::number(nbms)+
-                                  QLatin1String(" ms");
-        mess.append(extraDateFormat);
-
-        //mess.append(QLatin1String(" ms"));
-    }
+    PopulateOSD(frm, url, settings);
 
     QPainter p(&frm);
 
-    QFontMetrics titleMt(m_titleFnt);
-    p.setFont(m_titleFnt);
+    QFontMetrics descMt(m_descFnt);
+    p.setFont(m_descFnt);
 
-    QRect titleRect = titleMt.boundingRect(0, 0, frm.width(), frm.height(), 0, mess);
-    QRect bgTitleRect(m_titlePos.x(),
-                      m_titlePos.y() - titleRect.height() + 1,
-                      titleRect.width(),
-                      titleRect.height() + 3);
+    QRect descRect = descMt.boundingRect(0, 0, frm.width(), frm.height(), 0, m_desc);
+    QRect bgdescRect(m_descPos.x(),
+                     m_descPos.y(),
+                     descRect.width(),
+                     descRect.height() + 3);
 
-    p.fillRect(bgTitleRect, m_titleBg);
+    p.fillRect(bgdescRect, m_descBg);
 
     p.setPen(QPen(Qt::white));
-    p.drawText(bgTitleRect, m_titleAlign, mess);
+    p.drawText(bgdescRect, m_descAlign, m_desc);
 
-    if (!m_titleLogo.isNull())
+    m_desc.clear();
+}
+
+void MjpegFrameOsd::insertMessageOsdToFrame(QImage& frm,
+                                            const QSize& JPEGsize,
+                                            const QString& mess)
+{
+    QString message = mess;
+    QPainter p(&frm);
+
+    if ((JPEGsize.width() <= 480) && (JPEGsize.height() <= 480))
     {
-        p.drawImage(m_titlePos.x(), m_titlePos.y() + 5, m_titleLogo);
+        m_messFnt.setPixelSize(18);
+    }
+    else
+    {
+        m_messFnt.setPixelSize(60);
     }
 
-    // Description section
+    //---
 
-    if (!m_desc.isEmpty())
-    {
-        QFontMetrics descMt(m_descFnt);
-        p.setFont(m_descFnt);
+    QFontMetrics messMt(m_messFnt);
+    p.setFont(m_messFnt);
 
-        QRect descRect = descMt.boundingRect(0, 0, frm.width(), frm.height(),
-                                             0, m_desc);
-        QRect bgDescRect(m_descPos.x(),
-                         m_descPos.y() - descRect.height() + 1,
-                         descRect.width(),
-                         descRect.height() + 3);
+    QRect messRect = messMt.boundingRect(0, 0, frm.width(), frm.height(), 0, message);
 
-        p.fillRect(bgDescRect, m_descBg);
+    // print message in the middle of frame
 
-        p.setPen(QPen(Qt::white));
-        p.drawText(bgDescRect, m_descAlign, m_desc);
-    }
+    QRect bgErreurRect(m_messPos.x(),
+                       m_messPos.y(),
+                       messRect.width(),
+                       messRect.height() + 3);
 
-    // Comment section
+    p.fillRect(bgErreurRect, m_messBg);
 
-    if (!m_comment.isEmpty())
-    {
-        QFontMetrics commentMt(m_commentFnt);
-        p.setFont(m_commentFnt);
-
-        QRect commentRect = commentMt.boundingRect(0, 0, frm.width(), frm.height(),
-                                                   0, m_comment);
-        QRect bgCommentRect(m_commentPos.x(),
-                            m_commentPos.y() - commentRect.height() + 1,
-                            commentRect.width(),
-                            commentRect.height() + 3);
-
-        p.fillRect(bgCommentRect, m_commentBg);
-
-        p.setPen(QPen(Qt::white));
-        p.drawText(bgCommentRect, m_commentAlign, m_comment);
-    }
+    p.setPen(QPen(Qt::white));
+    p.drawText(bgErreurRect, m_messAlign, message);
 }
 
 } // namespace DigikamGenericMjpegStreamPlugin

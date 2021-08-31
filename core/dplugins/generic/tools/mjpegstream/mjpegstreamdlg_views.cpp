@@ -7,6 +7,7 @@
  * Description : MJPEG Stream configuration dialog - Views methods
  *
  * Copyright (C) 2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
+ * Copyright (C) 2021 by Quoc Hưng Tran <quochungtran1999 at gmail dot com>
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -301,6 +302,107 @@ void MjpegStreamDlg::setupEffectView()
     d->tabView->insertTab(Private::Effect, effectSettings, i18nc("@title", "Effect"));
 
     connect(d->effVal, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(slotSettingsChanged()));
+}
+
+void MjpegStreamDlg::setupOSDView()
+{
+    QWidget* const OSDSettings = new QWidget(d->tabView);
+
+    d->showName                = new QCheckBox(i18nc("@option:check", "Show image file name"), OSDSettings);
+    d->showName->setWhatsThis(i18nc("@info", "Show the image file name at the bottom of the screen."));
+
+    d->showDate                = new QCheckBox(i18nc("@option:check", "Show image creation date"), OSDSettings);
+    d->showDate->setWhatsThis(i18nc("@info", "Show the image creation time/date at the bottom of the screen."));
+
+    d->showApertureFocal       = new QCheckBox(i18nc("@option:check", "Show camera aperture and focal length"), OSDSettings);
+    d->showApertureFocal->setWhatsThis(i18nc("@info", "Show the camera aperture and focal length at the bottom of the screen."));
+
+    d->showExpoSensitivity     = new QCheckBox(i18nc("@option:check", "Show camera exposure and sensitivity"), OSDSettings);
+    d->showExpoSensitivity->setWhatsThis(i18nc("@info", "Show the camera exposure and sensitivity at the bottom of the screen."));
+
+    d->showMakeModel           = new QCheckBox(i18nc("@option:check", "Show camera make and model"), OSDSettings);
+    d->showMakeModel->setWhatsThis(i18nc("@info", "Show the camera make and model at the bottom of the screen."));
+
+    d->showLensModel           = new QCheckBox(i18nc("@option:check", "Show camera lens model"), OSDSettings);
+    d->showLensModel->setWhatsThis(i18nc("@info", "Show the camera lens model at the bottom of the screen."));
+
+    d->showComment             = new QCheckBox(i18nc("@option:check", "Show image caption"), OSDSettings);
+    d->showComment->setWhatsThis(i18nc("@info", "Show the image caption at the bottom of the screen."));
+
+    d->showTitle               = new QCheckBox(i18nc("@option:check", "Show image title"), OSDSettings);
+    d->showTitle->setWhatsThis(i18nc("@info", "Show the image title at the bottom of the screen."));
+
+    d->showCapIfNoTitle        = new QCheckBox(i18nc("@option:check", "Show image caption if it has not title"), OSDSettings);
+    d->showCapIfNoTitle->setWhatsThis(i18nc("@info", "Show the image caption at the bottom of the screen if no titles existed."));
+
+    d->showRating              = new QCheckBox(i18nc("@option:check", "Show image rating"), OSDSettings);
+    d->showRating->setWhatsThis(i18nc("@info", "Show the digiKam image rating at the bottom of the screen."));
+
+    d->showTags                = new QCheckBox(i18nc("@option:check", "Show image tags"), OSDSettings);
+    d->showTags->setWhatsThis(i18nc("@info", "Show the digiKam image tag names at the bottom of the screen."));
+
+    d->osdFont                 = new DFontSelect(i18nc("@option:label", "On Screen Display Font:"), OSDSettings);
+    d->osdFont->setToolTip(i18nc("@info", "Select here the font used to display text in the MJPEG."));
+
+    QGridLayout* const grid    = new QGridLayout(OSDSettings);
+    grid->addWidget(d->showName,             1, 0, 1, 1);
+    grid->addWidget(d->showRating,           1, 1, 1, 1);
+    grid->addWidget(d->showApertureFocal,    2, 0, 1, 1);
+    grid->addWidget(d->showDate,             2, 1, 1, 1);
+    grid->addWidget(d->showMakeModel,        3, 0, 1, 1);
+    grid->addWidget(d->showExpoSensitivity,  3, 1, 1, 1);
+    grid->addWidget(d->showLensModel,        4, 0, 1, 1);
+    grid->addWidget(d->showComment,          4, 1, 1, 1);
+    grid->addWidget(d->showTitle,            5, 0, 1, 1);
+    grid->addWidget(d->showCapIfNoTitle,     5, 1, 1, 1);
+    grid->addWidget(d->showTags,             6, 0, 1, 1);
+    grid->addWidget(d->osdFont,              7, 0, 1, 2);
+
+    d->tabView->insertTab(Private::OSD, OSDSettings, i18nc("@title: On Screen Display", "OSD"));
+
+    connect(d->showName, SIGNAL(stateChanged(int)),
+            this, SLOT(slotSettingsChanged()));
+
+    connect(d->showApertureFocal, SIGNAL(stateChanged(int)),
+            this, SLOT(slotSettingsChanged()));
+
+    connect(d->showDate, SIGNAL(stateChanged(int)),
+            this, SLOT(slotSettingsChanged()));
+
+    connect(d->showMakeModel, SIGNAL(stateChanged(int)),
+            this, SLOT(slotSettingsChanged()));
+
+    connect(d->showExpoSensitivity, SIGNAL(stateChanged(int)),
+            this, SLOT(slotSettingsChanged()));
+
+    connect(d->showLensModel, SIGNAL(stateChanged(int)),
+            this, SLOT(slotSettingsChanged()));
+
+    connect(d->showComment, SIGNAL(stateChanged(int)),
+            this, SLOT(slotSettingsChanged()));
+
+   // Disable and uncheck the "Show captions if no title" checkbox if the "Show comment" checkbox enabled
+
+    connect(d->showComment, SIGNAL(stateChanged(int)),
+            this, SLOT(slotSetUnchecked(int)));
+
+    connect(d->showComment, SIGNAL(toggled(bool)),
+            d->showCapIfNoTitle, SLOT(setDisabled(bool)));
+
+    connect(d->showTitle, SIGNAL(stateChanged(int)),
+            this, SLOT(slotSettingsChanged()));
+
+    connect(d->showCapIfNoTitle, SIGNAL(stateChanged(int)),
+            this, SLOT(slotSettingsChanged()));
+
+    connect(d->showTags, SIGNAL(stateChanged(int)),
+            this, SLOT(slotSettingsChanged()));
+
+    connect(d->showRating, SIGNAL(stateChanged(int)),
+            this, SLOT(slotSettingsChanged()));
+
+    connect(d->osdFont, SIGNAL(signalFontChanged()),
             this, SLOT(slotSettingsChanged()));
 }
 
