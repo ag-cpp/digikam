@@ -43,9 +43,9 @@
 
 // Local includes
 
-// #include "quadtree.h"
 #include "vptree.h"
 #include "splittree.h"
+#include "digikam_debug.h"
 
 namespace TSNE
 {
@@ -59,7 +59,7 @@ void tsne_run_float(float* X, int N, int D, float* Y,
 {
     if (verbose)
     {
-        fprintf(stderr, "Performing t-SNE using %d cores.\n", NUM_THREADS(num_threads));
+        qCDebug(DIGIKAM_FACEDB_LOG) << "Performing t-SNE using" << NUM_THREADS(num_threads) << "cores.";
     }
 
     if (distance == 0)
@@ -98,7 +98,7 @@ void TSNE<treeT, dist_fn>::run(float* X, int N, int D, float* Y,
 
         if (verbose)
         {
-            fprintf(stderr, "Perplexity too large for the number of data points! Adjusting ...\n");
+            qCCritical(DIGIKAM_FACEDB_LOG) << "Perplexity too large for the number of data points! Adjusting...";
         }
     }
 
@@ -122,16 +122,18 @@ void TSNE<treeT, dist_fn>::run(float* X, int N, int D, float* Y,
 
     if (verbose)
     {
-        fprintf(stderr, "Using no_dims = %d, perplexity = %f, and theta = %f\n", no_dims, perplexity, theta);
+        qCDebug(DIGIKAM_FACEDB_LOG) << "Using no_dims =" << no_dims << ", perplexity =" << perplexity << ", and theta = " << theta;
     }
 
     // Set learning parameters
 
-    float total_time = .0;
     time_t start, end;
-    int stop_lying_iter = n_iter_early_exag, mom_switch_iter = n_iter_early_exag;
-    float momentum = .5, final_momentum = .8;
-    float eta = learning_rate;
+    float total_time     = .0F;
+    int stop_lying_iter  = n_iter_early_exag;
+    int mom_switch_iter  = n_iter_early_exag;
+    float momentum       = .5F;
+    float final_momentum = .8F;
+    float eta            = learning_rate;
 
     // Allocate some memory
 
@@ -141,8 +143,7 @@ void TSNE<treeT, dist_fn>::run(float* X, int N, int D, float* Y,
 
     if ((dY == NULL) || (uY == NULL) || (gains == NULL))
     {
-        fprintf(stderr, "Memory allocation failed!\n");
-        exit(1);
+        qFatal("Memory allocation failed!");
     }
 
     for (int i = 0 ; i < N * no_dims ; i++)
@@ -154,17 +155,19 @@ void TSNE<treeT, dist_fn>::run(float* X, int N, int D, float* Y,
 
     if (verbose)
     {
-        fprintf(stderr, "Computing input similarities...\n");
+        qCDebug(DIGIKAM_FACEDB_LOG) << "Computing input similarities...";
     }
 
     start       = time(0);
     zeroMean(X, N, D);
-    float max_X = .0;
+    float max_X = .0F;
 
     for (int i = 0 ; i < N * D ; i++)
     {
         if (X[i] > max_X)
+        {
             max_X = X[i];
+        }
     }
 
     for (int i = 0 ; i < N * D ; i++)
@@ -185,7 +188,7 @@ void TSNE<treeT, dist_fn>::run(float* X, int N, int D, float* Y,
     // Symmetrize input similarities
 
     symmetrizeMatrix(&row_P, &col_P, &val_P, N);
-    float sum_P = .0;
+    float sum_P = .0F;
 
     for (int i = 0 ; i < row_P[N] ; i++)
     {
@@ -201,7 +204,10 @@ void TSNE<treeT, dist_fn>::run(float* X, int N, int D, float* Y,
 
     if (verbose)
     {
-        fprintf(stderr, "Done in %4.2f seconds (sparsity = %f)!\nLearning embedding...\n", (float)(end - start) , (float) row_P[N] / ((float) N * (float) N));
+        qCDebug(DIGIKAM_FACEDB_LOG) << "Done in"
+                                    << (float)(end - start)
+                                    << "seconds (sparsity =" << (float)row_P[N] / ((float)N * (float)N) << ")!"
+                                    << endl << "Learning embedding...";
     }
 
     /*
@@ -257,8 +263,8 @@ void TSNE<treeT, dist_fn>::run(float* X, int N, int D, float* Y,
 
             // Perform gradient update (with momentum and gains)
 
-            uY[i] = momentum * uY[i] - eta * gains[i] * dY[i];
-            Y[i] = Y[i] + uY[i];
+            uY[i]    = momentum * uY[i] - eta * gains[i] * dY[i];
+            Y[i]     = Y[i] + uY[i];
         }
 
         // Make solution zero-mean
@@ -288,12 +294,12 @@ void TSNE<treeT, dist_fn>::run(float* X, int N, int D, float* Y,
 
             if (iter == 0)
             {
-                fprintf(stderr, "Iteration %d: error is %f\n", iter + 1, error);
+                qCWarning(DIGIKAM_FACEDB_LOG) << "Iteration" << iter + 1 << ": error is" << error;
             }
             else
             {
                 total_time += (float) (end - start);
-                fprintf(stderr, "Iteration %d: error is %f (50 iterations in %4.2f seconds)\n", iter + 1, error, (float) (end - start) );
+                qCWarning(DIGIKAM_FACEDB_LOG) << "Iteration" << iter + 1 << ": error is" << error << "(50 iterations in" << (float) (end - start) << "seconds";
             }
 
             start = time(0);
@@ -323,7 +329,7 @@ void TSNE<treeT, dist_fn>::run(float* X, int N, int D, float* Y,
 
     if (verbose)
     {
-        fprintf(stderr, "Fitting performed in %4.2f seconds.\n", total_time);
+        qCDebug(DIGIKAM_FACEDB_LOG) << "Fitting performed in" << total_time << "seconds.";
     }
 }
 
@@ -347,8 +353,7 @@ float TSNE<treeT, dist_fn>::computeGradient(int* inp_row_P, int* inp_col_P, floa
 
     if ((pos_f == NULL) || (neg_f == NULL))
     {
-        fprintf(stderr, "Memory allocation failed!\n");
-        exit(1);
+        qFatal("Memory allocation failed!");
     }
 
 #ifdef _OPENMP
@@ -396,7 +401,7 @@ float TSNE<treeT, dist_fn>::computeGradient(int* inp_row_P, int* inp_col_P, floa
 
         // NoneEdge forces
 
-        float this_Q = .0;
+        float this_Q = .0F;
         tree->computeNonEdgeForces(n, theta, neg_f + n * no_dims, &this_Q);
         Q[n]         = this_Q;
     }
@@ -461,7 +466,7 @@ float TSNE<treeT, dist_fn>::evaluateError(int* row_P, int* col_P, float* val_P, 
 
         for (int i = row_P[n] ; i < row_P[n + 1] ; i++)
         {
-            float Q  = .0;
+            float Q  = .0F;
             int ind2 = col_P[i] * no_dims;
 
             for (int d = 0 ; d < no_dims ; d++)
@@ -481,11 +486,11 @@ float TSNE<treeT, dist_fn>::evaluateError(int* row_P, int* col_P, float* val_P, 
 // Compute input similarities with a fixed perplexity using ball trees (this function allocates memory another function should free)
 
 template <class treeT, float (*dist_fn)( const DataPoint&, const DataPoint&)>
-void TSNE<treeT, dist_fn>::computeGaussianPerplexity(float* X, int N, int D, int** _row_P, int** _col_P, float** _val_P, float perplexity, int K, int verbose) {
-
+void TSNE<treeT, dist_fn>::computeGaussianPerplexity(float* X, int N, int D, int** _row_P, int** _col_P, float** _val_P, float perplexity, int K, int verbose)
+{
     if (perplexity > K)
     {
-        fprintf(stderr, "Perplexity should be lower than K!\n");
+        qCWarning(DIGIKAM_FACEDB_LOG) << "Perplexity should be lower than K!";
     }
 
     // Allocate the memory we need
@@ -496,8 +501,7 @@ void TSNE<treeT, dist_fn>::computeGaussianPerplexity(float* X, int N, int D, int
 
     if ((*_row_P == NULL) || (*_col_P == NULL) || (*_val_P == NULL))
     {
-        fprintf(stderr, "Memory allocation failed!\n");
-        exit(1);
+        qFatal("Memory allocation failed!");
     }
 
     /*
@@ -533,7 +537,7 @@ void TSNE<treeT, dist_fn>::computeGaussianPerplexity(float* X, int N, int D, int
 
     if (verbose)
     {
-        fprintf(stderr, "Building tree...\n");
+        qCDebug(DIGIKAM_FACEDB_LOG) << "Building tree...";
     }
 
     int steps_completed = 0;
@@ -668,7 +672,8 @@ void TSNE<treeT, dist_fn>::computeGaussianPerplexity(float* X, int N, int D, int
 #   pragma omp critical
 
 #endif
-            fprintf(stderr, " - point %d of %d\n", steps_completed, N);
+
+            qCDebug(DIGIKAM_FACEDB_LOG) << " - point" << steps_completed << "of" << N;
         }
     }
 
@@ -694,8 +699,7 @@ void TSNE<treeT, dist_fn>::symmetrizeMatrix(int** _row_P, int** _col_P, float** 
 
     if (row_counts == NULL)
     {
-        fprintf(stderr, "Memory allocation failed!\n");
-        exit(1);
+        qFatal("Memory allocation failed!");
     }
 
     for (int n = 0 ; n < N ; n++)
@@ -742,8 +746,7 @@ void TSNE<treeT, dist_fn>::symmetrizeMatrix(int** _row_P, int** _col_P, float** 
 
     if ((sym_row_P == NULL) || (sym_col_P == NULL) || (sym_val_P == NULL))
     {
-        fprintf(stderr, "Memory allocation failed!\n");
-        exit(1);
+        qFatal("Memory allocation failed!");
     }
 
     // Construct new row indices for symmetric matrix
@@ -761,8 +764,7 @@ void TSNE<treeT, dist_fn>::symmetrizeMatrix(int** _row_P, int** _col_P, float** 
 
     if (offset == NULL)
     {
-        fprintf(stderr, "Memory allocation failed!\n");
-        exit(1);
+        qFatal("Memory allocation failed!");
     }
 
     for (int n = 0 ; n < N ; n++)
@@ -852,28 +854,27 @@ void TSNE<treeT, dist_fn>::zeroMean(float* X, int N, int D)
 
     if (mean == NULL)
     {
-        fprintf(stderr, "Memory allocation failed!\n");
-        exit(1);
+        qFatal("Memory allocation failed!");
     }
 
-    for (int n = 0; n < N; n++)
+    for (int n = 0 ; n < N ; n++)
     {
-        for (int d = 0; d < D; d++)
+        for (int d = 0 ; d < D ; d++)
         {
             mean[d] += X[n * D + d];
         }
     }
 
-    for (int d = 0; d < D; d++)
+    for (int d = 0 ; d < D ; d++)
     {
         mean[d] /= (float) N;
     }
 
     // Subtract data mean
 
-    for (int n = 0; n < N; n++)
+    for (int n = 0 ; n < N ; n++)
     {
-        for (int d = 0; d < D; d++)
+        for (int d = 0 ; d < D ; d++)
         {
             X[n * D + d] -= mean[d];
         }
@@ -892,9 +893,9 @@ float TSNE<treeT, dist_fn>::randn()
 
     do
     {
-        x = 2 * ((double)rand() / ((double) RAND_MAX + 1)) - 1;
+        x       = 2 * ((double)rand() / ((double) RAND_MAX + 1)) - 1;
         float y = 2 * ((double)rand() / ((double) RAND_MAX + 1)) - 1;
-        radius = (x * x) + (y * y);
+        radius  = (x * x) + (y * y);
     }
     while ((radius >= 1.0) || (radius == 0.0));
 

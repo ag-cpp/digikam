@@ -32,6 +32,10 @@
 #include <cstdio>
 #include <iostream>
 
+// Local includes
+
+#include "digikam_debug.h"
+
 namespace TSNE
 {
 
@@ -229,7 +233,7 @@ bool SplitTree::insert(int new_index)
     }
 
     // Otherwise, the point cannot be inserted (this should never happen)
-    // printf("%s\n", "No no, this should not happen");
+    //qCDebug(DIGIKAM_FACEDB_LOG) << "No no, this should not happen";
 
     return false;
 }

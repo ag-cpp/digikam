@@ -156,7 +156,6 @@ public:
 
     void search(const T& target, int k, std::vector<T>* results, std::vector<float>* distances)
     {
-
         // Use a priority queue to store intermediate results on
 
         std::priority_queue<HeapItem> heap;
