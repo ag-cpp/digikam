@@ -6,8 +6,8 @@
  * Description : Implementation of both standard and Barnes-Hut-SNE.
  *
  * Copyright (C) 2021 by Nghia Duong <minhnghiaduong997 at gmail dot com>
- * Copyright (C) 2012 by Laurens van der Maaten from Delft University of Technology
- * Copyright (C) 2016 by Dmitry Ulyanov <dmitry dot ulyanov dot msu at gmail.com> for the Multicore version
+ * Copyright (C) 2012 by Laurens van der Maaten <lvdmaaten at gmail dot com> from Delft University of Technology for the original version
+ * Copyright (C) 2016 by Dmitry Ulyanov <dmitry dot ulyanov dot msu at gmail dot com> for the Multicore version
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General

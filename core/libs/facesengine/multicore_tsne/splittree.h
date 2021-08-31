@@ -6,8 +6,8 @@
  * Description : TSNE Quadtree
  *
  * Copyright (C) 2021 by Nghia Duong <minhnghiaduong997 at gmail dot com>
- * Copyright (C) 2012 by Laurens van der Maaten from Delft University of Technology
- * Copyright (C) 2016 by Dmitry Ulyanov <dmitry dot ulyanov dot msu at gmail.com> for the Multicore version
+ * Copyright (C) 2012 by Laurens van der Maaten <lvdmaaten at gmail dot com> from Delft University of Technology for the original version
+ * Copyright (C) 2016 by Dmitry Ulyanov <dmitry dot ulyanov dot msu at gmail dot com> for the Multicore version
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -33,9 +33,9 @@
 namespace TSNE
 {
 
-static inline float min(float x, float y) { return (x <= y ? x : y); }
-static inline float max(float x, float y) { return (x <= y ? y : x); }
-static inline float abs_d(float x) { return (x <= 0 ? -x : x); }
+static inline float min(float x, float y) { return (x <= y ? x : y);  }
+static inline float max(float x, float y) { return (x <= y ? y : x);  }
+static inline float abs_d(float x)        { return (x <= 0 ? -x : x); }
 
 class Cell
 {
@@ -44,9 +44,9 @@ public:
 
     float* center;
     float* width;
-    int n_dims;
+    int    n_dims;
 
-    bool   containsPoint(float point[]);
+    bool containsPoint(float point[]);
 
     ~Cell()
     {
@@ -60,26 +60,26 @@ class SplitTree
 
     // Fixed constants
 
-    static const int QT_NODE_CAPACITY = 1;
+    static const int        QT_NODE_CAPACITY = 1;
 
     // Properties of this node in the tree
 
-    int QT_NO_DIMS;
-    bool is_leaf;
-    int size;
-    int cum_size;
+    int                     QT_NO_DIMS;
+    bool                    is_leaf;
+    int                     size;
+    int                     cum_size;
 
     // Axis-aligned bounding box stored as a center with half-dimensions to represent the boundaries of this quad tree
 
-    Cell boundary;
+    Cell                    boundary;
 
     // Indices in this quad tree node, corresponding center-of-mass, and list of all children
 
-    float* data;
-    float* center_of_mass;
-    int index[QT_NODE_CAPACITY];
+    float*                  data;
+    float*                  center_of_mass;
+    int                     index[QT_NODE_CAPACITY];
 
-    int num_children;
+    int                     num_children;
     std::vector<SplitTree*> children;
 
 public:
@@ -87,6 +87,7 @@ public:
     SplitTree(float* inp_data, int N, int no_dims);
     SplitTree(SplitTree* inp_parent, float* inp_data, float* mean_Y, float* width_Y);
     ~SplitTree();
+
     void construct(Cell boundary);
     bool insert(int new_index);
     void subdivide();

@@ -5,7 +5,7 @@
  * Date        : 2021-07-04
  * Description : Wrapper class for dimension reduction
  *
- * Copyright (C)      2021 by Nghia Duong <minhnghiaduong997 at gmail dot com>
+ * Copyright (C) 2021 by Nghia Duong <minhnghiaduong997 at gmail dot com>
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General

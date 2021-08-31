@@ -5,7 +5,7 @@
  * Date        : 2021-07-04
  * Description : Wrapper class for dimension reduction
  *
- * Copyright (C)      2021 by Nghia Duong <minhnghiaduong997 at gmail dot com>
+ * Copyright (C) 2021 by Nghia Duong <minhnghiaduong997 at gmail dot com>
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -34,13 +34,13 @@ cv::Mat DimensionReducer::reduceDimension(cv::Mat data, int outputDimension, int
     cv::Mat projectedData(data.rows, outputDimension, CV_32F);
 
     TSNE::tsne_run_float(reinterpret_cast<float*>(data.data),
-                          data.rows,
-                          data.cols,
-                          reinterpret_cast<float*>(projectedData.data),
-                          outputDimension,
-                          30,
-                          0.5,
-                          nbCPU);
+                         data.rows,
+                         data.cols,
+                         reinterpret_cast<float*>(projectedData.data),
+                         outputDimension,
+                         30,
+                         0.5,
+                         nbCPU);
 
     //cv::Mat normalizedData;
     //cv::normalize(projectedData, normalizedData, 1.0, 0.0, cv::NORM_L2);
