@@ -135,9 +135,9 @@ void TSNE<treeT, dist_fn>::run(float* X, int N, int D, float* Y,
 
     // Allocate some memory
 
-    float* dY    = (float*) malloc(N * no_dims * sizeof(float));
+    float* dY    = (float*) calloc(0,            N * no_dims * sizeof(float));
     float* uY    = (float*) calloc(N * no_dims , sizeof(float));
-    float* gains = (float*) malloc(N * no_dims * sizeof(float));
+    float* gains = (float*) calloc(0,            N * no_dims * sizeof(float));
 
     if ((dY == NULL) || (uY == NULL) || (gains == NULL))
     {
@@ -490,11 +490,11 @@ void TSNE<treeT, dist_fn>::computeGaussianPerplexity(float* X, int N, int D, int
 
     // Allocate the memory we need
 
-    *_row_P = (int*)    malloc((N + 1) * sizeof(int));
-    *_col_P = (int*)    calloc(N * K, sizeof(int));
+    *_row_P = (int*)   malloc((N + 1) * sizeof(int));
+    *_col_P = (int*)   calloc(N * K, sizeof(int));
     *_val_P = (float*) calloc(N * K, sizeof(float));
 
-    if (*_row_P == NULL || *_col_P == NULL || *_val_P == NULL)
+    if ((*_row_P == NULL) || (*_col_P == NULL) || (*_val_P == NULL))
     {
         fprintf(stderr, "Memory allocation failed!\n");
         exit(1);
@@ -736,9 +736,9 @@ void TSNE<treeT, dist_fn>::symmetrizeMatrix(int** _row_P, int** _col_P, float** 
 
     // Allocate memory for symmetrized matrix
 
-    int*    sym_row_P = (int*)    calloc((N + 1) * sizeof(int));
-    int*    sym_col_P = (int*)    calloc(no_elem * sizeof(int));
-    float*  sym_val_P = (float*)  calloc(no_elem * sizeof(float));
+    int*    sym_row_P = (int*)    calloc(0, (N + 1) * sizeof(int));
+    int*    sym_col_P = (int*)    calloc(0, no_elem * sizeof(int));
+    float*  sym_val_P = (float*)  calloc(0, no_elem * sizeof(float));
 
     if ((sym_row_P == NULL) || (sym_col_P == NULL) || (sym_val_P == NULL))
     {
