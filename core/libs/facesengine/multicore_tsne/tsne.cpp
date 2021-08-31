@@ -141,7 +141,7 @@ void TSNE<treeT, dist_fn>::run(float* X, int N, int D, float* Y,
     float* uY    = (float*) calloc(N * no_dims , sizeof(float));
     float* gains = (float*) calloc(0,            N * no_dims * sizeof(float));
 
-    if ((dY == NULL) || (uY == NULL) || (gains == NULL))
+    if ((dY == nullptr) || (uY == nullptr) || (gains == nullptr))
     {
         qFatal("Memory allocation failed!");
     }
@@ -177,9 +177,9 @@ void TSNE<treeT, dist_fn>::run(float* X, int N, int D, float* Y,
 
     // Compute input similarities
 
-    int* row_P   = NULL;
-    int* col_P   = NULL;
-    float* val_P = NULL;
+    int* row_P   = nullptr;
+    int* col_P   = nullptr;
+    float* val_P = nullptr;
 
     // Compute asymmetric pairwise input similarities
 
@@ -309,7 +309,7 @@ void TSNE<treeT, dist_fn>::run(float* X, int N, int D, float* Y,
 
     end = time(0); total_time += (float) (end - start) ;
 
-    if (final_error != NULL)
+    if (final_error != nullptr)
     {
         *final_error = evaluateError(row_P, col_P, val_P, Y, N, no_dims, theta);
     }
@@ -321,11 +321,11 @@ void TSNE<treeT, dist_fn>::run(float* X, int N, int D, float* Y,
     free(gains);
 
     free(row_P);
-    row_P = NULL;
+    row_P = nullptr;
     free(col_P);
-    col_P = NULL;
+    col_P = nullptr;
     free(val_P);
-    val_P = NULL;
+    val_P = nullptr;
 
     if (verbose)
     {
@@ -351,7 +351,7 @@ float TSNE<treeT, dist_fn>::computeGradient(int* inp_row_P, int* inp_col_P, floa
     float P_i_sum      = 0.F;
     float C            = 0.F;
 
-    if ((pos_f == NULL) || (neg_f == NULL))
+    if ((pos_f == nullptr) || (neg_f == nullptr))
     {
         qFatal("Memory allocation failed!");
     }
@@ -499,7 +499,7 @@ void TSNE<treeT, dist_fn>::computeGaussianPerplexity(float* X, int N, int D, int
     *_col_P = (int*)   calloc(N * K, sizeof(int));
     *_val_P = (float*) calloc(N * K, sizeof(float));
 
-    if ((*_row_P == NULL) || (*_col_P == NULL) || (*_val_P == NULL))
+    if ((*_row_P == nullptr) || (*_col_P == nullptr) || (*_val_P == nullptr))
     {
         qFatal("Memory allocation failed!");
     }
@@ -697,7 +697,7 @@ void TSNE<treeT, dist_fn>::symmetrizeMatrix(int** _row_P, int** _col_P, float** 
 
     int* row_counts = (int*) calloc(N, sizeof(int));
 
-    if (row_counts == NULL)
+    if (row_counts == nullptr)
     {
         qFatal("Memory allocation failed!");
     }
@@ -744,7 +744,7 @@ void TSNE<treeT, dist_fn>::symmetrizeMatrix(int** _row_P, int** _col_P, float** 
     int*    sym_col_P = (int*)    calloc(0, no_elem * sizeof(int));
     float*  sym_val_P = (float*)  calloc(0, no_elem * sizeof(float));
 
-    if ((sym_row_P == NULL) || (sym_col_P == NULL) || (sym_val_P == NULL))
+    if ((sym_row_P == nullptr) || (sym_col_P == nullptr) || (sym_val_P == nullptr))
     {
         qFatal("Memory allocation failed!");
     }
@@ -762,7 +762,7 @@ void TSNE<treeT, dist_fn>::symmetrizeMatrix(int** _row_P, int** _col_P, float** 
 
     int* offset = (int*) calloc(N, sizeof(int));
 
-    if (offset == NULL)
+    if (offset == nullptr)
     {
         qFatal("Memory allocation failed!");
     }
@@ -838,9 +838,9 @@ void TSNE<treeT, dist_fn>::symmetrizeMatrix(int** _row_P, int** _col_P, float** 
     // Free up some memery
 
     free(offset);
-    offset      = NULL;
+    offset      = nullptr;
     free(row_counts);
-    row_counts  = NULL;
+    row_counts  = nullptr;
 }
 
 // Makes data zero-mean
@@ -852,7 +852,7 @@ void TSNE<treeT, dist_fn>::zeroMean(float* X, int N, int D)
 
     float* mean = (float*) calloc(D, sizeof(float));
 
-    if (mean == NULL)
+    if (mean == nullptr)
     {
         qFatal("Memory allocation failed!");
     }
@@ -881,7 +881,7 @@ void TSNE<treeT, dist_fn>::zeroMean(float* X, int N, int D)
     }
 
     free(mean);
-    mean = NULL;
+    mean = nullptr;
 }
 
 // Generates a Gaussian random number

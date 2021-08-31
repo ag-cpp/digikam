@@ -44,7 +44,7 @@ void tsne_run_float(float* X, int N, int D, float* Y,
                     int num_threads = 1, int max_iter = 1000, int n_iter_early_exag = 250,
                     int random_state = -1, bool init_from_Y = false, int verbose = 0,
                     float early_exaggeration = 12, float learning_rate = 200,
-                    float *final_error = NULL, int distance = 1);
+                    float *final_error = nullptr, int distance = 1);
 
 static inline float sign(float x) { return (x == .0 ? .0 : (x < .0 ? -1.0 : 1.0)); }
 
@@ -61,7 +61,7 @@ public:
              int num_threads = 1, int max_iter = 1000, int n_iter_early_exag = 250,
              int random_state = 0, bool init_from_Y = false, int verbose = 0,
              float early_exaggeration = 12, float learning_rate = 200,
-             float *final_error = NULL);
+             float *final_error = nullptr);
 
     void symmetrizeMatrix(int** row_P, int** col_P, float** val_P, int N);
 

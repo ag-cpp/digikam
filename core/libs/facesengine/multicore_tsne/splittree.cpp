@@ -104,7 +104,7 @@ SplitTree::SplitTree(float* inp_data, int N, int no_dims)
 
     // Construct SplitTree
 
-    init(NULL, inp_data, mean_Y, width_Y);
+    init(nullptr, inp_data, mean_Y, width_Y);
     fill(N);
 
     delete[] max_Y;

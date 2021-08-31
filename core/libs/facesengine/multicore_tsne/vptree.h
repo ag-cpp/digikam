@@ -57,7 +57,7 @@ public:
     {
         _D   = 1;
         _ind = -1;
-        _x   = NULL;
+        _x   = nullptr;
     }
 
     DataPoint(int D, int ind, float* x)
@@ -82,7 +82,7 @@ public:
         {
             _D   = 1;
             _ind = -1;
-            _x   = NULL;
+            _x   = nullptr;
         }
     }
 
@@ -202,8 +202,8 @@ private:
         Node()
             : index    (0),
               threshold(0.),
-              left     (NULL),
-              right    (NULL)
+              left     (nullptr),
+              right    (nullptr)
         {
         }
 
@@ -260,7 +260,7 @@ private:
         {
             // indicates that we're done here!
 
-            return NULL;
+            return nullptr;
         }
 
         // Lower index is center of current node
@@ -305,7 +305,7 @@ private:
 
     void search(Node* node, const T& target, unsigned int k, std::priority_queue<HeapItem>& heap, float& tau)
     {
-        if (node == NULL)
+        if (node == nullptr)
         {
             return;                                          // indicates that we're done here
         }
@@ -333,7 +333,7 @@ private:
 
         // Return if we arrived at a leaf
 
-        if ((node->left == NULL) && (node->right == NULL))
+        if ((node->left == nullptr) && (node->right == nullptr))
         {
             return;
         }
