@@ -57,11 +57,11 @@ class TSNE
 public:
 
     void run(float* X, int N, int D, float* Y,
-               int no_dims = 2, float perplexity = 30, float theta = .5,
-               int num_threads = 1, int max_iter = 1000, int n_iter_early_exag = 250,
-               int random_state = 0, bool init_from_Y = false, int verbose = 0,
-               float early_exaggeration = 12, float learning_rate = 200,
-               float *final_error = NULL);
+             int no_dims = 2, float perplexity = 30, float theta = .5,
+             int num_threads = 1, int max_iter = 1000, int n_iter_early_exag = 250,
+             int random_state = 0, bool init_from_Y = false, int verbose = 0,
+             float early_exaggeration = 12, float learning_rate = 200,
+             float *final_error = NULL);
 
     void symmetrizeMatrix(int** row_P, int** col_P, float** val_P, int N);
 

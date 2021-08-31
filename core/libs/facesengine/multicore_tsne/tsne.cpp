@@ -449,7 +449,8 @@ float TSNE<treeT, dist_fn>::evaluateError(int* row_P, int* col_P, float* val_P, 
 template <class treeT, float (*dist_fn)( const DataPoint&, const DataPoint&)>
 void TSNE<treeT, dist_fn>::computeGaussianPerplexity(float* X, int N, int D, int** _row_P, int** _col_P, float** _val_P, float perplexity, int K, int verbose) {
 
-    if (perplexity > K) fprintf(stderr, "Perplexity should be lower than K!\n");
+    if (perplexity > K)
+        fprintf(stderr, "Perplexity should be lower than K!\n");
 
     // Allocate the memory we need
 
@@ -629,8 +630,8 @@ void TSNE<treeT, dist_fn>::symmetrizeMatrix(int** _row_P, int** _col_P, float** 
 {
     // Get sparse matrix
 
-    int* row_P = *_row_P;
-    int* col_P = *_col_P;
+    int* row_P   = *_row_P;
+    int* col_P   = *_col_P;
     float* val_P = *_val_P;
 
     // Count number of elements and row counts of symmetric matrix
@@ -639,14 +640,15 @@ void TSNE<treeT, dist_fn>::symmetrizeMatrix(int** _row_P, int** _col_P, float** 
 
     if (row_counts == NULL) { fprintf(stderr, "Memory allocation failed!\n"); exit(1); }
 
-    for (int n = 0; n < N; n++)
+    for (int n = 0 ; n < N ; n++)
     {
-        for (int i = row_P[n]; i < row_P[n + 1]; i++)
+        for (int i = row_P[n] ; i < row_P[n + 1] ; i++)
         {
             // Check whether element (col_P[i], n) is present
+
             bool present = false;
 
-            for (int m = row_P[col_P[i]]; m < row_P[col_P[i] + 1]; m++)
+            for (int m = row_P[col_P[i]] ; m < row_P[col_P[i] + 1] ; m++)
             {
                 if (col_P[m] == n)
                 {
@@ -669,48 +671,60 @@ void TSNE<treeT, dist_fn>::symmetrizeMatrix(int** _row_P, int** _col_P, float** 
 
     int no_elem = 0;
 
-    for (int n = 0; n < N; n++)
+    for (int n = 0 ; n < N ; n++)
     {
         no_elem += row_counts[n];
     }
 
     // Allocate memory for symmetrized matrix
 
-    int*    sym_row_P = (int*)    malloc((N + 1) * sizeof(int));
-    int*    sym_col_P = (int*)    malloc(no_elem * sizeof(int));
-    float* sym_val_P = (float*) malloc(no_elem * sizeof(float));
+    int*    sym_row_P = (int*)    calloc((N + 1) * sizeof(int));
+    int*    sym_col_P = (int*)    calloc(no_elem * sizeof(int));
+    float*  sym_val_P = (float*)  calloc(no_elem * sizeof(float));
 
-    if (sym_row_P == NULL || sym_col_P == NULL || sym_val_P == NULL) { fprintf(stderr, "Memory allocation failed!\n"); exit(1); }
+    if ((sym_row_P == NULL) || (sym_col_P == NULL) || (sym_val_P == NULL))
+    {
+        fprintf(stderr, "Memory allocation failed!\n");
+        exit(1);
+    }
 
     // Construct new row indices for symmetric matrix
 
     sym_row_P[0] = 0;
 
-    for (int n = 0; n < N; n++) sym_row_P[n + 1] = sym_row_P[n] + row_counts[n];
+    for (int n = 0 ; n < N ; n++)
+        sym_row_P[n + 1] = sym_row_P[n] + row_counts[n];
 
     // Fill the result matrix
 
     int* offset = (int*) calloc(N, sizeof(int));
 
-    if (offset == NULL) { fprintf(stderr, "Memory allocation failed!\n"); exit(1); }
-
-    for (int n = 0; n < N; n++)
+    if (offset == NULL)
     {
-        for (int i = row_P[n]; i < row_P[n + 1]; i++)
-        {                                 // considering element(n, col_P[i])
+        fprintf(stderr, "Memory allocation failed!\n");
+        exit(1);
+    }
+
+    for (int n = 0 ; n < N ; n++)
+    {
+        for (int i = row_P[n] ; i < row_P[n + 1] ; i++)
+        {
+            // considering element(n, col_P[i])
 
             // Check whether element (col_P[i], n) is present
 
             bool present = false;
 
-            for (int m = row_P[col_P[i]]; m < row_P[col_P[i] + 1]; m++)
+            for (int m = row_P[col_P[i]] ; m < row_P[col_P[i] + 1] ; m++)
             {
                 if (col_P[m] == n)
                 {
                     present = true;
 
                     if (n <= col_P[i])
-                    {                                                // make sure we do not add elements twice
+                    {
+                        // make sure we do not add elements twice
+
                         sym_col_P[sym_row_P[n]        + offset[n]]        = col_P[i];
                         sym_col_P[sym_row_P[col_P[i]] + offset[col_P[i]]] = n;
                         sym_val_P[sym_row_P[n]        + offset[n]]        = val_P[i] + val_P[m];
@@ -745,21 +759,26 @@ void TSNE<treeT, dist_fn>::symmetrizeMatrix(int** _row_P, int** _col_P, float** 
 
     // Divide the result by two
 
-    for (int i = 0; i < no_elem; i++)
+    for (int i = 0 ; i < no_elem ; i++)
     {
         sym_val_P[i] /= 2.0;
     }
 
     // Return symmetrized matrices
 
-    free(*_row_P); *_row_P = sym_row_P;
-    free(*_col_P); *_col_P = sym_col_P;
-    free(*_val_P); *_val_P = sym_val_P;
+    free(*_row_P);
+    *_row_P = sym_row_P;
+    free(*_col_P);
+    *_col_P =  sym_col_P;
+    free(*_val_P);
+    *_val_P = sym_val_P;
 
     // Free up some memery
 
-    free(offset); offset = NULL;
-    free(row_counts); row_counts  = NULL;
+    free(offset);
+    offset      = NULL;
+    free(row_counts);
+    row_counts  = NULL;
 }
 
 // Makes data zero-mean
