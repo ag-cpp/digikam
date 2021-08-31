@@ -39,11 +39,14 @@ namespace Digikam
 
 class RecognitionWorker::Private
 {
+
 public:
+
     explicit Private(FacePipeline::Private* const dd)
         : imageRetriever(dd),
-          recognizer(nullptr),
-          buffer(100)
+          recognizer    (nullptr),
+          buffer        (100),
+          threshold     (94.0F)
     {
     }
 
@@ -81,7 +84,7 @@ public:
 
 RecognitionWorker::RecognitionWorker(FacePipeline::Private* const dd)
     : QThread(),
-      d(new Private(dd))
+      d      (new Private(dd))
 {
 }
 
@@ -114,6 +117,7 @@ void RecognitionWorker::run()
         foreach (const FacePipelineFaceTagsIface& face, package->databaseFaces)
         {
             QString tagID = ExtractionWorker::encodeTagID(package->info.id(), face);
+
             if (d->faceembeddingMap.contains(tagID))
             {
                 embeddings << d->faceembeddingMap[tagID].embedding;
@@ -126,7 +130,7 @@ void RecognitionWorker::run()
 
         QVector<int> identitiesIDs = d->recognizer->recognize(embeddings);
 
-        for (int i = 0; i < identitiesIDs.size(); ++i)
+        for (int i = 0 ; i < identitiesIDs.size() ; ++i)
         {
             package->recognitionResults << d->identitiesManager.identity(identitiesIDs[i]);
         }
