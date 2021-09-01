@@ -64,11 +64,14 @@ public:
 
     explicit Extractor()
         : m_detector(new Digikam::FaceDetector()),
-          m_net(cv::dnn::readNetFromTensorflow("../scripts/facenet_opencv_dnn/models/graph_final.pb"))
+          m_net     (cv::dnn::readNetFromTensorflow("../scripts/facenet_opencv_dnn/models/graph_final.pb"))
     {
     }
 
-    ~Extractor() = default;
+    ~Extractor()
+    {
+        delete m_detector;
+    };
 
     QImage* detect(const QImage& faceImg) const;
     cv::Mat getFaceEmbedding(cv::Mat faceImage);
@@ -112,10 +115,10 @@ cv::Mat normalize(cv::Mat mat)
     mat.convertTo(floatMat, CV_32F);
 
     cv::Mat subtractedMat;
-    cv::subtract(floatMat, cv::Scalar(127.5,127.5,127.5), subtractedMat);
+    cv::subtract(floatMat, cv::Scalar(127.5, 127.5, 127.5), subtractedMat);
 
     cv::Mat normalizedMat;
-    cv::multiply(subtractedMat, cv::Scalar(1.0/127.5,1.0/127.5,1.0/127.5), normalizedMat);
+    cv::multiply(subtractedMat, cv::Scalar(1.0/127.5, 1.0/127.5, 1.0/127.5), normalizedMat);
 
     return normalizedMat;
 }
@@ -132,7 +135,7 @@ cv::Mat Extractor::getFaceEmbedding(cv::Mat faceImage)
 
     std::cout << "Mean " << mean << "std " << std << std::endl;
 */
-    cv::Mat blob             = cv::dnn::blobFromImage(faceImage, 1.0/127.5, imageSize, cv::Scalar(127.5,127.5,127.5), true, false);
+    cv::Mat blob             = cv::dnn::blobFromImage(faceImage, 1.0/127.5, imageSize, cv::Scalar(127.5, 127.5, 127.5), true, false);
     m_net.setInput(blob);
     cv::Mat face_descriptors = m_net.forward();
 
