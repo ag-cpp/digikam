@@ -44,7 +44,7 @@
 std::shared_ptr<QCommandLineParser> parseOptions(const QCoreApplication& app)
 {
     QCommandLineParser* const parser = new QCommandLineParser();
-    parser->addOption(QCommandLineOption(QLatin1String("in"), QLatin1String("Data file"), QLatin1String("path relative to data file")));
+    parser->addOption(QCommandLineOption(QLatin1String("in"),  QLatin1String("Data file"),   QLatin1String("path relative to data file")));
     parser->addOption(QCommandLineOption(QLatin1String("out"), QLatin1String("Output file"), QLatin1String("path relative to output file")));
     parser->addHelpOption();
     parser->process(app);
@@ -64,12 +64,13 @@ std::pair<cv::Mat, cv::Mat> loadData(const QString& fileName)
     if (!file.open(QIODevice::ReadOnly))
     {
         qDebug() << file.errorString();
+
         return std::make_pair(predictors, labels);
     }
 
     while (!file.atEnd())
     {
-        QByteArray line = file.readLine();
+        QByteArray line        = file.readLine();
         QList<QByteArray> data = line.split(',');
 
         cv::Mat predictor(1, data.size()-1, CV_32F);
@@ -86,7 +87,7 @@ std::pair<cv::Mat, cv::Mat> loadData(const QString& fileName)
     return std::make_pair(predictors, labels);
 }
 
-cv::Mat extractTrainData(std::pair<cv::Mat, cv::Mat> data, int nbPoints)
+cv::Mat extractTrainData(const std::pair<cv::Mat, cv::Mat>& data, int nbPoints)
 {
     cv::Mat trainData;
     std::unordered_map<int, int> counters;
@@ -103,26 +104,28 @@ cv::Mat extractTrainData(std::pair<cv::Mat, cv::Mat> data, int nbPoints)
     return trainData;
 }
 
-void save(std::pair<cv::Mat, cv::Mat> data, const QString& fileName)
+void save(const std::pair<cv::Mat, cv::Mat>& data, const QString& fileName)
 {
     QFile file(fileName);
+
     if (!file.open(QIODevice::WriteOnly))
     {
         qDebug() << file.errorString();
+
         return;
     }
 
     QTextStream streamOut(&file);
 
     cv::Mat samples = data.first;
-    cv::Mat labels = data.second;
+    cv::Mat labels  = data.second;
 
     for (int i = 0 ; i < samples.rows ; ++i)
     {
         QStringList line;
         line << QString::number(labels.row(i).at<int>(0));
 
-        for(int j = 0 ; j < samples.row(i).cols ; ++j)
+        for (int j = 0 ; j < samples.row(i).cols ; ++j)
         {
             line << QString::number(double(samples.row(i).at<float>(j)));
         }
@@ -137,8 +140,8 @@ int main(int argc, char** argv)
     app.setApplicationName(QString::fromLatin1("digikam"));
     std::shared_ptr<QCommandLineParser> parser = parseOptions(app);
 
-    std::pair<cv::Mat, cv::Mat> data = loadData(parser->value(QLatin1String("in")));
-    cv::Mat samples                  = data.first;
+    std::pair<cv::Mat, cv::Mat> data           = loadData(parser->value(QLatin1String("in")));
+    cv::Mat samples                            = data.first;
 
     QElapsedTimer timer;
     timer.start();
@@ -147,5 +150,6 @@ int main(int argc, char** argv)
 
     qDebug() << "Parse through" << samples.rows << "in" << timer.elapsed();
 
-    save(std::make_pair(projectedData, data.second),parser->value(QLatin1String("out")));
+    save(std::make_pair(projectedData, data.second),
+         parser->value(QLatin1String("out")));
 }
