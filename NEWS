@@ -7,6 +7,8 @@ Bundle : AppImage is now compiled under Mageia 7.1 instead 6.1 for a better bina
 Bundle : AppImage use last Qt 5.15.2 and KF5 5.84 libraries.
 Plugins: New tool to share items on the network with a Motion JPEG stream server.
 General: Update internal Libraw to snapshot 20210827.
+General: Integration of Image Quality Sorter Google Summer of Code project 2021
+         from Phuoc Khanh LE <https://community.kde.org/GSoC/2021/StatusReports/PhuocKhanhLE>
 
 *****************************************************************************************************
 BUGFIXES:
@@ -137,9 +139,9 @@ BUGFIXES:
 126 ==> 441697 - Windows - latest digikam pre-release build on 15.08.2021 - your software is up-to-date.
 127 ==> 440689 - Current appimage does not start on KDE Neon Linux (Ubuntu 20.04 based).
 128 ==> 440908 - digiKam weekly snapshot (x86-64.appimage) opening error msgs.
-129 ==> 
-130 ==> 
-131 ==> 
+129 ==> 441741 - Refresh won't import subfolders created by other software.
+130 ==> 441749 - Method to relocate data.
+131 ==> 441873 - Database migration failed.
 132 ==> 
 133 ==> 
 134 ==> 
