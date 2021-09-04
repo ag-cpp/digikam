@@ -120,6 +120,8 @@ Showfoto::Showfoto(const QList<QUrl>& urlList, QWidget* const)
     applySettings();
     setAutoSaveSettings(configGroupName(), true);
 
+    d->leftSideBar->loadState();
+    d->folderView->loadState();
     d->rightSideBar->loadState();
 
     //--------------------------------------------------
@@ -267,6 +269,37 @@ void Showfoto::slotOpenFolder()
     }
 }
 
+void Showfoto::slotOpenFolderFromPath(const QString& path)
+{
+    qCDebug(DIGIKAM_SHOWFOTO_LOG) << "Open folder from path =" << path;
+
+    QFileInfo inf(path);
+    d->infoList.clear();
+
+    if      (inf.isFile())
+    {
+        slotDroppedUrls(QList<QUrl>() << QUrl::fromLocalFile(inf.absolutePath()), false);
+        d->thumbBar->setCurrentUrl(QUrl::fromLocalFile(path));
+        slotOpenUrl(d->thumbBar->currentInfo());
+    }
+    else if (inf.isDir())
+    {
+        QString dpath(path.endsWith(QLatin1Char('/')) ? path : path + QLatin1Char('/'));
+        slotDroppedUrls(QList<QUrl>() << QUrl::fromLocalFile(dpath), false);
+        QList<QUrl> urls = d->thumbBar->urls();
+
+        if (!urls.isEmpty())
+        {
+            d->thumbBar->setCurrentUrl(urls.first());
+            slotOpenUrl(d->thumbBar->currentInfo());
+        }
+    }
+    else
+    {
+        return;
+    }
+}
+
 void Showfoto::openUrls(const QList<QUrl>& urls)
 {
     if (urls.isEmpty())
@@ -322,10 +355,9 @@ void Showfoto::openFolder(const QUrl& url)
 
     QString filter;
     QStringList mimeTypes = supportedImageMimeTypes(QIODevice::ReadOnly, filter);
-
-    QString patterns = filter.toLower();
-    patterns.append (QLatin1Char(' '));
-    patterns.append (filter.toUpper());
+    QString patterns      = filter.toLower();
+    patterns.append(QLatin1Char(' '));
+    patterns.append(filter.toUpper());
 
     qCDebug(DIGIKAM_SHOWFOTO_LOG) << "patterns=" << patterns;
 
@@ -494,7 +526,7 @@ void Showfoto::slotOpenUrl(const ShowfotoItemInfo& info)
     }
 
     d->currentLoadedUrl = info.url;
-
+    d->folderView->setCurrentPath(localFile);
     m_canvas->load(localFile, m_IOFileSettings);
 
     //TODO : add preload here like in ImageWindow::slotLoadCurrent() ???
