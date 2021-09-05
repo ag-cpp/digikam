@@ -50,7 +50,7 @@
 namespace TSNE
 {
 
-void tsne_run_float(float* X, int N, int D, float* Y,
+bool tsne_run_float(float* X, int N, int D, float* Y,
                     int no_dims, float perplexity, float theta,
                     int num_threads, int max_iter, int n_iter_early_exag,
                     int random_state, bool init_from_Y, int verbose,
@@ -65,15 +65,13 @@ void tsne_run_float(float* X, int N, int D, float* Y,
     if (distance == 0) 
     {
         TSNE<SplitTree, euclidean_distance> tsne;
-        tsne.run(X, N, D, Y, no_dims, perplexity, theta, num_threads, max_iter, n_iter_early_exag,
-                random_state, init_from_Y, verbose, early_exaggeration, learning_rate, final_error);
+        return tsne.run(X, N, D, Y, no_dims, perplexity, theta, num_threads, max_iter, n_iter_early_exag,
+                        random_state, init_from_Y, verbose, early_exaggeration, learning_rate, final_error);
     }
-    else 
-    {
-        TSNE<SplitTree, euclidean_distance_squared> tsne;
-        tsne.run(X, N, D, Y, no_dims, perplexity, theta, num_threads, max_iter, n_iter_early_exag,
-                 random_state, init_from_Y, verbose, early_exaggeration, learning_rate, final_error);
-    }
+    
+    TSNE<SplitTree, euclidean_distance_squared> tsne;
+    return tsne.run(X, N, D, Y, no_dims, perplexity, theta, num_threads, max_iter, n_iter_early_exag,
+                    random_state, init_from_Y, verbose, early_exaggeration, learning_rate, final_error);
 }
 
 /*  
@@ -84,7 +82,7 @@ void tsne_run_float(float* X, int N, int D, float* Y,
         no_dims -- target dimentionality
 */
 template <class treeT, float (*dist_fn)(const DataPoint&, const DataPoint&)>
-void TSNE<treeT, dist_fn>::run(float* X, int N, int D, float* Y,
+bool TSNE<treeT, dist_fn>::run(float* X, int N, int D, float* Y,
                int no_dims, float perplexity, float theta ,
                int num_threads, int max_iter, int n_iter_early_exag,
                int random_state, bool init_from_Y, int verbose,
@@ -133,7 +131,7 @@ void TSNE<treeT, dist_fn>::run(float* X, int N, int D, float* Y,
     if (dY == NULL || uY == NULL || gains == NULL) 
     { 
         fprintf(stderr, "Memory allocation failed!\n"); 
-        exit(1); 
+        return false;
     }
     
     for (int i = 0; i < N * no_dims; ++i) 
@@ -298,6 +296,8 @@ void TSNE<treeT, dist_fn>::run(float* X, int N, int D, float* Y,
     {
         fprintf(stderr, "Fitting performed in %4.2f seconds.\n", total_time);
     }
+
+    return true;
 }
 
 // Compute gradient of the t-SNE cost function (using Barnes-Hut algorithm)
@@ -315,12 +315,6 @@ float TSNE<treeT, dist_fn>::computeGradient(int* inp_row_P, int* inp_col_P, floa
     float P_i_sum = 0.;
     float C = 0.;
 
-    if (pos_f == NULL || neg_f == NULL) 
-    { 
-        fprintf(stderr, "Memory allocation failed!\n"); 
-        exit(1); 
-    }
-    
 #ifdef _OPENMP
     #pragma omp parallel for reduction(+:P_i_sum,C)
 #endif
@@ -443,11 +437,6 @@ void TSNE<treeT, dist_fn>::computeGaussianPerplexity(float* X, int N, int D, int
     *_row_P = (int*)    malloc((N + 1) * sizeof(int));
     *_col_P = (int*)    calloc(N * K, sizeof(int));
     *_val_P = (float*) calloc(N * K, sizeof(float));
-
-    if (*_row_P == NULL || *_col_P == NULL || *_val_P == NULL) 
-    { 
-        fprintf(stderr, "Memory allocation failed!\n"); exit(1); 
-    }
 
     /*
         row_P -- offsets for `col_P` (i)
@@ -615,10 +604,6 @@ void TSNE<treeT, dist_fn>::symmetrizeMatrix(int** _row_P, int** _col_P, float** 
 
     // Count number of elements and row counts of symmetric matrix
     int* row_counts = (int*) calloc(N, sizeof(int));
-    if (row_counts == NULL) 
-    { 
-        fprintf(stderr, "Memory allocation failed!\n"); exit(1); 
-    }
 
     for (int n = 0; n < N; ++n) 
     {
@@ -658,11 +643,6 @@ void TSNE<treeT, dist_fn>::symmetrizeMatrix(int** _row_P, int** _col_P, float** 
     int*    sym_row_P = (int*)    malloc((N + 1) * sizeof(int));
     int*    sym_col_P = (int*)    malloc(no_elem * sizeof(int));
     float* sym_val_P  = (float*) malloc(no_elem * sizeof(float));
-    
-    if (sym_row_P == NULL || sym_col_P == NULL || sym_val_P == NULL) 
-    { 
-        fprintf(stderr, "Memory allocation failed!\n"); exit(1); 
-    }
 
     // Construct new row indices for symmetric matrix
     sym_row_P[0] = 0;
@@ -674,11 +654,6 @@ void TSNE<treeT, dist_fn>::symmetrizeMatrix(int** _row_P, int** _col_P, float** 
 
     // Fill the result matrix
     int* offset = (int*) calloc(N, sizeof(int));
-    
-    if (offset == NULL) 
-    { 
-        fprintf(stderr, "Memory allocation failed!\n"); exit(1); 
-    }
     
     for (int n = 0; n < N; ++n) 
     {
@@ -753,12 +728,6 @@ void TSNE<treeT, dist_fn>::zeroMean(float* X, int N, int D)
 {
     // Compute data mean
     float* mean = (float*) calloc(D, sizeof(float));
-    
-    if (mean == NULL) 
-    { 
-        fprintf(stderr, "Memory allocation failed!\n"); 
-        exit(1); 
-    }
     
     for (int n = 0; n < N; ++n) 
     {
