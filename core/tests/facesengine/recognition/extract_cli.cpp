@@ -43,6 +43,7 @@
 
 #include "digikam_opencv.h"
 #include "opencvdnnfacedetector.h"
+#include "dnnfaceextractor.h"
 #include "facedetector.h"
 
 // --------------------------------------------------------
@@ -64,13 +65,14 @@ public:
 
     explicit Extractor()
         : m_detector(new Digikam::FaceDetector()),
-          m_net     (cv::dnn::readNetFromTensorflow("../scripts/facenet_opencv_dnn/models/graph_final.pb"))
+          m_extractor(new Digikam::DNNFaceExtractor())
     {
     }
 
     ~Extractor()
     {
         delete m_detector;
+        delete m_extractor;
     };
 
     QImage* detect(const QImage& faceImg) const;
@@ -79,7 +81,7 @@ public:
 private:
 
     Digikam::FaceDetector* m_detector;
-    cv::dnn::Net           m_net;
+    Digikam::DNNFaceExtractor* m_extractor;
 
 private:
 
@@ -125,21 +127,7 @@ cv::Mat normalize(cv::Mat mat)
 
 cv::Mat Extractor::getFaceEmbedding(cv::Mat faceImage)
 {
-    cv::Size imageSize       = cv::Size(160, 160);
-/*
-    cv::Mat resizedImage;
-    cv::resize(faceImage.clone(), resizedImage, imageSize, 0, 0, cv::INTER_LINEAR);
-
-    cv::Scalar mean, std;
-    cv::meanStdDev(resizedImage, mean, std);
-
-    std::cout << "Mean " << mean << "std " << std << std::endl;
-*/
-    cv::Mat blob             = cv::dnn::blobFromImage(faceImage, 1.0/127.5, imageSize, cv::Scalar(127.5, 127.5, 127.5), true, false);
-    m_net.setInput(blob);
-    cv::Mat face_descriptors = m_net.forward();
-
-    return face_descriptors;
+    return m_extractor->getFaceEmbedding(faceImage);
 }
 
 cv::Mat prepareForRecognition(QImage& inputImage)
