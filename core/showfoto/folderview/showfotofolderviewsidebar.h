@@ -21,8 +21,8 @@
  *
  * ============================================================ */
 
-#ifndef SHOWFOTO_FOLDER_VIEW_H
-#define SHOWFOTO_FOLDER_VIEW_H
+#ifndef SHOWFOTO_FOLDER_VIEW_SIDEBAR_H
+#define SHOWFOTO_FOLDER_VIEW_SIDEBAR_H
 
 // QT includes
 
@@ -41,19 +41,19 @@ using namespace Digikam;
 namespace ShowFoto
 {
 
-class ShowfotoFolderView : public QWidget,
-                           public StateSavingObject
+class ShowfotoFolderViewSideBar : public QWidget,
+                                  public StateSavingObject
 {
     Q_OBJECT
 
 public:
 
-    explicit ShowfotoFolderView(QWidget* const parent);
-    ~ShowfotoFolderView() override;
+    explicit ShowfotoFolderViewSideBar(QWidget* const parent);
+    ~ShowfotoFolderViewSideBar()           override;
 
     void          setActive(bool active);
-    void          doLoadState();
-    void          doSaveState();
+    void          doLoadState()     override;
+    void          doSaveState()     override;
     void          applySettings();
     const QIcon   getIcon();
     const QString getCaption();
@@ -63,20 +63,19 @@ public:
     void setCurrentPath(const QString& newPathNative);
     void setCurrentPathWithoutUndo(const QString& newPath);
 
-    QListView* listView()       const;
-
-private:
-
-    bool eventFilter(QObject* obj, QEvent* evt);
     void loadContents(const QModelIndex& index);
+
+public Q_SLOTS:
+
+    void slotUndo();
+    void slotRedo();
+    void slotGoHome();
+    void slotGoUp();
+    void slotLoadContents();
 
 private Q_SLOTS:
 
-    void slotItemDoubleClicked(const QModelIndex& index);
-    void slotGoHome();
-    void slotGoUp();
     void slotCustomPathChanged(const QString&);
-    void slotLoadContents();
 
 Q_SIGNALS:
 
@@ -90,4 +89,4 @@ private:
 
 } // namespace ShowFoto
 
-#endif // SHOWFOTO_FOLDER_VIEW_H
+#endif // SHOWFOTO_FOLDER_VIEW_SIDEBAR_H

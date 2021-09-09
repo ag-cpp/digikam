@@ -4,7 +4,7 @@
  * https://www.digikam.org
  *
  * Date        : 2021-08-27
- * Description : a tool bar for Showfoto folder view
+ * Description : Tool tip for Showfoto folder-view item.
  *
  * Copyright (C) 2021 by Gilles Caulier <caulier dot gilles at gmail dot com>
  *
@@ -21,58 +21,41 @@
  *
  * ============================================================ */
 
-#ifndef SHOWFOTO_FOLDER_VIEW_TOOL_BAR_H
-#define SHOWFOTO_FOLDER_VIEW_TOOL_BAR_H
+#ifndef SHOWFOTO_FOLDER_VIEW_TOOL_TIP_H
+#define SHOWFOTO_FOLDER_VIEW_TOOL_TIP_H
 
 // Qt includes
 
-#include <QWidget>
+#include <QString>
+#include <QRect>
+#include <QModelIndex>
 
 // Local includes
 
-#include "slideshowsettings.h"
-#include "dlayoutbox.h"
+#include "ditemtooltip.h"
 
 using namespace Digikam;
 
 namespace ShowFoto
 {
 
-class ShowfotoFolderViewBar : public DHBox
+class ShowfotoFolderViewList;
+
+class ShowfotoFolderViewToolTip : public DItemToolTip
 {
     Q_OBJECT
 
 public:
 
-    enum FolderViewMode
-    {
-        FolderViewSimplified = 0,
-        FolderViewDetailled
-    };
+    explicit ShowfotoFolderViewToolTip(ShowfotoFolderViewList* const view);
+    ~ShowfotoFolderViewToolTip()          override;
 
-public:
+    void setIndex(const QModelIndex& index);
 
-    explicit ShowfotoFolderViewBar(QWidget* const parent);
-    ~ShowfotoFolderViewBar() override;
+private:
 
-    void setCurrentPath(const QString& path);
-
-public Q_SLOTS:
-
-    void slotPreviousEnabled(bool);
-    void slotNextEnabled(bool);
-
-Q_SIGNALS:
-
-    void signalGoHome();
-    void signalGoUp();
-    void signalGoPrevious();
-    void signalGoNext();
-    void signalCustomPathChanged(const QString&);
-
-private Q_SLOTS:
-
-    void slotCustomPathChanged();
+    QRect   repositionRect()              override;
+    QString tipContents()                 override;
 
 private:
 
@@ -82,4 +65,4 @@ private:
 
 } // namespace ShowFoto
 
-#endif // SHOWFOTO_FOLDER_VIEW_TOOL_BAR_H
+#endif // SHOWFOTO_FOLDER_VIEW_TOOL_TIP_H
