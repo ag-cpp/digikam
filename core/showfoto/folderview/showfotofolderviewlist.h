@@ -52,6 +52,10 @@ public:
 
     void setEnableToolTips(bool val);
 
+public Q_SLOTS:
+
+    void slotIconSizeChanged(int);
+
 private:
 
     void mouseDoubleClickEvent(QMouseEvent*)                            override;
@@ -69,6 +73,7 @@ private:
 private Q_SLOTS:
 
     void slotToolTip();
+    void slotOpenInFileManager();
 
 private:
 
