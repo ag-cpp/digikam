@@ -841,7 +841,7 @@ BUGFIXES:
 825 ==> 443471 - Windows 10/11 : digiKam 7.2 or 7.3 does not start (AVAST suspected).
 826 ==> 435413 - Unwanted selection-area.
 827 ==> 449847 - Sticky selection.
-828 ==> 
+828 ==> 450153 - All groups deleted by "Extended clean up and shrink all databases".
 829 ==> 
 830 ==> 
 831 ==> 
