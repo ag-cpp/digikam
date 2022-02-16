@@ -843,5 +843,5 @@ BUGFIXES:
 827 ==> 449847 - Sticky selection.
 828 ==> 450153 - All groups deleted by "Extended clean up and shrink all databases".
 829 ==> 450311 - W10 - Error while trying to check for new digiKam version.
-830 ==> 
+830 ==> 450261 - digiKam searches for sidecar files even though reading them is disabled.
 831 ==> 
