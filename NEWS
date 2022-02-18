@@ -844,4 +844,8 @@ BUGFIXES:
 828 ==> 450153 - All groups deleted by "Extended clean up and shrink all databases".
 829 ==> 450311 - W10 - Error while trying to check for new digiKam version.
 830 ==> 450261 - digiKam searches for sidecar files even though reading them is disabled.
-831 ==> 
+831 ==> 448645 - Clicking Browse > Labels causes a program crash 100% of the time.
+832 ==> 425886 - digiKam crashes immediately after hitting the search button for Images, both on regular and advanced search tool.
+833 ==> 420868 - Random crashes, no error messages. Windows event report follows, suspect TIFF plugin.
+834 ==> 431118 - By using filters digiKam 7.1.0 is crashing at Windows10 Prof 64Bit.
+835 ==> 
