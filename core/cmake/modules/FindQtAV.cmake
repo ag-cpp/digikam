@@ -16,7 +16,7 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 #
 
-find_package(Qt5
+find_package(Qt5 ${QT_MIN_VERSION}
              QUIET REQUIRED NO_MODULE COMPONENTS
              Core
 )
