@@ -848,4 +848,5 @@ BUGFIXES:
 832 ==> 425886 - digiKam crashes immediately after hitting the search button for Images, both on regular and advanced search tool.
 833 ==> 420868 - Random crashes, no error messages. Windows event report follows, suspect TIFF plugin.
 834 ==> 431118 - By using filters digiKam 7.1.0 is crashing at Windows10 Prof 64Bit.
-835 ==> 
+835 ==> 426086 - Tiff file reading extremely slow.
+836 ==> 

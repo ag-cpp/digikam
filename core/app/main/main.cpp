@@ -134,7 +134,7 @@ int main(int argc, char* argv[])
 
     QApplication app(argc, argv);
 
-    digikamSetDebugFilterRules();
+    digikamSetDebugFilterRules(system.enableLogging);
 
     tryInitDrMingw();
 

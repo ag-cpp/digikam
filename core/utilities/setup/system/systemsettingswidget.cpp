@@ -51,13 +51,15 @@ public:
     explicit Private()
       : useHighDpiScalingCheck(nullptr),
         useHighDpiPixmapsCheck(nullptr),
-        disableOpenCLCheck    (nullptr)
+        disableOpenCLCheck    (nullptr),
+        enableLoggingCheck    (nullptr)
     {
     }
 
     QCheckBox* useHighDpiScalingCheck;
     QCheckBox* useHighDpiPixmapsCheck;
     QCheckBox* disableOpenCLCheck;
+    QCheckBox* enableLoggingCheck;
 };
 
 SystemSettingsWidget::SystemSettingsWidget(QWidget* const parent)
@@ -70,6 +72,7 @@ SystemSettingsWidget::SystemSettingsWidget(QWidget* const parent)
     d->useHighDpiScalingCheck = new QCheckBox(i18n("Use high DPI scaling from the screen factor"), this);
     d->useHighDpiPixmapsCheck = new QCheckBox(i18n("Use pixmaps with high DPI resolution"), this);
     d->disableOpenCLCheck     = new QCheckBox(i18n("Disable hardware acceleration OpenCL"), this);
+    d->enableLoggingCheck     = new QCheckBox(i18n("Enable internal debug logging"), this);
 
     if (qApp->applicationName() == QLatin1String("showfoto"))
     {
@@ -85,6 +88,7 @@ SystemSettingsWidget::SystemSettingsWidget(QWidget* const parent)
     layout->addWidget(d->useHighDpiScalingCheck);
     layout->addWidget(d->useHighDpiPixmapsCheck);
     layout->addWidget(d->disableOpenCLCheck);
+    layout->addWidget(d->enableLoggingCheck);
     layout->addWidget(systemNote);
     layout->setContentsMargins(spacing, spacing, spacing, spacing);
     layout->setSpacing(spacing);
@@ -103,6 +107,7 @@ void SystemSettingsWidget::readSettings()
 
     d->useHighDpiScalingCheck->setChecked(system.useHighDpiScaling);
     d->useHighDpiPixmapsCheck->setChecked(system.useHighDpiPixmaps);
+    d->enableLoggingCheck->setChecked(system.enableLogging);
     d->disableOpenCLCheck->setChecked(system.disableOpenCL);
 }
 
@@ -112,6 +117,7 @@ void SystemSettingsWidget::saveSettings()
 
     system.useHighDpiScaling = d->useHighDpiScalingCheck->isChecked();
     system.useHighDpiPixmaps = d->useHighDpiPixmapsCheck->isChecked();
+    system.enableLogging     = d->enableLoggingCheck->isChecked();
     system.disableOpenCL     = d->disableOpenCLCheck->isChecked();
 
     system.saveSettings();
