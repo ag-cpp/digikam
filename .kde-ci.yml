@@ -19,7 +19,6 @@ Dependencies:
     'frameworks/kcalendarcore': '@stable'
     'pim/akonadi-contacts': '@stable'
     'graphics/libksane': '@stable'
-    'education/marble': '@stable'
 
 Options:
     run-cppcheck: False
