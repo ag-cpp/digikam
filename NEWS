@@ -852,4 +852,5 @@ BUGFIXES:
 835 ==> 426086 - Tiff file reading extremely slow.
 836 ==> 450589 - "Save as": Cancelling the filename dialog does not cancel "Save as".
 837 ==> 450572 - default movie editor ?
-838 ==> 
+838 ==> 450588 - "Save" does not work if image was removed outside of Showfoto.
+839 ==> 
