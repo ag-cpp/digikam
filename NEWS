@@ -849,4 +849,5 @@ BUGFIXES:
 833 ==> 420868 - Random crashes, no error messages. Windows event report follows, suspect TIFF plugin.
 834 ==> 431118 - By using filters digiKam 7.1.0 is crashing at Windows10 Prof 64Bit.
 835 ==> 426086 - Tiff file reading extremely slow.
-836 ==> 
+836 ==> 450589 - "Save as": Cancelling the filename dialog does not cancel "Save as".
+837 ==> 
