@@ -855,4 +855,5 @@ BUGFIXES:
 838 ==> 450588 - "Save" does not work if image was removed outside of Showfoto.
 839 ==> 450575 - Hidpi grouped icons.
 840 ==> 450638 - Provide checkbox to allow overlapping by the sidebar.
-841 ==> 
+841 ==> 450563 - Could not download v7.5.0 from 7.3.0.
+842 ==> 
