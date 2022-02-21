@@ -854,4 +854,5 @@ BUGFIXES:
 837 ==> 450572 - default movie editor ?
 838 ==> 450588 - "Save" does not work if image was removed outside of Showfoto.
 839 ==> 450575 - Hidpi grouped icons.
-840 ==> 
+840 ==> 450638 - Provide checkbox to allow overlapping by the sidebar.
+841 ==> 
