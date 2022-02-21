@@ -37,7 +37,7 @@ copying source into the workspace:
 $SOURCEDIR
 $BUILDDIR"
 else
-    echo "Syntax: $0 [--eclipse]"
+    echo "Syntax: $0 [--eclipse] [--ninja]"
     echo "Run without arguments to create a Unix Makefile project in a build subdir."
     echo "Run with '--eclipse' to create an Eclipse IDE project and build source in a parallel directory."
     echo "Run with '--ninja' to create Ninja Makefile project in a build subdir."
