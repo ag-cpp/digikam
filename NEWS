@@ -856,4 +856,5 @@ BUGFIXES:
 839 ==> 450575 - Hidpi grouped icons.
 840 ==> 450638 - Provide checkbox to allow overlapping by the sidebar.
 841 ==> 450563 - Could not download v7.5.0 from 7.3.0.
-842 ==> 
+842 ==> 450713 - Unable to enter text in legend in Light table _ Presentation _ Caption.
+843 ==> 
