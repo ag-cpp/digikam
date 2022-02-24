@@ -857,4 +857,5 @@ BUGFIXES:
 840 ==> 450638 - Provide checkbox to allow overlapping by the sidebar.
 841 ==> 450563 - Could not download v7.5.0 from 7.3.0.
 842 ==> 450713 - Unable to enter text in legend in Light table _ Presentation _ Caption.
-843 ==> 
+843 ==> 405235 - Slow startup and new file scan on low latency networks.
+844 ==> 
