@@ -1,4 +1,4 @@
-digiKam 7.6.0 - Release date: 2022-xx-xx
+digiKam 7.6.0 - Release date: 2022-03-06
 
 *****************************************************************************************************
 NEW FEATURES:
@@ -858,4 +858,4 @@ BUGFIXES:
 841 ==> 450563 - Could not download v7.5.0 from 7.3.0.
 842 ==> 450713 - Unable to enter text in legend in Light table _ Presentation _ Caption.
 843 ==> 405235 - Slow startup and new file scan on low latency networks.
-844 ==> 
+844 ==> 445689 - Unable to change exif data with BatchQueueManager.
