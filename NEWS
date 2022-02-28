@@ -859,3 +859,5 @@ BUGFIXES:
 842 ==> 450713 - Unable to enter text in legend in Light table _ Presentation _ Caption.
 843 ==> 405235 - Slow startup and new file scan on low latency networks.
 844 ==> 445689 - Unable to change exif data with BatchQueueManager.
+845 ==> 418256 - Support for album icon-view Masonry layouts.
+846 ==> 448593 - New generic Flow View plugin for digiKam.
