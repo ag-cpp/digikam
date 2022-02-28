@@ -147,8 +147,6 @@ add_subdirectory(ext_imagemagick)
 if (${ENABLE_QTVERSION} MATCHES "5.*")
 
     add_subdirectory(ext_kf5_frameworks)
-    add_subdirectory(ext_marble)
-    add_subdirectory(ext_libksane)
 
     # Not yet ported to Qt6.
     add_subdirectory(ext_marble)
