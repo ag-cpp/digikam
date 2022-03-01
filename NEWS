@@ -861,3 +861,4 @@ BUGFIXES:
 844 ==> 445689 - Unable to change exif data with BatchQueueManager.
 845 ==> 418256 - Support for album icon-view Masonry layouts.
 846 ==> 448593 - New generic Flow View plugin for digiKam.
+847 ==> 450982 - digiKam 7.4.0 writes unsupported XMP-exif:GPSLatitudeRef, XMP-exif:GPSLongitudeRef metadata to JPEG.
