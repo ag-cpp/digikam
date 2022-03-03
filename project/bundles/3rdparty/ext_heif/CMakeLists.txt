@@ -14,6 +14,7 @@ if(MINGW)
 
         DOWNLOAD_DIR ${EXTERNALS_DOWNLOAD_DIR}
         GIT_REPOSITORY https://github.com/strukturag/libde265.git
+        GIT_TAG v1.0.8
 
         PATCH_COMMAND ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/de265-lib-mxe.patch
 
@@ -24,7 +25,8 @@ if(MINGW)
 
         BUILD_IN_SOURCE 1
 
-        INSTALL_COMMAND cd <SOURCE_DIR>/build.mxe && $(MAKE) install/fast
+        INSTALL_COMMAND cd <SOURCE_DIR>/build.mxe/libde265 && cp -fv de265-version.h ../../libde265/ &&
+                        cd <SOURCE_DIR>/build.mxe && $(MAKE) install/fast
 #                        mkdir -p ${PREFIX_ext_heif}/include/libde265/ &&
 #                        cp -fv <SOURCE_DIR>/build.mxe/libde265/de265-version.h ${PREFIX_ext_heif}/include/libde265/ &&
 #                        cp -fv <SOURCE_DIR>/libde265/de265.h ${PREFIX_ext_heif}/include/libde265/ &&
@@ -81,12 +83,6 @@ else() # Linux
                    -DCMAKE_BUILD_TYPE=${GLOBAL_BUILD_TYPE}
                    ${GLOBAL_PROFILE}
 
-#        INSTALL_COMMAND mkdir -p ${PREFIX_ext_heif}/include/libde265/ &&
-#                        cp -fv <BINARY_DIR>/libde265/de265-version.h ${PREFIX_ext_heif}/include/libde265/ &&
-#                        cp -fv <SOURCE_DIR>/libde265/de265.h ${PREFIX_ext_heif}/include/libde265/ &&
-#                        cp -fv <BINARY_DIR>/libde265/libde265.so ${PREFIX_ext_heif}/lib/ &&
-#                        cp -fv ${CMAKE_BINARY_DIR}/libde265.pc ${PREFIX_ext_heif}/lib/pkgconfig/
-
         BUILD_IN_SOURCE 1
 
         UPDATE_COMMAND ""
@@ -105,14 +101,6 @@ else() # Linux
         CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${PREFIX_ext_heif}
                    -DCMAKE_BUILD_TYPE=${GLOBAL_BUILD_TYPE}
                    ${GLOBAL_PROFILE}
-
-#        INSTALL_COMMAND mkdir -p ${PREFIX_ext_heif}/include/libheif/ &&
-#                        cp -fv <SOURCE_DIR>/libheif/heif_version.h ${PREFIX_ext_heif}/include/libheif/ &&
-#                        cp -fv <SOURCE_DIR>/libheif/heif.h ${PREFIX_ext_heif}/include/libheif/ &&
-#                        cp -fv <SOURCE_DIR>/libheif/heif_cxx.h ${PREFIX_ext_heif}/include/libheif/ &&
-#                        cp -fv <SOURCE_DIR>/libheif/heif_plugin.h ${PREFIX_ext_heif}/include/libheif/ &&
-#                        cp -fv <BINARY_DIR>/libheif/libheif.so ${PREFIX_ext_heif}/lib/ &&
-#                        cp -fv ${CMAKE_BINARY_DIR}/libheif.pc ${PREFIX_ext_heif}/lib/pkgconfig/
 
         BUILD_IN_SOURCE 1
 
