@@ -172,13 +172,20 @@ find_package(TIFF)
 find_package(PNG)
 find_package(Boost)
 find_package(LCMS2)
-find_package(EXPAT)    # For DNGWriter: XMP SDK need Expat library to compile.
-find_package(Threads)  # For DNGWriter and LibRaw which needs native threads support.
-find_package(Libheif)  # For HEIF support.
-find_package(X265)     # For HEIF encoding support.
+find_package(EXPAT)         # For DNGWriter: XMP SDK need Expat library to compile.
+find_package(Threads)       # For DNGWriter and LibRaw which needs native threads support.
+find_package(Libheif)       # For HEIF support.
 
-if(NOT X265_FOUND)
-    set(X265_LIBRARIES "")
+if(HEIF_FOUND)
+
+    find_package(X265)      # For HEIF encoding support.
+
+    if(NOT X265_FOUND)
+
+        set(X265_LIBRARIES "")
+
+    endif()
+
 endif()
 
 find_package(exiv2 REQUIRED)
@@ -550,6 +557,7 @@ MACRO_BOOL_TO_01(ENABLE_APPSTYLES             HAVE_APPSTYLE_SUPPORT)
 MACRO_BOOL_TO_01(ENABLE_QWEBENGINE            HAVE_QWEBENGINE)
 MACRO_BOOL_TO_01(ENABLE_DRMINGW               HAVE_DRMINGW)
 MACRO_BOOL_TO_01(ImageMagick_Magick++_FOUND   HAVE_IMAGE_MAGICK)
+MACRO_BOOL_TO_01(HEIF_FOUND                   HAVE_HEIF)
 MACRO_BOOL_TO_01(X265_FOUND                   HAVE_X265)
 MACRO_BOOL_TO_01(Qt5XmlPatterns_FOUND         HAVE_QTXMLPATTERNS)
 MACRO_BOOL_TO_01(CCACHE_FOUND                 HAVE_CCACHE)
@@ -586,7 +594,6 @@ PRINT_LIBRARY_STATUS("libpng"        "https://libpng.sourceforge.io/"           
 PRINT_LIBRARY_STATUS("libpthread"    "https://www.gnu.org/software/hurd/libpthread.html" "(version >= 2.0.0)"                 CMAKE_USE_PTHREADS_INIT OR CMAKE_USE_WIN32_THREADS_INIT)
 PRINT_LIBRARY_STATUS("libqt"         "https://www.qt.io"                                 "(version >= ${QT_MIN_VERSION})"     Qt5_FOUND)
 PRINT_LIBRARY_STATUS("libtiff"       "https://gitlab.com/libtiff/libtiff/"               "(version >= 3.8.2)"                 TIFF_FOUND)
-PRINT_LIBRARY_STATUS("libheif"       "https://github.com/strukturag/libheif"             "(version >= 1.6.0)"                 HEIF_FOUND)
 
 # ==============================================================================
 
@@ -613,6 +620,7 @@ PRINT_OPTIONAL_LIBRARY_STATUS("libqtav"           "https://www.qtav.org/"       
 PRINT_OPTIONAL_LIBRARY_STATUS("libthreadweaver"   "https://cgit.kde.org/threadweaver.git/about/"                    "(version >= ${KF5_MIN_VERSION})"       "digiKam will be compiled without Panorama support."                          KF5ThreadWeaver_FOUND)
 PRINT_OPTIONAL_LIBRARY_STATUS("libxml2"           "https://xmlsoft.org"                                             "(version >= 2.7.0)"                    "digiKam will be compiled without HTMLGallery support."                       LibXml2_FOUND)
 PRINT_OPTIONAL_LIBRARY_STATUS("libxslt"           "https://xmlsoft.org/XSLT"                                        "(version >= 1.1.0)"                    "digiKam will be compiled without HTMLGallery support."                       LibXslt_FOUND)
+PRINT_OPTIONAL_LIBRARY_STATUS("libheif"           "https://github.com/strukturag/libheif"                           "(version >= 1.6.0)"                    "digiKam will be compiled without HEIF support."                              HEIF_FOUND)
 PRINT_OPTIONAL_LIBRARY_STATUS("libx265"           "https://x265.org"                                                "(version >= 2.2)"                      "digiKam will be compiled without HEIF encoding support."                     X265_FOUND)
 PRINT_OPTIONAL_LIBRARY_STATUS("OpenGL"            "https://www.mesa3d.org"                                          "(version >= 11.0.0)"                   "digiKam will be compiled without OpenGL support."                            HAVE_OPENGL)
 PRINT_OPTIONAL_LIBRARY_STATUS("libqtxmlpatterns"  "https://www.qt.io"                                               "(version >= ${QT_MIN_VERSION})"        "digiKam will be compiled without Rajce tool support."                        HAVE_QTXMLPATTERNS)
@@ -629,7 +637,6 @@ if(Boost_FOUND                          AND
    PNG_FOUND                            AND
    Qt5_FOUND                            AND
    TIFF_FOUND                           AND
-   HEIF_FOUND                           AND
    Threads_FOUND                        AND
    (Qt5Test_FOUND OR NOT BUILD_TESTING) AND
    (Qt5X11Extras_FOUND OR NOT HAVE_X11) AND

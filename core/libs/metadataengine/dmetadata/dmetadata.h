@@ -391,12 +391,16 @@ private:
     bool hasValidField(const QVariantList& list)                                                                        const;
     QVariant toStringListVariant(const QStringList& list)                                                               const;
 
+#ifdef HAVE_HEIF
+
 private:
 
     /**
      * Libheif helper methods.
      */
     bool loadUsingLibheif(const QString& filePath);
+
+#endif
 
 private:
 

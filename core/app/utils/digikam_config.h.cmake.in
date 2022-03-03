@@ -45,6 +45,9 @@
 /* Define to 1 if an external Eigen3 shared library have been found */
 #cmakedefine HAVE_EIGEN3 1
 
+/* Define to 1 if an external HEIF shared library have been found */
+#cmakedefine HAVE_HEIF 1
+
 /* Define to 1 if an external x265 shared library have been found */
 #cmakedefine HAVE_X265 1
 
