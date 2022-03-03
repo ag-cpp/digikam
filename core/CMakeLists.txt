@@ -174,6 +174,7 @@ find_package(Boost)
 find_package(LCMS2)
 find_package(EXPAT)    # For DNGWriter: XMP SDK need Expat library to compile.
 find_package(Threads)  # For DNGWriter and LibRaw which needs native threads support.
+find_package(HEIF)     # For HEIF support.
 find_package(X265)     # For HEIF encoding support.
 
 if(NOT X265_FOUND)
@@ -367,8 +368,6 @@ if(BUILD_WITH_CCACHE)
     find_program(CCACHE_FOUND ccache)
     message(STATUS "ccache program found: ${CCACHE_FOUND}...")
 endif()
-
-# -- libgphoto2 rules ----------------------------------------------------------
 
 # -- libgphoto2 rules ----------------------------------------------------------
 
@@ -587,6 +586,7 @@ PRINT_LIBRARY_STATUS("libpng"        "https://libpng.sourceforge.io/"           
 PRINT_LIBRARY_STATUS("libpthread"    "https://www.gnu.org/software/hurd/libpthread.html" "(version >= 2.0.0)"                 CMAKE_USE_PTHREADS_INIT OR CMAKE_USE_WIN32_THREADS_INIT)
 PRINT_LIBRARY_STATUS("libqt"         "https://www.qt.io"                                 "(version >= ${QT_MIN_VERSION})"     Qt5_FOUND)
 PRINT_LIBRARY_STATUS("libtiff"       "https://gitlab.com/libtiff/libtiff/"               "(version >= 3.8.2)"                 TIFF_FOUND)
+PRINT_LIBRARY_STATUS("libheif"       "https://github.com/strukturag/libheif"             "(version >= 1.6.0)"                 HEIF_FOUND)
 
 # ==============================================================================
 
@@ -629,6 +629,7 @@ if(Boost_FOUND                          AND
    PNG_FOUND                            AND
    Qt5_FOUND                            AND
    TIFF_FOUND                           AND
+   HEIF_FOUND                           AND
    Threads_FOUND                        AND
    (Qt5Test_FOUND OR NOT BUILD_TESTING) AND
    (Qt5X11Extras_FOUND OR NOT HAVE_X11) AND
@@ -753,9 +754,6 @@ if(DIGIKAM_CAN_BE_COMPILED)
     include_directories(${CMAKE_CURRENT_BINARY_DIR}/app/utils)
 
     include_directories(${OpenCV_INCLUDE_DIRS})
-
-    # for libheif version header
-    include_directories(${CMAKE_CURRENT_BINARY_DIR}/libs/heifutils)
 
     if(ImageMagick_FOUND)
         include_directories(${ImageMagick_INCLUDE_DIRS})

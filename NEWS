@@ -3,6 +3,7 @@ digiKam 7.7.0 - Release date: 2022-xx-xx
 *****************************************************************************************************
 NEW FEATURES:
 
+General: remove internal libheif and libde265 from core in favor to system libraries.
 
 *****************************************************************************************************
 BUGFIXES:

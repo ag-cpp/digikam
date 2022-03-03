@@ -55,7 +55,7 @@ QT_PLUGIN_INSTALL_DIR=`qtpaths --plugin-dir`
 export PATH=$QT_INSTALL_PREFIX/bin:$PATH
 
 if [ "$CMAKE_BINARY" == "" ]; then
-    CMAKE_BINARY="cmake"
+    CMAKE_BINARY="/opt/cmake/bin/cmake"
 fi
 
 if [ "$DIGIKAM_INSTALL_PREFIX" == "" ]; then
