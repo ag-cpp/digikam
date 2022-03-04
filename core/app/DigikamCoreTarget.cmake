@@ -258,11 +258,21 @@ if(Lqr-1_FOUND)
 
 endif()
 
+# For HEIF file format support
 if(HEIF_FOUND)
 
     target_link_libraries(digikamcore
                           PRIVATE
                           Libheif::Libheif
+    )
+
+endif()
+
+if(X265_FOUND)
+
+    target_link_libraries(digikamcore
+                          PRIVATE
+                          ${X265_LIBRARIES}
     )
 
 endif()
