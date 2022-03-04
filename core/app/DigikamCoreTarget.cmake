@@ -267,15 +267,6 @@ if(HEIF_FOUND)
 
 endif()
 
-if(X265_FOUND)
-
-    target_link_libraries(digikamcore
-                          PRIVATE
-                          ${X265_LIBRARIES}
-    )
-
-endif()
-
 if(LensFun_FOUND)
 
     target_link_libraries(digikamcore
