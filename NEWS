@@ -8,4 +8,5 @@ General: remove internal libheif and libde265 from core in favor to system libra
 *****************************************************************************************************
 BUGFIXES:
 
-001 ==> 
+001 ==> 450567 - When editing a group caption, the digiKam does not warn of possible information loss.
+002 ==> 
