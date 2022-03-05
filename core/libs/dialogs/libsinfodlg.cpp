@@ -4,7 +4,7 @@
  * https://www.digikam.org
  *
  * Date        : 2008-07-11
- * Description : shared libraries list dialog
+ * Description : shared libraries list dialog common to digiKam and Showfoto
  *
  * Copyright (C) 2008-2022 by Gilles Caulier <caulier dot gilles at gmail dot com>
  *
@@ -103,7 +103,7 @@ extern "C"
 
 #ifdef HAVE_JASPER
 #   include <jasper/jas_version.h>
-#endif // HAVE_JASPER
+#endif
 
 #include <png.h>
 #include <tiffvers.h>
