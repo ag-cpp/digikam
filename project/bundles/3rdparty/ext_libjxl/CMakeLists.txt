@@ -6,22 +6,26 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 #
 
-set(PREFIX_ext_jpegxl "${EXTPREFIX}")
+set(PREFIX_ext_libjxl "${EXTPREFIX}")
 
 set(JpegXL_Conf -DBUILD_SHARED_LIBS=ON
+                -DBUILD_TESTING=OFF
 )
 
 JoinListAsString("${JpegXL_Conf}" " " BASH_OPTIONS)
 
 if(MINGW)
 
-    ExternalProject_Add(ext_jpegxl
+    ExternalProject_Add(ext_libjxl
         DOWNLOAD_DIR ${EXTERNALS_DOWNLOAD_DIR}
 
         GIT_REPOSITORY https://github.com/libjxl/libjxl.git
         GIT_TAG v0.6.1
 
-        CONFIGURE_COMMAND cp -f ${CMAKE_CURRENT_SOURCE_DIR}/../../../../bootstrap.mxe <SOURCE_DIR>/. &&
+        PATCH_COMMAND ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/jxl-lib-alone.patch
+
+        CONFIGURE_COMMAND git submodule update --init --recursive --depth 1 --recommend-shallow &&
+                          cp -f ${CMAKE_CURRENT_SOURCE_DIR}/../../../../bootstrap.mxe <SOURCE_DIR>/. &&
                           <SOURCE_DIR>/bootstrap.mxe ${MXE_BUILDROOT} RelWithDebInfo ${BASH_OPTIONS}
 
         BUILD_COMMAND cd <SOURCE_DIR>/build.mxe && $(MAKE) -j
@@ -36,7 +40,7 @@ if(MINGW)
 
 elseif(APPLE)
 
-    ExternalProject_Add(ext_jpegxl
+    ExternalProject_Add(ext_libjxl
         DOWNLOAD_DIR ${EXTERNALS_DOWNLOAD_DIR}
 
         # To use official release tarball
@@ -44,8 +48,11 @@ elseif(APPLE)
         GIT_REPOSITORY https://github.com/libjxl/libjxl.git
         GIT_TAG v0.6.1
 
-        CONFIGURE_COMMAND cp -f ${CMAKE_CURRENT_SOURCE_DIR}/../../../../bootstrap.macports <SOURCE_DIR>/. &&
-                          <SOURCE_DIR>/bootstrap.macports ${PREFIX_ext_jpegxl} RelWithDebInfo x86_64 ${BASH_OPTIONS}
+        PATCH_COMMAND ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/jxl-lib-alone.patch
+
+        CONFIGURE_COMMAND git submodule update --init --recursive --depth 1 --recommend-shallow &&
+                          cp -f ${CMAKE_CURRENT_SOURCE_DIR}/../../../../bootstrap.macports <SOURCE_DIR>/. &&
+                          <SOURCE_DIR>/bootstrap.macports ${PREFIX_ext_libjxl} RelWithDebInfo x86_64 ${BASH_OPTIONS}
 
         BUILD_COMMAND cd <SOURCE_DIR>/build && $(MAKE)
 
@@ -59,15 +66,18 @@ elseif(APPLE)
 
 else() # Linux
 
-    ExternalProject_Add(ext_jpegxl
+    ExternalProject_Add(ext_libjxl
         DOWNLOAD_DIR ${EXTERNALS_DOWNLOAD_DIR}
 
         GIT_REPOSITORY https://github.com/libjxl/libjxl.git
         GIT_TAG v0.6.1
 
-        CONFIGURE_COMMAND $(CMAKE_COMMAND) . -DCMAKE_INSTALL_PREFIX=${PREFIX_ext_jpegxl}
+        PATCH_COMMAND ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/jxl-lib-alone.patch
+
+        CONFIGURE_COMMAND git submodule update --init --recursive --depth 1 --recommend-shallow &&
+                          $(CMAKE_COMMAND) . -DCMAKE_INSTALL_PREFIX=${PREFIX_ext_libjxl}
                                              -DCMAKE_BUILD_TYPE=${GLOBAL_BUILD_TYPE}
-                                             -DICONV_INCLUDE_DIR=${PREFIX_ext_jpegxl}/include
+                                             -DICONV_INCLUDE_DIR=${PREFIX_ext_libjxl}/include
                                              ${JpegXL_Conf}
                                              ${GLOBAL_PROFILE}
 
