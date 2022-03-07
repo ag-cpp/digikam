@@ -22,7 +22,7 @@ if(MINGW)
         GIT_REPOSITORY https://github.com/libjxl/libjxl.git
         GIT_TAG v0.6.1
 
-        PATCH_COMMAND ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/jxl-lib-alone.patch
+        PATCH_COMMAND ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/jxl-lib-only.patch
 
         CONFIGURE_COMMAND git submodule update --init --recursive --depth 1 --recommend-shallow &&
                           cp -f ${CMAKE_CURRENT_SOURCE_DIR}/../../../../bootstrap.mxe <SOURCE_DIR>/. &&
@@ -48,7 +48,7 @@ elseif(APPLE)
         GIT_REPOSITORY https://github.com/libjxl/libjxl.git
         GIT_TAG v0.6.1
 
-        PATCH_COMMAND ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/jxl-lib-alone.patch
+        PATCH_COMMAND ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/jxl-lib-only.patch
 
         CONFIGURE_COMMAND git submodule update --init --recursive --depth 1 --recommend-shallow &&
                           cp -f ${CMAKE_CURRENT_SOURCE_DIR}/../../../../bootstrap.macports <SOURCE_DIR>/. &&
@@ -72,7 +72,7 @@ else() # Linux
         GIT_REPOSITORY https://github.com/libjxl/libjxl.git
         GIT_TAG v0.6.1
 
-        PATCH_COMMAND ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/jxl-lib-alone.patch
+        PATCH_COMMAND ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/jxl-lib-only.patch
 
         CONFIGURE_COMMAND git submodule update --init --recursive --depth 1 --recommend-shallow &&
                           $(CMAKE_COMMAND) . -DCMAKE_INSTALL_PREFIX=${PREFIX_ext_libjxl}
@@ -84,6 +84,8 @@ else() # Linux
         BUILD_COMMAND cd <SOURCE_DIR> && $(MAKE)
 
         INSTALL_COMMAND cd <SOURCE_DIR> && $(MAKE) install/fast
+
+        BUILD_IN_SOURCE 1
 
         UPDATE_COMMAND ""
         ALWAYS 0

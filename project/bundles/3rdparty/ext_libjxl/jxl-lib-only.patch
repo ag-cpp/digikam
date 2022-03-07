@@ -58,21 +58,3 @@ index c2790ab..003dee8 100644
  # Binary tools
 -add_subdirectory(tools)
 +#add_subdirectory(tools)
-diff --git a/third_party/brotli b/third_party/brotli
---- a/third_party/brotli
-+++ b/third_party/brotli
-@@ -1 +1 @@
--Subproject commit 35ef5c554d888bef217d449346067de05e269b30
-+Subproject commit 35ef5c554d888bef217d449346067de05e269b30-dirty
-diff --git a/third_party/highway b/third_party/highway
---- a/third_party/highway
-+++ b/third_party/highway
-@@ -1 +1 @@
--Subproject commit e2397743fe092df68b760d358253773699a16c93
-+Subproject commit e2397743fe092df68b760d358253773699a16c93-dirty
-diff --git a/third_party/sjpeg b/third_party/sjpeg
---- a/third_party/sjpeg
-+++ b/third_party/sjpeg
-@@ -1 +1 @@
--Subproject commit 868ab558fad70fcbe8863ba4e85179eeb81cc840
-+Subproject commit 868ab558fad70fcbe8863ba4e85179eeb81cc840-dirty
