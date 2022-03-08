@@ -68,6 +68,7 @@ urpmi --auto \
       cmake \
       ccache \
       gcc-c++ \
+      yasm \
       patch \
       libdrm-devel \
       libxcb \

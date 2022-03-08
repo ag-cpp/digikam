@@ -32,14 +32,6 @@ set(AVIF_Conf -DBUILD_SHARED_LIBS=ON
               -DAVIF_BUILD_TESTS=OFF
 )
 
-if(MINGW)
-
-#    set(AVIF_Conf ${AVIF_Conf}
-#        -DCMAKE_CXX_FLAGS="-DHWY_COMPILE_ONLY_SCALAR"
-#    )
-
-endif()
-
 JoinListAsString("${AVIF_Conf}" " " BASH_OPTIONS_AVIF)
 
 set(AOM_Conf -DBUILD_SHARED_LIBS=ON
@@ -108,6 +100,7 @@ elseif(APPLE)
         CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${PREFIX_ext_libavif}
                    -DCMAKE_BUILD_TYPE=${GLOBAL_BUILD_TYPE}
                    ${GLOBAL_PROFILE}
+                   ${AOM_Conf}
 
         BUILD_IN_SOURCE 1
 
@@ -148,13 +141,12 @@ else() # Linux
         GIT_REPOSITORY https://aomedia.googlesource.com/aom
         GIT_TAG v3.3.0
 
-#        PATCH_COMMAND ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/de265-lib-linux.patch
-
         CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${PREFIX_ext_libavif}
                    -DCMAKE_BUILD_TYPE=${GLOBAL_BUILD_TYPE}
                    ${GLOBAL_PROFILE}
+                   ${AOM_Conf}
 
-        BUILD_IN_SOURCE 1
+        BUILD_IN_SOURCE 0
 
         UPDATE_COMMAND ""
         ALWAYS 0
@@ -168,8 +160,6 @@ else() # Linux
 
         GIT_REPOSITORY https://github.com/AOMediaCodec/libavif.git
         GIT_TAG v0.9.3
-
-#        PATCH_COMMAND ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/jxl-lib-linux.patch
 
         CONFIGURE_COMMAND $(CMAKE_COMMAND) . -DCMAKE_INSTALL_PREFIX=${PREFIX_ext_libavif}
                                              -DCMAKE_BUILD_TYPE=${GLOBAL_BUILD_TYPE}
