@@ -5,6 +5,7 @@ NEW FEATURES:
 
 General: remove internal libheif and libde265 from core in favor to system libraries.
 Bundles: Add JpegXL support (read/write) in all bundles (AppImage, MacOS, and Windows).
+Bundles: Add AVIF/AOM support (read/write) in all bundles (AppImage, MacOS, and Windows).
 
 *****************************************************************************************************
 BUGFIXES:
