@@ -40,11 +40,43 @@ if(MINGW)
 
 endif()
 
-JoinListAsString("${AVIF_Conf}" " " BASH_OPTIONS)
+JoinListAsString("${AVIF_Conf}" " " BASH_OPTIONS_AVIF)
+
+set(AOM_Conf -DBUILD_SHARED_LIBS=ON
+             -DENABLE_EXAMPLES=OFF
+             -DENABLE_TESTS=OFF
+             -DENABLE_TOOLS=OFF
+             -DENABLE_DOCS=OFF
+)
+
+JoinListAsString("${AOM_Conf}" " " BASH_OPTIONS_AOM)
 
 if(MINGW)
 
+    ExternalProject_Add(libaom
+
+        DOWNLOAD_DIR ${EXTERNALS_DOWNLOAD_DIR}
+        GIT_REPOSITORY https://aomedia.googlesource.com/aom
+        GIT_TAG v3.3.0
+
+#        PATCH_COMMAND ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/de265-lib-mxe.patch
+
+        CONFIGURE_COMMAND cp -f ${CMAKE_CURRENT_SOURCE_DIR}/../../../../bootstrap.mxe <SOURCE_DIR>/. &&
+                          <SOURCE_DIR>/bootstrap.mxe ${MXE_BUILDROOT} RelWithDebInfo ${BASH_OPTIONS_AOM}
+
+        BUILD_COMMAND cd <SOURCE_DIR>/build.mxe && $(MAKE)
+
+        BUILD_IN_SOURCE 0
+
+        INSTALL_COMMAND cd <SOURCE_DIR>/build.mxe && $(MAKE) install/fast
+
+        UPDATE_COMMAND ""
+        ALWAYS 0
+    )
+
     ExternalProject_Add(ext_libavif
+        DEPENDS libaom
+
         DOWNLOAD_DIR ${EXTERNALS_DOWNLOAD_DIR}
 
         GIT_REPOSITORY https://github.com/AOMediaCodec/libavif.git
@@ -53,7 +85,7 @@ if(MINGW)
 #        PATCH_COMMAND ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/jxl-lib-mxe.patch
 
         CONFIGURE_COMMAND cp -f ${CMAKE_CURRENT_SOURCE_DIR}/../../../../bootstrap.mxe <SOURCE_DIR>/. &&
-                          <SOURCE_DIR>/bootstrap.mxe ${MXE_BUILDROOT} RelWithDebInfo ${BASH_OPTIONS}
+                          <SOURCE_DIR>/bootstrap.mxe ${MXE_BUILDROOT} RelWithDebInfo ${BASH_OPTIONS_AVIF}
 
         BUILD_COMMAND cd <SOURCE_DIR>/build.mxe && $(MAKE) -j
 
@@ -78,7 +110,7 @@ elseif(APPLE)
  #       PATCH_COMMAND ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/jxl-lib-macports.patch
 
         CONFIGURE_COMMAND cp -f ${CMAKE_CURRENT_SOURCE_DIR}/../../../../bootstrap.macports <SOURCE_DIR>/. &&
-                          <SOURCE_DIR>/bootstrap.macports ${PREFIX_ext_libavif} RelWithDebInfo x86_64 ${BASH_OPTIONS}
+                          <SOURCE_DIR>/bootstrap.macports ${PREFIX_ext_libavif} RelWithDebInfo x86_64 ${BASH_OPTIONS_AVIF}
 
         BUILD_COMMAND cd <SOURCE_DIR>/build && $(MAKE)
 
