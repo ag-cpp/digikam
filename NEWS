@@ -10,4 +10,5 @@ BUGFIXES:
 
 001 ==> 450567 - When editing a group caption, the digiKam does not warn of possible information loss.
 002 ==> 450587 - Inconsistent disabled state of Save action after Undo/Redo.
-003 ==> 
+003 ==> 451256 - An empty album displays a notification message that the database query returned no result.
+004 ==> 
