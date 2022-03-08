@@ -13,7 +13,7 @@ set(AVIF_Conf -DBUILD_SHARED_LIBS=ON
               -DAVIF_CODEC_AOM=ON
               -DAVIF_CODEC_AOM_DECODE=ON
               -DAVIF_CODEC_AOM_ENCODE=ON
-              -DAVIF_LOCAL_AOM=ON
+              -DAVIF_LOCAL_AOM=OFF
               -DAVIF_LOCAL_ZLIBPNG=OFF
               -DAVIF_LOCAL_JPEG=OFF
               -DAVIF_LOCAL_LIBYUV=OFF
@@ -66,7 +66,7 @@ if(MINGW)
 
         BUILD_COMMAND cd <SOURCE_DIR>/build.mxe && $(MAKE)
 
-        BUILD_IN_SOURCE 0
+        BUILD_IN_SOURCE 1
 
         INSTALL_COMMAND cd <SOURCE_DIR>/build.mxe && $(MAKE) install/fast
 
