@@ -72,8 +72,6 @@ if(MINGW)
         GIT_REPOSITORY https://github.com/AOMediaCodec/libavif.git
         GIT_TAG v0.9.3
 
-#        PATCH_COMMAND ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/jxl-lib-mxe.patch
-
         CONFIGURE_COMMAND cp -f ${CMAKE_CURRENT_SOURCE_DIR}/../../../../bootstrap.mxe <SOURCE_DIR>/. &&
                           <SOURCE_DIR>/bootstrap.mxe ${MXE_BUILDROOT} RelWithDebInfo ${BASH_OPTIONS_AVIF}
 
@@ -89,36 +87,14 @@ if(MINGW)
 
 elseif(APPLE)
 
-    ExternalProject_Add(libaom
-
-        DOWNLOAD_DIR ${EXTERNALS_DOWNLOAD_DIR}
-        GIT_REPOSITORY https://aomedia.googlesource.com/aom
-        GIT_TAG v3.3.0
-
-#        PATCH_COMMAND ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/de265-lib-linux.patch
-
-        CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${PREFIX_ext_libavif}
-                   -DCMAKE_BUILD_TYPE=${GLOBAL_BUILD_TYPE}
-                   ${GLOBAL_PROFILE}
-                   ${AOM_Conf}
-
-        BUILD_IN_SOURCE 1
-
-        UPDATE_COMMAND ""
-        ALWAYS 0
-    )
+    # NOTE: libaom is installed with Macports
 
     ExternalProject_Add(ext_libavif
-        DEPENDS libaom
 
         DOWNLOAD_DIR ${EXTERNALS_DOWNLOAD_DIR}
-
-        # To use official release tarball
 
         GIT_REPOSITORY https://github.com/AOMediaCodec/libavif.git
         GIT_TAG v0.9.3
-
- #       PATCH_COMMAND ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/jxl-lib-macports.patch
 
         CONFIGURE_COMMAND cp -f ${CMAKE_CURRENT_SOURCE_DIR}/../../../../bootstrap.macports <SOURCE_DIR>/. &&
                           <SOURCE_DIR>/bootstrap.macports ${PREFIX_ext_libavif} RelWithDebInfo x86_64 ${BASH_OPTIONS_AVIF}

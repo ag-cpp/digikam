@@ -290,6 +290,7 @@ port install \
              py-lxml \
              libheif \
              x265 \
+             aom \
              ffmpeg \
              qt5-qtbase \
              qt5-qtdeclarative \
