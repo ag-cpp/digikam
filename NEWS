@@ -15,4 +15,5 @@ BUGFIXES:
 003 ==> 451256 - An empty album displays a notification message that the database query returned no result.
 004 ==> 451265 - Incorrect information in dialog.
 005 ==> 451221 - Cannot start digiKam.
-006 ==> 
+006 ==> 451289 - Database identifiers should be protected with tick marks.
+007 ==> 
