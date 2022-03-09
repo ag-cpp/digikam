@@ -419,6 +419,11 @@ rm -rf usr/share/ECM/      || true
 rm -rf usr/share/gettext   || true
 rm -rf usr/share/pkgconfig || true
 
+# Special rules for mixed libaom versions.
+# See this comment from Bugzilla for details: https://bugs.kde.org/show_bug.cgi?id=109060#c30
+rm -rf usr/lib/libaom.so.0 || true
+ln -s usr/lib/libaom.so.3 usr/lib/libaom.so.0
+
 #################################################################################################
 # See LFS instruction: http://www.linuxfromscratch.org/lfs/view/systemd/chapter05/stripping.html
 
