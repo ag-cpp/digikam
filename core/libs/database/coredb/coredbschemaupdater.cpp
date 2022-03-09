@@ -62,7 +62,7 @@ int CoreDbSchemaUpdater::schemaVersion()
 
 int CoreDbSchemaUpdater::filterSettingsVersion()
 {
-    return 14;
+    return 15;
 }
 
 int CoreDbSchemaUpdater::uniqueHashVersion()
