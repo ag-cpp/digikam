@@ -5,7 +5,9 @@ NEW FEATURES:
 
 General: remove internal libheif and libde265 from core in favor to system libraries.
 Bundles: Add JpegXL support (read/write) in all bundles (AppImage, MacOS, and Windows).
+         More info about this file format: https://en.wikipedia.org/wiki/JPEG_XL
 Bundles: Add AVIF/AOM support (read/write) in all bundles (AppImage, MacOS, and Windows).
+         More info about this file format: https://en.wikipedia.org/wiki/AVIF
 
 *****************************************************************************************************
 BUGFIXES:
@@ -16,4 +18,5 @@ BUGFIXES:
 004 ==> 451265 - Incorrect information in dialog.
 005 ==> 451221 - Cannot start digiKam.
 006 ==> 451289 - Database identifiers should be protected with tick marks.
-007 ==> 
+007 ==> 436533 - Add JPEG XL support in all bundles (AppImage, MacOS, Windows).
+009 ==> 
