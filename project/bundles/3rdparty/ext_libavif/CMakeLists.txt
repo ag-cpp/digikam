@@ -34,12 +34,27 @@ set(AVIF_Conf -DBUILD_SHARED_LIBS=ON
 
 JoinListAsString("${AVIF_Conf}" " " BASH_OPTIONS_AVIF)
 
-set(AOM_Conf -DBUILD_SHARED_LIBS=ON
-             -DENABLE_EXAMPLES=OFF
+set(AOM_Conf -DENABLE_EXAMPLES=OFF
              -DENABLE_TESTS=OFF
              -DENABLE_TOOLS=OFF
              -DENABLE_DOCS=OFF
+             -DENABLE_TESTDATA=OFF
 )
+
+if(MINGW)
+
+    set(AOM_Conf ${AOM_Conf}
+                 -DBUILD_SHARED_LIBS=ON
+    )
+
+else()
+
+    set(AOM_Conf ${AOM_Conf}
+                 -DBUILD_SHARED_LIBS=OFF
+                 -DCONFIG_PIC=ON
+    )
+
+endif()
 
 JoinListAsString("${AOM_Conf}" " " BASH_OPTIONS_AOM)
 
@@ -124,10 +139,10 @@ else() # Linux
 
         BUILD_IN_SOURCE 0
 
+        INSTALL_COMMAND ""
         UPDATE_COMMAND ""
         ALWAYS 0
     )
-
 
     ExternalProject_Add(ext_libavif
         DEPENDS libaom
@@ -136,6 +151,8 @@ else() # Linux
 
         GIT_REPOSITORY https://github.com/AOMediaCodec/libavif.git
         GIT_TAG v0.9.3
+
+#        PATCH_COMMAND cd <SOURCE_DIR> && ln -s <SOURCE_DIR>
 
         CONFIGURE_COMMAND $(CMAKE_COMMAND) . -DCMAKE_INSTALL_PREFIX=${PREFIX_ext_libavif}
                                              -DCMAKE_BUILD_TYPE=${GLOBAL_BUILD_TYPE}
