@@ -441,7 +441,7 @@ QUrl MetadataWidget::saveMetadataToFile(const QString& caption, const QString& f
 
     // Check for cancel.
 
-    if (fileSaveDialog->selectedUrls().isEmpty())
+    if (!fileSaveDialog || !fileSaveDialog->hasAcceptedUrls())
     {
         delete fileSaveDialog;
 

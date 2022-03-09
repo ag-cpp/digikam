@@ -377,8 +377,9 @@ void PresentationAudioPage::slotSoundFilesButtonAdd()
     dlg->setMimeTypeFilters(atm);
     dlg->setAcceptMode(QFileDialog::AcceptOpen);
     dlg->setFileMode(QFileDialog::ExistingFiles);
+    dlg->exec();
 
-    if (dlg->exec() == QDialog::Accepted)
+    if (dlg && dlg->hasAcceptedUrls())
     {
         addItems(dlg->selectedUrls());
         updateFileList();
@@ -496,8 +497,9 @@ void PresentationAudioPage::slotSoundFilesButtonLoad()
                                                 QString(), i18n("Playlist (*.m3u)"));
     dlg->setAcceptMode(QFileDialog::AcceptOpen);
     dlg->setFileMode(QFileDialog::ExistingFile);
+    dlg->exec();
 
-    if (dlg->exec() != QDialog::Accepted)
+    if (!dlg || !dlg->hasAcceptedUrls())
     {
         delete dlg;
 
@@ -554,8 +556,9 @@ void PresentationAudioPage::slotSoundFilesButtonSave()
                                                 QString(), i18n("Playlist (*.m3u)"));
     dlg->setAcceptMode(QFileDialog::AcceptSave);
     dlg->setFileMode(QFileDialog::AnyFile);
+    dlg->exec();
 
-    if (dlg->exec() != QDialog::Accepted)
+    if (!dlg || !dlg->hasAcceptedUrls())
     {
         delete dlg;
 
