@@ -63,7 +63,12 @@ ThumbnailImage ThumbnailCreator::createThumbnail(const ThumbnailInfo& info, cons
     }
     else
     {
-        if (info.mimeType == QLatin1String("image"))
+        qCDebug(DIGIKAM_GENERAL_LOG) << "Trying to get thumbnail from" << path << "(" << mimeType << ")";
+
+        if (
+            (info.mimeType == QLatin1String("image")) ||
+            (ext           == QLatin1String("AVIF"))
+           )
         {
             if (qimage.isNull())
             {
