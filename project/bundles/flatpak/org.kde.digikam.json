@@ -265,11 +265,11 @@
             "sources": [ { "type": "git", "url": "https://github.com/ImageMagick/ImageMagick.git", "tag": "7.0.10-34" } ]
         },
         {
-            "name": "de265",
+            "name": "x265",
             "buildsystem": "cmake-ninja",
             "builddir": true,
             "subdir" : "source",
-            "sources": [ { "type": "git", "url": "https://github.com/strukturag/libde265.git", "tag": "v1.0.8" } ]
+            "sources": [ { "type": "git", "url": "https://github.com/videolan/x265.git", "tag": "3.4" } ]
         },
         {
             "name": "x265",
@@ -337,7 +337,7 @@
                     "url": "https://github.com/scheckmedia/ImageMosaicWall.git"
                 }
             ]
-        }
+        },
         {
             "name": "flowview",
             "buildsystem": "cmake-ninja",
@@ -345,7 +345,8 @@
             "sources": [
                 {
                     "type": "git",
-                    "url": "https://github.com/cathaysia/digikamflowplugin.git"
+                    "url": "https://github.com/cathaysia/digikamflowplugin.git",
+                    "disable-submodules": false
                 }
             ]
         }
