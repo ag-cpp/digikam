@@ -13,7 +13,6 @@ set(AVIF_Conf -DBUILD_SHARED_LIBS=ON
               -DAVIF_CODEC_AOM=ON
               -DAVIF_CODEC_AOM_DECODE=ON
               -DAVIF_CODEC_AOM_ENCODE=ON
-              -DAVIF_LOCAL_AOM=OFF
               -DAVIF_LOCAL_ZLIBPNG=OFF
               -DAVIF_LOCAL_JPEG=OFF
               -DAVIF_LOCAL_LIBYUV=OFF
@@ -43,15 +42,23 @@ set(AOM_Conf -DENABLE_EXAMPLES=OFF
 
 if(MINGW)
 
+    set(AVIF_Conf ${AVIF_Conf}
+                  -DAVIF_LOCAL_AOM=OFF
+    )
+
     set(AOM_Conf ${AOM_Conf}
                  -DBUILD_SHARED_LIBS=ON
     )
 
 else()
 
+    set(AVIF_Conf ${AVIF_Conf}
+                  -DAVIF_LOCAL_AOM=ON
+    )
+
     set(AOM_Conf ${AOM_Conf}
                  -DBUILD_SHARED_LIBS=OFF
-                 -DCONFIG_PIC=ON
+                 -DCONFIG_PIC=1
     )
 
 endif()
@@ -152,7 +159,18 @@ else() # Linux
         GIT_REPOSITORY https://github.com/AOMediaCodec/libavif.git
         GIT_TAG v0.9.3
 
-#        PATCH_COMMAND cd <SOURCE_DIR> && ln -s <SOURCE_DIR>
+        PATCH_COMMAND cd <SOURCE_DIR>/ext && mkdir -p aom/build.libavif && mkdir -p aom/aom                                                     &&
+                      ln -s <SOURCE_DIR>/../../../libaom-prefix/src/libaom-build/libaom.a               <SOURCE_DIR>/ext/aom/build.libavif/     &&
+                      ln -s <SOURCE_DIR>/../../../libaom-prefix/src/libaom/aom/aom_decoder.h            <SOURCE_DIR>/ext/aom/aom/               &&
+                      ln -s <SOURCE_DIR>/../../../libaom-prefix/src/libaom/aom/aom_encoder.h            <SOURCE_DIR>/ext/aom/aom/               &&
+                      ln -s <SOURCE_DIR>/../../../libaom-prefix/src/libaom/aom/aom_image.h              <SOURCE_DIR>/ext/aom/aom/               &&
+                      ln -s <SOURCE_DIR>/../../../libaom-prefix/src/libaom/aom/aom_integer.h            <SOURCE_DIR>/ext/aom/aom/               &&
+                      ln -s <SOURCE_DIR>/../../../libaom-prefix/src/libaom/aom/aom_codec.h              <SOURCE_DIR>/ext/aom/aom/               &&
+                      ln -s <SOURCE_DIR>/../../../libaom-prefix/src/libaom/aom/aom_frame_buffer.h       <SOURCE_DIR>/ext/aom/aom/               &&
+                      ln -s <SOURCE_DIR>/../../../libaom-prefix/src/libaom/aom/aom_external_partition.h <SOURCE_DIR>/ext/aom/aom/               &&
+                      ln -s <SOURCE_DIR>/../../../libaom-prefix/src/libaom/aom/aomcx.h                  <SOURCE_DIR>/ext/aom/aom/               &&
+                      ln -s <SOURCE_DIR>/../../../libaom-prefix/src/libaom/aom/aomdx.h                  <SOURCE_DIR>/ext/aom/aom/               &&
+                      ln -s <SOURCE_DIR>/../../../libaom-prefix/src/libaom/aom/aom.h                    <SOURCE_DIR>/ext/aom/aom/
 
         CONFIGURE_COMMAND $(CMAKE_COMMAND) . -DCMAKE_INSTALL_PREFIX=${PREFIX_ext_libavif}
                                              -DCMAKE_BUILD_TYPE=${GLOBAL_BUILD_TYPE}
