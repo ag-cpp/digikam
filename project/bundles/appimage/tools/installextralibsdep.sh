@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Script to install extra host dependency pass as name as first argument (ex: "heif")
+# Script to install extra libs dependency pass as name as first argument (ex: "kimageformats")
 # This script must be run as sudo
 #
 # Copyright (c) 2015-2022 by Gilles Caulier  <caulier dot gilles at gmail dot com>
@@ -16,7 +16,7 @@ trap 'echo "FAILED COMMAND: $PREVIOUS_COMMAND"' ERR
 
 if [ -z "$1" ] ; then
 
-    echo "Pass the name of extra dependency to install as first argument (aka 'heif' for ex.)"
+    echo "Pass the name of extra libs dependency to install as first argument (aka 'kimageformats' for ex.)"
     exit
 fi
 
@@ -30,6 +30,7 @@ StartScript
 ChecksCPUCores
 HostAdjustments
 RegisterRemoteServers
+
 ORIG_WD="`pwd`/.."
 
 #################################################################################################
@@ -45,8 +46,7 @@ rm -rf $BUILDING_DIR/* || true
       -DKA_VERSION=$DK_KA_VERSION \
       -DKF5_VERSION=$DK_KF5_VERSION \
       -DENABLE_QTVERSION=$DK_QTVERSION \
-      -DENABLE_QTWEBENGINE=$DK_QTWEBENGINE \
-      -DQTWEBENGINE_VERSION=$DK_QTWEBENGINEVERSION
+      -DENABLE_QTWEBENGINE=$DK_QTWEBENGINE
 
 /opt/cmake/bin/cmake --build . --config RelWithDebInfo --target ext_$1 -- -j$CPU_CORES
 
