@@ -133,6 +133,9 @@ elseif(APPLE)
 
 else() # Linux
 
+    # Special rules for mixed libaom versions hosted in AppImage bundle: build libaom as static library.
+    # See this comment from Bugzilla for details: https://bugs.kde.org/show_bug.cgi?id=109060#c30
+
     ExternalProject_Add(libaom
 
         DOWNLOAD_DIR ${EXTERNALS_DOWNLOAD_DIR}
