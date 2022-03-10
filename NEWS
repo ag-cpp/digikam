@@ -20,4 +20,5 @@ BUGFIXES:
 006 ==> 451289 - Database identifiers should be protected with tick marks.
 007 ==> 436533 - Add JPEG XL support in all bundles (AppImage, MacOS, Windows).
 009 ==> 109060 - Add AVIF file format support to all bundles (AppImage, MacOS, Windows).
-010 ==> 
+010 ==> 451374 - When changing image orientation to portrait in DNG file, the change does not seem to get written to file metadata.
+011 ==> 
