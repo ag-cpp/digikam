@@ -6,6 +6,8 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 #
 
+# NOTE: see build rules at https://github.com/pyke369/sffmpeg/blob/master/CMakeLists.txt
+
 SET(PREFIX_ext_ffmpeg "${EXTPREFIX}")
 
 ExternalProject_Add(ext_ffmpeg
