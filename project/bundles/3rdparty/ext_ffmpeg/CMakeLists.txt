@@ -6,7 +6,10 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 #
 
-# NOTE: see build rules at https://github.com/pyke369/sffmpeg/blob/master/CMakeLists.txt
+# NOTE: see build rules and tips at:
+#       https://github.com/pyke369/sffmpeg/blob/master/CMakeLists.txt
+#       https://www.linuxfromscratch.org/blfs/view/svn/multimedia/ffmpeg.html
+#
 
 SET(PREFIX_ext_ffmpeg "${EXTPREFIX}")
 
