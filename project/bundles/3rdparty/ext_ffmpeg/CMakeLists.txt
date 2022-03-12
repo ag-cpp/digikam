@@ -9,6 +9,7 @@
 # NOTE: see build rules and tips at:
 #       https://github.com/pyke369/sffmpeg/blob/master/CMakeLists.txt
 #       https://www.linuxfromscratch.org/blfs/view/svn/multimedia/ffmpeg.html
+#       https://trac.ffmpeg.org/wiki/CompilationGuide/Ubuntu
 #
 
 SET(PREFIX_ext_ffmpeg "${EXTPREFIX}")
