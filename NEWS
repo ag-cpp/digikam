@@ -22,4 +22,5 @@ BUGFIXES:
 009 ==> 109060 - Add AVIF file format support to all bundles (AppImage, MacOS, Windows).
 010 ==> 451374 - When changing image orientation to portrait in DNG file, the change does not seem to get written to file metadata.
 011 ==> 451460 - Failed to update the database schema from version 10 to version 11.
-012 ==> 
+012 ==> 449406 - Photograph Properties incorrect after saving in image editor.
+013 ==> 
