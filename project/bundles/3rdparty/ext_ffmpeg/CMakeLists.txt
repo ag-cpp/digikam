@@ -27,7 +27,7 @@ ExternalProject_Add(ext_ffmpeg
                                              --enable-nonfree
                                              --disable-doc
                                              --disable-debug
-                                             --disable-ffplay
+                                             --disable-programs
                                              --disable-outdevs
                                              --enable-runtime-cpudetect
                                              --extra-libs=-lstdc++
@@ -40,15 +40,15 @@ ExternalProject_Add(ext_ffmpeg
                                              --enable-libvorbis
                                              --enable-libx264
                                              --enable-libx265
+                                             --enable-libaom
                                              --enable-libxvid
                                              --enable-libvpx
                                              --enable-libopus
                                              --enable-librtmp
                                              --enable-libfreetype
                                              --enable-libass
-                                             --enable-openssl
+                                             --enable-opengl
 
-    INSTALL_COMMAND ""
     UPDATE_COMMAND ""
     ALWAYS 0
 )
