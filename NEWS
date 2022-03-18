@@ -23,4 +23,5 @@ BUGFIXES:
 010 ==> 451374 - When changing image orientation to portrait in DNG file, the change does not seem to get written to file metadata.
 011 ==> 451460 - Failed to update the database schema from version 10 to version 11.
 012 ==> 449406 - Photograph Properties incorrect after saving in image editor.
-013 ==> 
+013 ==> 451660 - digiKam Import Main View - <Ctrl-W>, <Ctr-Esc> and Menu entry "Close" do not close the Window.
+014 ==> 
