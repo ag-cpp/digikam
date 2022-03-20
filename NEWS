@@ -29,4 +29,5 @@ BUGFIXES:
 016 ==> 451545 - Strange tagging after building a new database.
 017 ==> 451347 - Missing Rating info in XMP sidecar, for RAW files.
 018 ==> 450785 - Image version hiding not working.
-019 ==> 
+019 ==> 451723 - Reread metadata from image stalls when started from Tag Manager.
+020 ==> 
