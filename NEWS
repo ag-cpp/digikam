@@ -30,4 +30,5 @@ BUGFIXES:
 017 ==> 451347 - Missing Rating info in XMP sidecar, for RAW files.
 018 ==> 450785 - Image version hiding not working.
 019 ==> 451723 - Reread metadata from image stalls when started from Tag Manager.
-020 ==> 
+020 ==> 451291 - Insuffiecient privileges "ALTER TABLE" crashes digikam.
+021 ==> 
