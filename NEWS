@@ -27,4 +27,5 @@ BUGFIXES:
 014 ==> 451697 - Why does digikam do anything to Thumbnails if tags are changed?
 015 ==> 451628 - digiKam hangs on startup.
 016 ==> 451545 - Strange tagging after building a new database.
-017 ==> 
+017 ==> 451347 - Missing Rating info in XMP sidecar, for RAW files.
+018 ==> 
