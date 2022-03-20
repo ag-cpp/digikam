@@ -25,4 +25,5 @@ BUGFIXES:
 012 ==> 449406 - Photograph Properties incorrect after saving in image editor.
 013 ==> 451660 - digiKam Import Main View - <Ctrl-W>, <Ctr-Esc> and Menu entry "Close" do not close the Window.
 014 ==> 451697 - Why does digikam do anything to Thumbnails if tags are changed?
-015 ==> 
+015 ==> 451628 - digiKam hangs on startup.
+016 ==> 
