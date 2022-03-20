@@ -26,4 +26,5 @@ BUGFIXES:
 013 ==> 451660 - digiKam Import Main View - <Ctrl-W>, <Ctr-Esc> and Menu entry "Close" do not close the Window.
 014 ==> 451697 - Why does digikam do anything to Thumbnails if tags are changed?
 015 ==> 451628 - digiKam hangs on startup.
-016 ==> 
+016 ==> 451545 - Strange tagging after building a new database.
+017 ==> 
