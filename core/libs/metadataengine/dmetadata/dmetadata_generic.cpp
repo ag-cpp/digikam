@@ -344,7 +344,7 @@ QVariant DMetadata::getMetadataField(MetadataInfo::Field field) const
 
         case MetadataInfo::FlashMode:
         {
-            return fromExifOrXmp("Exif.Photo.Flash", "Xmp.exif.Flash");
+            return fromExifOrXmp("Exif.Photo.Flash", "Xmp.exif.Flash/exif:Mode");
         }
 
         case MetadataInfo::WhiteBalance:
