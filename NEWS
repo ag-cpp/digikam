@@ -3,11 +3,13 @@ digiKam 7.7.0 - Release date: 2022-xx-xx
 *****************************************************************************************************
 NEW FEATURES:
 
-General: remove internal libheif and libde265 from core in favor to system libraries.
+General: Remove internal libheif and libde265 from core in favor to system libraries.
 Bundles: Add JpegXL support (read/write) in all bundles (AppImage, MacOS, and Windows).
          More info about this file format: https://en.wikipedia.org/wiki/JPEG_XL
 Bundles: Add AVIF/AOM support (read/write) in all bundles (AppImage, MacOS, and Windows).
          More info about this file format: https://en.wikipedia.org/wiki/AVIF
+Bundles: All bundles uses KF5 frameworks version 5.92.
+Bundles: MacOS package uses Qt framework version 5.15.3.
 
 *****************************************************************************************************
 BUGFIXES:
