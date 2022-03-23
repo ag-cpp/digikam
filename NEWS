@@ -35,4 +35,5 @@ BUGFIXES:
 020 ==> 451291 - Insuffiecient privileges "ALTER TABLE" crashes digikam.
 021 ==> 451786 - Zero sized images on failed move.
 022 ==> 451785 - Map view freezing.
-023 ==> 
+023 ==> 451637 - Crash while extra->maintenance.
+024 ==> 
