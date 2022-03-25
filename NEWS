@@ -36,4 +36,6 @@ BUGFIXES:
 021 ==> 451786 - Zero sized images on failed move.
 022 ==> 451785 - Map view freezing.
 023 ==> 451637 - Crash while extra->maintenance.
-024 ==> 
+024 ==> 386522 - Video decoder backend in digiKam (windows 10).
+025 ==> 418266 - Animated .gif files flicker while looping.
+026 ==> 
