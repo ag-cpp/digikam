@@ -112,6 +112,7 @@ echo 'override MXE_PLUGIN_DIRS += plugins/gcc9' >> settings.mk
 make MXE_TARGETS=$MXE_BUILD_TARGETS \
      openssl \
      cmake \
+     yasm \
      gettext \
      freeglut \
      libxml2 \
@@ -126,6 +127,7 @@ make MXE_TARGETS=$MXE_BUILD_TARGETS \
      eigen \
      jasper \
      zlib \
+     bzip2 \
      mman-win32 \
      pthreads \
      libgphoto2 \
@@ -137,8 +139,20 @@ make MXE_TARGETS=$MXE_BUILD_TARGETS \
      qtwinextras \
      qtscript \
      qtwebkit \
+     fdk-aac \
+     x264 \
      x265 \
-     ffmpeg \
+     xvidcore \
+     libvpx \
+     theora \
+     vorbis \
+     opencore-amr \
+     librtmp \
+     opus \
+     speex \
+     lame \
+     freetype \
+     libass \
      openal \
      libical \
      imagemagick
@@ -170,6 +184,7 @@ rm -rf $BUILDING_DIR/* || true
 ${MXE_BUILD_TARGETS}-cmake $ORIG_WD/../3rdparty \
                            -DMXE_TOOLCHAIN=${MXE_TOOLCHAIN} \
                            -DMXE_BUILDROOT=${MXE_BUILDROOT} \
+                           -DMXE_BUILD_TARGETS=${MXE_BUILD_TARGETS} \
                            -DMXE_ARCHBITS=${MXE_ARCHBITS} \
                            -DMXE_INSTALL_PREFIX=${MXE_INSTALL_PREFIX} \
                            -DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -196,8 +211,9 @@ ${MXE_BUILD_TARGETS}-cmake --build . --config RelWithDebInfo --target ext_libde2
 ${MXE_BUILD_TARGETS}-cmake --build . --config RelWithDebInfo --target ext_libjxl     -- -j$CPU_CORES
 ${MXE_BUILD_TARGETS}-cmake --build . --config RelWithDebInfo --target ext_libaom     -- -j$CPU_CORES
 ${MXE_BUILD_TARGETS}-cmake --build . --config RelWithDebInfo --target ext_libavif    -- -j$CPU_CORES
-${MXE_BUILD_TARGETS}-cmake --build . --config RelWithDebInfo --target ext_drmingw    -- -j$CPU_CORES
+${MXE_BUILD_TARGETS}-cmake --build . --config RelWithDebInfo --target ext_ffmpeg     -- -j$CPU_CORES
 ${MXE_BUILD_TARGETS}-cmake --build . --config RelWithDebInfo --target ext_opencv     -- -j$CPU_CORES
+${MXE_BUILD_TARGETS}-cmake --build . --config RelWithDebInfo --target ext_drmingw    -- -j$CPU_CORES
 
 #################################################################################################
 
