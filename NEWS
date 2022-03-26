@@ -40,4 +40,5 @@ BUGFIXES:
 025 ==> 418266 - Animated .gif files flicker while looping.
 026 ==> 451933 - No access to folders with Flatpak.
 027 ==> 451934 - Cannot move picture to trash.
-028 ==> 
+028 ==> 451943 - digiKam crashes on *.svg file that contains a font that's not installed on the system.
+029 ==> 
