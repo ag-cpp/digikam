@@ -39,4 +39,5 @@ BUGFIXES:
 024 ==> 386522 - Video decoder backend in digiKam (windows 10).
 025 ==> 418266 - Animated .gif files flicker while looping.
 026 ==> 451933 - No access to folders with Flatpak.
-027 ==> 
+027 ==> 451934 - Cannot move picture to trash.
+028 ==> 
