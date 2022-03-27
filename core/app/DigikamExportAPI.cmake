@@ -48,6 +48,8 @@ install(FILES
               ${CMAKE_SOURCE_DIR}/core/libs/dplugins/webservices/wstoolutils.h
               ${CMAKE_SOURCE_DIR}/core/libs/dplugins/webservices/wsitem.h
               ${CMAKE_SOURCE_DIR}/core/libs/dplugins/webservices/wsnewalbumdialog.h
+              ${CMAKE_SOURCE_DIR}/core/libs/dplugins/webservices/wssettingswidget.h
+              ${CMAKE_SOURCE_DIR}/core/libs/dplugins/webservices/wslogindialog.h
 
               ${CMAKE_SOURCE_DIR}/core/utilities/geolocation/geoiface/items/gpsitemcontainer.h
               ${CMAKE_SOURCE_DIR}/core/utilities/geolocation/geoiface/correlator/gpsdatacontainer.h
