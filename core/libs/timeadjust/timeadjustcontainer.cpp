@@ -105,6 +105,7 @@ QDateTime TimeAdjustContainer::getDateTimeFromUrl(const QUrl& url) const
 
     // Do not change the order of the list.
 
+    regExpStrings << QLatin1String("(.+)?([0-9]{8}[T-_][0-9]{6})(.+)?");
     regExpStrings << QLatin1String("(.+)?([0-9]{4}[-_:/]?[0-9]{2}[-_:/]?[0-9]{2})"
                                    "(.+)?([0-9]{2}[-_:.]?[0-9]{2}[-_:.]?[0-9]{2}"
                                    "[-_:.]?[0-9]{3})(.+)?");
@@ -120,6 +121,7 @@ QDateTime TimeAdjustContainer::getDateTimeFromUrl(const QUrl& url) const
     regExpStrings << QLatin1String("(.+)?([0-9]{2}_[0-9]{2} [0-9]{2})(.+)?");
 
     QList <QPair<QString, QString> > formatStrings;
+    formatStrings << qMakePair(QLatin1String("yyyyMMddhhmmss"),    QString());
     formatStrings << qMakePair(QLatin1String("yyyyMMddhhmmsszzz"), QString());
     formatStrings << qMakePair(QLatin1String("yyyyMMddhhmmss"),    QString());
     formatStrings << qMakePair(QLatin1String("ddMMyyyyhhmmss"),    QLatin1String("MMddyyyyhhmmss"));
@@ -151,6 +153,7 @@ QDateTime TimeAdjustContainer::getDateTimeFromUrl(const QUrl& url) const
             dateString.remove(QLatin1Char(':'));
             dateString.remove(QLatin1Char('.'));
             dateString.remove(QLatin1Char('/'));
+            dateString.remove(QLatin1Char('T'));
 
             dateTime = QDateTime::fromString(dateString, format);
 
