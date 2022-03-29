@@ -75,7 +75,7 @@ QMap<QString, QString> DPluginDImg::extraAboutData() const
 
 QString DPluginDImg::extraAboutDataTitle() const
 {
-    return i18n("Type-Mimes");
+    return i18nc("@title", "Type-Mimes");
 }
 
 } // namespace Digikam
