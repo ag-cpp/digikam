@@ -488,6 +488,8 @@ void FaceGroup::slotRejected(const ItemInfo&, const QVariant& faceIdentifier)
 
         item->setFace(FaceTagsIface());
         d->visibilityController->hideAndRemoveItem(item);
+
+        focusRandomFace();
     }
 }
 
@@ -504,6 +506,8 @@ void FaceGroup::slotIgnored(const ItemInfo&, const QVariant& faceIdentifier)
 
         item->setFace(face);
         item->switchMode(AssignNameWidget::ConfirmedMode);
+
+        focusRandomFace();
     }
 }
 
