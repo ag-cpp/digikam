@@ -505,7 +505,7 @@ void FaceGroup::slotIgnored(const ItemInfo&, const QVariant& faceIdentifier)
                                                        FaceTags::ignoredPersonTagId());
 
         item->setFace(face);
-        item->switchMode(AssignNameWidget::ConfirmedMode);
+        item->switchMode(AssignNameWidget::IgnoredMode);
 
         focusRandomFace();
     }
