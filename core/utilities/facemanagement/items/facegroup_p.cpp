@@ -197,7 +197,7 @@ AssignNameWidget* FaceGroup::Private::createAssignNameWidget(const FaceTagsIface
                q, SLOT(slotIgnored(ItemInfo,QVariant)));
 
     q->connect(assignWidget, SIGNAL(ignoredClicked(ItemInfo,QVariant)),
-               q, SLOT(slotIgnoredClicked(ItemInfo,QVariant)));
+               q, SLOT(slotIgnored(ItemInfo,QVariant)));
 
     q->connect(assignWidget, SIGNAL(labelClicked(ItemInfo,QVariant)),
                q, SLOT(slotLabelClicked(ItemInfo,QVariant)));

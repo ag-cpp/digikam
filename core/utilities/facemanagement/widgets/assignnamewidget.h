@@ -190,7 +190,6 @@ protected Q_SLOTS:
     void slotIgnore();
     void slotActionActivated(const TaggingAction& action);
     void slotActionSelected(const TaggingAction& action);
-    void slotIgnoredClicked();
     void slotLabelClicked();
 
 private:
