@@ -29,7 +29,7 @@
 // Qt includes
 
 #include <QList>
-#include <QDebug>
+#include <QMutex>
 
 namespace Digikam
 {
@@ -44,8 +44,10 @@ public:
     {
     }
 
-    float threshold_punish;
-    float weight_punish;
+    float                  threshold_punish;
+    float                  weight_punish;
+
+    QMutex                 mutex;
 
     QList<ResultDetection> detectionResults;
 };
@@ -71,6 +73,8 @@ void ImageQualityCalculator::addDetectionResult(const QString& name,
     result.weight       = weight;
     result.score        = score;
 
+    QMutexLocker locker(&d->mutex);
+
     d->detectionResults.append(result);
 }
 
@@ -91,6 +95,8 @@ void ImageQualityCalculator::normalizeWeight() const
 
 float ImageQualityCalculator::calculateQuality() const
 {
+    QMutexLocker locker(&d->mutex);
+
     if (!numberDetectors())
     {
         return -1;
