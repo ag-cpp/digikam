@@ -89,7 +89,7 @@ BatchToolSettings ConvertToPNG::defaultSettings()
     KConfigGroup group        = config->group(QLatin1String("ImageViewer Settings"));
     int compression           = group.readEntry(QLatin1String("PNGCompression"), 9);
     BatchToolSettings settings;
-    settings.insert(QLatin1String("Quality"), compression);
+    settings.insert(QLatin1String("quality"), compression);
     return settings;
 }
 
@@ -101,7 +101,7 @@ void ConvertToPNG::slotAssignSettings2Widget()
 
     if (PNGBox)
     {
-        PNGBox->setCompressionValue(settings()[QLatin1String("Quality")].toInt());
+        PNGBox->setCompressionValue(settings()[QLatin1String("quality")].toInt());
     }
 
     m_changeSettings = true;
@@ -116,7 +116,7 @@ void ConvertToPNG::slotSettingsChanged()
         if (PNGBox)
         {
             BatchToolSettings settings;
-            settings.insert(QLatin1String("Quality"), PNGBox->getCompressionValue());
+            settings.insert(QLatin1String("quality"), PNGBox->getCompressionValue());
             BatchTool::slotSettingsChanged(settings);
         }
     }
@@ -134,7 +134,7 @@ bool ConvertToPNG::toolOperations()
         return false;
     }
 
-    int PNGCompression = PNGSettings::convertCompressionForLibPng(settings()[QLatin1String("Quality")].toInt());
+    int PNGCompression = PNGSettings::convertCompressionForLibPng(settings()[QLatin1String("quality")].toInt());
     image().setAttribute(QLatin1String("quality"), PNGCompression);
 
     return (savefromDImg());
