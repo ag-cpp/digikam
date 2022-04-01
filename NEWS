@@ -44,4 +44,5 @@ BUGFIXES:
 028 ==> 451943 - digiKam crashes on *.svg file that contains a font that's not installed on the system.
 029 ==> 451924 - digiKam-7.7.0-20220325T121458-Win64.tar.xz crash on start.
 030 ==> 452008 - Timestamp not updated when using File name timestamp.
-031 ==> 
+031 ==> 452103 - Custom keyboard shortcut definitions not persistent.
+032 ==> 
