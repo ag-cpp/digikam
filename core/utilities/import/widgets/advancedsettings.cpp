@@ -107,7 +107,7 @@ AdvancedSettings::AdvancedSettings(QWidget* const parent)
 
 #ifdef HAVE_X265
 
-    d->losslessFormat->insertItem(4, QLatin1String("HEIC"));
+    d->losslessFormat->insertItem(4, QLatin1String("HEIF"));
 
 #endif // HAVE_X265
 
