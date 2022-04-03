@@ -114,7 +114,7 @@ void ConvertToHEIF::slotSettingsChanged()
 
 QString ConvertToHEIF::outputSuffix() const
 {
-    return QLatin1String("heic");
+    return QLatin1String("heif");
 }
 
 bool ConvertToHEIF::toolOperations()

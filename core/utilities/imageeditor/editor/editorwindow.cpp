@@ -284,7 +284,7 @@ void EditorWindow::setupStandardActions()
 
 #ifdef HAVE_X265
 
-    d->plugNewVersionInFormatAction(this, m_saveNewVersionInFormatAction, i18nc("@action:inmenu", "HEIC"),      QLatin1String("HEIC"));
+    d->plugNewVersionInFormatAction(this, m_saveNewVersionInFormatAction, i18nc("@action:inmenu", "HEIF"),      QLatin1String("HEIF"));
 
 #endif // HAVE_X265
 
