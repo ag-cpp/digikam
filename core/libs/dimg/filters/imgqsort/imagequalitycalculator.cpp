@@ -40,7 +40,8 @@ public:
 
     explicit Private()
       : threshold_punish(0.9),
-        weight_punish   (20.0)
+        weight_punish   (20.0),
+        mutex           (QMutex::Recursive)
     {
     }
 
