@@ -171,47 +171,50 @@ SetupVersioning::SetupVersioning(QWidget* const parent)
                                 "<title>Default File Format for Saving</title>"
                                 "<para>Select the file format in which edited images are saved automatically. "
                                 "Format-specific options, like compression settings, "
-                                "can be configured on the <interface>Format Options</interface> tab.</para>"
-                                "<para><list>"
+                                "can be configured on the <interface>Format Options</interface> tab.</para>");
 
-                                // Lossy: JPEG
+    formatHelp.append(QLatin1String("<para><list>"));
 
-                                "<item>"
-                                "<emphasis strong='true'>JPEG</emphasis>: "
-                                "JPEG is the most commonly used file format, but it employs lossy compression, "
-                                "which means that with each saving operation some image information will be irreversibly lost. "
-                                "JPEG offers a good compression rate, resulting in smaller files. "
-                                "</item>"
+    formatHelp.append(xi18nc("@info:whatsthis",
 
-                                // Traditional lossless: PNG, TIFF
+                             // Lossy: JPEG
 
-                                "<item>"
-                                "<emphasis strong='true'>PNG</emphasis>: "
-                                "A widely used format employing lossless compression. "
-                                "The files, though, will be larger because PNG does not achieve very good compression rates."
-                                "</item>"
-                                "<item>"
-                                "<emphasis strong='true'>TIFF</emphasis>: "
-                                "A commonly used format, usually uncompressed or with modest lossless compression. "
-                                "Resulting files will be large, but without quality loss due to compression. "
-                                "</item>"
+                             "<item>"
+                             "<emphasis strong='true'>JPEG</emphasis>: "
+                             "It's the most commonly used file format, but it employs lossy compression, "
+                             "which means that with each saving operation some image information will be irreversibly lost. "
+                             "JPEG offers a good compression rate, resulting in smaller files. "
+                             "</item>"
 
-                                // Modern lossless: PGF, JPEG 2000
+                             // Traditional lossless: PNG, TIFF
 
-                                "<item>"
-                                "<emphasis strong='true'>PGF</emphasis>: "
-                                "This is a technically superior file format offering good compression rates "
-                                "with either lossy or lossless compression. "
-                                "But it is not yet widely used and supported, so your friends may not directly be able to open these files, "
-                                "and you may not be able to directly publish them on the web. "
-                                "</item>");
+                             "<item>"
+                             "<emphasis strong='true'>PNG</emphasis>: "
+                             "A widely used format employing lossless compression. "
+                             "The files, though, will be larger because PNG does not achieve very good compression rates."
+                             "</item>"
+                             "<item>"
+                             "<emphasis strong='true'>TIFF</emphasis>: "
+                             "A commonly used format, usually uncompressed or with modest lossless compression. "
+                             "Resulting files will be large, but without quality loss due to compression. "
+                             "</item>"
+
+                             // Modern lossless: PGF, JPEG 2000
+
+                             "<item>"
+                             "<emphasis strong='true'>PGF</emphasis>: "
+                             "This is a technically superior file format offering good compression rates "
+                             "with either lossy or lossless compression. "
+                             "But it is not yet widely used and supported, so your friends may not directly be able to open these files, "
+                             "and you may not be able to directly publish them on the web. "
+                             "</item>"));
 
 #ifdef HAVE_JASPER
 
     formatHelp.append(xi18nc("@info:whatsthis",
                              "<item>"
                              "<emphasis strong='true'>JPEG 2000</emphasis>: "
-                             "JPEG 2000 is similar to PGF. Loading or saving is slower, the compression rate is better, "
+                             "It's similar to PGF. Loading or saving is slower, the compression rate is better, "
                              "and the format more widely supported, though still not comparable "
                              "to the tradition formats JPEG, PNG or TIFF. "
                              "</item>"));
