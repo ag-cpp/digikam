@@ -220,7 +220,7 @@ void AssignNameWidget::Private::checkWidgets()
                     confirmButton->setToolTip(i18nc("@info:tooltip", "Unmark this face as Ignored"));
 
                     q->connect(confirmButton, SIGNAL(clicked()),
-                               q, SLOT(slotIgnore()));
+                               q, SLOT(slotIgnoredClicked()));
                 }
 
                 if (!rejectButton)
@@ -238,7 +238,7 @@ void AssignNameWidget::Private::checkWidgets()
                 clickLabel->setAlignment(Qt::AlignCenter);
 
                 connect(clickLabel, SIGNAL(activated()),
-                        q, SLOT(slotIgnore()));
+                        q, SLOT(slotIgnoredClicked()));
             }
 
             break;
