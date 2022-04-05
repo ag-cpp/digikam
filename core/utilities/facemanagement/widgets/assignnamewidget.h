@@ -36,7 +36,6 @@ namespace Digikam
 
 class AddTagsComboBox;
 class AddTagsLineEdit;
-class DClickLabel;
 class CheckableAlbumFilterModel;
 class FaceTagsIface;
 class ItemInfo;
@@ -125,7 +124,6 @@ public:
     /// The combo box or line edit in use, if any
     AddTagsComboBox* comboBox()             const;
     AddTagsLineEdit* lineEdit()             const;
-    DClickLabel* clickLabel()               const;
 
 public Q_SLOTS:
 
