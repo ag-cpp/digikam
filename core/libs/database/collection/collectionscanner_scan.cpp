@@ -798,8 +798,8 @@ void CollectionScanner::scanAlbum(const CollectionLocation& location, const QStr
 
                 if (itemDate.isValid())
                 {
-                    if     ((settings.albumDateFrom == MetaEngineSettingsContainer::NewestItemDate) ||
-                            (settings.albumDateFrom == MetaEngineSettingsContainer::AverageDate))
+                    if ((settings.albumDateFrom == MetaEngineSettingsContainer::NewestItemDate) ||
+                        (settings.albumDateFrom == MetaEngineSettingsContainer::AverageDate))
                     {
                         // Change album date only if the item date is newer.
 
@@ -809,8 +809,9 @@ void CollectionScanner::scanAlbum(const CollectionLocation& location, const QStr
                             updateAlbumDate = true;
                         }
                     }
-                    else if ((settings.albumDateFrom == MetaEngineSettingsContainer::OldestItemDate) ||
-                             (settings.albumDateFrom == MetaEngineSettingsContainer::AverageDate))
+
+                    if ((settings.albumDateFrom == MetaEngineSettingsContainer::OldestItemDate) ||
+                        (settings.albumDateFrom == MetaEngineSettingsContainer::AverageDate))
                     {
                         // Change album date only if the item date is older.
 
