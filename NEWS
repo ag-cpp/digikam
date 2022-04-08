@@ -46,4 +46,5 @@ BUGFIXES:
 030 ==> 452008 - Timestamp not updated when using File name timestamp.
 031 ==> 452103 - Custom keyboard shortcut definitions not persistent.
 032 ==> 452323 - digiKam crash after importing photos.
-033 ==> 
+033 ==> 452321 - digiKam Album date after migration from Picasa3.
+034 ==> 
