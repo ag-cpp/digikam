@@ -45,4 +45,7 @@ BUGFIXES:
 029 ==> 451924 - digiKam-7.7.0-20220325T121458-Win64.tar.xz crash on start.
 030 ==> 452008 - Timestamp not updated when using File name timestamp.
 031 ==> 452103 - Custom keyboard shortcut definitions not persistent.
-032 ==> 
+032 ==> 452323 - digiKam crash after importing photos.
+033 ==> 452321 - digiKam Album date after migration from Picasa3.
+034 ==> 122738 - Exiv2 needed to compile.
+035 ==> 
