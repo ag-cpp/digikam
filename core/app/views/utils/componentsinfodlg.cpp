@@ -221,7 +221,7 @@ public:
         {
             QStringList vals = it.value();
 
-            if (vals[1] == QLatin1String("R"))
+            if ((vals.size() > 1) && (vals[1] == QLatin1String("R")))
             {
                 new QTreeWidgetItem(vidDec, QStringList() << it.key() << vals[0]);
             }
@@ -233,7 +233,7 @@ public:
         {
             QStringList vals = it.value();
 
-            if (vals[2] == QLatin1String("W"))
+            if ((vals.size() > 2) && (vals[2] == QLatin1String("W")))
             {
                 new QTreeWidgetItem(vidEnc, QStringList() << it.key() << vals[0]);
             }
@@ -241,14 +241,14 @@ public:
 
         // --- FFMPEG Audio codecs ---
 
-        FFMpegProperties propsAud     = FFMpegConfigHelper::getVideoCodecsProperties();
+        FFMpegProperties propsAud     = FFMpegConfigHelper::getAudioCodecsProperties();
         QTreeWidgetItem* const audDec = new QTreeWidgetItem(ffmpegEntry, QStringList() << i18nc("@item: component info", "Audio Decoders"));
 
         for (FFMpegProperties::const_iterator it = propsAud.constBegin() ; it != propsAud.constEnd() ; ++it)
         {
             QStringList vals = it.value();
 
-            if (vals[1] == QLatin1String("R"))
+            if ((vals.size() > 1) && (vals[1] == QLatin1String("R")))
             {
                 new QTreeWidgetItem(audDec, QStringList() << it.key() << vals[0]);
             }
@@ -260,7 +260,7 @@ public:
         {
             QStringList vals = it.value();
 
-            if (vals[2] == QLatin1String("W"))
+            if ((vals.size() > 2) && (vals[2] == QLatin1String("W")))
             {
                 new QTreeWidgetItem(audEnc, QStringList() << it.key() << vals[0]);
             }
@@ -273,7 +273,10 @@ public:
 
         for (FFMpegProperties::const_iterator it = propsExt.constBegin() ; it != propsExt.constEnd() ; ++it)
         {
-            new QTreeWidgetItem(extEntry, QStringList() << it.key() << it.value()[0]);
+            if (!it.value().isEmpty())
+            {
+                new QTreeWidgetItem(extEntry, QStringList() << it.key() << it.value()[0]);
+            }
         }
 
 #endif
