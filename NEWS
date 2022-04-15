@@ -49,4 +49,5 @@ BUGFIXES:
 033 ==> 452321 - digiKam Album date after migration from Picasa3.
 034 ==> 122738 - Exiv2 needed to compile.
 035 ==> 451868 - Crash while creating quality.
-036 ==> 
+036 ==> 452578 - Cannot set correct image folder when configure.
+037 ==> 
