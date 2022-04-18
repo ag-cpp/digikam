@@ -50,4 +50,5 @@ BUGFIXES:
 034 ==> 122738 - Exiv2 needed to compile.
 035 ==> 451868 - Crash while creating quality.
 036 ==> 452578 - Cannot set correct image folder when configure.
-037 ==> 
+037 ==> 452712 - Appimage for 7.6.0 will not run in Ubuntu 18.04.
+038 ==> 
