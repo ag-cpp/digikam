@@ -51,4 +51,5 @@ BUGFIXES:
 035 ==> 451868 - Crash while creating quality.
 036 ==> 452578 - Cannot set correct image folder when configure.
 037 ==> 452712 - Appimage for 7.6.0 will not run in Ubuntu 18.04.
-038 ==> 
+038 ==> 452677 - The date is passed to iNaturalist in the wrong format.
+039 ==> 
