@@ -380,9 +380,10 @@ LensFunIface::MetadataMatch LensFunIface::findFromMetadata(DMetadata* const meta
 
                 lensMatches = lensMatches.toSet().toList();
             }
-            else
+
+            if (lensMatches.isEmpty())
             {
-                qCDebug(DIGIKAM_DIMG_LOG) << "Lens description string is empty";
+                qCDebug(DIGIKAM_DIMG_LOG) << "Lens description string is empty or no match";
 
                 const LensList lensList = findLenses(d->usedCamera, QString());
 
