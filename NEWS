@@ -54,5 +54,5 @@ BUGFIXES:
 038 ==> 452677 - The date is passed to iNaturalist in the wrong format.
 039 ==> 452947 - From Batch Queue Manager metadata for lens auto-correction are not recognized.
 040 ==> 452577 - Export to Pinterest function does not work and shows a message status:failure,code:11.
-041 ==> 453060 - MWG regions with Type != "Face" are treated as faces.
+041 ==> 
 042 ==> 
