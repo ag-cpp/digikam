@@ -55,4 +55,5 @@ BUGFIXES:
 039 ==> 452947 - From Batch Queue Manager metadata for lens auto-correction are not recognized.
 040 ==> 452577 - Export to Pinterest function does not work and shows a message status:failure,code:11.
 041 ==> 453181 - QMYSQL driver not loaded.
-042 ==> 
+042 ==> 453231 - digiKam does not work anymore after upgrading to ubuntu 22.04.
+043 ==> 
