@@ -57,4 +57,5 @@ BUGFIXES:
 041 ==> 453181 - QMYSQL driver not loaded.
 042 ==> 453231 - digiKam does not work anymore after upgrading to ubuntu 22.04.
 043 ==> 453244 - 7.6.0 Appimage crashes on Ubuntu 22.04.
-044 ==> 
+044 ==> 453249 - Face regions get lost when the file is renamed.
+045 ==> 
