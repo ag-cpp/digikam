@@ -168,7 +168,7 @@ bool DRawDecoder::loadHalfPreview(QImage& image, const QString& path)
         return false;
     }
 
-    qCDebug(DIGIKAM_RAWENGINE_LOG) << "Try to use reduced RAW picture extraction";
+    qCDebug(DIGIKAM_RAWENGINE_LOG) << "Try to use reduced RAW picture extraction" << path;
 
     LibRaw* const raw                 = new LibRaw;
     raw->imgdata.params.use_auto_wb   = 1;         // Use automatic white balance.
@@ -217,7 +217,7 @@ bool DRawDecoder::loadHalfPreview(QByteArray& imgData, const QString& path)
         return false;
     }
 
-    qCDebug(DIGIKAM_RAWENGINE_LOG) << "Try to use reduced RAW picture extraction";
+    qCDebug(DIGIKAM_RAWENGINE_LOG) << "Try to use reduced RAW picture extraction" << path;
 
     LibRaw* const raw = new LibRaw;
 
