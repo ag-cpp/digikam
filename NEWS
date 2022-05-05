@@ -58,4 +58,5 @@ BUGFIXES:
 042 ==> 453231 - digiKam does not work anymore after upgrading to ubuntu 22.04.
 043 ==> 453244 - 7.6.0 Appimage crashes on Ubuntu 22.04.
 044 ==> 453249 - Face regions get lost when the file is renamed.
-045 ==> 
+045 ==> 453418 - Color Profile Default Locations not Correct.
+046 ==> 
