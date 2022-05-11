@@ -60,4 +60,5 @@ BUGFIXES:
 044 ==> 453249 - Face regions get lost when the file is renamed.
 045 ==> 453418 - Color Profile Default Locations not Correct.
 046 ==> 453516 - Crash on Inkscape svg file in Exiv2.
-047 ==> 
+047 ==> 453611 - Showfoto main window freeze and crash at startup.
+048 ==> 
