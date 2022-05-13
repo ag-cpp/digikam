@@ -61,4 +61,5 @@ BUGFIXES:
 045 ==> 453418 - Color Profile Default Locations not Correct.
 046 ==> 453516 - Crash on Inkscape svg file in Exiv2.
 047 ==> 453611 - Showfoto main window freeze and crash at startup.
-048 ==> 
+048 ==> 453617 - Add "Ignore face" button for unrecongised faces in thumbnail view.
+049 ==> 
