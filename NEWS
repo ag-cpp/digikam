@@ -63,4 +63,5 @@ BUGFIXES:
 047 ==> 453611 - Showfoto main window freeze and crash at startup.
 048 ==> 453617 - Add "Ignore face" button for unrecongised faces in thumbnail view.
 049 ==> 453707 - Resizing and then ignoring recognised face ignores the original rectangle and resizes the rectangle for the suggested face.
-050 ==> 
+050 ==> 453817 - digiKam does not detect hugin software as it is now provided as a flatpack, and no more as a classic ppa.
+051 ==> 
