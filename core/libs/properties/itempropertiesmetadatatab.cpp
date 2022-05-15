@@ -116,7 +116,7 @@ ItemPropertiesMetadataTab::ItemPropertiesMetadataTab(QWidget* const parent)
     // ExifTool tab area ----------------------------------
 
     d->exifToolWidget = new ExifToolWidget(this);
-    insertTab(Private::EXIFTOOL, d->exifToolWidget, QLatin1String("ExifTool")); // No i18n here.
+    insertTab(Private::EXIFTOOL, d->exifToolWidget, i18n("ExifTool")); // No i18n here.
 
     connect(d->exifToolWidget, SIGNAL(signalSetupExifTool()),
             this, SIGNAL(signalSetupExifTool()));
