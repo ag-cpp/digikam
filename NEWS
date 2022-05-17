@@ -66,4 +66,5 @@ BUGFIXES:
 050 ==> 453817 - digiKam does not detect hugin software as it is now provided as a flatpack, and no more as a classic ppa.
 051 ==> 453905 - Network Mounts are not functional.
 052 ==> 453888 - Exiftool display of a malformed tag.
-053 ==> 
+053 ==> 453899 - Ccache not detected at digikam git compilation.
+054 ==> 
