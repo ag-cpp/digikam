@@ -68,4 +68,5 @@ BUGFIXES:
 052 ==> 453888 - Exiftool display of a malformed tag.
 053 ==> 453899 - Ccache not detected at digikam git compilation.
 054 ==> 453417 - Color Management not working properly.
-055 ==> 
+055 ==> 453965 - Showfoto crashed while parsing image metadata with Image Magick.
+056 ==> 
