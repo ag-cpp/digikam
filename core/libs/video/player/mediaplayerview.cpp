@@ -298,8 +298,9 @@ MediaPlayerView::MediaPlayerView(QWidget* const parent)
     KConfigGroup group        = config->group("Media Player Settings");
     int volume                = group.readEntry("Volume", 50);
 
-    d->volume->setValue(volume);
     d->player->audio()->setVolume((qreal)volume / 100.0);
+    d->volume->setValue(volume);
+    d->player->audio()->close();
 
     // --------------------------------------------------------------------------
 
@@ -416,6 +417,7 @@ void MediaPlayerView::slotMediaStatusChanged(QtAV::MediaStatus status)
 void MediaPlayerView::escapePreview()
 {
     d->player->stop();
+    d->player->audio()->close();
     d->player->setFile(QString());
 }
 
@@ -587,8 +589,10 @@ void MediaPlayerView::setCurrentItem(const QUrl& url, bool hasPrevious, bool has
 
     if (url.isEmpty())
     {
-        d->currentItem = url;
         d->player->stop();
+        d->currentItem = url;
+        d->player->audio()->close();
+
         return;
     }
 
