@@ -71,4 +71,5 @@ BUGFIXES:
 055 ==> 453965 - Showfoto crashed while parsing image metadata with Image Magick.
 056 ==> 454090 - Prevent computer from sleeping after playing some videos.
 057 ==> 362023 - Extremely slow metadata writing via maintenance.
-058 ==> 
+058 ==> 454279 - Appimage not starting.
+059 ==> 
