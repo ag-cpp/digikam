@@ -72,4 +72,5 @@ BUGFIXES:
 056 ==> 454090 - Prevent computer from sleeping after playing some videos.
 057 ==> 362023 - Extremely slow metadata writing via maintenance.
 058 ==> 454279 - Appimage not starting.
-059 ==> 
+059 ==> 444265 - The plugin MediaWiki crashes by uploading an image.
+060 ==> 
