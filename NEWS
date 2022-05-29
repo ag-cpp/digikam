@@ -73,4 +73,5 @@ BUGFIXES:
 057 ==> 362023 - Extremely slow metadata writing via maintenance.
 058 ==> 454279 - Appimage not starting.
 059 ==> 444265 - The plugin MediaWiki crashes by uploading an image.
-060 ==> 
+060 ==> 454537 - RAW DNG image file (from Adobe Lightroom) with color space conversion to sSRG IEC61966-2.1 and converted to TIFF cannot be read.
+061 ==> 
