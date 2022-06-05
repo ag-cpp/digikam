@@ -81,4 +81,5 @@ BUGFIXES:
 065 ==> 454844 - Cannot read a JPEG produced by Photoshop and acceptable to LightRoom.
 066 ==> 454831 - Sort photos by shooting date.
 067 ==> 454882 - Requirements for MySQL Server omit USER.
-068 ==> 
+068 ==> 454873 - Problems with lensfun and batch.
+069 ==> 
