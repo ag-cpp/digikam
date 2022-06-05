@@ -80,4 +80,5 @@ BUGFIXES:
 064 ==> 454796 - 7.6.0 AppImage fails to start on Ubuntu 22.04 "symbol lookup error: /lib/x86_64-linux-gnu/libgio-2.0.so.0".
 065 ==> 454844 - Cannot read a JPEG produced by Photoshop and acceptable to LightRoom.
 066 ==> 454831 - Sort photos by shooting date.
-067 ==> 
+067 ==> 454882 - Requirements for MySQL Server omit USER.
+068 ==> 
