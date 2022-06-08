@@ -845,8 +845,12 @@ void ItemPropertiesTab::shortenedMakeInfo(QString& make)
     make.remove(QLatin1String(" IMAGING CORP."),     Qt::CaseInsensitive);        // from Olympus
     make.remove(QLatin1String(" Techwin co.,Ltd."),  Qt::CaseInsensitive);        // from Samsung
     make.remove(QLatin1String("  Co.,Ltd."),         Qt::CaseInsensitive);        // from Minolta
+    make.remove(QLatin1String(" Co., Ltd."),         Qt::CaseInsensitive);        // from Minolta
     make.remove(QLatin1String(" Electric Co.,Ltd."), Qt::CaseInsensitive);        // from Sanyo
     make.remove(QLatin1String(" Electric Co.,Ltd"),  Qt::CaseInsensitive);        // from Sanyo
+    make.remove(QLatin1String(" COMPUTER CO.,LTD."), Qt::CaseInsensitive);        // from Casio
+    make.remove(QLatin1String(" COMPUTER CO.,LTD"),  Qt::CaseInsensitive);        // from Casio
+    make = make.trimmed();
 }
 
 void ItemPropertiesTab::shortenedModelInfo(QString& model)
@@ -857,6 +861,7 @@ void ItemPropertiesTab::shortenedModelInfo(QString& model)
     model.remove(QLatin1String(" DIGITAL"),         Qt::CaseInsensitive);        // from Canon
     model.remove(QLatin1String("KODAK "),           Qt::CaseInsensitive);
     model.remove(QLatin1String(" CAMERA"),          Qt::CaseInsensitive);        // from Kodak
+    model = model.trimmed();
 }
 
 /**

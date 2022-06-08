@@ -83,4 +83,5 @@ BUGFIXES:
 067 ==> 454882 - Requirements for MySQL Server omit USER.
 068 ==> 454873 - Problems with lensfun and batch.
 069 ==> 454978 - Search for camera maker does not yield results for certain photos.
-070 ==> 
+070 ==> 455001 - Add case for Casio/Minolta cameras in shortenedMakeInfo (itempropertiestab.cpp).
+071 ==> 
