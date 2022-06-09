@@ -84,4 +84,5 @@ BUGFIXES:
 068 ==> 454873 - Problems with lensfun and batch.
 069 ==> 454978 - Search for camera maker does not yield results for certain photos.
 070 ==> 455001 - Add case for Casio/Minolta cameras in shortenedMakeInfo (itempropertiestab.cpp).
-071 ==> 
+071 ==> 455047 - Renaming folder with different case is detected as a different album.
+072 ==> 
