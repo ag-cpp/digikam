@@ -86,4 +86,5 @@ BUGFIXES:
 070 ==> 455001 - Add case for Casio/Minolta cameras in shortenedMakeInfo (itempropertiestab.cpp).
 071 ==> 455047 - Renaming folder with different case is detected as a different album.
 072 ==> 455057 - Exposure blending fails to preview.
-073 ==> 
+073 ==> 455091 - Renaming files on import loses image order in some cases.
+074 ==> 
