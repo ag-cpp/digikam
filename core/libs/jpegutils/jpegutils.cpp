@@ -586,12 +586,12 @@ void JpegRotator::updateMetadata(const QString& fileName, const MetaEngineRotati
     if (!MetaEngineSettings::instance()->settings().updateFileTimeStamp)
     {
         DFileOperations::copyModificationTime(m_file, fileName);
-
-        // Restore permissions in all cases
-
-        QFile::Permissions permissions = QFile::permissions(m_file);
-        QFile::setPermissions(fileName, permissions);
     }
+
+    // Restore permissions in all cases
+
+    QFile::Permissions permissions = QFile::permissions(m_file);
+    QFile::setPermissions(fileName, permissions);
 }
 
 bool JpegRotator::performJpegTransform(TransformAction action, const QString& src, const QString& dest)
