@@ -87,4 +87,5 @@ BUGFIXES:
 071 ==> 455047 - Renaming folder with different case is detected as a different album.
 072 ==> 455057 - Exposure blending fails to preview.
 073 ==> 455091 - Renaming files on import loses image order in some cases.
-074 ==> 
+074 ==> 455417 - Regression : when batch renaming file (F2), only the first modifier is taken into account.
+075 ==> 
