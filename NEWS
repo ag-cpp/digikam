@@ -88,4 +88,5 @@ BUGFIXES:
 072 ==> 455057 - Exposure blending fails to preview.
 073 ==> 455091 - Renaming files on import loses image order in some cases.
 074 ==> 455417 - Regression : when batch renaming file (F2), only the first modifier is taken into account.
-075 ==> 
+075 ==> 453165 - digiKam crashes before starting faces detection.
+076 ==> 
