@@ -89,4 +89,5 @@ BUGFIXES:
 073 ==> 455091 - Renaming files on import loses image order in some cases.
 074 ==> 455417 - Regression : when batch renaming file (F2), only the first modifier is taken into account.
 075 ==> 453165 - digiKam crashes before starting faces detection.
-076 ==> 
+076 ==> 453971 - Maintenance / Face recognition - digiKam (Not responding).
+077 ==> 
