@@ -90,4 +90,5 @@ BUGFIXES:
 074 ==> 455417 - Regression : when batch renaming file (F2), only the first modifier is taken into account.
 075 ==> 453165 - digiKam crashes before starting faces detection.
 076 ==> 453971 - Maintenance / Face recognition - digiKam (Not responding).
-077 ==> 
+077 ==> 454940 - Exporting PSD files to Google Photos fails under Windows works under Linux.
+078 ==> 
