@@ -218,7 +218,7 @@ LibsInfoDlg::LibsInfoDlg(QWidget* const parent)
 
     ExifToolParser* const parser = new ExifToolParser(this);
     ExifToolParser::ExifToolData parsed;
-
+qCDebug(DIGIKAM_WIDGETS_LOG) << "Testdebug #01";
     if (parser->version())
     {
         parsed            = parser->currentData();
@@ -231,7 +231,7 @@ LibsInfoDlg::LibsInfoDlg(QWidget* const parent)
         new QTreeWidgetItem(m_features, QStringList() <<
                             i18nc(CONTEXT, "ExifTool support") <<           SUPPORTED_NO);
     }
-
+qCDebug(DIGIKAM_WIDGETS_LOG) << "Testdebug #02";
 #ifdef HAVE_LENSFUN
     new QTreeWidgetItem(m_libraries, QStringList() <<
                         i18nc(CONTEXT, "LensFun") <<                        LensFunIface::lensFunVersion());
@@ -239,7 +239,7 @@ LibsInfoDlg::LibsInfoDlg(QWidget* const parent)
     new QTreeWidgetItem(m_features, QStringList() <<
                         i18nc(CONTEXT, "LensFun support") <<                SUPPORTED_NO);
 #endif
-
+qCDebug(DIGIKAM_WIDGETS_LOG) << "Testdebug #03";
 #ifdef HAVE_LIBLQR_1
     new QTreeWidgetItem(m_features, QStringList() <<
                         i18nc(CONTEXT, "LibLqr support") <<                 SUPPORTED_YES);
@@ -255,7 +255,7 @@ LibsInfoDlg::LibsInfoDlg(QWidget* const parent)
     new QTreeWidgetItem(m_features, QStringList() <<
                         i18nc(CONTEXT, "VKontakte support") <<              SUPPORTED_NO);
 #endif
-
+qCDebug(DIGIKAM_WIDGETS_LOG) << "Testdebug #04";
 #ifdef HAVE_IMAGE_MAGICK
     new QTreeWidgetItem(m_libraries, QStringList() <<
                         i18nc(CONTEXT, "ImageMagick codecs") <<             QLatin1String(MagickLibVersionText));
@@ -263,7 +263,7 @@ LibsInfoDlg::LibsInfoDlg(QWidget* const parent)
     new QTreeWidgetItem(m_features, QStringList() <<
                         i18nc(CONTEXT, "ImageMagick codecs support") <<     SUPPORTED_NO);
 #endif
-
+qCDebug(DIGIKAM_WIDGETS_LOG) << "Testdebug #05";
 #ifdef HAVE_HEIF
     new QTreeWidgetItem(m_libraries, QStringList() <<
                         i18nc(CONTEXT, "LibHEIF") <<                        QLatin1String(LIBHEIF_VERSION));
@@ -273,7 +273,7 @@ LibsInfoDlg::LibsInfoDlg(QWidget* const parent)
     new QTreeWidgetItem(m_features, QStringList() <<
                         i18nc(CONTEXT, "HEIF reading support") <<           SUPPORTED_NO);
 #endif
-
+qCDebug(DIGIKAM_WIDGETS_LOG) << "Testdebug #06";
 #ifdef HAVE_X265
     new QTreeWidgetItem(m_libraries, QStringList() <<
                         i18nc(CONTEXT, "Libx265") <<                        QLatin1String(x265_version_str));
@@ -283,34 +283,34 @@ LibsInfoDlg::LibsInfoDlg(QWidget* const parent)
     new QTreeWidgetItem(m_features, QStringList() <<
                         i18nc(CONTEXT, "HEIF writing support") <<           SUPPORTED_NO);
 #endif
-
+qCDebug(DIGIKAM_WIDGETS_LOG) << "Testdebug #07";
     QString tiffver = QLatin1String(TIFFLIB_VERSION_STR);
     tiffver         = tiffver.left(tiffver.indexOf(QLatin1Char('\n')));
     tiffver         = tiffver.section(QLatin1Char(' '), 2, 2);
     new QTreeWidgetItem(m_libraries, QStringList() <<
                         i18nc(CONTEXT, "LibTIFF") <<                        tiffver);
-
+qCDebug(DIGIKAM_WIDGETS_LOG) << "Testdebug #08";
     new QTreeWidgetItem(m_libraries, QStringList() <<
                         i18nc(CONTEXT, "LibPNG") <<                         QLatin1String(PNG_LIBPNG_VER_STRING));
 
     new QTreeWidgetItem(m_libraries, QStringList() <<
                         i18nc(CONTEXT, "LibJPEG") <<                        QString::number(JPEG_LIB_VERSION));
-
+qCDebug(DIGIKAM_WIDGETS_LOG) << "Testdebug #09";
     new QTreeWidgetItem(m_libraries, QStringList() <<
                         i18nc(CONTEXT, "LibCImg") <<                        GreycstorationFilter::cimgVersionString());
-
+qCDebug(DIGIKAM_WIDGETS_LOG) << "Testdebug #10";
     new QTreeWidgetItem(m_libraries, QStringList() <<
                         i18nc(CONTEXT, "LibLCMS") <<                        QString::number(LCMS_VERSION));
-
+qCDebug(DIGIKAM_WIDGETS_LOG) << "Testdebug #11";
     new QTreeWidgetItem(m_libraries, QStringList() <<
                         i18nc(CONTEXT, "LibPGF") <<                         PGFUtils::libPGFVersion());
-
+qCDebug(DIGIKAM_WIDGETS_LOG) << "Testdebug #12";
     new QTreeWidgetItem(m_libraries, QStringList() <<
                         i18nc(CONTEXT, "XMP SDK") <<                        DNGWriter::xmpSdkVersion());
-
+qCDebug(DIGIKAM_WIDGETS_LOG) << "Testdebug #13";
     new QTreeWidgetItem(m_libraries, QStringList() <<
                         i18nc(CONTEXT, "DNG SDK") <<                        DNGWriter::dngSdkVersion());
-
+qCDebug(DIGIKAM_WIDGETS_LOG) << "Testdebug #14";
 #ifdef HAVE_JASPER
     new QTreeWidgetItem(m_libraries, QStringList() <<
                         i18nc(CONTEXT, "LibJasper") <<                      QLatin1String(jas_getversion()));
@@ -318,7 +318,7 @@ LibsInfoDlg::LibsInfoDlg(QWidget* const parent)
     new QTreeWidgetItem(m_features, QStringList() <<
                         i18nc(CONTEXT, "LibJasper support") <<              SUPPORTED_NO);
 #endif
-
+qCDebug(DIGIKAM_WIDGETS_LOG) << "Testdebug #15";
 #ifdef HAVE_MARBLE
     new QTreeWidgetItem(m_libraries, QStringList() <<
                         i18nc(CONTEXT, "Marble") <<                         MapWidget::MarbleWidgetVersion());
@@ -326,7 +326,7 @@ LibsInfoDlg::LibsInfoDlg(QWidget* const parent)
     new QTreeWidgetItem(m_features, QStringList() <<
                         i18nc(CONTEXT, "Marble support") <<                 SUPPORTED_NO);
 #endif
-
+qCDebug(DIGIKAM_WIDGETS_LOG) << "Testdebug #16";
     int nbcore = QThread::idealThreadCount();
     new QTreeWidgetItem(m_features, QStringList() <<
                         i18ncp(CONTEXT, "CPU core", "CPU cores", nbcore) << QString::fromLatin1("%1").arg(nbcore));
@@ -348,7 +348,7 @@ LibsInfoDlg::LibsInfoDlg(QWidget* const parent)
                                 i18nc(CONTEXT, "Memory available") << i18nc("@item: information about memory", "Unknown"));
         }
     }
-
+qCDebug(DIGIKAM_WIDGETS_LOG) << "Testdebug #17";
     // NOTE: MANIFEST.txt is a text file generated with the bundles and listing all git revisions of rolling release components.
     //       One section title start with '+'.
     //       All component revisions are listed below line by line with the name and the revision separated by ':'.
@@ -395,6 +395,7 @@ LibsInfoDlg::LibsInfoDlg(QWidget* const parent)
 
         file.close();
     }
+qCDebug(DIGIKAM_WIDGETS_LOG) << "Testdebug #18";
 }
 
 LibsInfoDlg::~LibsInfoDlg()
