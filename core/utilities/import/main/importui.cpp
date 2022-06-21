@@ -91,6 +91,7 @@
 #include "capturedlg.h"
 #include "collectionlocation.h"
 #include "collectionmanager.h"
+#include "collectionscanner.h"
 #include "componentsinfodlg.h"
 #include "dlogoaction.h"
 #include "coredbdownloadhistory.h"
@@ -1579,9 +1580,9 @@ void ImportUI::slotDownloaded(const QString& folder, const QString& file, int st
 }
 
 void ImportUI::slotDownloadComplete(const QString&, const QString&,
-                                    const QString& destFolder, const QString& destFile)
+                                    const QString& destFolder, const QString&)
 {
-    ScanController::instance()->scannedInfo(destFolder + QLatin1Char('/') + destFile);
+    ScanController::instance()->scheduleCollectionScanRelaxed(destFolder);
     autoRotateItems();
 }
 
@@ -2436,10 +2437,13 @@ void ImportUI::autoRotateItems()
     }
 
     ItemInfoList list;
+    CollectionScanner scanner;
 
     foreach (const QString& downloadPath, d->autoRotateItemsList)
     {
-        list << ItemInfo::fromLocalFile(downloadPath);
+        qlonglong id = scanner.scanFile(downloadPath,
+                                        CollectionScanner::NormalScan);
+        list << ItemInfo(id);
     }
 
     FileActionMngr::instance()->transform(list, MetaEngineRotation::NoTransformation);

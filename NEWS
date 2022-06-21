@@ -91,4 +91,5 @@ BUGFIXES:
 075 ==> 453165 - digiKam crashes before starting faces detection.
 076 ==> 453971 - Maintenance / Face recognition - digiKam (Not responding).
 077 ==> 454940 - Exporting PSD files to Google Photos fails under Windows works under Linux.
-078 ==> 
+078 ==> 455699 - Importing folders with subdirectories creates albums, but they're missing in album view.
+079 ==> 
