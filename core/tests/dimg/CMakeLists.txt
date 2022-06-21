@@ -106,7 +106,6 @@ ecm_add_tests(${CMAKE_CURRENT_SOURCE_DIR}/dimgfilteractionkeys_utest.cpp
 
         ${COMMON_TEST_LINK}
 )
-        
 
 #------------------------------------------------------------------------
 
