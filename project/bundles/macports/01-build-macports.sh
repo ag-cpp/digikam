@@ -284,10 +284,9 @@ port install \
              expat \
              libxml2 \
              libxslt \
-             libical \
              lensfun \
              bison \
-             py-lxml \
+             py38-lxml \
              x265 \
              aom \
              ffmpeg \
@@ -314,8 +313,9 @@ else
 
 fi
 
-
-#             sane-backends
+# port broken since a while. Check later
+#             sane-backends \
+#             libical \
 
 echo -e "\n"
 
