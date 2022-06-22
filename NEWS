@@ -93,3 +93,5 @@ BUGFIXES:
 077 ==> 454940 - Exporting PSD files to Google Photos fails under Windows works under Linux.
 078 ==> 455699 - Importing folders with subdirectories creates albums, but they're missing in album view.
 079 ==> 452508 - Components information crashes digiKam.
+080 ==> 444296 - digiKam starts but does not open a window. Showfoto does the same.
+081 ==> 455050 - digiKam hangs on startup.
