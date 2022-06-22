@@ -1,4 +1,4 @@
-digiKam 7.7.0 - Release date: 2022-xx-xx
+digiKam 7.7.0 - Release date: 2022-06-26
 
 *****************************************************************************************************
 NEW FEATURES:
@@ -92,4 +92,3 @@ BUGFIXES:
 076 ==> 453971 - Maintenance / Face recognition - digiKam (Not responding).
 077 ==> 454940 - Exporting PSD files to Google Photos fails under Windows works under Linux.
 078 ==> 455699 - Importing folders with subdirectories creates albums, but they're missing in album view.
-079 ==> 
