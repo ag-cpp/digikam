@@ -27,13 +27,13 @@ BUGFIXES:
 011 ==> 451460 - Failed to update the database schema from version 10 to version 11.
 012 ==> 449406 - Photograph Properties incorrect after saving in image editor.
 013 ==> 451660 - digiKam Import Main View - <Ctrl-W>, <Ctr-Esc> and Menu entry "Close" do not close the Window.
-014 ==> 451697 - Why does digikam do anything to Thumbnails if tags are changed?
+014 ==> 451697 - Why does digiKam do anything to Thumbnails if tags are changed?
 015 ==> 451628 - digiKam hangs on startup.
 016 ==> 451545 - Strange tagging after building a new database.
 017 ==> 451347 - Missing Rating info in XMP sidecar, for RAW files.
 018 ==> 450785 - Image version hiding not working.
 019 ==> 451723 - Reread metadata from image stalls when started from Tag Manager.
-020 ==> 451291 - Insuffiecient privileges "ALTER TABLE" crashes digikam.
+020 ==> 451291 - Insuffiecient privileges "ALTER TABLE" crashes digiKam.
 021 ==> 451786 - Zero sized images on failed move.
 022 ==> 451785 - Map view freezing.
 023 ==> 451637 - Crash while extra->maintenance.
@@ -66,7 +66,7 @@ BUGFIXES:
 050 ==> 453817 - digiKam does not detect hugin software as it is now provided as a flatpack, and no more as a classic ppa.
 051 ==> 453905 - Network Mounts are not functional.
 052 ==> 453888 - Exiftool display of a malformed tag.
-053 ==> 453899 - Ccache not detected at digikam git compilation.
+053 ==> 453899 - Ccache not detected at digiKam git compilation.
 054 ==> 453417 - Color Management not working properly.
 055 ==> 453965 - Showfoto crashed while parsing image metadata with Image Magick.
 056 ==> 454090 - Prevent computer from sleeping after playing some videos.
