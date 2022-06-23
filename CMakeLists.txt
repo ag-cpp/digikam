@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2010-2020, Gilles Caulier, <caulier dot gilles at gmail dot com>
+# Copyright (c) 2010-2022, Gilles Caulier, <caulier dot gilles at gmail dot com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
@@ -17,7 +17,7 @@ message(STATUS "CMake version: ${VERSION_CMAKE_INFO}")
 
 # digiKam version
 set(DIGIKAM_MAJOR_VERSION "7")
-set(DIGIKAM_MINOR_VERSION "7")
+set(DIGIKAM_MINOR_VERSION "8")
 set(DIGIKAM_PATCH_VERSION "0")
 
 # Suffix to add at end of version string. Usual values are:
