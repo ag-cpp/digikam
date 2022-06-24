@@ -7,4 +7,6 @@ NEW FEATURES:
 *****************************************************************************************************
 BUGFIXES:
 
-001 ==> 
+001 ==> 455805 - At start of digikam: "Your locale has changed since this album was last opened."
+002 ==> 455876 - Handling of image orientation in modern image formats using ExifTool.
+003 ==> 
