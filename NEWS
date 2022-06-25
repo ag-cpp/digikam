@@ -9,4 +9,5 @@ BUGFIXES:
 
 001 ==> 455805 - At start of digikam: "Your locale has changed since this album was last opened."
 002 ==> 455876 - Handling of image orientation in modern image formats using ExifTool.
-003 ==> 
+003 ==> 455859 - digiKam 7.7.0 FTBFS with Qt 5.9 (as in Ubuntu 18.04 Bionic LTS).
+004 ==> 
