@@ -61,7 +61,6 @@ bool DImgQImageLoader::load(const QString& filePath, DImgLoaderObserver* const o
     // progress info are only pseudo values
 
     QImageReader reader(filePath);
-    reader.setAutoTransform(false);
     reader.setDecideFormatFromContent(true);
 
     QByteArray readFormat = reader.format();
