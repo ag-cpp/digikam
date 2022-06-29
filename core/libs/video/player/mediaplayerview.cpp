@@ -645,6 +645,7 @@ void MediaPlayerView::setCurrentItem(const QUrl& url, bool hasPrevious, bool has
     {
         d->player->setFile(d->currentItem.toLocalFile());
         setPreviewMode(Private::PlayerView);
+        d->player->audio()->open();
         d->player->play();
     }
     else
