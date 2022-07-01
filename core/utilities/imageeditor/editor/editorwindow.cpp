@@ -241,7 +241,7 @@ void EditorWindow::setupStandardActions()
                                       i18nc("@action", "Open Original"), this);
     connect(m_openVersionAction, SIGNAL(triggered()), this, SLOT(slotOpenOriginal()));
     ac->addAction(QLatin1String("editorwindow_openversion"), m_openVersionAction);
-    ac->setDefaultShortcuts(m_openVersionAction, QList<QKeySequence>() << Qt::CTRL + Qt::Key_End);
+    ac->setDefaultShortcuts(m_openVersionAction, QList<QKeySequence>() << Qt::CTRL + Qt::SHIFT + Qt::Key_End);
 
     m_saveAction = buildStdAction(StdSaveAction, this, SLOT(saveOrSaveAs()), this);
     ac->addAction(QLatin1String("editorwindow_save"), m_saveAction);
