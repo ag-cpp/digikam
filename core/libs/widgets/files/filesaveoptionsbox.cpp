@@ -246,7 +246,7 @@ DImg::FORMAT FileSaveOptionsBox::discoverFormat(const QString& filename, DImg::F
 
 #ifdef HAVE_X265
 
-    else if (ext.contains(QLatin1String("HEIC")) || ext.contains(QLatin1String("HEIF")))
+    else if (ext.contains(QLatin1String("HEIC")) || ext.contains(QLatin1String("HEIF")) || ext.contains(QLatin1String("HIF")))
     {
         format = DImg::HEIF;
     }

@@ -50,6 +50,7 @@ ThumbnailInfo ThumbnailCreator::fileThumbnailInfo(const QString& path)
              (suffix == QLatin1String("PGF"))             ||
              (suffix == QLatin1String("KRA"))             ||
              (suffix == QLatin1String("CR3"))             ||
+             (suffix == QLatin1String("HIF"))             ||
              (suffix == QLatin1String("HEIC"))            ||
              (suffix == QLatin1String("HEIF")))
     {
