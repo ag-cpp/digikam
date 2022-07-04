@@ -14,4 +14,5 @@ BUGFIXES:
 004 ==> 412778 - digiKam 6.3.0 appimage fails to run on centos 7.6.
 005 ==> 455922 - Appimage fails to start in Fedora 36 - Missing libnsl.so.1.
 006 ==> 456247 - Change MacOS to macOS.
-007 ==> 
+007 ==> 456333 - File transfer terminated resulted 0 byte files to target, while files were deleted from source.
+008 ==> 
