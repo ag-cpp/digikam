@@ -15,4 +15,5 @@ BUGFIXES:
 005 ==> 455922 - Appimage fails to start in Fedora 36 - Missing libnsl.so.1.
 006 ==> 456247 - Change MacOS to macOS.
 007 ==> 456333 - File transfer terminated resulted 0 byte files to target, while files were deleted from source.
-008 ==> 
+008 ==> 456365 - Importing filetype QOI.
+009 ==> 
