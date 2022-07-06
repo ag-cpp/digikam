@@ -17,4 +17,5 @@ BUGFIXES:
 007 ==> 456333 - File transfer terminated resulted 0 byte files to target, while files were deleted from source.
 008 ==> 456365 - Importing filetype QOI.
 009 ==> 397610 - Problem to render greyscale PSD thumbnails.
-010 ==> 
+010 ==> 261088 - PSD 16 Bit images not displayed.
+011 ==> 
