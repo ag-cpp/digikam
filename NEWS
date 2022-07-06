@@ -16,4 +16,5 @@ BUGFIXES:
 006 ==> 456247 - Change MacOS to macOS.
 007 ==> 456333 - File transfer terminated resulted 0 byte files to target, while files were deleted from source.
 008 ==> 456365 - Importing filetype QOI.
-009 ==> 
+009 ==> 397610 - Problem to render greyscale PSD thumbnails.
+010 ==> 
