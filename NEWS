@@ -4,6 +4,7 @@ digiKam 7.8.0 - Release date: 2022-??-??
 NEW FEATURES:
 
 General : HIF files recognized as HEIF images.
+IconView: add support of GrayScale and 16 bits PSD images.
 
 *****************************************************************************************************
 BUGFIXES:
@@ -15,4 +16,17 @@ BUGFIXES:
 005 ==> 455922 - Appimage fails to start in Fedora 36 - Missing libnsl.so.1.
 006 ==> 456247 - Change MacOS to macOS.
 007 ==> 456333 - File transfer terminated resulted 0 byte files to target, while files were deleted from source.
-008 ==> 
+008 ==> 456365 - Importing filetype QOI.
+009 ==> 397610 - Problem to render greyscale PSD thumbnails.
+010 ==> 261088 - PSD 16 Bit images not displayed.
+011 ==> 452032 - Dark mode support on macOS.
+012 ==> 
+013 ==> 
+014 ==> 
+015 ==> 
+016 ==> 
+017 ==> 
+018 ==> 
+019 ==> 
+020 ==> 
+021 ==> 
