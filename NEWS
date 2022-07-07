@@ -19,4 +19,14 @@ BUGFIXES:
 008 ==> 456365 - Importing filetype QOI.
 009 ==> 397610 - Problem to render greyscale PSD thumbnails.
 010 ==> 261088 - PSD 16 Bit images not displayed.
-011 ==> 
+011 ==> 452032 - Dark mode support on macOS.
+012 ==> 
+013 ==> 
+014 ==> 
+015 ==> 
+016 ==> 
+017 ==> 
+018 ==> 
+019 ==> 
+020 ==> 
+021 ==> 
