@@ -124,6 +124,7 @@ echo "---------- Configure digiKam $DK_VERSION"
       -DCMAKE_BUILD_TYPE=RelWithDebInfo \
       -DCMAKE_INSTALL_PREFIX=/usr \
       -DBUILD_TESTING=OFF \
+      -DBUILD_WITH_CCACHE=ON \
       -DDIGIKAMSC_CHECKOUT_PO=ON \
       -DDIGIKAMSC_CHECKOUT_DOC=OFF \
       -DDIGIKAMSC_COMPILE_PO=ON \
