@@ -58,6 +58,7 @@
 
 #include "digikam_debug.h"
 #include "digikam_globals.h"
+#include "dservicemenu.h"
 #include "progressmanager.h"
 #include "metaenginesettings.h"
 
@@ -150,6 +151,20 @@ void DFileOperations::openFilesWithDefaultApplication(const QList<QUrl>& urls)
     {
         return;
     }
+
+#ifdef Q_OS_LINUX
+
+    KService::List offers = DServiceMenu::servicesForOpenWith(urls);
+
+    if (!offers.isEmpty())
+    {
+        KService::Ptr service = offers.first();
+        DServiceMenu::runFiles(service, urls);
+
+        return;
+    }
+
+#endif
 
     foreach (const QUrl& url, urls)
     {

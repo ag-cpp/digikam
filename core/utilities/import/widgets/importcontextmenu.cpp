@@ -311,7 +311,7 @@ void ImportContextMenuHelper::slotOpenWith(QAction* action)
         service = d->servicesMap[name];
     }
 
-    DServiceMenu::runFiles(service.data(), list);
+    DServiceMenu::runFiles(service, list);
 }
 
 void ImportContextMenuHelper::addRotateMenu(itemIds& /*ids*/)
