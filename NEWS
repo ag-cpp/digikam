@@ -21,7 +21,7 @@ BUGFIXES:
 010 ==> 261088 - PSD 16 Bit images not displayed.
 011 ==> 452032 - Dark mode support on macOS.
 012 ==> 456347 - Delete does not work anymore.
-013 ==> 
+013 ==> 456481 - Open with default program -button opens multiple editor windows.
 014 ==> 
 015 ==> 
 016 ==> 
