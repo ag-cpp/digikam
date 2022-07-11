@@ -23,7 +23,7 @@ BUGFIXES:
 012 ==> 456347 - Delete does not work anymore.
 013 ==> 456481 - Open with default program -button opens multiple editor windows.
 014 ==> 456592 - No "remove all filters" command available.
-015 ==> 
+015 ==> 456545 - The "handles" in the scroll bars are too inconspicuous.
 016 ==> 
 017 ==> 
 018 ==> 
