@@ -22,7 +22,7 @@ BUGFIXES:
 011 ==> 452032 - Dark mode support on macOS.
 012 ==> 456347 - Delete does not work anymore.
 013 ==> 456481 - Open with default program -button opens multiple editor windows.
-014 ==> 
+014 ==> 456592 - No "remove all filters" command available.
 015 ==> 
 016 ==> 
 017 ==> 
