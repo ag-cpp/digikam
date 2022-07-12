@@ -21,8 +21,8 @@ ENDIF()
 ExternalProject_Add(ext_qt
     DOWNLOAD_DIR ${EXTERNALS_DOWNLOAD_DIR}
 
-    URL https://download.qt.io/official_releases/qt/5.15/5.15.2/single/qt-everywhere-src-5.15.2.tar.xz
-    URL_MD5 e1447db4f06c841d8947f0a6ce83a7b5
+    URL https://download.qt.io/official_releases/qt/5.15/5.15.5/single/qt-everywhere-src-5.15.5.tar.xz
+    URL_MD5 0fbcde36556a366df8ecf24a7ea1f7ec
 
     PATCH_COMMAND ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/qt-appimage-support.patch
                && ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/qt-appimage-openssl-linked.patch
@@ -73,7 +73,6 @@ ExternalProject_Add(ext_qt
                   -skip qtlottie                    # No need Adobe QtQuick After Effect animations integration
                   -skip qtmacextras                 # For MacOS devices only
                   -skip qtmultimedia                # No need multimedia support (replaced by QtAV+ffmpeg)
-                  -skip qtnetworkauth               # No need network authentication support.
                   -skip qtpurchasing                # No need in-app purchase of products support
                   -skip qtquickcontrols2            # QtQuick support for QML
                   -skip qtremoteobjects             # No need sharing QObject properties between processes support

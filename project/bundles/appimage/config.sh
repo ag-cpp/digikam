@@ -41,11 +41,11 @@ DK_BUILDTEMP=$BUILDING_DIR/dktemp
 
 # KDE Application version.
 # See official release here: https://download.kde.org/stable/release-service/
-DK_KA_VERSION="22.04.2"
+DK_KA_VERSION="22.04.3"
 
 # KDE KF5 frameworks version.
 # See official release here: https://download.kde.org/stable/frameworks/
-DK_KF5_VERSION="5.95"
+DK_KF5_VERSION="5.96"
 
 # ExifTool Linux version to embed in the bundle.
 DK_EXIFTOOL_VERSION="12.43"
@@ -56,9 +56,9 @@ DK_EXIFTOOL_VERSION="12.43"
 # Installer will include or not digiKam debug symbols
 DK_DEBUG=0
 
-# Qt version to use in bundle. Possible values: 5.15, 5.15-LTS, 6.2
-DK_QTVERSION="5.15-LTS"
-#DK_QTVERSION="6.2"
+# Qt version to use in bundle. Possible values: 5.15, 5.15-LTS
+#DK_QTVERSION="5.15-LTS"
+DK_QTVERSION="5.15"
 
 # QtWebEngine version to use in bundle when 5.15-LTS is used.
 DK_QTWEBENGINEVERSION="5.15.9"
