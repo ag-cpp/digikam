@@ -183,7 +183,7 @@ else()
     set(BreezeIconsOptions -DBINARY_ICONS_RESOURCE=ON)
 endif()
 
-InstallKF5Component(extra-cmake-modules ${KF5_VERSION} ""                                                                   "")
+InstallKF5Component(extra-cmake-modules ${KF5_VERSION} ""                                                                   "extracmakemodules-compiler-options.patch")
 InstallKF5Component(kconfig             ${KF5_VERSION} ""                                                                   "")
 InstallKF5Component(breeze-icons        ${KF5_VERSION} "${BreezeIconsOptions}"                                              "breeze-dropsvg-rccprefix.patch")
 InstallKF5Component(solid               ${KF5_VERSION} ""                                                                   "")
