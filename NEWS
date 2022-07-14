@@ -4,7 +4,9 @@ digiKam 7.8.0 - Release date: 2022-??-??
 NEW FEATURES:
 
 General : HIF files recognized as HEIF images.
-IconView: add support of GrayScale and 16 bits PSD images.
+IconView: Add support of GrayScale and 16 bits PSD images.
+Bundles : AppImage ported to Qt5 5.15.5
+Bundles : all bundles ported to KF5 5.96
 
 *****************************************************************************************************
 BUGFIXES:
