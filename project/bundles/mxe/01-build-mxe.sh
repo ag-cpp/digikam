@@ -161,10 +161,11 @@ make MXE_TARGETS=$MXE_BUILD_TARGETS \
      freetype \
      libass \
      openal \
-     libical \
      fftw \
      libltdl \
      openexr
+
+#     libical \
 
 echo -e "\n"
 
