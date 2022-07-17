@@ -93,7 +93,7 @@ echo "-----------------------------"
 echo "Coverity Scan tarball 'myproject.tgz' uploading in progress..."
 
 # To be sure that resolve domain is in cache
-nslookup scan5.coverity.com
+nslookup scan.coverity.com
 
 # To measure uploading time
 SECONDS=0
