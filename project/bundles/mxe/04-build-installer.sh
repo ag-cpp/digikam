@@ -243,11 +243,11 @@ fi
 
 cd $DOWNLOAD_DIR
 
-if [ ! -f $DOWNLOAD_DIR/exiftool-$DK_EXIFTOOL_VERSION.zip ] ; then
-    wget https://files.kde.org/digikam/exiftool/exiftool-$DK_EXIFTOOL_VERSION.zip -O exiftool-$DK_EXIFTOOL_VERSION.zip
-fi
+#if [ ! -f $DOWNLOAD_DIR/exiftool.zip ] ; then
+    wget https://files.kde.org/digikam/exiftool/exiftool.zip -O exiftool.zip
+#fi
 
-unzip -o $DOWNLOAD_DIR/exiftool-$DK_EXIFTOOL_VERSION.zip -d $BUNDLEDIR
+unzip -o $DOWNLOAD_DIR/exiftool.zip -d $BUNDLEDIR
 mv "$BUNDLEDIR/exiftool(-k).exe" "$BUNDLEDIR/exiftool.exe"
 
 #################################################################################################
