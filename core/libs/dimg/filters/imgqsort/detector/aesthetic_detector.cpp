@@ -51,14 +51,10 @@ public:
     
 };
 
-AestheticDetector::AestheticDetector(const DImg& image)
+AestheticDetector::AestheticDetector()
     : DetectorDistortion(),
       d                 (new Private)
 {
-    QScopedPointer<FocusPointsExtractor> const extractor (new FocusPointsExtractor(nullptr, image.originalFilePath()));
-
-    d->af_points         = extractor->get_af_points(FocusPoint::TypePoint::Selected);
-    d->have_focus_region = !d->af_points.isEmpty();
 }
 
 AestheticDetector::~AestheticDetector()
@@ -68,29 +64,7 @@ AestheticDetector::~AestheticDetector()
 
 float AestheticDetector::detect(const cv::Mat& image) const
 {
-    cv::Mat edgesMap      = edgeDetection(image);
-
-    cv::Mat defocusMap    = detectDefocusMap(edgesMap);
-    defocusMap.convertTo(defocusMap, CV_8U);
-
-    cv::Mat motionBlurMap = detectMotionBlurMap(edgesMap);
-    motionBlurMap.convertTo(motionBlurMap, CV_8U);
-
-    cv::Mat weightsMat    = getWeightMap(image);
-
-    cv::Mat blurMap       = defocusMap + motionBlurMap;
-
-    cv::Mat res           = weightsMat.mul(blurMap);
-
-    int totalPixels       = cv::countNonZero(weightsMat);
-
-    int blurPixel         = cv::countNonZero(res);
-
-    float percentBlur     = float(blurPixel) / float(totalPixels);
-
-    qCDebug(DIGIKAM_DIMG_LOG) << "percentage of blur" << percentBlur;
-
-    return percentBlur;
+    
 }
 
 
