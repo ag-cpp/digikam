@@ -31,6 +31,7 @@
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui.hpp>
 #include "opencv2/dnn.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
 #include <filesystem>
 
 // Local includes
@@ -41,12 +42,19 @@ int main(int argc, char** argv)
 {
     QApplication app(argc, argv);
 
+    // Load and preprocess image
 	cv::Mat img = cv::imread(argv[1]);
     if (img.empty()) {
         qDebug() << "Parse image to calculate quality score";
         qDebug() << "Usage: <image file>";
         return -1;
     }
+    cv::Mat img_rgb;
+    cv::cvtColor(img, img_rgb, cv::COLOR_BGR2RGB);
+	cv::Mat cv_resized;
+	cv::resize(img_rgb, cv_resized, cv::Size(224, 224), 0, 0, cv::INTER_NEAREST_EXACT);
+
+    // Serve model
 	cv::dnn::Net net = cv::dnn::readNetFromTensorflow(argv[2]);
     if (net.empty()) {
         qDebug() << "Parse net to calculate quality score";
@@ -54,11 +62,12 @@ int main(int argc, char** argv)
         return -1;
     }
 
-	cv::Mat blob = cv::dnn::blobFromImage(img, 1, cv::Size(224, 224), cv::Scalar(0, 0, 0), false, false);
+	cv::Mat blob = cv::dnn::blobFromImage(cv_resized, 1, cv::Size(224, 224), cv::Scalar(0, 0, 0), false, false);
 	net.setInput(blob);
 	cv::Mat out = net.forward();
     float tmp[10] = {0,1,2,3,4,5,6,7,8,9};
     
+    // Post process 
     cv::Mat scale(1, 10, out.type(), tmp);
     cv::Scalar score = cv::sum(out.mul(scale));
     
