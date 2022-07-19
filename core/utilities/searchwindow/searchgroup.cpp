@@ -298,9 +298,12 @@ void SearchGroup::read(SearchXmlCachingReader& reader)
 
             foreach (fieldGroup, m_fieldGroups)
             {
-                if ((field = fieldGroup->fieldForName(name)))
+                if (fieldGroup)
                 {
-                    break;
+                    if ((field = fieldGroup->fieldForName(name)))
+                    {
+                        break;
+                    }
                 }
             }
 
