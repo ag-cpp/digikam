@@ -53,6 +53,9 @@ int main(int argc, char** argv)
     cv::cvtColor(img, img_rgb, cv::COLOR_BGR2RGB);
 	cv::Mat cv_resized;
 	cv::resize(img_rgb, cv_resized, cv::Size(224, 224), 0, 0, cv::INTER_NEAREST_EXACT);
+	cv_resized.convertTo(cv_resized, CV_32FC3);
+	cv_resized = cv_resized.mul(1.0 / float(127.5));
+	subtract(cv_resized, cv::Scalar(1, 1, 1), cv_resized);
 
     // Serve model
 	cv::dnn::Net net = cv::dnn::readNetFromTensorflow(argv[2]);
@@ -61,15 +64,15 @@ int main(int argc, char** argv)
         qDebug() << "Usage: <image file>";
         return -1;
     }
-
 	cv::Mat blob = cv::dnn::blobFromImage(cv_resized, 1, cv::Size(224, 224), cv::Scalar(0, 0, 0), false, false);
 	net.setInput(blob);
 	cv::Mat out = net.forward();
-    float tmp[10] = {0,1,2,3,4,5,6,7,8,9};
     
-    // Post process 
-    cv::Mat scale(1, 10, out.type(), tmp);
-    cv::Scalar score = cv::sum(out.mul(scale));
-    
-    std::cout << "score : " << score[0] << "\n";
+    // Post processs
+    std::cout << "score : " << out << "\n";
+    double min=0, max=0;
+    cv::Point minLoc, maxLoc;
+    cv::minMaxLoc(out, &min, &max, &minLoc, &maxLoc);
+    std::cout << "class : " << maxLoc << "\n";
+
 }
