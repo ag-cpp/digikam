@@ -159,7 +159,7 @@ void DatabaseSettingsWidget::setupMainArea()
 #ifdef Q_OS_WIN
 
     d->dbBinariesWidget->addDirectory(QLatin1String("C:/Program Files/MariaDB 10.5/bin"));
-    d->dbBinariesWidget->addDirectory(QLatin1String("C:/Program Files (x86/MariaDB 10.5/bin"));
+    d->dbBinariesWidget->addDirectory(QLatin1String("C:/Program Files (x86)/MariaDB 10.5/bin"));
 
 #endif
 
