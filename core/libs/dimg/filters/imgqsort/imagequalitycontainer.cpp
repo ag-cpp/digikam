@@ -41,6 +41,7 @@ ImageQualityContainer::ImageQualityContainer()
       detectNoise       (true),
       detectCompression (true),
       detectExposure    (true),
+      detectAesthetic   (false),
       lowQRejected      (true),
       mediumQPending    (true),
       highQAccepted     (true),
@@ -61,6 +62,7 @@ ImageQualityContainer::ImageQualityContainer(const ImageQualityContainer& other)
       detectNoise       (other.detectNoise),
       detectCompression (other.detectCompression),
       detectExposure    (other.detectExposure),
+      detectAesthetic   (other.detectAesthetic),
       lowQRejected      (other.lowQRejected),
       mediumQPending    (other.mediumQPending),
       highQAccepted     (other.highQAccepted),
@@ -82,6 +84,7 @@ ImageQualityContainer& ImageQualityContainer::operator=(const ImageQualityContai
     detectNoise        = other.detectNoise;
     detectCompression  = other.detectCompression;
     detectExposure     = other.detectExposure;
+    detectAesthetic    = other.detectAesthetic;
     lowQRejected       = other.lowQRejected;
     mediumQPending     = other.mediumQPending;
     highQAccepted      = other.highQAccepted;
@@ -111,6 +114,7 @@ void ImageQualityContainer::readFromConfig()
     detectNoise               = group.readEntry("Detect Noise",       true);
     detectCompression         = group.readEntry("Detect Compression", true);
     detectExposure            = group.readEntry("Detect Exposure",    true);
+    detectAesthetic           = group.readEntry("Detect aesthetic",   true);
     lowQRejected              = group.readEntry("LowQ Rejected",      true);
     mediumQPending            = group.readEntry("MediumQ Pending",    true);
     highQAccepted             = group.readEntry("HighQ Accepted",     true);
@@ -134,6 +138,7 @@ void ImageQualityContainer::writeToConfig()
     group.writeEntry("Detect Noise",        detectNoise);
     group.writeEntry("Detect Compression",  detectCompression);
     group.writeEntry("Detect Exposure",     detectExposure);
+    group.writeEntry("Detect aesthetic",    detectAesthetic);
     group.writeEntry("LowQ Rejected",       lowQRejected);
     group.writeEntry("MediumQ Pending",     mediumQPending);
     group.writeEntry("HighQ Accepted",      highQAccepted);
@@ -155,6 +160,7 @@ QDebug operator<<(QDebug dbg, const ImageQualityContainer& s)
     dbg.nospace() << "DetectNoise        :" << s.detectNoise        << QT_ENDL;
     dbg.nospace() << "DetectCompression  :" << s.detectCompression  << QT_ENDL;
     dbg.nospace() << "DetectExposure     :" << s.detectExposure     << QT_ENDL;
+    dbg.nospace() << "DetectAesthetic    :" << s.detectAesthetic    << QT_ENDL;
     dbg.nospace() << "LowQRejected       :" << s.lowQRejected       << QT_ENDL;
     dbg.nospace() << "MediumQPending     :" << s.mediumQPending     << QT_ENDL;
     dbg.nospace() << "HighQAccepted      :" << s.highQAccepted      << QT_ENDL;

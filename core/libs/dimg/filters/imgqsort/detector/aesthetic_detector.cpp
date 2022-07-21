@@ -22,7 +22,7 @@
  *
  * ============================================================ */
 
-#include "asthetic_detector.h"
+#include "aesthetic_detector.h"
 
 // Qt includes
 
@@ -38,17 +38,9 @@ public:
 
     explicit Private()
     {
-        float tmp[10] = {0,1,2,3,4,5,6,7,8,9};
-        scale = cv::Mat(1, 10, out.type(), tmp);
-
-        model = cv::dnn::readNetFromTensorflow();
+        model = cv::dnn::readNetFromTensorflow("/home/lephuock/Downloads/iqs_digikam/weights_inceptionresnetv2_08_0.910.hdf5.pb");
     }
-
-    string model_path;
-    cv::mat scale;
     cv::dnn::Net model;
-
-    
 };
 
 AestheticDetector::AestheticDetector()
@@ -64,8 +56,40 @@ AestheticDetector::~AestheticDetector()
 
 float AestheticDetector::detect(const cv::Mat& image) const
 {
+    cv::Mat input = this->preprocess(image);
+    
+    d->model.setInput(input);
+    cv::Mat out = d->model.forward();
+    
+    return this->postProcess(out);
     
 }
+
+cv::Mat AestheticDetector::preprocess(const cv::Mat& image) const
+{
+    cv::Mat img_rgb;
+    cv::cvtColor(image, img_rgb, cv::COLOR_BGR2RGB);
+    cv::Mat cv_resized;
+    cv::resize(img_rgb, cv_resized, cv::Size(224, 224), 0, 0, cv::INTER_NEAREST_EXACT);
+    cv_resized.convertTo(cv_resized, CV_32FC3);
+    cv_resized = cv_resized.mul(1.0 / float(127.5));
+    subtract(cv_resized, cv::Scalar(1, 1, 1), cv_resized);
+
+    cv::Mat blob = cv::dnn::blobFromImage(cv_resized, 1, cv::Size(224, 224), cv::Scalar(0, 0, 0), false, false);
+
+    return blob;
+}
+
+float AestheticDetector::postProcess(const cv::Mat& modelOutput) const
+{
+    std::cout << "score : " << modelOutput << "\n";
+    double min=0, max=0;
+    cv::Point minLoc, maxLoc;
+    cv::minMaxLoc(modelOutput, &min, &max, &minLoc, &maxLoc);
+    std::cout << "class : " << maxLoc << "\n";
+    return float(maxLoc.x);
+}
+
 
 
 }

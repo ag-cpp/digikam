@@ -61,6 +61,7 @@ public:
         detectNoise         (nullptr),
         detectCompression   (nullptr),
         detectExposure      (nullptr),
+        detectAesthetic     (nullptr),
         setRejected         (nullptr),
         setPending          (nullptr),
         setAccepted         (nullptr),
@@ -81,6 +82,7 @@ public:
     QCheckBox*    detectNoise;
     QCheckBox*    detectCompression;
     QCheckBox*    detectExposure;
+    QCheckBox*    detectAesthetic;
     QCheckBox*    setRejected;
     QCheckBox*    setPending;
     QCheckBox*    setAccepted;
