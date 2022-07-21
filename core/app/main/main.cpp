@@ -45,6 +45,7 @@
 #include <ksharedconfig.h>
 #include <kconfiggroup.h>
 #include <kaboutdata.h>
+#include <ksycoca.h>
 
 // ImageMagick includes
 
@@ -411,6 +412,8 @@ int main(int argc, char* argv[])
     {
         digikam->autoDetect();
     }
+
+    qCDebug(DIGIKAM_GENERAL_LOG) << "Local KSycoca database file:" <<  KSycoca::absoluteFilePath();
 
     int ret = app.exec();
 
