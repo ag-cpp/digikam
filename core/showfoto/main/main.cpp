@@ -147,6 +147,8 @@ int main(int argc, char* argv[])
     QString iconTheme         = group.readEntry(QLatin1String("Icon Theme"), QString());
     QString colorTheme        = group.readEntry(QLatin1String("Theme"), QString::fromLatin1("Standard"));
 
+    setupKSycocaDatabaseFile();
+
     // See bug #438701
 
     installQtTranslationFiles(app);

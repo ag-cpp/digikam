@@ -228,6 +228,11 @@ DIGIKAM_EXPORT void loadEcmQtTranslationFiles(QApplication& app);
  */
 DIGIKAM_EXPORT void installQtTranslationFiles(QApplication& app);
 
+/**
+ * For bundles only, find or set KSycoca database file in the cache directory.
+ */
+DIGIKAM_EXPORT void setupKSycocaDatabaseFile();
+
 } // namespace Digikam
 
 #endif // DIGIKAM_GLOBALS_H
