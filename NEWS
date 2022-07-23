@@ -42,7 +42,7 @@ BUGFIXES:
 014 ==> 456592 - No "remove all filters" command available.
 015 ==> 456545 - The "handles" in the scroll bars are too inconspicuous.
 016 ==> 456604 - Parse "file name timestamp" with template YYYY-MM-DD hh[hH]mm when adjusting time & date.
-017 ==> 
+017 ==> 457022 - digiKam overrides the original raw-image (cr2) as jpg-file after or before a cut and save as new image. Then you have two jpg-files.
 018 ==> 
 019 ==> 
 020 ==> 
