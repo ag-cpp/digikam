@@ -186,7 +186,7 @@ int main(int argc, char* argv[])
 
     parser.process(app);
     aboutData.processCommandLine(&parser);
-    qCDebug(DIGIKAM_GENERAL_LOG) << "Local KSycoca database file:" <<  KSycoca::absoluteFilePath();
+
     setupKSycocaDatabaseFile();
 
     // See bug #438701
