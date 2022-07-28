@@ -28,6 +28,8 @@
 
 // Local includes
 
+#include "digikam_debug.h"
+
 namespace Digikam
 {
 
@@ -56,12 +58,12 @@ AestheticDetector::~AestheticDetector()
 
 float AestheticDetector::detect(const cv::Mat& image) const
 {
-    cv::Mat input = this->preprocess(image);
+    cv::Mat input = preprocess(image);
     
     d->model.setInput(input);
     cv::Mat out = d->model.forward();
     
-    return this->postProcess(out);
+    return postProcess(out);
     
 }
 
@@ -83,13 +85,9 @@ cv::Mat AestheticDetector::preprocess(const cv::Mat& image) const
 float AestheticDetector::postProcess(const cv::Mat& modelOutput) const
 {
     std::cout << "score : " << modelOutput << "\n";
-    double min=0, max=0;
-    cv::Point minLoc, maxLoc;
-    cv::minMaxLoc(modelOutput, &min, &max, &minLoc, &maxLoc);
-    std::cout << "class : " << maxLoc << "\n";
+    cv::Point maxLoc;
+    cv::minMaxLoc(modelOutput, nullptr, nullptr, nullptr, &maxLoc);
     return float(maxLoc.x);
 }
-
-
 
 }
