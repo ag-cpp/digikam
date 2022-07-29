@@ -49,8 +49,8 @@ BUGFIXES:
 020 ==> 457086 - A request to add our own tag icons.
 021 ==> 457153 - Allow for sub-folders to be searched when selecting Scan for faces in Albums.
 022 ==> 456833 - No Drag and drop or Open with in showfoto Appimage.
-023 ==> 
-024 ==> 
+023 ==> 457225 - Make use of existing people tags.
+024 ==> 425352 - Cursor is huge and jagged.
 025 ==> 
 026 ==> 
 027 ==> 
