@@ -47,7 +47,7 @@ ORIG_PATH="$PATH"
 ORIG_WD="`pwd`"
 
 export PATH=$INSTALL_PREFIX/bin:/$INSTALL_PREFIX/sbin:/$INSTALL_PREFIX/libexec/qt5/bin:$ORIG_PATH
-
+if [ ] ; then
 #################################################################################################
 # Install out-dated dependencies
 
@@ -178,7 +178,7 @@ if [ $? -ne 0 ]; then
     echo "---------- Aborting..."
     exit;
 fi
-
+fi
 #################################################################################################
 # Install Extra Plugins
 
@@ -196,8 +196,8 @@ cmake $ORIG_WD/../3rdparty \
        -DENABLE_QTWEBENGINE=$DK_QTWEBENGINE \
        -Wno-dev
 
-cmake --build . --config RelWithDebInfo --target ext_mosaicwall -- -j$CPU_CORES
-cmake --build . --config RelWithDebInfo --target ext_flowview   -- -j$CPU_CORES
+#cmake --build . --config RelWithDebInfo --target ext_mosaicwall -- -j$CPU_CORES
+#cmake --build . --config RelWithDebInfo --target ext_flowview   -- -j$CPU_CORES
 cmake --build . --config RelWithDebInfo --target ext_gmic_qt    -- -j$CPU_CORES
 
 mv -f $INSTALL_PREFIX/libexec/qt5/plugins/digikam/editor/*.so $INSTALL_PREFIX/lib/plugins/digikam/editor/
