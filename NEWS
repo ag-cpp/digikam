@@ -52,7 +52,7 @@ BUGFIXES:
 023 ==> 457225 - Make use of existing people tags.
 024 ==> 425352 - Cursor is huge and jagged.
 025 ==> 333115 - Add tool to fix dust area from lens.
-026 ==> 
+026 ==> 456987 - Open with... not working in AppImage.
 027 ==> 
 028 ==> 
 029 ==> 
