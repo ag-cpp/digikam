@@ -53,7 +53,7 @@ BUGFIXES:
 024 ==> 425352 - Cursor is huge and jagged.
 025 ==> 333115 - Add tool to fix dust area from lens.
 026 ==> 456987 - Open with... not working in AppImage.
-027 ==> 
+027 ==> 457312 - Using customized filename with camera name deletes previous name parts.
 028 ==> 
 029 ==> 
 030 ==> 

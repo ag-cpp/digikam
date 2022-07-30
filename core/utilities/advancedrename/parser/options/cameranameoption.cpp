@@ -92,6 +92,8 @@ QString CameraNameOption::parseOperation(ParseSettings& settings)
         result = make + QLatin1Char(' ') + model;
     }
 
+    result.replace(QLatin1Char('/'), QLatin1Char('-'));
+
     return result.simplified();
 }
 
