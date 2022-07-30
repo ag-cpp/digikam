@@ -54,7 +54,7 @@ BUGFIXES:
 025 ==> 333115 - Add tool to fix dust area from lens.
 026 ==> 456987 - Open with... not working in AppImage.
 027 ==> 457312 - Using customized filename with camera name deletes previous name parts.
-028 ==> 
+028 ==> 457257 - Contextual menu option "rename" does not work.
 029 ==> 
 030 ==> 
 031 ==> 
