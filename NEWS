@@ -55,6 +55,6 @@ BUGFIXES:
 026 ==> 456987 - Open with... not working in AppImage.
 027 ==> 457312 - Using customized filename with camera name deletes previous name parts.
 028 ==> 457257 - Contextual menu option "rename" does not work.
-029 ==> 
+029 ==> 408586 - digiKam search, thumbnails don't refresh correctly.
 030 ==> 
 031 ==> 
