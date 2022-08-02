@@ -56,5 +56,5 @@ BUGFIXES:
 027 ==> 457312 - Using customized filename with camera name deletes previous name parts.
 028 ==> 457257 - Contextual menu option "rename" does not work.
 029 ==> 408586 - digiKam search, thumbnails don't refresh correctly.
-030 ==> 
+030 ==> 457422 - Cannot select items in table view.
 031 ==> 

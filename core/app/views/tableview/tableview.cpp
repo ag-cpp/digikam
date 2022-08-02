@@ -183,7 +183,9 @@ void TableView::slotItemActivated(const QModelIndex& tableViewIndex)
         return;
     }
 
-    if (qApp->queryKeyboardModifiers() != Qt::AltModifier)
+    Qt::KeyboardModifiers modifiers = qApp->queryKeyboardModifiers();
+
+    if      (modifiers == Qt::NoModifier)
     {
         int leftClickAction = ApplicationSettings::instance()->getItemLeftClickAction();
 
@@ -200,7 +202,7 @@ void TableView::slotItemActivated(const QModelIndex& tableViewIndex)
             d->imageViewUtilities->openInfosWithDefaultApplication(QList<ItemInfo>() << info);
         }
     }
-    else
+    else if (modifiers == Qt::AltModifier)
     {
         d->imageViewUtilities->openInfosWithDefaultApplication(QList<ItemInfo>() << info);
     }
