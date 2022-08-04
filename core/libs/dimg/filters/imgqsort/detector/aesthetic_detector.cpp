@@ -26,6 +26,9 @@
 
 // Qt includes
 
+#include <QStandardPaths>
+#include <QUrl>
+
 // Local includes
 
 #include "digikam_debug.h"
@@ -40,7 +43,6 @@ public:
 
     explicit Private()
     {
-        model = cv::dnn::readNetFromTensorflow("/home/lephuock/Downloads/iqs_digikam/weights_inceptionresnetv2_08_0.910.hdf5.pb");
     }
     cv::dnn::Net model;
 };
@@ -56,14 +58,71 @@ AestheticDetector::~AestheticDetector()
     delete d;
 }
 
+bool AestheticDetector::loadModels() const
+{
+    QString appPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QUrl    appUrl  = QUrl::fromLocalFile(appPath).adjusted(QUrl::RemoveFilename);
+    appUrl.setPath(appUrl.path() + QLatin1String("digikam/aestheticdetector/"));
+
+    QString nnmodel = appUrl.toLocalFile() + QLatin1String("weights_inceptionresnetv2_08_0.910.hdf5.pb");
+
+    if (QFileInfo::exists(nnmodel))
+    {
+        try
+        {
+            qCDebug(DIGIKAM_DIMG_LOG) << "Aesthetic detector model:" << nnmodel;
+
+#ifdef Q_OS_WIN
+
+            d->model = cv::dnn::readNetFromTensorflow(nnmodel.toLocal8Bit().constData());
+
+#else
+
+            d->model = cv::dnn::readNetFromTensorflow(nnmodel.toStdString());
+
+#endif
+        }
+        catch (cv::Exception& e)
+        {
+            qCWarning(DIGIKAM_DIMG_LOG) << "cv::Exception:" << e.what();
+
+            return false;
+        }
+        catch (...)
+        {
+           qCWarning(DIGIKAM_DIMG_LOG) << "Default exception from OpenCV";
+
+           return false;
+        }
+    }
+    else
+    {
+        qCCritical(DIGIKAM_DIMG_LOG) << "Cannot found Aesthetic DNN model" << nnmodel;
+        qCCritical(DIGIKAM_DIMG_LOG) << "Aesthetic detection feature cannot be used!";
+
+        return false;
+    }
+
+    return true;
+}
+
 float AestheticDetector::detect(const cv::Mat& image) const
 {
     cv::Mat input = preprocess(image);
     
-    d->model.setInput(input);
-    cv::Mat out = d->model.forward();
+    if (loadModels())
+    {
+        d->model.setInput(input);
+        cv::Mat out = d->model.forward();
+        
+        return postProcess(out);
+    }
+    else
+    {
+        qCCritical(DIGIKAM_DIMG_LOG) << "Cannot load Aesthetic DNN model\n";
+        return -1.0;
+    }
     
-    return postProcess(out);
     
 }
 
@@ -84,9 +143,9 @@ cv::Mat AestheticDetector::preprocess(const cv::Mat& image) const
 
 float AestheticDetector::postProcess(const cv::Mat& modelOutput) const
 {
-    std::cout << "score : " << modelOutput << "\n";
     cv::Point maxLoc;
     cv::minMaxLoc(modelOutput, nullptr, nullptr, nullptr, &maxLoc);
+    qCDebug(DIGIKAM_DIMG_LOG) << "class : " << maxLoc.x << "\n";
     return float(maxLoc.x);
 }
 
