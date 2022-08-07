@@ -58,4 +58,5 @@ BUGFIXES:
 029 ==> 408586 - digiKam search, thumbnails don't refresh correctly.
 030 ==> 457422 - Cannot select items in table view.
 031 ==> 457421 - digiKam treats .MOV files differently from .JPG files by creation timestamp in metadata to match local time.
-032 ==> 
+032 ==> 457580 - Not possible to view HEIC files with Swedish charaters in path.
+033 ==> 
