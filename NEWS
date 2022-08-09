@@ -59,4 +59,5 @@ BUGFIXES:
 030 ==> 457422 - Cannot select items in table view.
 031 ==> 457421 - digiKam treats .MOV files differently from .JPG files by creation timestamp in metadata to match local time.
 032 ==> 457580 - Not possible to view HEIC files with Swedish charaters in path.
-033 ==> 
+033 ==> 457479 - digiKam does not help the user to enter dates quickly.
+034 ==> 
