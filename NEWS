@@ -60,4 +60,5 @@ BUGFIXES:
 031 ==> 457421 - digiKam treats .MOV files differently from .JPG files by creation timestamp in metadata to match local time.
 032 ==> 457580 - Not possible to view HEIC files with Swedish charaters in path.
 033 ==> 457479 - digiKam does not help the user to enter dates quickly.
-034 ==> 
+034 ==> 457662 - digiKam implodes when run by root because QtWebEngine exits.
+035 ==> 
