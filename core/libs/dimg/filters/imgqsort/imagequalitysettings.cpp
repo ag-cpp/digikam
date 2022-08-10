@@ -240,6 +240,8 @@ ImageQualitySettings::ImageQualitySettings(QWidget* const parent)
 
     connect(d->enableSorter, SIGNAL(toggled(bool)),
             d->optionsView, SLOT(setEnabled(bool)));
+    connect(d->detectAesthetic, SIGNAL(toggled(bool)),
+            this, SLOT(setDisableOptionViews(bool)));
 
     readSettings();
 }
@@ -305,6 +307,20 @@ ImageQualityContainer ImageQualitySettings::getImageQualityContainer() const
     imq.readFromConfig();
 
     return imq;
+}
+
+void ImageQualitySettings::setDisableOptionViews(bool b)
+{
+    d->detectBlur->setEnabled(!b);
+    d->detectNoise->setEnabled(!b);
+    d->detectCompression->setEnabled(!b);
+    d->detectExposure->setEnabled(!b);
+    d->setRejectedThreshold->setEnabled(!b);
+    d->setPendingThreshold->setEnabled(!b);
+    d->setAcceptedThreshold->setEnabled(!b);
+    d->setBlurWeight->setEnabled(!b);
+    d->setNoiseWeight->setEnabled(!b);
+    d->setCompressionWeight->setEnabled(!b);
 }
 
 } // namespace Digikam

@@ -154,7 +154,6 @@ cv::Mat AestheticDetector::preprocess(const cv::Mat& image) const
 
 float AestheticDetector::postProcess(const cv::Mat& modelOutput) const
 {
-    std::cout<<modelOutput;
     cv::Point maxLoc;
     cv::minMaxLoc(modelOutput, nullptr, nullptr, nullptr, &maxLoc);
     qCDebug(DIGIKAM_DIMG_LOG) << "class : " << maxLoc.x << "\n";
