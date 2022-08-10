@@ -60,7 +60,17 @@ AestheticDetector::~AestheticDetector()
 
 bool AestheticDetector::loadModels() const
 {
+#ifdef Q_OS_WIN
+
+    QString appPath = QStandardPaths::AppLocalDataLocation(QStandardPaths::AppDataLocation);
+
+#else
+
     QString appPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+
+#endif
+
+    
     QUrl    appUrl  = QUrl::fromLocalFile(appPath).adjusted(QUrl::RemoveFilename);
     appUrl.setPath(appUrl.path() + QLatin1String("digikam/aestheticdetector/"));
 
