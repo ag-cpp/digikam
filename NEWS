@@ -61,4 +61,5 @@ BUGFIXES:
 032 ==> 457580 - Not possible to view HEIC files with Swedish charaters in path.
 033 ==> 457479 - digiKam does not help the user to enter dates quickly.
 034 ==> 457662 - digiKam implodes when run by root because QtWebEngine exits.
-035 ==> 
+035 ==> 457693 - digiKam crashes if trying to delete selection of multiple files.
+036 ==> 
