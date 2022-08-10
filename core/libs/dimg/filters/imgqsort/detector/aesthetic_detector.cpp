@@ -70,7 +70,6 @@ bool AestheticDetector::loadModels() const
 
 #endif
 
-    
     QUrl    appUrl  = QUrl::fromLocalFile(appPath).adjusted(QUrl::RemoveFilename);
     appUrl.setPath(appUrl.path() + QLatin1String("digikam/aestheticdetector/"));
 
@@ -91,6 +90,8 @@ bool AestheticDetector::loadModels() const
             d->model = cv::dnn::readNetFromTensorflow(nnmodel.toStdString());
 
 #endif
+            d->model.setPreferableBackend(cv::dnn::DNN_TARGET_CPU);
+            d->model.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
         }
         catch (cv::Exception& e)
         {
@@ -153,6 +154,7 @@ cv::Mat AestheticDetector::preprocess(const cv::Mat& image) const
 
 float AestheticDetector::postProcess(const cv::Mat& modelOutput) const
 {
+    std::cout<<modelOutput;
     cv::Point maxLoc;
     cv::minMaxLoc(modelOutput, nullptr, nullptr, nullptr, &maxLoc);
     qCDebug(DIGIKAM_DIMG_LOG) << "class : " << maxLoc.x << "\n";

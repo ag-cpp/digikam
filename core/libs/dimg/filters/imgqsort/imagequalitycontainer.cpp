@@ -138,7 +138,7 @@ void ImageQualityContainer::writeToConfig()
     group.writeEntry("Detect Noise",        detectNoise);
     group.writeEntry("Detect Compression",  detectCompression);
     group.writeEntry("Detect Exposure",     detectExposure);
-    group.writeEntry("Detect aesthetic",    detectAesthetic);
+    group.writeEntry("Detect Aesthetic",    detectAesthetic);
     group.writeEntry("LowQ Rejected",       lowQRejected);
     group.writeEntry("MediumQ Pending",     mediumQPending);
     group.writeEntry("HighQ Accepted",      highQAccepted);
