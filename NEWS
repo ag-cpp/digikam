@@ -62,4 +62,6 @@ BUGFIXES:
 033 ==> 457479 - digiKam does not help the user to enter dates quickly.
 034 ==> 457662 - digiKam implodes when run by root because QtWebEngine exits.
 035 ==> 457693 - digiKam crashes if trying to delete selection of multiple files.
-036 ==> 
+036 ==> 454676 - Metadata missing from thumbnails after moving more than 30 to 40 images at a time between albums.
+037 ==> 457682 - Cut and Paste operations with Tags on many elements gives an unexpected result.
+038 ==> 
