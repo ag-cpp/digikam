@@ -51,6 +51,7 @@ MetadataListView::MetadataListView(QWidget* const parent)
     setSelectionMode(QAbstractItemView::SingleSelection);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     setAllColumnsShowFocus(true);
+    setUniformRowHeights(true);
     setColumnCount(2);
     setIndentation(QApplication::style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing));
     header()->setSectionResizeMode(QHeaderView::Stretch);
