@@ -67,4 +67,6 @@ BUGFIXES:
 038 ==> 457830 - Can't add Collections from local filesystem.
 039 ==> 457896 - In People view, the viewport doesn't scroll to the selected face photo thumbnail when arrow keys or PgUp/PgDn are used.
 040 ==> 457972 - digiKam Crash when select multiple files and add to cue to batch process.
-041 ==> 
+041 ==> 458023 - Print Creator: Impossible to include Gimp binaries.
+042 ==> 458029 - Duplicate tags keep reappering at their old places in hierarchy.
+043 ==> 
