@@ -69,4 +69,5 @@ BUGFIXES:
 040 ==> 457972 - digiKam Crash when select multiple files and add to cue to batch process.
 041 ==> 458023 - Print Creator: Impossible to include Gimp binaries.
 042 ==> 458029 - Duplicate tags keep reappering at their old places in hierarchy.
-043 ==> 
+043 ==> 384285 - Text unclear in documentation.
+044 ==> 
