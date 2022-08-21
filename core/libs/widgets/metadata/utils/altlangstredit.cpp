@@ -90,7 +90,7 @@ public:
         languageCodeMap.insert( QLatin1String("bg-BG"), i18nc("@info: country code", "Bulgarian (Bulgaria)") );
         languageCodeMap.insert( QLatin1String("bn-IN"), i18nc("@info: country code", "Bengali (India)") );
         languageCodeMap.insert( QLatin1String("bo-BT"), i18nc("@info: country code", "Tibetan (Bhutan)") );
-        languageCodeMap.insert( QLatin1String("bo-CN"), i18nc("@info: country code", "Tibetan (PRC)") );
+        languageCodeMap.insert( QLatin1String("bo-CN"), i18nc("@info: country code", "Tibetan (People's Republic of China)") );
         languageCodeMap.insert( QLatin1String("br-FR"), i18nc("@info: country code", "Breton (France)") );
         languageCodeMap.insert( QLatin1String("ca-AD"), i18nc("@info: country code", "Catalan (Andorra)") );
         languageCodeMap.insert( QLatin1String("ca-ES"), i18nc("@info: country code", "Catalan (Spain)") );
@@ -162,8 +162,8 @@ public:
         languageCodeMap.insert( QLatin1String("hr-HR"), i18nc("@info: country code", "Croatian (Croatia)") );
         languageCodeMap.insert( QLatin1String("hu-HU"), i18nc("@info: country code", "Hungarian (Hungary)") );
         languageCodeMap.insert( QLatin1String("hy-AM"), i18nc("@info: country code", "Armenian (Armenia)") );
-        languageCodeMap.insert( QLatin1String("id-ID"), i18nc("@info: country code", "(Indonesian)") );
-        languageCodeMap.insert( QLatin1String("ii-CN"), i18nc("@info: country code", "Yi (PRC)") );
+        languageCodeMap.insert( QLatin1String("id-ID"), i18nc("@info: country code", "Indonesian (Bahasa Indonesia)") );
+        languageCodeMap.insert( QLatin1String("ii-CN"), i18nc("@info: country code", "Sichuan Yi (People's Republic of China)") );
         languageCodeMap.insert( QLatin1String("is-IS"), i18nc("@info: country code", "Icelandic (Iceland)") );
         languageCodeMap.insert( QLatin1String("it-CH"), i18nc("@info: country code", "Italian (Switzerland)") );
         languageCodeMap.insert( QLatin1String("it-IT"), i18nc("@info: country code", "Italian (Italy)") );
@@ -182,7 +182,7 @@ public:
         languageCodeMap.insert( QLatin1String("mi-NZ"), i18nc("@info: country code", "Maori (New Zealand)") );
         languageCodeMap.insert( QLatin1String("mk-MK"), i18nc("@info: country code", "Macedonian (Macedonia)") );
         languageCodeMap.insert( QLatin1String("ml-IN"), i18nc("@info: country code", "Malayalam (India)") );
-        languageCodeMap.insert( QLatin1String("mn-CN"), i18nc("@info: country code", "Mongolian (PRC)") );
+        languageCodeMap.insert( QLatin1String("mn-CN"), i18nc("@info: country code", "Mongolian (People's Republic of China)") );
         languageCodeMap.insert( QLatin1String("mn-MN"), i18nc("@info: country code", "Mongolian (Mongolia)") );
         languageCodeMap.insert( QLatin1String("mr-IN"), i18nc("@info: country code", "Marathi (India)") );
         languageCodeMap.insert( QLatin1String("ms-BN"), i18nc("@info: country code", "Malay (Brunei Darussalam)") );
@@ -224,15 +224,15 @@ public:
         languageCodeMap.insert( QLatin1String("tr-IN"), i18nc("@info: country code", "Urdu (India)") );
         languageCodeMap.insert( QLatin1String("tr-TR"), i18nc("@info: country code", "Turkish (Turkey)") );
         languageCodeMap.insert( QLatin1String("tt-RU"), i18nc("@info: country code", "Tatar (Russia)") );
-        languageCodeMap.insert( QLatin1String("ug-CN"), i18nc("@info: country code", "Uighur (PRC)") );
+        languageCodeMap.insert( QLatin1String("ug-CN"), i18nc("@info: country code", "Uighur (People's Republic of China)") );
         languageCodeMap.insert( QLatin1String("uk-UA"), i18nc("@info: country code", "Ukrainian (Ukraine)") );
         languageCodeMap.insert( QLatin1String("ur-PK"), i18nc("@info: country code", "Urdu (Pakistan)") );
         languageCodeMap.insert( QLatin1String("vi-VN"), i18nc("@info: country code", "Vietnamese (Vietnam)") );
         languageCodeMap.insert( QLatin1String("wo-SN"), i18nc("@info: country code", "Wolof (Senegal)") );
         languageCodeMap.insert( QLatin1String("xh-ZA"), i18nc("@info: country code", "isiXhosa Xhosa (South Africa)") );
         languageCodeMap.insert( QLatin1String("yo-NG"), i18nc("@info: country code", "Yoruba (Nigeria)") );
-        languageCodeMap.insert( QLatin1String("zh-CN"), i18nc("@info: country code", "Chinese (PRC)") );
-        languageCodeMap.insert( QLatin1String("zh-HK"), i18nc("@info: country code", "Chinese (Hong Kong SAR, PRC)") );
+        languageCodeMap.insert( QLatin1String("zh-CN"), i18nc("@info: country code", "Chinese (People's Republic of China)") );
+        languageCodeMap.insert( QLatin1String("zh-HK"), i18nc("@info: country code", "Chinese (Hong Kong SAR, People's Republic of China)") );
         languageCodeMap.insert( QLatin1String("zh-MO"), i18nc("@info: country code", "Chinese (Macao SAR)") );
         languageCodeMap.insert( QLatin1String("zh-SG"), i18nc("@info: country code", "Chinese (Singapore)") );
         languageCodeMap.insert( QLatin1String("zh-TW"), i18nc("@info: country code", "Chinese (Taiwan)") );
