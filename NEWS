@@ -70,4 +70,5 @@ BUGFIXES:
 041 ==> 458023 - Print Creator: Impossible to include Gimp binaries.
 042 ==> 458029 - Duplicate tags keep reappering at their old places in hierarchy.
 043 ==> 384285 - Text unclear in documentation.
-044 ==> 
+044 ==> 458108 - Thumbnail disappears when image is renamed, reappears only on selection or mouseover.
+045 ==> 
