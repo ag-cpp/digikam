@@ -71,4 +71,5 @@ BUGFIXES:
 042 ==> 458029 - Duplicate tags keep reappering at their old places in hierarchy.
 043 ==> 384285 - Text unclear in documentation.
 044 ==> 458108 - Thumbnail disappears when image is renamed, reappears only on selection or mouseover.
-045 ==> 
+045 ==> 458145 - Geolocation editor works properly when opened from ShowFoto but not when opened from digiKam.
+046 ==> 
