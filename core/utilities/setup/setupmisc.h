@@ -44,13 +44,17 @@ public:
         Behaviour = 0,
         Appearance,
         Grouping,
-        System
+        System,
+        SpellCheck,
+        Localize
     };
 
 public:
 
     explicit SetupMisc(QWidget* const parent = nullptr);
     ~SetupMisc() override;
+
+    void setActiveTab(MiscTab tab);
 
     bool checkSettings();
     void applySettings();

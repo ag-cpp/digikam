@@ -62,6 +62,14 @@ Showfoto::Showfoto(const QList<QUrl>& urlList, QWidget* const)
 
     Digikam::LoadingCacheInterface::initialize();
     Digikam::MetaEngineSettings::instance();
+    Digikam::SpellCheckSettings::instance();
+
+    connect(SpellCheckSettings::instance(), &SpellCheckSettings::signalOpenLocalizeSetup,
+            this, [=]()
+        {
+            ShowfotoSetup::execLocalize(this);
+        }
+    );
 
     d->thumbLoadThread = new Digikam::ThumbnailLoadThread();
     d->thumbLoadThread->setThumbnailSize(Digikam::ThumbnailSize::Huge);

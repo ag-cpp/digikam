@@ -30,13 +30,16 @@
 #include <QGridLayout>
 #include <QApplication>
 #include <QStyle>
-#include <QLineEdit>
 #include <QListWidget>
 #include <QToolTip>
 
 // KDE includes
 
 #include <klocalizedstring.h>
+
+// Local includes
+
+#include "limitedtextedit.h"
 
 namespace DigikamGenericMetadataEditPlugin
 {
@@ -46,45 +49,46 @@ class Q_DECL_HIDDEN IPTCKeywords::Private
 public:
 
     explicit Private()
+      : addKeywordButton(nullptr),
+        delKeywordButton(nullptr),
+        repKeywordButton(nullptr),
+        keywordsCheck   (nullptr),
+        keywordsEdit    (nullptr),
+        keywordsBox     (nullptr)
     {
-        addKeywordButton = nullptr;
-        delKeywordButton = nullptr;
-        repKeywordButton = nullptr;
-        keywordsBox      = nullptr;
-        keywordsCheck    = nullptr;
-        keywordsEdit     = nullptr;
     }
 
-    QStringList  oldKeywords;
+    QStringList      oldKeywords;
 
-    QPushButton* addKeywordButton;
-    QPushButton* delKeywordButton;
-    QPushButton* repKeywordButton;
+    QPushButton*     addKeywordButton;
+    QPushButton*     delKeywordButton;
+    QPushButton*     repKeywordButton;
 
-    QCheckBox*   keywordsCheck;
+    QCheckBox*       keywordsCheck;
 
-    QLineEdit*   keywordsEdit;
+    LimitedTextEdit* keywordsEdit;
 
-    QListWidget* keywordsBox;
+    QListWidget*     keywordsBox;
 };
 
 IPTCKeywords::IPTCKeywords(QWidget* const parent)
-    : QWidget(parent),
-      d(new Private)
+    : MetadataEditPage(parent),
+      d               (new Private)
 {
-    QGridLayout* const grid = new QGridLayout(this);
+    QGridLayout* const grid = new QGridLayout(widget());
 
     // --------------------------------------------------------
 
-    d->keywordsCheck = new QCheckBox(i18n("Use information retrieval words:"), this);
+    d->keywordsCheck  = new QCheckBox(i18n("Use information retrieval words:"), this);
 
-    d->keywordsEdit   = new QLineEdit(this);
-    d->keywordsEdit->setClearButtonEnabled(true);
+    d->keywordsEdit   = new LimitedTextEdit(this);
     d->keywordsEdit->setMaxLength(64);
+    d->keywordsEdit->setLinesVisible(1);
+    d->keywordsEdit->setPlaceholderText(i18n("Set here a keyword"));
     d->keywordsEdit->setWhatsThis(i18n("Enter here a new keyword. "
                                       "This field is limited to 64 characters."));
 
-    d->keywordsBox   = new QListWidget(this);
+    d->keywordsBox    = new QListWidget(this);
     d->keywordsBox->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
     d->addKeywordButton = new QPushButton( i18n("&Add"), this);
@@ -110,9 +114,9 @@ IPTCKeywords::IPTCKeywords(QWidget* const parent)
 
     // --------------------------------------------------------
 
-    grid->setAlignment( Qt::AlignTop );
+    grid->setAlignment(Qt::AlignTop);
     grid->addWidget(d->keywordsCheck,       0, 0, 1, 2);
-    grid->addWidget(d->keywordsEdit,         1, 0, 1, 1);
+    grid->addWidget(d->keywordsEdit,        1, 0, 1, 1);
     grid->addWidget(d->keywordsBox,         2, 0, 5, 1);
     grid->addWidget(d->addKeywordButton,    2, 1, 1, 1);
     grid->addWidget(d->delKeywordButton,    3, 1, 1, 1);
@@ -120,9 +124,12 @@ IPTCKeywords::IPTCKeywords(QWidget* const parent)
     grid->addWidget(note,                   5, 1, 1, 1);
     grid->setColumnStretch(0, 10);
     grid->setRowStretch(6, 10);
-    grid->setContentsMargins(QMargins());
-    grid->setSpacing(qMin(QApplication::style()->pixelMetric(QStyle::PM_LayoutHorizontalSpacing),
-                             QApplication::style()->pixelMetric(QStyle::PM_LayoutVerticalSpacing)));
+
+    int spacing = qMin(QApplication::style()->pixelMetric(QStyle::PM_LayoutHorizontalSpacing),
+                       QApplication::style()->pixelMetric(QStyle::PM_LayoutVerticalSpacing));
+
+    grid->setContentsMargins(spacing, spacing, spacing, spacing);
+    grid->setSpacing(spacing);
 
     // --------------------------------------------------------
 
@@ -168,9 +175,6 @@ IPTCKeywords::IPTCKeywords(QWidget* const parent)
 
     connect(d->repKeywordButton, SIGNAL(clicked()),
             this, SIGNAL(signalModified()));
-
-    connect(d->keywordsEdit, SIGNAL(textChanged(QString)),
-            this, SLOT(slotLineEditModified()));
 }
 
 IPTCKeywords::~IPTCKeywords()
@@ -181,7 +185,11 @@ IPTCKeywords::~IPTCKeywords()
 void IPTCKeywords::slotDelKeyword()
 {
     QListWidgetItem* const item = d->keywordsBox->currentItem();
-    if (!item) return;
+
+    if (!item)
+    {
+        return;
+    }
 
     d->keywordsBox->takeItem(d->keywordsBox->row(item));
     delete item;
@@ -190,7 +198,11 @@ void IPTCKeywords::slotDelKeyword()
 void IPTCKeywords::slotRepKeyword()
 {
     QString newKeyword = d->keywordsEdit->text();
-    if (newKeyword.isEmpty()) return;
+
+    if (newKeyword.isEmpty())
+    {
+        return;
+    }
 
     if (!d->keywordsBox->selectedItems().isEmpty())
     {
@@ -217,7 +229,11 @@ void IPTCKeywords::slotKeywordSelectionChanged()
 void IPTCKeywords::slotAddKeyword()
 {
     QString newKeyword = d->keywordsEdit->text();
-    if (newKeyword.isEmpty()) return;
+
+    if (newKeyword.isEmpty())
+    {
+        return;
+    }
 
     bool found = false;
 
@@ -237,20 +253,6 @@ void IPTCKeywords::slotAddKeyword()
         d->keywordsBox->insertItem(d->keywordsBox->count(), newKeyword);
         d->keywordsEdit->clear();
     }
-}
-
-void IPTCKeywords::slotLineEditModified()
-{
-    QLineEdit* const ledit = dynamic_cast<QLineEdit*>(sender());
-
-    if (!ledit)
-    {
-        return;
-    }
-
-    QToolTip::showText(ledit->mapToGlobal(QPoint(0, (-1)*(ledit->height() + 16))),
-                       i18np("%1 character left", "%1 characters left", ledit->maxLength() - ledit->text().size()),
-                       ledit);
 }
 
 void IPTCKeywords::readMetadata(const DMetadata& meta)

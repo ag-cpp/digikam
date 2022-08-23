@@ -48,13 +48,17 @@ public:
     {
         Behaviour = 0,
         Appearance,
-        System
+        System,
+        SpellCheck,
+        Localize
     };
 
 public:
 
     explicit ShowfotoSetupMisc(QWidget* const parent = nullptr);
     ~ShowfotoSetupMisc() override;
+
+    void setActiveTab(MiscTab tab);
 
     bool checkSettings();
     void applySettings();

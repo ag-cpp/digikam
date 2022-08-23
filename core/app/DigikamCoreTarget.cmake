@@ -233,6 +233,16 @@ if(KF5NotifyConfig_FOUND)
 
 endif()
 
+if(KF5Sonnet_FOUND)
+
+    target_link_libraries(digikamcore
+                          PRIVATE
+                          KF5::SonnetCore
+                          KF5::SonnetUi
+    )
+
+endif()
+
 if(Marble_FOUND)
 
     target_link_libraries(digikamcore
