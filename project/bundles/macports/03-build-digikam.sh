@@ -47,7 +47,7 @@ ORIG_PATH="$PATH"
 ORIG_WD="`pwd`"
 
 export PATH=$INSTALL_PREFIX/bin:/$INSTALL_PREFIX/sbin:/$INSTALL_PREFIX/libexec/qt5/bin:$ORIG_PATH
-if [ ] ; then
+
 #################################################################################################
 # Install out-dated dependencies
 
@@ -178,7 +178,7 @@ if [ $? -ne 0 ]; then
     echo "---------- Aborting..."
     exit;
 fi
-fi
+
 #################################################################################################
 # Install Extra Plugins
 
