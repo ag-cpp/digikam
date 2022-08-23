@@ -109,6 +109,8 @@ QDateTime TimeAdjustContainer::getDateTimeFromUrl(const QUrl& url) const
 
     // Do not change the order of the list.
 
+    regExpStrings << QLatin1String("(.+)?([0-9]{4}[-_:/]?[0-9]{2}[-_:/]?[0-9]{2})"
+                                   "(.+)?([0-9]{2}[hH][0-9]{2})(.+)?");
     regExpStrings << QLatin1String("(.+)?([0-9]{8}[T-_][0-9]{6})(.+)?");
     regExpStrings << QLatin1String("(.+)?([0-9]{4}[-_:/]?[0-9]{2}[-_:/]?[0-9]{2})"
                                    "(.+)?([0-9]{2}[-_:.]?[0-9]{2}[-_:.]?[0-9]{2}"
@@ -125,6 +127,7 @@ QDateTime TimeAdjustContainer::getDateTimeFromUrl(const QUrl& url) const
     regExpStrings << QLatin1String("(.+)?([0-9]{2}_[0-9]{2} [0-9]{2})(.+)?");
 
     QList <QPair<QString, QString> > formatStrings;
+    formatStrings << qMakePair(QLatin1String("yyyyMMddhhmm"),      QString());
     formatStrings << qMakePair(QLatin1String("yyyyMMddhhmmss"),    QString());
     formatStrings << qMakePair(QLatin1String("yyyyMMddhhmmsszzz"), QString());
     formatStrings << qMakePair(QLatin1String("yyyyMMddhhmmss"),    QString());
@@ -159,6 +162,8 @@ QDateTime TimeAdjustContainer::getDateTimeFromUrl(const QUrl& url) const
             dateString.remove(QLatin1Char('.'));
             dateString.remove(QLatin1Char('/'));
             dateString.remove(QLatin1Char('T'));
+            dateString.remove(QLatin1Char('h'));
+            dateString.remove(QLatin1Char('H'));
 
             dateTime = QDateTime::fromString(dateString, format);
 
@@ -188,6 +193,32 @@ QDateTime TimeAdjustContainer::getDateTimeFromUrl(const QUrl& url) const
     return dateTime;
 }
 
+QMap<QString, bool> TimeAdjustContainer::getDateTimeTagsMap() const
+{
+    QMap<QString, bool> tagsMap;
+
+    tagsMap.insert(QLatin1String("Exif.Image.DateTime"),           updEXIFModDate);
+    tagsMap.insert(QLatin1String("Exif.Photo.DateTimeOriginal"),   updEXIFOriDate);
+    tagsMap.insert(QLatin1String("Exif.Photo.DateTimeDigitized"),  updEXIFDigDate);
+    tagsMap.insert(QLatin1String("Exif.Image.PreviewDateTime"),    updEXIFThmDate);
+
+    tagsMap.insert(QLatin1String("Iptc.Application2.DateCreated"), updIPTCDate);
+    tagsMap.insert(QLatin1String("Iptc.Application2.TimeCreated"), updIPTCDate);
+
+    tagsMap.insert(QLatin1String("Xmp.exif.DateTimeOriginal"),     updXMPDate);
+    tagsMap.insert(QLatin1String("Xmp.photoshop.DateCreated"),     updXMPDate);
+    tagsMap.insert(QLatin1String("Xmp.xmp.MetadataDate"),          updXMPDate);
+    tagsMap.insert(QLatin1String("Xmp.xmp.CreateDate"),            updXMPDate);
+    tagsMap.insert(QLatin1String("Xmp.xmp.ModifyDate"),            updXMPDate);
+    tagsMap.insert(QLatin1String("Xmp.tiff.DateTime"),             updXMPDate);
+
+    tagsMap.insert(QLatin1String("Xmp.video.DateTimeOriginal"),    updXMPVideo);
+    tagsMap.insert(QLatin1String("Xmp.video.DateTimeDigitized"),   updXMPVideo);
+    tagsMap.insert(QLatin1String("Xmp.video.ModificationDate"),    updXMPVideo);
+    tagsMap.insert(QLatin1String("Xmp.video.DateUTC"),             updXMPVideo);
+
+    return tagsMap;
+}
 // -------------------------------------------------------------------
 
 DeltaTime::DeltaTime()

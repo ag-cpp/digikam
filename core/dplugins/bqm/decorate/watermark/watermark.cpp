@@ -42,7 +42,6 @@
 #include <QStyle>
 #include <QFontComboBox>
 #include <QComboBox>
-#include <QLineEdit>
 #include <QDoubleSpinBox>
 #include <QRandomGenerator>
 
@@ -61,6 +60,7 @@
 #include "dfontproperties.h"
 #include "metaengine.h"
 #include "dcolorselector.h"
+#include "dtextedit.h"
 
 namespace DigikamBqmWatermarkPlugin
 {
@@ -76,7 +76,9 @@ public:
         TopRight,
         BottomLeft,
         BottomRight,
-        Center
+        Center,
+        TopCenter,
+        BottomCenter
     };
 
     enum WaterMarkPlacementType
@@ -132,7 +134,7 @@ public:
     QRadioButton*    useTextRadioButton;
 
     DFileSelector*   imageFileUrlRequester;
-    QLineEdit*       textEdit;
+    DTextEdit*       textEdit;
 
     QComboBox*       placementPositionComboBox;
     QComboBox*       placementTypeComboBox;
@@ -278,8 +280,7 @@ void WaterMark::registerSettingsWidget()
     d->textSettingsGroupBox->setLayout(textSettingsGroupBoxLayout);
 
     QLabel* const textEditLabel = new QLabel(vbox);
-    d->textEdit                 = new QLineEdit(vbox);
-    d->textEdit->setClearButtonEnabled(true);
+    d->textEdit                 = new DTextEdit(vbox);
     d->textEdit->setPlaceholderText(i18n("Enter your watermark string here."));
     textEditLabel->setText(i18n("Watermark text:"));
     textSettingsGroupBoxLayout->addWidget(textEditLabel);
@@ -393,11 +394,14 @@ void WaterMark::registerSettingsWidget()
 
     QLabel* const label4         = new QLabel(vbox);
     d->placementPositionComboBox = new QComboBox(vbox);
-    d->placementPositionComboBox->insertItem(Private::TopLeft,     i18nc("@item: placement position", "Top left"));
-    d->placementPositionComboBox->insertItem(Private::TopRight,    i18nc("@item: placement position", "Top right"));
-    d->placementPositionComboBox->insertItem(Private::BottomLeft,  i18nc("@item: placement position", "Bottom left"));
-    d->placementPositionComboBox->insertItem(Private::BottomRight, i18nc("@item: placement position", "Bottom right"));
-    d->placementPositionComboBox->insertItem(Private::Center,      i18nc("@item: placement position", "Center"));
+    d->placementPositionComboBox->insertItem(Private::TopLeft,      i18nc("@item: placement position", "Top left"));
+    d->placementPositionComboBox->insertItem(Private::TopRight,     i18nc("@item: placement position", "Top right"));
+    d->placementPositionComboBox->insertItem(Private::BottomLeft,   i18nc("@item: placement position", "Bottom left"));
+    d->placementPositionComboBox->insertItem(Private::BottomRight,  i18nc("@item: placement position", "Bottom right"));
+    d->placementPositionComboBox->insertItem(Private::Center,       i18nc("@item: placement position", "Center"));
+    d->placementPositionComboBox->insertItem(Private::TopCenter,    i18nc("@item: placement position", "Top center"));
+    d->placementPositionComboBox->insertItem(Private::BottomCenter, i18nc("@item: placement position", "Bottom center"));
+
     label4->setText(i18n("Placement Position:"));
 
     QLabel* const labelRotation  = new QLabel(vbox);
@@ -451,7 +455,7 @@ void WaterMark::registerSettingsWidget()
     connect(d->fontColorButton, SIGNAL(signalColorSelected(QColor)),
             this, SLOT(slotSettingsChanged()));
 
-    connect(d->textEdit, SIGNAL(textChanged(QString)),
+    connect(d->textEdit, SIGNAL(textChanged()),
             this, SLOT(slotSettingsChanged()));
 
     connect(d->textOpacity, SIGNAL(valueChanged(int)),
@@ -503,7 +507,7 @@ void WaterMark::registerSettingsWidget()
             this, SLOT(slotSettingsChanged()));
 
     connect(d->waterMarkOpacityPercent, SIGNAL(valueChanged(int)),
-	    this, SLOT(slotSettingsChanged()));
+            this, SLOT(slotSettingsChanged()));
 
     BatchTool::registerSettingsWidget();
 }
@@ -756,6 +760,8 @@ bool WaterMark::toolOperations()
             }
 
             case Private::Center:
+            case Private::TopCenter:
+            case Private::BottomCenter:
             {
                 alignMode = Qt::AlignCenter;
                 break;
@@ -879,6 +885,30 @@ bool WaterMark::toolOperations()
 
                 watermarkRect.moveCenter(QPoint((int)(image().width()  / 2 + xAdditionalValue),
                                                 (int)(image().height() / 2 + yAdditionalValue)));
+                break;
+            }
+
+            case Private::TopCenter:
+            {
+                if ((rotationAngle == DImg::ANGLE::ROT90) || (rotationAngle == DImg::ANGLE::ROT270))
+                {
+                    xAdditionalValue += (watermarkRect.width() - watermarkRect.height()) / 2;
+                }
+
+                watermarkRect.moveCenter(QPoint((int)(image().width()  / 2 + xAdditionalValue), marginH));
+                break;
+            }
+
+            case Private::BottomCenter:
+            {
+                if ((rotationAngle == DImg::ANGLE::ROT90) || (rotationAngle == DImg::ANGLE::ROT270))
+                {
+                    xAdditionalValue += (watermarkRect.width() - watermarkRect.height()) / 2;
+                    yAdditionalValue += watermarkRect.height() - watermarkRect.width();
+                }
+
+                watermarkRect.moveCenter(QPoint((int)(image().width()  / 2 + xAdditionalValue),
+                                                image().height() + yAdditionalValue - 1 - marginH));
                 break;
             }
 

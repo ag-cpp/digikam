@@ -25,21 +25,26 @@
 
 // Qt includes
 
-#include <QPlainTextEdit>
 #include <QKeyEvent>
 #include <QMimeData>
+
+// Local includes
+
+#include "dtextedit.h"
+
+using namespace Digikam;
 
 namespace DigikamGenericMetadataEditPlugin
 {
 
-class LimitedTextEdit : public QPlainTextEdit
+class LimitedTextEdit : public DPlainTextEdit
 {
     Q_OBJECT
 
 public:
 
     explicit LimitedTextEdit(QWidget* const parent = nullptr);
-    ~LimitedTextEdit() override;
+    ~LimitedTextEdit()                               override;
 
     void setMaxLength(int length);
     int  maxLength()     const;
@@ -50,11 +55,15 @@ protected:
 
     void insertFromMimeData(const QMimeData* source) override;
 
-    void keyPressEvent(QKeyEvent* e) override;
+    void keyPressEvent(QKeyEvent* e)                 override;
+
+private Q_SLOTS:
+
+    void slotChanged();
 
 private:
 
-    int m_maxLength;
+    int m_maxLength    = 0;
 };
 
 } // namespace DigikamGenericMetadataEditPlugin
