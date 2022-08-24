@@ -36,6 +36,61 @@
 namespace Digikam
 {
 
+cv::dnn::Net loadModel()
+{
+    cv::dnn::Net model;
+
+    QString appPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+
+    QUrl    appUrl  = QUrl::fromLocalFile(appPath).adjusted(QUrl::RemoveFilename);
+    appUrl.setPath(appUrl.path() + QLatin1String("share/digikam/aestheticdetector/"));
+
+    QString nnmodel = appUrl.toLocalFile() + QLatin1String("weights_inceptionresnetv2_08_0.910.hdf5.pb");
+
+    if (QFileInfo::exists(nnmodel))
+    {
+        try
+        {
+            qCDebug(DIGIKAM_DIMG_LOG) << "Aesthetic detector model:" << nnmodel;
+
+#ifdef Q_OS_WIN
+
+            model = cv::dnn::readNetFromTensorflow(nnmodel.toLocal8Bit().constData());
+
+#else
+
+            model = cv::dnn::readNetFromTensorflow(nnmodel.toStdString());
+
+#endif
+            model.setPreferableBackend(cv::dnn::DNN_TARGET_CPU);
+            model.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
+        }
+        catch (cv::Exception& e)
+        {
+            qCWarning(DIGIKAM_DIMG_LOG) << "cv::Exception:" << e.what();
+
+            return model;
+        }
+        catch (...)
+        {
+           qCWarning(DIGIKAM_DIMG_LOG) << "Default exception from OpenCV";
+
+           return model;
+        }
+    }
+    else
+    {
+        qCCritical(DIGIKAM_DIMG_LOG) << "Cannot found Aesthetic DNN model" << nnmodel;
+        qCCritical(DIGIKAM_DIMG_LOG) << "Aesthetic detection feature cannot be used!";
+
+        return model;
+    }
+
+    return model;
+}
+
+cv::dnn::Net AestheticDetector::model = loadModel();
+
 class Q_DECL_HIDDEN AestheticDetector::Private
 {
 
@@ -58,65 +113,14 @@ AestheticDetector::~AestheticDetector()
     delete d;
 }
 
-bool AestheticDetector::loadModels() const
-{
-    QString appPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-
-    QUrl    appUrl  = QUrl::fromLocalFile(appPath).adjusted(QUrl::RemoveFilename);
-    appUrl.setPath(appUrl.path() + QLatin1String("digikam/aestheticdetector/"));
-
-    QString nnmodel = appUrl.toLocalFile() + QLatin1String("weights_inceptionresnetv2_08_0.910.hdf5.pb");
-
-    if (QFileInfo::exists(nnmodel))
-    {
-        try
-        {
-            qCDebug(DIGIKAM_DIMG_LOG) << "Aesthetic detector model:" << nnmodel;
-
-#ifdef Q_OS_WIN
-
-            d->model = cv::dnn::readNetFromTensorflow(nnmodel.toLocal8Bit().constData());
-
-#else
-
-            d->model = cv::dnn::readNetFromTensorflow(nnmodel.toStdString());
-
-#endif
-            d->model.setPreferableBackend(cv::dnn::DNN_TARGET_CPU);
-            d->model.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
-        }
-        catch (cv::Exception& e)
-        {
-            qCWarning(DIGIKAM_DIMG_LOG) << "cv::Exception:" << e.what();
-
-            return false;
-        }
-        catch (...)
-        {
-           qCWarning(DIGIKAM_DIMG_LOG) << "Default exception from OpenCV";
-
-           return false;
-        }
-    }
-    else
-    {
-        qCCritical(DIGIKAM_DIMG_LOG) << "Cannot found Aesthetic DNN model" << nnmodel;
-        qCCritical(DIGIKAM_DIMG_LOG) << "Aesthetic detection feature cannot be used!";
-
-        return false;
-    }
-
-    return true;
-}
-
 float AestheticDetector::detect(const cv::Mat& image) const
 {
     cv::Mat input = preprocess(image);
     
-    if (loadModels())
+    if (!model.empty())
     {
-        d->model.setInput(input);
-        cv::Mat out = d->model.forward();
+        model.setInput(input);
+        cv::Mat out = model.forward();
         
         return postProcess(out);
     }
