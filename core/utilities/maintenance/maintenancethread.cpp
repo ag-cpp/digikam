@@ -39,6 +39,7 @@
 #include "imagequalitycontainer.h"
 #include "databasetask.h"
 #include "maintenancedata.h"
+#include "imagequalityparser.h"
 
 namespace Digikam
 {
@@ -149,6 +150,15 @@ void MaintenanceThread::sortByImageQuality(const QStringList& paths, const Image
     ActionJobCollection collection;
 
     data->setImagePaths(paths);
+
+    // if (quality.detectAesthetic)
+    // {
+    //     if (!AestheticDetector::loadModel())
+    //     {
+    //         qCDebug(DIGIKAM_GENERAL_LOG) << "Can not load model";
+    //         return;
+    //     }
+    // }
 
     for (int i = 1 ; i <= maximumNumberOfThreads() ; ++i)
     {
@@ -320,6 +330,7 @@ void MaintenanceThread::slotThreadFinished()
 {
     if (isEmpty())
     {
+        ImageQualityParser::unloadDLModel();
         qCDebug(DIGIKAM_GENERAL_LOG) << "List of Pending Jobs is empty";
         Q_EMIT signalCompleted();
     }
