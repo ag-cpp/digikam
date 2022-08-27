@@ -128,11 +128,11 @@ void ImageQualityParser::startAnalyse()
 
                 pool.addDetector(grayImage, d->imq.exposureWeight, exposureDetector.get());
             }
+
+            pool.start();
+            pool.end();
         }
     }
-    pool.start();
-    pool.end();
-
 #ifdef TRACE
 
     // QFile filems("imgqsortresult.txt");

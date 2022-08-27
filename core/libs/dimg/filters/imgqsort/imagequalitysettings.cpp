@@ -126,7 +126,7 @@ ImageQualitySettings::ImageQualitySettings(QWidget* const parent)
     d->detectExposure         = new QCheckBox(i18n("Detect Under and Over Exposure"), d->optionsView);
     d->detectExposure->setWhatsThis(i18n("Detect if the images are under-exposed or over-exposed"));
 
-    d->detectAesthetic         = new QCheckBox(i18n("Detect Aesthetic image"), d->optionsView);
+    d->detectAesthetic         = new QCheckBox(i18n("Detect Aesthetic Image"), d->optionsView);
     d->detectAesthetic->setWhatsThis(i18n("Detect if the image is aesthetic"));
 
     // ------------------------------------------------------------------------------
