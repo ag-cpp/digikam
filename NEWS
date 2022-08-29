@@ -1,4 +1,4 @@
-digiKam 7.8.0 - Release date: 2022-??-??
+digiKam 7.8.0 - Release date: 2022-08-31
 
 *****************************************************************************************************
 NEW FEATURES:
@@ -75,6 +75,4 @@ BUGFIXES:
 046 ==> 458228 - Hugin doesnt work in Wayland.
 047 ==> 458260 - How can i switch to full Russian version of digiKam.
 048 ==> 458314 - digiKam crashes while editing picture.
-049 ==> 
-050 ==> 
-051 ==> 
+049 ==> 457871 - digiKam packages for a while not building.
