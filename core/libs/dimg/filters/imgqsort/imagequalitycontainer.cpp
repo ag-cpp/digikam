@@ -114,7 +114,7 @@ void ImageQualityContainer::readFromConfig()
     detectNoise               = group.readEntry("Detect Noise",       true);
     detectCompression         = group.readEntry("Detect Compression", true);
     detectExposure            = group.readEntry("Detect Exposure",    true);
-    detectAesthetic           = group.readEntry("Detect aesthetic",   true);
+    detectAesthetic           = group.readEntry("Detect Aesthetic",   true);
     lowQRejected              = group.readEntry("LowQ Rejected",      true);
     mediumQPending            = group.readEntry("MediumQ Pending",    true);
     highQAccepted             = group.readEntry("HighQ Accepted",     true);

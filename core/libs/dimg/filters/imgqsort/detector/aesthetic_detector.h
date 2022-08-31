@@ -51,7 +51,11 @@ private:
 
     cv::Mat preprocess(const cv::Mat& image)                    const;
     float postProcess(const cv::Mat& modelOutput)               const;
-    bool loadModels()                                           const;
+
+public:
+    static cv::dnn::Net model;
+    static bool loadModel();
+    static void unloadModel();
 
 private:
 

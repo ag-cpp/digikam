@@ -63,6 +63,9 @@ private:
     ImageQualityParser& operator=(const ImageQualityParser&) = delete;
     explicit ImageQualityParser(QObject*);
 
+public:
+    static void unloadDLModel();
+
 private:
 
     class Private;

@@ -39,6 +39,7 @@
 #include "imagequalitycontainer.h"
 #include "databasetask.h"
 #include "maintenancedata.h"
+#include "imagequalityparser.h"
 
 namespace Digikam
 {

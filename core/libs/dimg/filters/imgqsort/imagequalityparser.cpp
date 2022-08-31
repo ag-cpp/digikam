@@ -91,6 +91,10 @@ void ImageQualityParser::startAnalyse()
     {
         if (d->imq.detectAesthetic)
         {
+            if (AestheticDetector::model.empty())
+            {
+                AestheticDetector::loadModel();
+            }
             aestheticDetector = std::unique_ptr<AestheticDetector>(new AestheticDetector());
 
             aestheticScore = aestheticDetector->detect(cvImage);
@@ -124,11 +128,11 @@ void ImageQualityParser::startAnalyse()
 
                 pool.addDetector(grayImage, d->imq.exposureWeight, exposureDetector.get());
             }
+
+            pool.start();
+            pool.end();
         }
     }
-    pool.start();
-    pool.end();
-
 #ifdef TRACE
 
     // QFile filems("imgqsortresult.txt");
@@ -224,6 +228,11 @@ void ImageQualityParser::startAnalyse()
 void ImageQualityParser::cancelAnalyse()
 {
     d->running = false;
+}
+
+void ImageQualityParser::unloadDLModel()
+{
+    AestheticDetector::unloadModel();
 }
 
 } // namespace Digikam
