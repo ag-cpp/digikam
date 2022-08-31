@@ -57,6 +57,7 @@ ImageQualityContainer ImgQSortTest_ArrangeSettings (DetectionType type)
     settings.detectNoise        = false;
     settings.detectCompression  = false;
     settings.detectExposure     = false;
+    settings.detectAesthetic    = false;
 
     switch (type)
     {
@@ -74,6 +75,10 @@ ImageQualityContainer ImgQSortTest_ArrangeSettings (DetectionType type)
 
         case DETECTBLUR:
             settings.detectBlur         = true;
+            break;
+
+        case DETECTAESTHETIC:
+            settings.detectAesthetic    = true;
             break;
 
         default:

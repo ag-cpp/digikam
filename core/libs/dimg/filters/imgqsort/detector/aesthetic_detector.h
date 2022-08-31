@@ -4,7 +4,7 @@
  * https://www.digikam.org
  *
  * Date        : 28/08/2021
- * Description : an unit-test to detect image quality level
+ * Description : Image Quality Parser - Aesthetic detection
  *
  * Copyright (C) 2021-2022 by Gilles Caulier <caulier dot gilles at gmail dot com>
  * Copyright (C) 2021 by Phuoc Khanh Le <phuockhanhnk94 at gmail dot com>
@@ -22,48 +22,43 @@
  *
  * ============================================================ */
 
-#ifndef DIGIKAM_IMGQSORT_TEST_SHARED_H
-#define DIGIKAM_IMGQSORT_TEST_SHARED_H
-
-// Qt includes
-
-#include <QMultiMap>
-#include <QString>
-#include <QFileInfoList>
-#include <QObject>
-#include <QDir>
-#include <QTest>
+#ifndef DIGIKAM_AESTHETIC_DETECTOR_H
+#define DIGIKAM_AESTHETIC_DETECTOR_H
 
 // Local includes
 
-#include "digikam_debug.h"
-#include "digikam_globals.h"
+#include "dimg.h"
+#include "digikam_opencv.h"
+#include "detector.h"
 
 namespace Digikam
 {
 
-enum DetectionType
+class AestheticDetector : public DetectorDistortion
 {
-    DETECTBLUR = 0,
-    DETECTNOISE,
-    DETECTCOMPRESSION,
-    DETECTEXPOSURE,
-    DETECTAESTHETIC,
-    DETECTIONGENERAL
+    Q_OBJECT
+
+public:
+
+    explicit AestheticDetector();
+    ~AestheticDetector();
+
+    float detect(const cv::Mat& image)                          const override;
+
+private:
+
+    explicit AestheticDetector(QObject*);
+
+    cv::Mat preprocess(const cv::Mat& image)                    const;
+    float postProcess(const cv::Mat& modelOutput)               const;
+    bool loadModels()                                           const;
+
+private:
+
+    class Private;
+    Private* const d;
 };
-
-struct CustomDetection
-{
-    bool detectBlur;
-    bool detectNoise;
-    bool detectExposure;
-    bool detectCompression;
-};
-
-QHash<QString, int> ImgQSortTest_ParseTestImagesDefautDetection(DetectionType type, const QFileInfoList& list);
-
-QHash<QString, int> ImgQSortTest_ParseTestImagesCustomDetection(const CustomDetection& customSetting, const QFileInfoList& list);
 
 } // namespace Digikam
 
-#endif // DIGIKAM_IMGQSORT_TEST_SHARED_H
+#endif // DIGIKAM_AESTHETIC_DETECTOR_H

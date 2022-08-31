@@ -21,49 +21,38 @@
  * GNU General Public License for more details.
  *
  * ============================================================ */
-
-#ifndef DIGIKAM_IMGQSORT_TEST_SHARED_H
-#define DIGIKAM_IMGQSORT_TEST_SHARED_H
+#include "detectaesthetic_utest.h"
 
 // Qt includes
 
-#include <QMultiMap>
-#include <QString>
-#include <QFileInfoList>
-#include <QObject>
-#include <QDir>
 #include <QTest>
+#include <QStringList>
+#include <QFileInfoList>
+#include <QDebug>
+#include <QDir>
 
 // Local includes
 
-#include "digikam_debug.h"
 #include "digikam_globals.h"
+#include "imagequalitycontainer.h"
+#include "dpluginloader.h"
+#include "digikam_debug.h"
 
-namespace Digikam
+QTEST_MAIN(ImgQSortTestDetectQesthetic)
+
+ImgQSortTestDetectQesthetic::ImgQSortTestDetectQesthetic(QObject* const parent)
+    : ImgQSortTest(parent)
 {
+    m_dataTestCases = dataTestCases;
+}
 
-enum DetectionType
+void ImgQSortTestDetectQesthetic::testParseTestImagesForAestheticDetection()
 {
-    DETECTBLUR = 0,
-    DETECTNOISE,
-    DETECTCOMPRESSION,
-    DETECTEXPOSURE,
-    DETECTAESTHETIC,
-    DETECTIONGENERAL
-};
+   QHash<QString, bool> results = testParseTestImages(QLatin1String("aestheticDetection"),
+                                                       ImgQSortTest_ParseTestImagesDefautDetection, DETECTAESTHETIC);
 
-struct CustomDetection
-{
-    bool detectBlur;
-    bool detectNoise;
-    bool detectExposure;
-    bool detectCompression;
-};
-
-QHash<QString, int> ImgQSortTest_ParseTestImagesDefautDetection(DetectionType type, const QFileInfoList& list);
-
-QHash<QString, int> ImgQSortTest_ParseTestImagesCustomDetection(const CustomDetection& customSetting, const QFileInfoList& list);
-
-} // namespace Digikam
-
-#endif // DIGIKAM_IMGQSORT_TEST_SHARED_H
+    for (const auto& test_case : results.keys())
+    {
+        QVERIFY(results.value(test_case));
+    }
+}

@@ -61,6 +61,7 @@ public:
         detectNoise         (nullptr),
         detectCompression   (nullptr),
         detectExposure      (nullptr),
+        detectAesthetic     (nullptr),
         setRejected         (nullptr),
         setPending          (nullptr),
         setAccepted         (nullptr),
@@ -81,6 +82,7 @@ public:
     QCheckBox*    detectNoise;
     QCheckBox*    detectCompression;
     QCheckBox*    detectExposure;
+    QCheckBox*    detectAesthetic;
     QCheckBox*    setRejected;
     QCheckBox*    setPending;
     QCheckBox*    setAccepted;
@@ -123,6 +125,9 @@ ImageQualitySettings::ImageQualitySettings(QWidget* const parent)
 
     d->detectExposure         = new QCheckBox(i18n("Detect Under and Over Exposure"), d->optionsView);
     d->detectExposure->setWhatsThis(i18n("Detect if the images are under-exposed or over-exposed"));
+
+    d->detectAesthetic         = new QCheckBox(i18n("Detect Aesthetic image"), d->optionsView);
+    d->detectAesthetic->setWhatsThis(i18n("Detect if the image is aesthetic"));
 
     // ------------------------------------------------------------------------------
 
@@ -235,6 +240,8 @@ ImageQualitySettings::ImageQualitySettings(QWidget* const parent)
 
     connect(d->enableSorter, SIGNAL(toggled(bool)),
             d->optionsView, SLOT(setEnabled(bool)));
+    connect(d->detectAesthetic, SIGNAL(toggled(bool)),
+            this, SLOT(setDisableOptionViews(bool)));
 
     readSettings();
 }
@@ -254,6 +261,7 @@ void ImageQualitySettings::applySettings()
     imq.detectNoise       = d->detectNoise->isChecked();
     imq.detectCompression = d->detectCompression->isChecked();
     imq.detectExposure    = d->detectExposure->isChecked();
+    imq.detectAesthetic   = d->detectAesthetic->isChecked();
     imq.lowQRejected      = d->setRejected->isChecked();
     imq.mediumQPending    = d->setPending->isChecked();
     imq.highQAccepted     = d->setAccepted->isChecked();
@@ -278,6 +286,7 @@ void ImageQualitySettings::readSettings()
     d->detectNoise->setChecked(imq.detectNoise);
     d->detectCompression->setChecked(imq.detectCompression);
     d->detectExposure->setChecked(imq.detectExposure);
+    d->detectAesthetic->setChecked(imq.detectAesthetic);
     d->setRejected->setChecked(imq.lowQRejected);
     d->setPending->setChecked(imq.mediumQPending);
     d->setAccepted->setChecked(imq.highQAccepted);
@@ -298,6 +307,20 @@ ImageQualityContainer ImageQualitySettings::getImageQualityContainer() const
     imq.readFromConfig();
 
     return imq;
+}
+
+void ImageQualitySettings::setDisableOptionViews(bool b)
+{
+    d->detectBlur->setEnabled(!b);
+    d->detectNoise->setEnabled(!b);
+    d->detectCompression->setEnabled(!b);
+    d->detectExposure->setEnabled(!b);
+    d->setRejectedThreshold->setEnabled(!b);
+    d->setPendingThreshold->setEnabled(!b);
+    d->setAcceptedThreshold->setEnabled(!b);
+    d->setBlurWeight->setEnabled(!b);
+    d->setNoiseWeight->setEnabled(!b);
+    d->setCompressionWeight->setEnabled(!b);
 }
 
 } // namespace Digikam
