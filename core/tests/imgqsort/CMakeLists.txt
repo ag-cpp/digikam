@@ -79,7 +79,7 @@ endmacro()
 
 IMGQSORT_BUILD_UNITTEST(detectgeneral_badimage_utest.cpp)
 IMGQSORT_BUILD_UNITTEST(detectgeneral_goodimage_utest.cpp)
-IMGQSORT_BUILD_UNITTEST(detectgeneral_utest.cpp)
+# IMGQSORT_BUILD_UNITTEST(detectgeneral_utest.cpp)
 IMGQSORT_BUILD_UNITTEST(detectnoise_utest.cpp)
 IMGQSORT_BUILD_UNITTEST(detectblur_utest.cpp)
 IMGQSORT_BUILD_UNITTEST(detectexposure_utest.cpp)
