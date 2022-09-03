@@ -58,6 +58,7 @@ struct CustomDetection
     bool detectNoise;
     bool detectExposure;
     bool detectCompression;
+    bool detectAesthetic;
 };
 
 QHash<QString, int> ImgQSortTest_ParseTestImagesDefautDetection(DetectionType type, const QFileInfoList& list);
