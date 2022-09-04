@@ -118,7 +118,7 @@ float BlurDetector::detect(const cv::Mat& image) const
 
     float percentBlur     = float(blurPixel) / float(totalPixels);
 
-    qCDebug(DIGIKAM_DIMG_LOG) << "percentage of blur" << percentBlur;
+    // qCDebug(DIGIKAM_DIMG_LOG) << "percentage of blur" << percentBlur;
 
     return percentBlur;
 }
@@ -196,7 +196,7 @@ cv::Mat BlurDetector::detectMotionBlurMap(const cv::Mat& edgesMap) const
     {
         // Divide image
 
-        qCDebug(DIGIKAM_DIMG_LOG) << "Divide image to small parts";
+        // qCDebug(DIGIKAM_DIMG_LOG) << "Divide image to small parts";
 
         int nb_parts_row = static_cast<int>(edgesMap.size().height / d->part_size_motion_blur);
         int nb_parts_col = static_cast<int>(edgesMap.size().width  / d->part_size_motion_blur);
@@ -218,7 +218,7 @@ cv::Mat BlurDetector::detectMotionBlurMap(const cv::Mat& edgesMap) const
 
                 if (isMotionBlur(subImg))
                 {
-                    qCDebug(DIGIKAM_DIMG_LOG) << "Motion blurred part detected";
+                    // qCDebug(DIGIKAM_DIMG_LOG) << "Motion blurred part detected";
                     res(rect).setTo(1);
                 }
             }
@@ -274,7 +274,7 @@ bool BlurDetector::isMotionBlur(const cv::Mat& frag) const
 
             if (stddev[0] < d->max_stddev)
             {
-                qCDebug(DIGIKAM_DIMG_LOG) << "Standard Deviation for group of lines " << stddev[0];
+                // qCDebug(DIGIKAM_DIMG_LOG) << "Standard Deviation for group of lines " << stddev[0];
             }
 
             return (stddev[0] < d->max_stddev);
@@ -369,7 +369,7 @@ cv::Mat BlurDetector::detectBackgroundRegion(const cv::Mat& image)    const
 {
     try
     {
-        qCDebug(DIGIKAM_DIMG_LOG) << "Divide image to small parts";
+        // qCDebug(DIGIKAM_DIMG_LOG) << "Divide image to small parts";
 
         int nb_parts_row = static_cast<int>(image.size().height / d->part_size_mono_color);
         int nb_parts_col = static_cast<int>(image.size().width  / d->part_size_mono_color);

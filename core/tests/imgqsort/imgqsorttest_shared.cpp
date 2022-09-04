@@ -86,6 +86,7 @@ ImageQualityContainer ImgQSortTest_ArrangeSettings (DetectionType type)
             settings.detectCompression  = true;
             settings.detectNoise        = true;
             settings.detectExposure     = true;
+            settings.detectAesthetic    = false;
             break;
     }
 
@@ -105,6 +106,7 @@ ImageQualityContainer ImgQSortTest_ArrangeCustomSettings(const CustomDetection& 
     settings.detectCompression  = customSetting.detectCompression;
     settings.detectNoise        = customSetting.detectNoise;
     settings.detectExposure     = customSetting.detectExposure;
+    settings.detectAesthetic    = customSetting.detectAesthetic;
 
     return settings;
 }

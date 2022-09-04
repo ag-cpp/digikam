@@ -116,7 +116,7 @@ FilesDownloader::FilesDownloader(QWidget* const parent)
                              246305388
                             );
     d->files << DownloadInfo(QLatin1String("aestheticdetector/"),
-                             QLatin1String("weights_inceptionresnetv2_08_0.910.hdf5.pb"),
+                             QLatin1String("weights_inceptionv3_299.pb"),
                              QLatin1String("205ade89705680a0bd778252d877a862c841374b19c7a96468ff108e69af2b11"),
                              217975225
                             );
