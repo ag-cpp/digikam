@@ -72,7 +72,6 @@ static int heifQIODeviceDImgSeek(int64_t position, void* userdata)
 {
     QFile* const file = static_cast<QFile*>(userdata);
 
-
     return (int)!file->seek(position);
 }
 
