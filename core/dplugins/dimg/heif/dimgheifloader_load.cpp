@@ -23,6 +23,10 @@
 
 #include "dimgheifloader.h"
 
+// C++ includes
+
+#include <cstdint>
+
 // Qt includes
 
 #include <QFile>
