@@ -11,4 +11,5 @@ BUGFIXES:
 001 ==> 458690 - Crash after the digiKam splash screen.
 002 ==> 458627 - Unconfirmed faces do not show up.
 003 ==> 458752 - Appimage isn't recognising digiKam tags in xmp sidecars.
-004 ==> 
+004 ==> 458704 - Migration Database.
+005 ==> 
