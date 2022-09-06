@@ -9,4 +9,5 @@ General: Update internal with snapshot 2002-09-03
 BUGFIXES:
 
 001 ==> 458690 - Crash after the digiKam splash screen.
-002 ==> 
+002 ==> 458627 - Unconfirmed faces do not show up.
+003 ==> 
