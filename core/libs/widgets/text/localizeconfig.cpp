@@ -8,16 +8,7 @@
  *
  * Copyright (C) 2021-2022 by Gilles Caulier <caulier dot gilles at gmail dot com>
  *
- * This program is free software; you can redistribute it
- * and/or modify it under the terms of the GNU General
- * Public License as published by the Free Software Foundation;
- * either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * SPDX-License-Identifier: GPL-2.0-or-later
  *
  * ============================================================ */
 
@@ -47,69 +38,55 @@
 #include "localizesettings.h"
 #include "altlangstredit.h"
 #include "digikam_debug.h"
-#include "searchtextbar.h"
 #include "dlayoutbox.h"
 #include "dexpanderbox.h"
 
 namespace Digikam
 {
 
-class Q_DECL_HIDDEN LanguagesList : public QTreeWidget
+LanguagesList::LanguagesList(QWidget* const parent)
+    : QTreeWidget(parent)
 {
-    Q_OBJECT
+    setRootIsDecorated(false);
+    setItemsExpandable(false);
+    setExpandsOnDoubleClick(false);
+    setAlternatingRowColors(true);
+    setSelectionMode(QAbstractItemView::NoSelection);
+    setAllColumnsShowFocus(true);
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    setColumnCount(2);
+    setHeaderLabels(QStringList() << i18nc("@title: translator language code", "Code (Language-Country)")
+                                  << i18nc("@title: translator language name", "Name"));
+    header()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+    header()->setSectionResizeMode(1, QHeaderView::Stretch);
+}
 
-public:
+void LanguagesList::slotSearchTextChanged(const SearchTextSettings& settings)
+{
+    int found = 0;
 
-    explicit LanguagesList(QWidget* const parent)
-        : QTreeWidget(parent)
+    QTreeWidgetItemIterator it(this);
+
+    while (*it)
     {
-        setRootIsDecorated(false);
-        setItemsExpandable(false);
-        setExpandsOnDoubleClick(false);
-        setAlternatingRowColors(true);
-        setSelectionMode(QAbstractItemView::NoSelection);
-        setAllColumnsShowFocus(true);
-        setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        setColumnCount(2);
-        setHeaderLabels(QStringList() << i18nc("@title: translator language code", "Code (Language-Country)")
-                                      << i18nc("@title: translator language name", "Name"));
-        header()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
-        header()->setSectionResizeMode(1, QHeaderView::Stretch);
-    }
-
-public Q_SLOTS:
-
-    void slotSearchTextChanged(const SearchTextSettings& settings)
-    {
-        int found = 0;
-
-        QTreeWidgetItemIterator it(this);
-
-        while (*it)
+        if (
+            (*it)->text(0).contains(settings.text, settings.caseSensitive) ||
+            (*it)->text(1).contains(settings.text, settings.caseSensitive)
+           )
         {
-            if (
-                (*it)->text(0).contains(settings.text, settings.caseSensitive) ||
-                (*it)->text(1).contains(settings.text, settings.caseSensitive)
-               )
-            {
-                found++;
-                (*it)->setHidden(false);
-            }
-            else
-            {
-                (*it)->setHidden(true);
-            }
-
-            ++it;
+            found++;
+            (*it)->setHidden(false);
+        }
+        else
+        {
+            (*it)->setHidden(true);
         }
 
-        Q_EMIT signalSearchResult(found);
+        ++it;
     }
 
-Q_SIGNALS:
-
-    void signalSearchResult(int);
-};
+    Q_EMIT signalSearchResult(found);
+}
 
 // --------------------------------------------------------------------------------------------------
 

@@ -8,16 +8,7 @@
  *
  * Copyright (C) 2021-2022 by Gilles Caulier <caulier dot gilles at gmail dot com>
  *
- * This program is free software; you can redistribute it
- * and/or modify it under the terms of the GNU General
- * Public License as published by the Free Software Foundation;
- * either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * SPDX-License-Identifier: GPL-2.0-or-later
  *
  * ============================================================ */
 
@@ -29,9 +20,10 @@
 #include <QCheckBox>
 #include <QComboBox>
 #include <QWidget>
+#include <QListWidget>
 #include <QLabel>
 #include <QFile>
-#include <QScopedPointer>
+#include <QMenu>
 
 // KDE includes
 
@@ -39,31 +31,27 @@
 
 // Local includes
 
+#include "digikam_debug.h"
 #include "dimg.h"
-#include "dmetadata.h"
 #include "donlinetranslator.h"
 #include "localizesettings.h"
+#include "localizeselector.h"
+#include "altlangstredit.h"
 
 namespace DigikamBqmTranslatePlugin
 {
 
 class Q_DECL_HIDDEN Translate::Private
 {
+
 public:
 
-    enum RemoveAction
+    enum Entries
     {
-        ALL = 0,
-        GPS,
-        DATE,
-        EXIF,
-        VIDEO,
-        DUBLIN,
-        COMMENT,
-        DIGIKAM,
-        HISTORY,
-        XPKEYWORDS
-
+        Title       = 0x01,
+        Caption     = 0x02,
+        Copyrights  = 0x04,
+        UsageTerms  = 0x08
     };
 
 public:
@@ -73,19 +61,24 @@ public:
         captionCB     (nullptr),
         copyrightsCB  (nullptr),
         usageTermsCB  (nullptr),
-        trComboBox    (nullptr),
+        trLabel       (nullptr),
+        tagsLabel     (nullptr),
+        trSelectorList(nullptr),
         changeSettings(true)
     {
     }
 
-    QCheckBox* titleCB;
-    QCheckBox* captionCB;
-    QCheckBox* copyrightsCB;
-    QCheckBox* usageTermsCB;
+    QCheckBox*            titleCB;
+    QCheckBox*            captionCB;
+    QCheckBox*            copyrightsCB;
+    QCheckBox*            usageTermsCB;
 
-    QComboBox* trComboBox;
+    QLabel*               trLabel;
+    QLabel*               tagsLabel;
 
-    bool       changeSettings;
+    LocalizeSelectorList* trSelectorList;
+
+    bool                  changeSettings;
 };
 
 Translate::Translate(QObject* const parent)
@@ -109,29 +102,23 @@ void Translate::registerSettingsWidget()
     QWidget* const panel     = new QWidget;
     QGridLayout* const grid  = new QGridLayout(panel);
 
-    d->titleCB               = new QCheckBox(i18nc("@title", "Title"),       panel);
-    d->captionCB             = new QCheckBox(i18nc("@title", "Caption"),     panel);
-    d->copyrightsCB          = new QCheckBox(i18nc("@title", "Copyrights"),  panel);
-    d->usageTermsCB          = new QCheckBox(i18nc("@title", "Usage Terms"), panel);
+    d->tagsLabel             = new QLabel(i18nc("@label", "Entries to Translate:"),                panel);
+    d->titleCB               = new QCheckBox(i18nc("@option:check metadata entry", "Title"),       panel);
+    d->captionCB             = new QCheckBox(i18nc("@option:check metadata entry", "Caption"),     panel);
+    d->copyrightsCB          = new QCheckBox(i18nc("@option:check metadata entry", "Copyrights"),  panel);
+    d->usageTermsCB          = new QCheckBox(i18nc("@option:check metadata entry", "Usage Terms"), panel);
 
-    d->trComboBox            = new QComboBox(panel);
+    d->trSelectorList        = new LocalizeSelectorList(panel);
+    d->trSelectorList->setTitle(i18nc("@label", "Translate to:"));
 
-    QStringList allRFC3066  = DOnlineTranslator::supportedRFC3066(LocalizeSettings::instance()->settings().translatorEngine);
-    LocalizeContainer set   = LocalizeSettings::instance()->settings();
-
-    Q_FOREACH (const QString& lg, set.translatorLang)
-    {
-        d->trComboBox->addItem(lg);
-        d->trComboBox->setItemData(d->trComboBox->findText(lg), i18nc("@info", "Translate to %1", languageNameRFC3066(lg)), Qt::ToolTipRole);
-    }
-
-    grid->addWidget(d->titleCB,      0, 0, 1, 1);
-    grid->addWidget(d->captionCB,    1, 0, 1, 1);
-    grid->addWidget(d->copyrightsCB, 2, 0, 1, 1);
-    grid->addWidget(d->usageTermsCB, 3, 0, 1, 1);
-    grid->addWidget(d->trComboBox,   4, 0, 1, 1);
+    grid->addWidget(d->tagsLabel,      0, 0, 1, 2);
+    grid->addWidget(d->titleCB,        1, 0, 1, 2);
+    grid->addWidget(d->captionCB,      2, 0, 1, 2);
+    grid->addWidget(d->copyrightsCB,   3, 0, 1, 2);
+    grid->addWidget(d->usageTermsCB,   4, 0, 1, 2);
+    grid->addWidget(d->trSelectorList, 5, 0, 1, 2);
     grid->setColumnStretch(0, 10);
-    grid->setRowStretch(5, 10);
+    grid->setRowStretch(6, 10);
 
     m_settingsWidget = panel;
 
@@ -147,7 +134,7 @@ void Translate::registerSettingsWidget()
     connect(d->usageTermsCB, SIGNAL(toggled(bool)),
             this, SLOT(slotSettingsChanged()));
 
-    connect(d->trComboBox, SIGNAL(currentIndexChanged(int)),
+    connect(d->trSelectorList, SIGNAL(signalSettingsChanged()),
             this, SLOT(slotSettingsChanged()));
 
     BatchTool::registerSettingsWidget();
@@ -161,7 +148,7 @@ BatchToolSettings Translate::defaultSettings()
     settings.insert(QLatin1String("Caption"),    false);
     settings.insert(QLatin1String("Copyrights"), false);
     settings.insert(QLatin1String("UsageTerms"), false);
-    settings.insert(QLatin1String("TrLang"),     QLatin1String("en-US"));
+    settings.insert(QLatin1String("TrLangs"),    QStringList() << QLatin1String("en-US"));
 
     return settings;
 }
@@ -175,8 +162,14 @@ void Translate::slotAssignSettings2Widget()
     d->copyrightsCB->setChecked(settings()[QLatin1String("Copyrights")].toBool());
     d->usageTermsCB->setChecked(settings()[QLatin1String("UsageTerms")].toBool());
 
-    QString lang = settings()[QLatin1String("TrLang")].toString();
-    d->trComboBox->setCurrentIndex(d->trComboBox->findText(lang));
+    QStringList langs = settings()[QLatin1String("TrLangs")].toStringList();
+
+    d->trSelectorList->clearLanguages();
+
+    Q_FOREACH (const QString& lg, langs)
+    {
+        d->trSelectorList->addLanguage(lg);
+    }
 
     d->changeSettings = true;
 }
@@ -191,7 +184,9 @@ void Translate::slotSettingsChanged()
         settings.insert(QLatin1String("Caption"),     d->captionCB->isChecked());
         settings.insert(QLatin1String("Copyrights"),  d->copyrightsCB->isChecked());
         settings.insert(QLatin1String("UsageTerms"),  d->usageTermsCB->isChecked());
-        settings.insert(QLatin1String("trLang"),      d->trComboBox->currentText());
+
+        QStringList langs = d->trSelectorList->languagesList();
+        settings.insert(QLatin1String("TrLangs"),     langs);
 
         BatchTool::slotSettingsChanged(settings);
     }
@@ -204,159 +199,179 @@ bool Translate::toolOperations()
 
     if (image().isNull())
     {
-        QFile::remove(outputUrl().toLocalFile());
-        ret = QFile::copy(inputUrl().toLocalFile(), outputUrl().toLocalFile());
-
-        if (!ret || !meta->load(outputUrl().toLocalFile()))
+        if (!meta->load(inputUrl().toLocalFile()))
         {
-            return ret;
+            return false;
         }
     }
     else
     {
-        ret = savefromDImg();
         meta->setData(image().getMetadata());
     }
 
-    bool titleAc       = settings()[QLatin1String("Title")].toBool();
-    bool captionAc     = settings()[QLatin1String("Caption")].toBool();
-    bool copyrightsAc  = settings()[QLatin1String("Copyrights")].toBool();
-    bool usageTermsAc  = settings()[QLatin1String("UsageTerms")].toBool();
-    QString trLang     = settings()[QLatin1String("TrLAng")].toString();
+    bool titleStage      = settings()[QLatin1String("Title")].toBool();
+    bool captionStage    = settings()[QLatin1String("Caption")].toBool();
+    bool copyrightsStage = settings()[QLatin1String("Copyrights")].toBool();
+    bool usageTermsStage = settings()[QLatin1String("UsageTerms")].toBool();
+    QStringList langs    = settings()[QLatin1String("TrLangs")].toStringList();
 
-    if (titleAc)
+    Q_FOREACH (const QString& trLang, langs)
     {
-        
-    }
+        if (titleStage)
+        {
+            qCDebug(DIGIKAM_DPLUGIN_BQM_LOG) << "Translate Title";
+            ret &= insertTranslation(Private::Title, trLang, meta.data());
+        }
 
-    if (removeIptc)
-    {
-        if      (iptcData == Private::ALL)
+        if (captionStage)
         {
-            meta->clearIptc();
+            qCDebug(DIGIKAM_DPLUGIN_BQM_LOG) << "Translate Caption";
+            ret &= insertTranslation(Private::Caption, trLang, meta.data());
         }
-        else if (iptcData == Private::DATE)
-        {
-            meta->removeIptcTag("Iptc.Application2.DateCreated");
-            meta->removeIptcTag("Iptc.Application2.TimeCreated");
-        }
-        else if (iptcData == Private::COMMENT)
-        {
-            meta->removeIptcTag("Iptc.Application2.Caption");
-        }
-    }
 
-    if (removeXmp)
-    {
-        if      (xmpData == Private::ALL)
+        if (copyrightsStage)
         {
-            meta->clearXmp();
+            qCDebug(DIGIKAM_DPLUGIN_BQM_LOG) << "Translate Copyrights";
+            ret &= insertTranslation(Private::Copyrights, trLang, meta.data());
         }
-        else if (xmpData == Private::DATE)
-        {
-            meta->removeXmpTag("Xmp.photoshop.DateCreated");
-            meta->removeXmpTag("Xmp.exif.DateTimeOriginal");
-            meta->removeXmpTag("Xmp.xmp.MetadataDate");
-            meta->removeXmpTag("Xmp.xmp.CreateDate");
-            meta->removeXmpTag("Xmp.xmp.ModifyDate");
-            meta->removeXmpTag("Xmp.tiff.DateTime");
-            meta->removeXmpTag("Xmp.video.DateTimeDigitized");
-            meta->removeXmpTag("Xmp.video.DateTimeOriginal");
-            meta->removeXmpTag("Xmp.video.ModificationDate");
-            meta->removeXmpTag("Xmp.video.DateUTC");
-        }
-        else if (xmpData == Private::HISTORY)
-        {
-            meta->removeXmpTag("Xmp.digiKam.ImageHistory");
-        }
-        else if (xmpData == Private::DIGIKAM)
-        {
-            meta->removeXmpTags(QStringList() << QLatin1String("digiKam"));
-        }
-        else if (xmpData == Private::DUBLIN)
-        {
-            meta->removeXmpTags(QStringList() << QLatin1String("dc"));
-        }
-        else if (xmpData == Private::EXIF)
-        {
-            meta->removeXmpTags(QStringList() << QLatin1String("exif"));
-        }
-        else if (xmpData == Private::VIDEO)
-        {
-            meta->removeXmpTags(QStringList() << QLatin1String("video"));
-        }
-        else if (xmpData == Private::COMMENT)
-        {
-            meta->removeXmpTag("Xmp.acdsee.Caption");
-            meta->removeXmpTag("Xmp.dc.Description");
-            meta->removeXmpTag("Xmp.crs.Description");
-            meta->removeXmpTag("Xmp.exif.UserComment");
-            meta->removeXmpTag("Xmp.tiff.ImageDescription");
-            meta->removeXmpTag("Xmp.xmp.Description");
-            meta->removeXmpTag("Xmp.xmpDM.DMComment");
-        }
-    }
 
-    if (ret && (removeExif || removeIptc || removeXmp))
-    {
-        ret = meta->save(outputUrl().toLocalFile());
+        if (usageTermsStage)
+        {
+            qCDebug(DIGIKAM_DPLUGIN_BQM_LOG) << "Translate Usage Terms";
+            ret &= insertTranslation(Private::UsageTerms, trLang, meta.data());
+        }
+
+        qCDebug(DIGIKAM_DPLUGIN_BQM_LOG) << "Title     :" << meta->getXmpTagStringListLangAlt("Xmp.dc.title", false);
+        qCDebug(DIGIKAM_DPLUGIN_BQM_LOG) << "Caption   :" << meta->getXmpTagStringListLangAlt("Xmp.dc.description", false);
+        qCDebug(DIGIKAM_DPLUGIN_BQM_LOG) << "CopyRights:" << meta->getXmpTagStringListLangAlt("Xmp.dc.rights", false);
+        qCDebug(DIGIKAM_DPLUGIN_BQM_LOG) << "UsageTerms:" << meta->getXmpTagStringListLangAlt("Xmp.xmpRights.UsageTerms", false);
+
+        if (image().isNull())
+        {
+            QFile::remove(outputUrl().toLocalFile());
+            ret &= QFile::copy(inputUrl().toLocalFile(), outputUrl().toLocalFile());
+
+            if (ret && (titleStage || captionStage || copyrightsStage || usageTermsStage))
+            {
+                ret &= meta->save(outputUrl().toLocalFile());
+                qCDebug(DIGIKAM_DPLUGIN_BQM_LOG) << "Save metadata to file:" << ret;
+            }
+        }
+        else
+        {
+            if (titleStage || captionStage || copyrightsStage || usageTermsStage)
+            {
+                qCDebug(DIGIKAM_DPLUGIN_BQM_LOG) << "Save metadata to image";
+                image().setMetadata(meta->data());
+            }
+
+            ret &= savefromDImg();
+        }
     }
 
     return ret;
 }
 
-QString Translate::translate(const QString& text, const QString& trCode)
+bool Translate::insertTranslation(int entry, const QString& trLang, DMetadata* const meta) const
 {
-    DOnlineTranslator* const trengine   = new DOnlineTranslator;
-    DOnlineTranslator::Language srcLang = DOnlineTranslator::Auto;
-    DOnlineTranslator::Language trLang  = DOnlineTranslator::language(DOnlineTranslator::fromRFC3066(LocalizeSettings::instance()->settings().translatorEngine, trCode));
+    bool ret = true;
+    CaptionsMap captions;
+    DMetadata::AltLangMap map;
 
-    qCDebug(DIGIKAM_WIDGETS_LOG) << "Request to translate with Web-service:";
-    qCDebug(DIGIKAM_WIDGETS_LOG) << "Text to translate        :" << text;
-    qCDebug(DIGIKAM_WIDGETS_LOG) << "To target language       :" << trLang;
-    qCDebug(DIGIKAM_WIDGETS_LOG) << "With source language     :" << srcLang;
-
-    trengine->translate(text,                                                            // String to translate
-                        LocalizeSettings::instance()->settings().translatorEngine,       // Web service
-                        trLang,                                                          // Target language
-                        srcLang,                                                         // Source langage
-                        DOnlineTranslator::Auto);
-}
-
-void AltLangStrEdit::slotTranslationFinished()
-{
-    setDisabled(false);
-
-    if (d->trengine->error() == DOnlineTranslator::NoError)
+    switch (entry)
     {
-        if (d->trCode.isEmpty())
+        case Private::Title:
         {
-            return;
+            captions = meta->getItemTitles();
+            map      = captions.toAltLangMap();
+            break;
         }
 
-        QString translation = d->trengine->translation();
-        qCDebug(DIGIKAM_WIDGETS_LOG) << "Text translated          :" << translation;
+        case Private::Caption:
+        {
+            captions = meta->getItemComments();
+            map      = captions.toAltLangMap();
+            break;
+        }
 
-        MetaEngine::AltLangMap vals = values();
-        vals.insert(d->trCode, translation);
-        setValues(vals);
+        case Private::Copyrights:
+        {
+            map = meta->getXmpTagStringListLangAlt("Xmp.dc.rights", false);
+            break;
+        }
 
-        Q_EMIT signalValueAdded(d->trCode, translation);
+        case Private::UsageTerms:
+        {
+            map = meta->getXmpTagStringListLangAlt("Xmp.xmpRights.UsageTerms", false);
+            break;
+        }
+    }
 
-        d->languageCB->setCurrentText(d->trCode);
-        d->trCode.clear();
+    if (!map.isEmpty() && map.contains(QLatin1String("x-default")))
+    {
+        QString sc = map.value(QLatin1String("x-default"));
+
+        if (!sc.isEmpty())
+        {
+            QString tr;
+            QString error;
+            ret = s_inlineTranslateString(sc, trLang, tr, error);
+
+            if (ret)
+            {
+                switch (entry)
+                {
+                    case Private::Title:
+                    {
+                        CaptionValues val = captions[QLatin1String("x-default")];
+                        val.caption       = tr;
+                        captions[trLang]  = val;
+                        meta->setItemTitles(captions);
+                        break;
+                    }
+
+                    case Private::Caption:
+                    {
+                        CaptionValues val = captions[QLatin1String("x-default")];
+                        val.caption       = tr;
+                        captions[trLang]  = val;
+                        meta->setItemComments(captions);
+                        break;
+                    }
+
+                    case Private::Copyrights:
+                    {
+                        map[trLang] = tr;
+                        meta->setXmpTagStringListLangAlt("Xmp.dc.rights", map);
+                        break;
+                    }
+
+                    case Private::UsageTerms:
+                    {
+                        map[trLang] = tr;
+                        meta->setXmpTagStringListLangAlt("Xmp.xmpRights.UsageTerms", map);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                qCDebug(DIGIKAM_DPLUGIN_BQM_LOG) << "Cannot process online translation from"
+                                                 << meta->getFilePath()
+                                                 << " - Error:" << error;
+            }
+        }
+        else
+        {
+            qCDebug(DIGIKAM_DPLUGIN_BQM_LOG) << "No x-default language found from" << meta->getFilePath();
+        }
     }
     else
     {
-        qCDebug(DIGIKAM_WIDGETS_LOG) << "Translation Error       :" << d->trengine->error();
-
-        QMessageBox::information(qApp->activeWindow(),
-                                 i18nc("@info", "Failed to translate string with %1 Web-service",
-                                 DOnlineTranslator::engineName(LocalizeSettings::instance()->settings().translatorEngine)),
-                                 i18nc("@info", "Error message: %1",
-                                 d->trengine->errorString()));
-
+        qCDebug(DIGIKAM_DPLUGIN_BQM_LOG) << "No alternative language string found from" << meta->getFilePath();
     }
+
+    return ret;
 }
 
 } // namespace DigikamBqmTranslatePlugin
