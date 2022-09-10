@@ -13,4 +13,5 @@ BUGFIXES:
 003 ==> 458752 - Appimage isn't recognising digiKam tags in xmp sidecars.
 004 ==> 458704 - Migration Database.
 005 ==> 458968 - Geolocation information icon not visible.
-006 ==> 
+006 ==> 458958 - Album items not sorted according to date from XMP sidecar.
+007 ==> 
