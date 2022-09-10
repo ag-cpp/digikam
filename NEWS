@@ -12,4 +12,5 @@ BUGFIXES:
 002 ==> 458627 - Unconfirmed faces do not show up.
 003 ==> 458752 - Appimage isn't recognising digiKam tags in xmp sidecars.
 004 ==> 458704 - Migration Database.
-005 ==> 
+005 ==> 458968 - Geolocation information icon not visible.
+006 ==> 
