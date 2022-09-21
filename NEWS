@@ -15,4 +15,5 @@ BUGFIXES:
 005 ==> 458968 - Geolocation information icon not visible.
 006 ==> 458958 - Album items not sorted according to date from XMP sidecar.
 007 ==> 459124 - Tags are duplicated when adding People/Face tags.
-008 ==> 
+008 ==> 459370 - Merge tags dont remove old tags.
+009 ==> 
