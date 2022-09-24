@@ -177,7 +177,7 @@ void Task::run()
 
         // Only true if it is also the last tool
 
-        AssignTemplate |= (set.name == QLatin1String("AssignTemplate"));
+        assignTemplate |= (set.name == QLatin1String("AssignTemplate"));
         timeAdjust     |= (set.name == QLatin1String("TimeAdjust"));
         rmMetadata     |= (set.name == QLatin1String("RemoveMetadata"));
 
