@@ -153,9 +153,10 @@ void Task::run()
 
     // ItemInfo must be tread-safe.
 
-    ItemInfo source = ItemInfo::fromUrl(d->tools.m_itemUrl);
-    bool timeAdjust = false;
-    bool rmMetadata = false;
+    ItemInfo source     = ItemInfo::fromUrl(d->tools.m_itemUrl);
+    bool assignTemplate = false;
+    bool timeAdjust     = false;
+    bool rmMetadata     = false;
 
     foreach (const BatchToolSet& set, d->tools.m_toolsList)
     {
@@ -176,8 +177,9 @@ void Task::run()
 
         // Only true if it is also the last tool
 
-        timeAdjust |= (set.name == QLatin1String("TimeAdjust"));
-        rmMetadata |= (set.name == QLatin1String("RemoveMetadata"));
+        AssignTemplate |= (set.name == QLatin1String("AssignTemplate"));
+        timeAdjust     |= (set.name == QLatin1String("TimeAdjust"));
+        rmMetadata     |= (set.name == QLatin1String("RemoveMetadata"));
 
         inUrl       = outUrl;
         index       = set.index + 1;
@@ -301,7 +303,7 @@ void Task::run()
                                              timeAdjust))
         {
             emitActionData(ActionData::BatchDone, i18n("Item processed successfully %1", renameMess),
-                           dest, (rmMetadata | timeAdjust));
+                           dest, (assignTemplate | rmMetadata | timeAdjust));
         }
         else
         {
