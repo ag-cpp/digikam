@@ -17,4 +17,5 @@ BUGFIXES:
 007 ==> 459124 - Tags are duplicated when adding People/Face tags.
 008 ==> 459370 - Merge tags dont remove old tags.
 009 ==> 453621 - Error while opening the database.
-010 ==> 
+010 ==> 459463 - Paste Coordinates Lost Precision.
+011 ==> 
