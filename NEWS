@@ -18,4 +18,6 @@ BUGFIXES:
 008 ==> 459370 - Merge tags dont remove old tags.
 009 ==> 453621 - Error while opening the database.
 010 ==> 459463 - Paste Coordinates Lost Precision.
-011 ==> 
+011 ==> 459276 - Batch Queue Manager, Base tool (Convert tool): crash for some selected formats.
+012 ==> 
+
