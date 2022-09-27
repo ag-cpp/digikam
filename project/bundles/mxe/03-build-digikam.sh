@@ -96,6 +96,20 @@ cp $DOWNLOAD_DIR/lensfun_manifest.txt $ORIG_WD/data/
 #################################################################################################
 # Build digiKam in temporary directory and installation
 
+# Clean up previous install (see bug #459276)
+
+cd "$MXE_BUILDROOT"
+FILES=$(find . | grep -E '(digikam|showfoto)')
+
+for FILE in $FILES ; do
+    if [[ -f ${FILE} || -d ${FILE} ]] ; then
+        echo -e "   ==> $MXE_BUILDROOT/${FILE} will be removed from previous install"
+        rm -f $MXE_BUILDROOT/${FILE}
+    fi
+done
+
+cd $BUILDING_DIR
+
 if [ -d "$DK_BUILDTEMP/digikam-$DK_VERSION" ] ; then
 
     echo "---------- Updating existing $DK_BUILDTEMP"
