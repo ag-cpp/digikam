@@ -80,7 +80,7 @@ FILES=$(find /usr | grep -E '(digikam|showfoto)')
 for FILE in $FILES ; do
     if [[ -f ${FILE} || -d ${FILE} ]] ; then
         echo -e "   ==> ${FILE} will be removed from previous install"
-        rm -f ${FILE}
+        rm -fr ${FILE}
     fi
 done
 
