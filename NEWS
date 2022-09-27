@@ -3,7 +3,7 @@ digiKam 7.9.0 - Release date: 2022-xx-xx
 *****************************************************************************************************
 NEW FEATURES:
 
-General: Update internal with snapshot 2002-09-03
+General: Update internal Libraw with snapshot 2002-09-03
 
 *****************************************************************************************************
 BUGFIXES:
@@ -19,5 +19,6 @@ BUGFIXES:
 009 ==> 453621 - Error while opening the database.
 010 ==> 459463 - Paste Coordinates Lost Precision.
 011 ==> 459276 - Batch Queue Manager, Base tool (Convert tool): crash for some selected formats.
-012 ==> 
+012 ==> 459306 - 'Ambiguous Shortcuts' Message is displayed every time digiKam is launched.
+013 ==> 
 
