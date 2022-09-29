@@ -20,5 +20,5 @@ BUGFIXES:
 010 ==> 459463 - Paste Coordinates Lost Precision.
 011 ==> 459276 - Batch Queue Manager, Base tool (Convert tool): crash for some selected formats.
 012 ==> 459306 - 'Ambiguous Shortcuts' Message is displayed every time digiKam is launched.
-013 ==> 
-
+013 ==> 459822 - Blending raw images (-2,0,+2 Ev) does not result in exposure blend. (all three TIFFs are corrected for 0Ev before merging.)
+014 ==> 
