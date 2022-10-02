@@ -24,4 +24,5 @@ BUGFIXES:
 013 ==> 459822 - Blending raw images (-2,0,+2 Ev) does not result in exposure blend. (all three TIFFs are corrected for 0Ev before merging.)
 014 ==> 459819 - digiKam Crashes after downloading several files.
 015 ==> 459910 - Picture detail in full screen.
-016 ==> 
+016 ==> 459892 - Fingerprints in maintenance mode crash.
+017 ==> 
