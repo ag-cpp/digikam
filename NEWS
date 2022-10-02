@@ -23,4 +23,5 @@ BUGFIXES:
 012 ==> 459306 - 'Ambiguous Shortcuts' Message is displayed every time digiKam is launched.
 013 ==> 459822 - Blending raw images (-2,0,+2 Ev) does not result in exposure blend. (all three TIFFs are corrected for 0Ev before merging.)
 014 ==> 459819 - digiKam Crashes after downloading several files.
-015 ==> 
+015 ==> 459910 - Picture detail in full screen.
+016 ==> 
