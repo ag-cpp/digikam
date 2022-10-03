@@ -25,4 +25,5 @@ BUGFIXES:
 014 ==> 459819 - digiKam Crashes after downloading several files.
 015 ==> 459910 - Picture detail in full screen.
 016 ==> 459892 - Fingerprints in maintenance mode crash.
-017 ==> 
+017 ==> 398386 - Allow video frame to be saved as picture.
+018 ==> 
