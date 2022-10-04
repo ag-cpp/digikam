@@ -186,7 +186,14 @@ bool DImgHEIFLoader::save(const QString& filePath, DImgLoaderObserver* const obs
 
     QElapsedTimer timer;
     timer.start();
+
     qCDebug(DIGIKAM_DIMG_LOG_HEIF) << "HEVC encoder setup...";
+
+#if LIBHEIF_NUMERIC_VERSION >= 0x010d0000
+
+    heif_init(nullptr);
+
+#endif
 
     struct heif_context* const ctx = heif_context_alloc();
 
@@ -205,6 +212,12 @@ bool DImgHEIFLoader::save(const QString& filePath, DImgLoaderObserver* const obs
     {
         heif_context_free(ctx);
 
+#if LIBHEIF_NUMERIC_VERSION >= 0x010d0000
+
+        heif_deinit();
+
+#endif
+
         return false;
     }
 
@@ -221,6 +234,12 @@ bool DImgHEIFLoader::save(const QString& filePath, DImgLoaderObserver* const obs
     {
         heif_encoder_release(encoder);
         heif_context_free(ctx);
+
+#if LIBHEIF_NUMERIC_VERSION >= 0x010d0000
+
+        heif_deinit();
+
+#endif
 
         return false;
     }
@@ -246,6 +265,12 @@ bool DImgHEIFLoader::save(const QString& filePath, DImgLoaderObserver* const obs
         heif_encoder_release(encoder);
         heif_context_free(ctx);
 
+#if LIBHEIF_NUMERIC_VERSION >= 0x010d0000
+
+        heif_deinit();
+
+#endif
+
         return false;
     }
 
@@ -259,6 +284,12 @@ bool DImgHEIFLoader::save(const QString& filePath, DImgLoaderObserver* const obs
         qCWarning(DIGIKAM_DIMG_LOG_HEIF) << "HEIF data pixels information not valid!";
         heif_encoder_release(encoder);
         heif_context_free(ctx);
+
+#if LIBHEIF_NUMERIC_VERSION >= 0x010d0000
+
+        heif_deinit();
+
+#endif
 
         return false;
     }
@@ -400,6 +431,11 @@ bool DImgHEIFLoader::save(const QString& filePath, DImgLoaderObserver* const obs
                 heif_encoder_release(encoder);
                 heif_context_free(ctx);
 
+#if LIBHEIF_NUMERIC_VERSION >= 0x010d0000
+
+                heif_deinit();
+
+#endif
                 return false;
             }
 
@@ -426,6 +462,12 @@ bool DImgHEIFLoader::save(const QString& filePath, DImgLoaderObserver* const obs
         heif_image_handle_release(image_handle);
         heif_encoder_release(encoder);
         heif_context_free(ctx);
+
+#if LIBHEIF_NUMERIC_VERSION >= 0x010d0000
+
+        heif_deinit();
+
+#endif
 
         return false;
     }
@@ -456,6 +498,12 @@ bool DImgHEIFLoader::save(const QString& filePath, DImgLoaderObserver* const obs
             heif_image_handle_release(image_handle);
             heif_encoder_release(encoder);
             heif_context_free(ctx);
+
+#if LIBHEIF_NUMERIC_VERSION >= 0x010d0000
+
+            heif_deinit();
+
+#endif
 
             return false;
         }
@@ -489,6 +537,12 @@ bool DImgHEIFLoader::save(const QString& filePath, DImgLoaderObserver* const obs
     {
         heif_context_free(ctx);
 
+#if LIBHEIF_NUMERIC_VERSION >= 0x010d0000
+
+        heif_deinit();
+
+#endif
+
         return false;
     }
 
@@ -496,6 +550,12 @@ bool DImgHEIFLoader::save(const QString& filePath, DImgLoaderObserver* const obs
 
     imageSetAttribute(QLatin1String("savedFormat"), QLatin1String("HEIF"));
     saveMetadata(filePath);
+
+#if LIBHEIF_NUMERIC_VERSION >= 0x010d0000
+
+    heif_deinit();
+
+#endif
 
     return true;
 }
