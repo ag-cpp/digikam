@@ -26,4 +26,5 @@ BUGFIXES:
 015 ==> 459910 - Picture detail in full screen.
 016 ==> 459892 - Fingerprints in maintenance mode crash.
 017 ==> 398386 - Allow video frame to be saved as picture.
-018 ==> 
+018 ==> 459969 - Unconfirmed Faces are not grouped correctly when re-running recognition.
+019 ==> 
