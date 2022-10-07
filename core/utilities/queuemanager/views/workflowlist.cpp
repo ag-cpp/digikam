@@ -285,6 +285,8 @@ void WorkflowList::slotContextMenu()
                     mngr->remove(wfOld);
                     mngr->insert(wfNew);
                     mngr->save();
+                    removeItemWidget(item, 0);
+                    delete item;
                 }
             }
         }
@@ -311,6 +313,7 @@ void WorkflowList::slotContextMenu()
                     WorkflowManager* const mngr = WorkflowManager::instance();
                     Workflow wf                 = mngr->findByTitle(item->title());
                     mngr->remove(wf);
+                    mngr->save();
                     removeItemWidget(item, 0);
                     delete item;
                 }
