@@ -27,4 +27,5 @@ BUGFIXES:
 016 ==> 459892 - Fingerprints in maintenance mode crash.
 017 ==> 398386 - Allow video frame to be saved as picture.
 018 ==> 459969 - Unconfirmed Faces are not grouped correctly when re-running recognition.
-019 ==> 
+019 ==> 460091 - Original batch still present after modification.
+020 ==> 
