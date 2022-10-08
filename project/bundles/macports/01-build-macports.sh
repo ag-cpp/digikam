@@ -305,6 +305,8 @@ port install \
              qt5-mysql-plugin +mariadb10_5 \
              wget +ssl
 
+port deactivate boost
+
 if [[ $DK_QTWEBENGINE = 1 ]] ; then
 
     port install qt5-qtwebengine
@@ -314,6 +316,8 @@ else
     port install qt5-qtwebkit
 
 fi
+
+port reactivate boost
 
 # port broken since a while. Check later
 #             sane-backends \
