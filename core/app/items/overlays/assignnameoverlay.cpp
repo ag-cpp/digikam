@@ -127,7 +127,6 @@ AssignNameWidget* AssignNameOverlay::assignNameWidget() const
 QWidget* AssignNameOverlay::createWidget()
 {
     DVBox* const vbox    = new DVBox(parentWidget());
-    QWidget* const space = new QWidget(vbox);
     d->assignNameWidget  = new AssignNameWidget(vbox);
     d->assignNameWidget->setMode(AssignNameWidget::UnconfirmedEditMode);
     d->assignNameWidget->setVisualStyle(AssignNameWidget::TranslucentThemedFrameless);
@@ -135,8 +134,6 @@ QWidget* AssignNameOverlay::createWidget()
     d->assignNameWidget->setLayoutMode(AssignNameWidget::Compact);
     d->assignNameWidget->setModel(&d->tagModel, &d->filteredModel, &d->filterModel);
     d->assignNameWidget->lineEdit()->installEventFilter(this);
-
-    vbox->setStretchFactor(space, 4);
 /*
     new StyleSheetDebugger(d->assignNameWidget);
 */
@@ -243,10 +240,13 @@ void AssignNameOverlay::updatePosition()
         rect.adjust(-offset, 0, offset, 0);
     }
 
+    int yoffset = rect.height() - m_widget->minimumSizeHint().height();
+    rect.adjust(0, yoffset, 0, 0);
+
     QRect visualRect = m_view->visualRect(index());
     rect.translate(visualRect.topLeft());
 
-    m_widget->setFixedSize(rect.width(), rect.height());
+    m_widget->setFixedSize(rect.width(), m_widget->minimumSizeHint().height());
     m_widget->move(rect.topLeft());
 }
 
