@@ -490,15 +490,8 @@ void DIO::slotOneProccessed(const QUrl& url)
 
             if (!info.isNull() && data->destAlbum())
             {
-               QString destName = info.name();
-
-                if (!data->destUrl(url).fileName().isEmpty())
-                {
-                    destName = data->destUrl(url).fileName();
-                }
-
                 CoreDbAccess().db()->copyItem(info.albumId(), info.name(),
-                                              data->destAlbum()->id(), destName);
+                                              data->destAlbum()->id(), data->destName(url));
             }
 
             break;
@@ -510,15 +503,8 @@ void DIO::slotOneProccessed(const QUrl& url)
 
             if (!info.isNull() && data->destAlbum())
             {
-                QString destName = info.name();
-
-                if (!data->destUrl(url).fileName().isEmpty())
-                {
-                    destName = data->destUrl(url).fileName();
-                }
-
                 CoreDbAccess().db()->moveItem(info.albumId(), info.name(),
-                                              data->destAlbum()->id(), destName);
+                                              data->destAlbum()->id(), data->destName(url));
             }
 
             break;
@@ -529,14 +515,8 @@ void DIO::slotOneProccessed(const QUrl& url)
         {
             if (data->destAlbum())
             {
-                QString destName = url.fileName();
-
-                if (!data->destUrl(url).fileName().isEmpty())
-                {
-                    destName = data->destUrl(url).fileName();
-                }
-
-                QString newFile = data->destUrl().toLocalFile() + destName;
+                QUrl newUrl     = data->destUrl().adjusted(QUrl::StripTrailingSlash);
+                QString newFile = newUrl.toLocalFile() + QLatin1Char('/') + data->destName(url);
                 ScanController::instance()->scannedInfo(newFile);
             }
 
@@ -551,7 +531,8 @@ void DIO::slotOneProccessed(const QUrl& url)
 
             if (!location.isNull() && !info.isNull())
             {
-                QString newFile = data->destUrl().toLocalFile() + QLatin1Char('/') + info.name();
+                QUrl newUrl     = data->destUrl().adjusted(QUrl::StripTrailingSlash);
+                QString newFile = newUrl.toLocalFile() + QLatin1Char('/') + data->destName(url);
                 ScanController::instance()->scannedInfo(newFile);
             }
 
@@ -560,7 +541,7 @@ void DIO::slotOneProccessed(const QUrl& url)
 
         case IOJobData::CopyAlbum:
         {
-            QString scanPath = data->destUrl().toLocalFile();
+            QString scanPath = data->destUrl().adjusted(QUrl::StripTrailingSlash).toLocalFile();
             ScanController::instance()->scheduleCollectionScanRelaxed(scanPath);
 
             break;
@@ -572,6 +553,7 @@ void DIO::slotOneProccessed(const QUrl& url)
             {
                 CoreDbAccess access;
                 QList<int> albumsToMove;
+                QString newName  = data->destName(url);
                 QString basePath = data->srcAlbum()->albumPath();
                 QString destPath = data->destAlbum()->albumPath();
 
@@ -585,9 +567,8 @@ void DIO::slotOneProccessed(const QUrl& url)
                 Q_FOREACH (int albumId, albumsToMove)
                 {
                     QString relativePath = access.db()->getAlbumRelativePath(albumId);
-                    relativePath         = relativePath.section(basePath, 1, 1);
-                    relativePath         = destPath + data->srcAlbum()->title() + relativePath;
-
+                    relativePath         = relativePath.section(basePath, 1, -1);
+                    relativePath         = destPath + newName + relativePath;
                     access.db()->renameAlbum(albumId, data->destAlbum()->albumRootId(), relativePath);
                 }
             }
@@ -601,8 +582,10 @@ void DIO::slotOneProccessed(const QUrl& url)
             // Mark the images as obsolete and remove them
             // from their album and from the grouped
 
-            int originalVersionTag = TagsCache::instance()->getOrCreateInternalTag(InternalTagName::originalVersion());
-            int needTaggingTag     = TagsCache::instance()->getOrCreateInternalTag(InternalTagName::needTaggingHistoryGraph());
+            int originalVersionTag = TagsCache::instance()->
+                getOrCreateInternalTag(InternalTagName::originalVersion());
+            int needTaggingTag     = TagsCache::instance()->
+                getOrCreateInternalTag(InternalTagName::needTaggingHistoryGraph());
 
             PAlbum* const album    = data->srcAlbum();
 
@@ -626,8 +609,7 @@ void DIO::slotOneProccessed(const QUrl& url)
                 Q_FOREACH (const qlonglong& removeId, imagesToRemove)
                 {
                     const QList<qlonglong>& imageIds = access.db()->
-                                                           getImagesRelatedFrom(removeId,
-                                                                                DatabaseRelation::DerivedFrom);
+                          getImagesRelatedFrom(removeId, DatabaseRelation::DerivedFrom);
 
                     Q_FOREACH (const qlonglong& id, imageIds)
                     {
@@ -667,8 +649,8 @@ void DIO::slotOneProccessed(const QUrl& url)
                 if (!info.isNull())
                 {
                     CoreDbAccess access;
-                    QList<qlonglong> imageIds = access.db()->getImagesRelatedFrom(info.id(),
-                                                                                  DatabaseRelation::DerivedFrom);
+                    const QList<qlonglong>& imageIds = access.db()->
+                          getImagesRelatedFrom(info.id(), DatabaseRelation::DerivedFrom);
 
                     Q_FOREACH (const qlonglong& id, imageIds)
                     {

@@ -122,6 +122,7 @@ public:
     QUrl               destUrl(const QUrl& srcUrl = QUrl()) const;
     QUrl               getNextUrl()                         const;
 
+    QString            destName(const QUrl& srcUrl)         const;
     QString            getProgressId()                      const;
     QDateTime          jobTime()                            const;
 
