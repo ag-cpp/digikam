@@ -31,4 +31,5 @@ BUGFIXES:
 020 ==> 460124 - Unable to acces existing collections.
 021 ==> 460132 - Impossible to drag suggested face tag to other face tag in sidebar (for reassignment).
 022 ==> 460153 - Deleting an album takes many seconds.
-023 ==> 
+023 ==> 429709 - Date view suddenly switches to month view.
+024 ==> 
