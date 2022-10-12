@@ -55,6 +55,7 @@ rm -rf $BUILDING_DIR/* || true
 
 if [[ $DK_QTVERSION == 5.* ]] ; then
 
+if [ ] ; then
     # NOTE: The order to compile each component here is very important.
 
     # core KF5 frameworks dependencies
@@ -82,7 +83,7 @@ if [[ $DK_QTVERSION == 5.* ]] ; then
     /opt/cmake/bin/cmake --build . --config RelWithDebInfo --target ext_kxmlgui             -- -j$CPU_CORES
     /opt/cmake/bin/cmake --build . --config RelWithDebInfo --target ext_kbookmarks          -- -j$CPU_CORES
     /opt/cmake/bin/cmake --build . --config RelWithDebInfo --target ext_kimageformats       -- -j$CPU_CORES
-
+fi
     # Extra support for digiKam
 
     # libksane support
