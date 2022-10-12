@@ -102,6 +102,7 @@ urpmi --auto \
       inotify-tools-devel \
       cups-devel \
       openal-soft-devel \
+      lib64pulseaudio-devel \
       libical-devel \
       libcap-devel \
       fontconfig-devel \
