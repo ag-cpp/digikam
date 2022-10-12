@@ -30,4 +30,8 @@ BUGFIXES:
 019 ==> 460091 - Original batch still present after modification.
 020 ==> 460124 - Unable to acces existing collections.
 021 ==> 460132 - Impossible to drag suggested face tag to other face tag in sidebar (for reassignment).
-022 ==> 
+022 ==> 460153 - Deleting an album takes many seconds.
+023 ==> 429709 - Date view suddenly switches to month view.
+024 ==> 416524 - Cannot move item inside album or between albums.
+025 ==> 370356 - Very slow when delete photos and albums.
+026 ==> 
