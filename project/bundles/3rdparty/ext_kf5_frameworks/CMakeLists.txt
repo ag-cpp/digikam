@@ -192,7 +192,7 @@ InstallKF5Component(threadweaver        ${KF5_VERSION} ""                       
 InstallKF5Component(kwindowsystem       ${KF5_VERSION} ""                                                                   "")
 InstallKF5Component(karchive            ${KF5_VERSION} ""                                                                   "")
 InstallKF5Component(kdbusaddons         ${KF5_VERSION} ""                                                                   "")
-InstallKF5Component(ki18n               ${KF5_VERSION} ""                                                                   "")
+InstallKF5Component(ki18n               ${KF5_VERSION} ""                                                                   "ki18n-mingw.patch")
 InstallKF5Component(kcrash              ${KF5_VERSION} ""                                                                   "")
 InstallKF5Component(kcodecs             ${KF5_VERSION} ""                                                                   "")
 InstallKF5Component(kauth               ${KF5_VERSION} "${MacosKauthBackend}"                                               "")
