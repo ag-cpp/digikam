@@ -14,13 +14,14 @@ set -e
 
 # Pre-processing checks
 
+. ../config.sh
 . ../common.sh
 StartScript
 CommonChecks
 
 # Uninstall Macports packages
 
-port -fp uninstall installed
+#port -fp uninstall installed
 
 # Remove Macports dirs
 
