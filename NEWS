@@ -37,4 +37,5 @@ BUGFIXES:
 023 ==> 429709 - Date view suddenly switches to month view.
 024 ==> 416524 - Cannot move item inside album or between albums.
 025 ==> 370356 - Very slow when delete photos and albums.
-026 ==> 
+026 ==> 460464 - "Scan for faces" context menu in Faces view does not trigger scan.
+027 ==> 
