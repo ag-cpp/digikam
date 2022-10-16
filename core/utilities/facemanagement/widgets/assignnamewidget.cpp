@@ -326,6 +326,7 @@ void AssignNameWidget::showEvent(QShowEvent* e)
     {
         if      (d->comboBox)
         {
+            d->comboBox->setMinimumWidth(qMax(250, size().width() - 4));
             d->comboBox->lineEdit()->selectAll();
             d->comboBox->lineEdit()->setFocus();
         }
