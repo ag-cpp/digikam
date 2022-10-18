@@ -39,4 +39,5 @@ BUGFIXES:
 025 ==> 370356 - Very slow when delete photos and albums.
 026 ==> 460464 - "Scan for faces" context menu in Faces view does not trigger scan.
 027 ==> 460629 - "People" top level tag appears in People left hand pane.
-027 ==> 
+027 ==> 460683 - digiKam crash on libheif.
+028 ==> 
