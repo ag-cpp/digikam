@@ -40,4 +40,5 @@ BUGFIXES:
 026 ==> 460464 - "Scan for faces" context menu in Faces view does not trigger scan.
 027 ==> 460629 - "People" top level tag appears in People left hand pane.
 027 ==> 460683 - digiKam crash on libheif.
-028 ==> 
+028 ==> 456882 - HEIF decoding in 7.7.0 flatpak version not supported.
+029 ==> 
