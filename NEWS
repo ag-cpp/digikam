@@ -41,4 +41,5 @@ BUGFIXES:
 027 ==> 460629 - "People" top level tag appears in People left hand pane.
 027 ==> 460683 - digiKam crash on libheif.
 028 ==> 456882 - HEIF decoding in 7.7.0 flatpak version not supported.
-029 ==> 
+029 ==> 460746 - Face rectangle description boxes "fly out of the view" when zooming an image with many faces.
+030 ==> 
