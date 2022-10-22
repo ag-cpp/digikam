@@ -770,18 +770,9 @@ void AbstractCountingAlbumModel::setCountMap(const QMap<int, int>& idCountMap)
     }
 }
 
-void AbstractCountingAlbumModel::updateCount(Album* album)
+void AbstractCountingAlbumModel::updateCount(Album* const album)
 {
     if (!album)
-    {
-        return;
-    }
-
-    // if the model does not contain the album, do nothing.
-
-    QModelIndex index = indexForAlbum(album);
-
-    if (!index.isValid())
     {
         return;
     }
@@ -823,7 +814,14 @@ void AbstractCountingAlbumModel::updateCount(Album* album)
 
     if (changed)
     {
-        emit dataChanged(index, index);
+        // update only if the model contains the album
+
+        QModelIndex index = indexForAlbum(album);
+
+        if (index.isValid())
+        {
+            emit dataChanged(index, index);
+        }
     }
 }
 
