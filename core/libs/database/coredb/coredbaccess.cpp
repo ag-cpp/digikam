@@ -365,6 +365,7 @@ void CoreDbAccess::cleanUpDatabase()
             d->backend->close();
             delete d->db;
             delete d->backend;
+            delete d->databaseWatch;
         }
     }
 
