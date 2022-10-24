@@ -116,8 +116,6 @@ void CoreDbCopyManager::copyDatabases(const DbEngineParameters& fromDBParameters
 
     const int tablesSize = tables.size();
 
-    QMap<QString, QVariant> bindingMap;
-
     // Run any database specific preparatory cleanup prior to dropping tables.
 
     DbEngineAction action                        = toDBbackend.getDBAction(QString::fromUtf8("Migrate_Cleanup_Prepare"));
@@ -273,9 +271,12 @@ bool CoreDbCopyManager::copyTable(CoreDbBackend& fromDBbackend,
 
         foreach (QString columnName, columnNames) // krazy:exclude=foreach
         {
+            columnName.remove(QLatin1String(" COLLATE utf8_general_ci"));
+
             qCDebug(DIGIKAM_COREDB_LOG) << "Core database: column: ["
                                         << columnName << "] value ["
                                         << result.value(i) << "]";
+
             tempBindingMap.insert(columnName.insert(0, QLatin1Char(':')), result.value(i));
             ++i;
         }
