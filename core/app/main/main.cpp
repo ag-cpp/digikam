@@ -36,6 +36,7 @@
 #include <QSqlDatabase>
 #include <QApplication>
 #include <QStandardPaths>
+#include <QSslConfiguration>
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 
@@ -211,6 +212,17 @@ int main(int argc, char* argv[])
                               i18n("<p>You are running digiKam as a 32-bit version on a 64-bit Windows.</p>"
                                    "<p>Please install the 64-bit version of digiKam to get "
                                    "a better experience with digiKam.</p>"));
+    }
+
+    QString certsFile = QStandardPaths::locate(QStandardPaths::GenericDataLocation,
+                                               QLatin1String("digikam/certs/rootcerts.pem"));
+    if (!certsFile.isEmpty())
+    {
+        QSslConfiguration sslConfiguration = QSslConfiguration::defaultConfiguration();
+        bool loaded = sslConfiguration.addCaCertificates(certsFile, QSsl::Pem);
+        QSslConfiguration::setDefaultConfiguration(sslConfiguration);
+
+        qCDebug(DIGIKAM_GENERAL_LOG) << "Root CA certificate loaded from:" << certsFile << loaded;
     }
 
 #endif
