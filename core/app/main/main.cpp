@@ -90,6 +90,7 @@ using namespace Magick;
 #include "filesdownloader.h"
 
 #ifdef Q_OS_WIN
+#   include <QSslConfiguration>
 #   include <windows.h>
 #   include <shellapi.h>
 #   include <objbase.h>
