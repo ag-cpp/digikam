@@ -43,4 +43,5 @@ BUGFIXES:
 028 ==> 456882 - HEIF decoding in 7.7.0 flatpak version not supported.
 029 ==> 460746 - Face rectangle description boxes "fly out of the view" when zooming an image with many faces.
 030 ==> 425254 - Face tagging in digiKam: Exiv2 saves [XMP-mwg-rs] with "inf, inf, inf, inf" instead of numbers.
-031 ==> 
+031 ==> 461197 - English mistranslation in showfoto undo cache free space warning.
+032 ==> 
