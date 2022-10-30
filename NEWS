@@ -44,4 +44,5 @@ BUGFIXES:
 029 ==> 460746 - Face rectangle description boxes "fly out of the view" when zooming an image with many faces.
 030 ==> 425254 - Face tagging in digiKam: Exiv2 saves [XMP-mwg-rs] with "inf, inf, inf, inf" instead of numbers.
 031 ==> 461197 - English mistranslation in showfoto undo cache free space warning.
-032 ==> 
+032 ==> 461221 - If Title and Description text is the same, only write one of these two to Google Caption Field to avoid duplication.
+033 ==> 
