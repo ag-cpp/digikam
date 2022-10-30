@@ -66,15 +66,6 @@ target_link_libraries(digikam
                       digikamgui
 )
 
-if(WIN32)
-
-    target_link_libraries(digikam
-                          PUBLIC
-                          Qt5::Network
-    )
-
-endif()
-
 if(ENABLE_DBUS)
 
     target_link_libraries(digikam
