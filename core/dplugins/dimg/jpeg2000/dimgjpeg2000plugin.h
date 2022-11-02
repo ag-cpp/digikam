@@ -67,6 +67,12 @@ public:
     int         canRead(const QFileInfo& fileInfo, bool magic)                              const override;
     int         canWrite(const QString& format)                                             const override;
     DImgLoader* loader(DImg* const image, const DRawDecoding& rawSettings = DRawDecoding()) const override;
+
+    void cleanUp()                                                                                override;
+
+private:
+
+    bool m_initJasper;
 };
 
 } // namespace DigikamJPEG2000DImgPlugin
