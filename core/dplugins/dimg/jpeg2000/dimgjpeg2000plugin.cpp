@@ -98,6 +98,10 @@ DImgJPEG2000Plugin::DImgJPEG2000Plugin(QObject* const parent)
         }
     }
 
+#else
+
+    m_initJasper = true;
+
 #endif
 
 }
