@@ -48,4 +48,5 @@ BUGFIXES:
 033 ==> 459160 - Geolocation Editor maps don’t zoom enough.
 034 ==> 460775 - "TLS initialization failed" error whenever the app tries to download files.
 035 ==> 461257 - digiKam crashes when displaying thumbnails for JP2 files.
-036 ==> 
+036 ==> 461348 - Does not start because - Failed to update the database schema from version 13 to version 14.
+037 ==> 
