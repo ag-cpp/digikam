@@ -35,6 +35,8 @@ StartScript
 ChecksCPUCores
 HostAdjustments
 RegisterRemoteServers
+CheckSystemReleaseID
+
 ORIG_WD="`pwd`"
 
 if   [[ "$OS_NAME" == "mageia" ]] ; then
@@ -62,15 +64,15 @@ cd /
 
 # Create the build dir for the 3rdparty deps
 if [ ! -d $BUILDING_DIR ] ; then
-    mkdir $BUILDING_DIR
+    mkdir -p $BUILDING_DIR
 fi
 
 if [ ! -d $DOWNLOAD_DIR ] ; then
-    mkdir $DOWNLOAD_DIR
+    mkdir -p $DOWNLOAD_DIR
 fi
 
 if [ ! -d /opt/cmake ] ; then
-    mkdir /opt/cmake
+    mkdir -p /opt/cmake
 fi
 
 #################################################################################################
