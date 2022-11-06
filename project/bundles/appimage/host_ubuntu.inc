@@ -140,12 +140,68 @@ optional_packages=("ruby"                               # For i18n extraction
                    "libudev-dev"
                    "libsqlite3-dev"
                    "libexif-dev"
-                   ""
-                   ""
-                   ""
-                   ""
-                   ""
-                   ""
+                   "liblzma-dev"
+                   "liblz-dev"
+                   "libinotifytools0-dev"
+                   "libcups2-dev"
+                   "libopenal-dev"
+                   "libpulse-dev"
+                   "libical-dev"
+                   "libcap-dev"
+                   "libfontconfig1-dev"
+                   "patchelf"
+                   "dpkg"
+                   "clang"
+                   "python"
+                   "libboost-all-dev"
+                   "libgphoto2-dev"
+                   "libsane-dev"
+                   "nodejs-dev"
+                   "python3-lxml"
+                   "appstream"
+                   "libnss3-dev"
+                   "libxkbcommon-dev"
+                   "libxkbfile-dev"
+                   "libxinerama-dev"
+                   "libxcb-util-dev"
+                   "libxcb-xrm-dev"
+                   "libxi-dev"
+                   "libxtst-dev"
+                   "libxrandr-dev"
+                   "libxcursor-dev"
+                   "libxcomposite-dev"
+                   "libxrender-dev"
+                   "libltdl-dev"
+                   "libglib2.0-dev"
+                   "libusb-1.0-0-dev"
+                   "libcurl4-openssl-dev"
+                   "libwayland-dev"
+                   "libclang-dev"
+                   "libsm-dev"
+                   "freeglut3-dev"
+                   "libinput-dev"
+                   "libfdk-aac-dev"
+                   "libx264-dev"
+                   "libx265-dev"
+                   "libxvidcore-dev"
+                   "libvpx-dev"
+                   "libtheora-dev"
+                   "libvorbis-dev"
+                   "libopencore-amrnb-dev"
+                   "librtmp-dev"
+                   "libopus-dev"
+                   "libspeex-dev"
+                   "libmp3lame-dev"
+                   "libfreetype6-dev"
+                   "libass-dev"
+                   "libegl1-mesa-dev"
+                   "libgl1-mesa-dev"
+                   "libgles2-mesa-dev"
+                   "libglu1-mesa-dev"
+                   "libxcb-image0-dev"
+                   "libxcb-cursor-dev"
+                   "libxcb-render-util0-dev"
+                   "libxcb-xrm-dev"
                    ""
                    ""
                    ""
@@ -156,6 +212,11 @@ for pkg in ${optional_packages[@]}; do
     sudo apt-get install -y ${pkg}
     echo "-------------------------------------------------------------------"
 done
+
+echo -e "---------- Clean-up Old Packages\n"
+
+# Remove system based devel package to prevent conflict with new one.
+sudo apt remove -y libqt5core5a || true
 
 return
 
@@ -202,99 +263,97 @@ urpmi --auto \
 #      sqlite-devel \
 #      libexif-devel \
 #      libxslt-devel \
-      xz-devel \
-      lz4-devel \
-      inotify-tools-devel \
-      cups-devel \
-      openal-soft-devel \
-      lib64pulseaudio-devel \
-      libical-devel \
-      libcap-devel \
-      fontconfig-devel \
-      patchelf \
-      dpkg \
+#      xz-devel \
+#      lz4-devel \
+#      inotify-tools-devel \
+#      cups-devel \
+#      openal-soft-devel \
+#      lib64pulseaudio-devel \
+#      libical-devel \
+#      libcap-devel \
+#      fontconfig-devel \
+#      patchelf \
+#      dpkg \
 #      ninja \
-      clang \
+#      clang \
       cdialog \
-      python \
+#      python \
 #      ruby \
 #      ruby-devel \
-      sqlite3-devel \
-      boost-devel \
-      gphoto2-devel \
-      sane-backends \
-      nodejs-devel \
-      python3-lxml \
+#      boost-devel \
+#      gphoto2-devel \
+#      sane-backends \
+#      nodejs-devel \
+#      python3-lxml \
 #      perl-YAML-PP \
 #      perl-YAML-Syck \
-      appstream \
-      openssh-askpass \
+#      appstream \
+#      openssh-askpass \
 #      ${LIBSUFFIX}openssl-devel \
-      ${LIBSUFFIX}nss-devel \
-      ${LIBSUFFIX}xkbcommon-devel \
-      ${LIBSUFFIX}xkbfile-devel \
-      ${LIBSUFFIX}xinerama-devel \
-      ${LIBSUFFIX}sane1-devel \
-      ${LIBSUFFIX}xcb-util1 \
+#      ${LIBSUFFIX}nss-devel \
+#      ${LIBSUFFIX}xkbcommon-devel \
+#      ${LIBSUFFIX}xkbfile-devel \
+#      ${LIBSUFFIX}xinerama-devel \
+#      ${LIBSUFFIX}xcb-util1 \
       ${LIBSUFFIX}xcb-util-cursor-devel \
       ${LIBSUFFIX}xcb-util-wm-devel \
-      ${LIBSUFFIX}xcb-xrm-devel \
-      ${LIBSUFFIX}xi-devel \
-      ${LIBSUFFIX}xtst-devel \
-      ${LIBSUFFIX}xrandr-devel \
-      ${LIBSUFFIX}xcursor-devel \
-      ${LIBSUFFIX}xcomposite-devel \
-      ${LIBSUFFIX}xrender-devel \
+#      ${LIBSUFFIX}xcb-xrm-devel \
+#      ${LIBSUFFIX}xi-devel \
+#      ${LIBSUFFIX}xtst-devel \
+#      ${LIBSUFFIX}xrandr-devel \
+#      ${LIBSUFFIX}xcursor-devel \
+#      ${LIBSUFFIX}xcomposite-devel \
+#      ${LIBSUFFIX}xrender-devel \
       ${LIBSUFFIX}xscrnsaver-devel \
-      ${LIBSUFFIX}ltdl-devel \
-      ${LIBSUFFIX}glib2.0-devel \
-      ${LIBSUFFIX}usb1.0-devel \
+#      ${LIBSUFFIX}ltdl-devel \
+#      ${LIBSUFFIX}glib2.0-devel \
+#      ${LIBSUFFIX}usb1.0-devel \
 #      ${LIBSUFFIX}jpeg-devel \
 #      ${LIBSUFFIX}jasper-devel \
 #      ${LIBSUFFIX}png-devel \
 #      ${LIBSUFFIX}tiff-devel \
 #      ${LIBSUFFIX}lqr-devel \
 #      ${LIBSUFFIX}fftw-devel \
-      ${LIBSUFFIX}curl-devel \
-      ${LIBSUFFIX}wayland-devel \
-      ${LIBSUFFIX}clang-devel \
-      ${LIBSUFFIX}sm-devel \
-      ${LIBSUFFIX}freeglut-devel \
-      ${LIBSUFFIX}input-devel \
-      ${LIBSUFFIX}fdk-aac-devel \
-      ${LIBSUFFIX}x264-devel \
-      ${LIBSUFFIX}x265-devel \
-      ${LIBSUFFIX}xvidcore-devel \
-      ${LIBSUFFIX}vpx-devel \
-      ${LIBSUFFIX}theora-devel \
-      ${LIBSUFFIX}vorbis-devel \
-      ${LIBSUFFIX}opencore-amr-devel \
-      ${LIBSUFFIX}rtmp-devel \
-      ${LIBSUFFIX}opus-devel \
-      ${LIBSUFFIX}speex-devel \
-      ${LIBSUFFIX}mp3lame-devel \
-      ${LIBSUFFIX}freetype2-devel \
-      ${LIBSUFFIX}ass-devel
+#      ${LIBSUFFIX}curl-devel \
+#      ${LIBSUFFIX}wayland-devel \
+#      ${LIBSUFFIX}clang-devel \
+#      ${LIBSUFFIX}sm-devel \
+#      ${LIBSUFFIX}freeglut-devel \
+#      ${LIBSUFFIX}input-devel \
+#      ${LIBSUFFIX}fdk-aac-devel \
+#      ${LIBSUFFIX}x264-devel \
+#      ${LIBSUFFIX}x265-devel \
+#      ${LIBSUFFIX}xvidcore-devel \
+#      ${LIBSUFFIX}vpx-devel \
+#      ${LIBSUFFIX}theora-devel \
+#      ${LIBSUFFIX}vorbis-devel \
+#      ${LIBSUFFIX}opencore-amr-devel \
+#      ${LIBSUFFIX}rtmp-devel \
+#      ${LIBSUFFIX}opus-devel \
+#      ${LIBSUFFIX}speex-devel \
+#      ${LIBSUFFIX}mp3lame-devel \
+#      ${LIBSUFFIX}freetype2-devel \
+#      ${LIBSUFFIX}ass-devel
 
 
 if [[ "$DK_QTVERSION" = "5.14" ]] ; then
 
     urpmi --auto \
-          ${LIBSUFFIX}mesagl1-devel \
-          ${LIBSUFFIX}mesaglu1-devel \
-          ${LIBSUFFIX}mesaegl1-devel \
-          ${LIBSUFFIX}mesaegl1
+#          ${LIBSUFFIX}mesagl1-devel \
+#          ${LIBSUFFIX}mesaglu1-devel \
+#          ${LIBSUFFIX}mesaegl1-devel \
+#          ${LIBSUFFIX}mesaegl1
 
 fi
 
 if [[ "$DK_QTVERSION" = "5.15" || "$DK_QTVERSION" = "5.15-LTS" ]] ; then
 
     urpmi --auto \
-          ${LIBSUFFIX}xcb-util-cursor-devel \
-          ${LIBSUFFIX}xcb-util-image-devel \
-          ${LIBSUFFIX}xcb-util-renderutil-devel \
+#          ${LIBSUFFIX}xcb-util-cursor-devel \
+#          ${LIBSUFFIX}xcb-util-image-devel \
+#          ${LIBSUFFIX}xcb-util-renderutil-devel \
           ${LIBSUFFIX}xcb-util-wm-devel \
-          ${LIBSUFFIX}xcb-xrm-devel
+#          ${LIBSUFFIX}xcb-xrm-devel
 
 fi
 
@@ -306,16 +365,6 @@ if [[ $DK_QTVERSION == 6.* ]] ; then
 
 fi
 
-echo -e "---------- Clean-up Old Packages\n"
-
-# Remove system based devel package to prevent conflict with new one.
-urpme --auto --force ${LIBSUFFIX}qt5core5 || true
-
-# Clean up previous openssl install
-
-rm -fr /usr/local/lib/libssl.a    || true
-rm -fr /usr/local/lib/libcrypto.a || true
-rm -fr /usr/local/include/openssl || true
 
 # Workaround for: On Mageia 6, .pc files in /usr/lib/pkgconfig are not recognized
 # However, this is where .pc files get installed when building libraries... (FIXME)
