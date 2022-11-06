@@ -93,7 +93,7 @@ cmake $ORIG_WD/../3rdparty \
 
 # Install new cmake recent version to /opt
 
-cmake --build . --config RelWithDebInfo --target ext_cmake        -- -j$CPU_CORES
+#cmake --build . --config RelWithDebInfo --target ext_cmake        -- -j$CPU_CORES
 
 #################################################################################################
 
@@ -115,7 +115,7 @@ rm -rf $BUILDING_DIR/* || true
 # NOTE: The order to compile each component here is very important.
 
 #/opt/cmake/bin/cmake --build . --config RelWithDebInfo --target ext_libicu        -- -j$CPU_CORES
-/opt/cmake/bin/cmake --build . --config RelWithDebInfo --target ext_openssl       -- -j$CPU_CORES
+#/opt/cmake/bin/cmake --build . --config RelWithDebInfo --target ext_openssl       -- -j$CPU_CORES
 
 /opt/cmake/bin/cmake --build . --config RelWithDebInfo --target ext_qt            -- -j$CPU_CORES    # depend of tiff, png, jpeg
 

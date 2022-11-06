@@ -105,7 +105,7 @@ optional_packages=("ruby"                               # For i18n extraction
                    "ccache"                             # For compiling
                    "bison"                              # For Qt build (>= 2.5.0)
                    "flex"                               # For compiling (>= 2.5.0)
-                   "mariadb-server"                     # Run-time: mysql internal server init
+                   "mysql-server"                       # Run-time: mysql internal server init
                    "libeigen3-dev"                      # >= 3.2
                    "libgomp1"                           # For Libraw compilation
                    "libjasper-dev"                      # >= 1.900.1
@@ -134,7 +134,7 @@ optional_packages=("ruby"                               # For i18n extraction
                    "zlib1g-dev"
                    "libfuse-dev"
                    "libc6-dev"
-                   "libmariadb-dev"
+                   "default-libmysqlclient-dev"
                    "libcppunit-dev"
                    "libc++-dev"
                    "libudev-dev"
@@ -156,7 +156,8 @@ optional_packages=("ruby"                               # For i18n extraction
                    "libboost-all-dev"
                    "libgphoto2-dev"
                    "libsane-dev"
-                   "nodejs-dev"
+                   "libssl-dev"
+#                   "nodejs-dev"
                    "python3-lxml"
                    "appstream"
                    "libnss3-dev"
@@ -165,6 +166,9 @@ optional_packages=("ruby"                               # For i18n extraction
                    "libxinerama-dev"
                    "libxcb-util-dev"
                    "libxcb-xrm-dev"
+                   "libxcb-icccm4-dev"
+                   "libxcb-xinerama0-dev"
+                   "libxcb-xkb-dev"
                    "libxi-dev"
                    "libxtst-dev"
                    "libxrandr-dev"
@@ -174,7 +178,6 @@ optional_packages=("ruby"                               # For i18n extraction
                    "libltdl-dev"
                    "libglib2.0-dev"
                    "libusb-1.0-0-dev"
-                   "libcurl4-openssl-dev"
                    "libwayland-dev"
                    "libclang-dev"
                    "libsm-dev"
@@ -202,9 +205,7 @@ optional_packages=("ruby"                               # For i18n extraction
                    "libxcb-cursor-dev"
                    "libxcb-render-util0-dev"
                    "libxcb-xrm-dev"
-                   ""
-                   ""
-                   ""
+                   "libdbus-1-dev"
                   )
 
 

@@ -25,12 +25,13 @@ ExternalProject_Add(ext_qt
     URL_MD5 b30147f4fd91c8dc1b7e61cbc7e6b8a6
 
     PATCH_COMMAND ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/qt-appimage-support.patch
-               && ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/qt-appimage-openssl-linked.patch
                && ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/qt-icu-hack.patch
 
-    CMAKE_ARGS -DOPENSSL_LIBS='-l${EXTPREFIX}/local/lib/libssl.a -l${EXTPREFIX}/local/lib/libcrypto.a -lpthread -ldl'
-               -DOPENSSL_INCDIR='${EXTPREFIX}/local/include/openssl/'
-               -DOPENSSL_LIBDIR='${EXTPREFIX}/local/lib'
+#               && ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/qt-appimage-openssl-linked.patch
+#
+#    CMAKE_ARGS -DOPENSSL_LIBS='-l${EXTPREFIX}/local/lib/libssl.a -l${EXTPREFIX}/local/lib/libcrypto.a -lpthread -ldl'
+#               -DOPENSSL_INCDIR='${EXTPREFIX}/local/include/openssl/'
+#               -DOPENSSL_LIBDIR='${EXTPREFIX}/local/lib'
 
     CONFIGURE_COMMAND <SOURCE_DIR>/configure
                   -prefix ${EXTPREFIX_qt}
@@ -43,7 +44,7 @@ ExternalProject_Add(ext_qt
 #                  -iconv                            # International string conversion
                   -fontconfig
                   -system-freetype                  # Use system font rendering lib https://doc.qt.io/qt-5/qtgui-attribution-freetype.html
-                  -openssl-linked                   # hard link to static version of ssl libraries
+#                  -openssl-linked                   # hard link to static version of ssl libraries
                   -nomake tests                     # Do not build test codes
                   -nomake examples                  # Do not build basis example codes
                   -no-compile-examples              # Do not build extra example codes
