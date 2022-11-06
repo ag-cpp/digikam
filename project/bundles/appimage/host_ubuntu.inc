@@ -162,6 +162,7 @@ optional_packages=("ruby"                               # For i18n extraction
                    "appstream"
                    "libnss3-dev"
                    "libxkbcommon-dev"
+                   "libxkbcommon-x11-dev"
                    "libxkbfile-dev"
                    "libxinerama-dev"
                    "libxcb-util-dev"
