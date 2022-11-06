@@ -95,52 +95,113 @@ for pkg in ${required_packages[@]}; do
 
 done
 
+# Install optional dependencies to Compile And Link Source Code
+
+optional_packages=("ruby"                               # For i18n extraction
+                   "subversion"                         # For i18n extraction
+                   "hunspell"                           # For check spelling
+                   "keychain"                           # For git-ssh
+                   "ssh-askpass"                        # For git-ssh
+                   "ccache"                             # For compiling
+                   "bison"                              # For Qt build (>= 2.5.0)
+                   "flex"                               # For compiling (>= 2.5.0)
+                   "mariadb-server"                     # Run-time: mysql internal server init
+                   "libeigen3-dev"                      # >= 3.2
+                   "libgomp1"                           # For Libraw compilation
+                   "libjasper-dev"                      # >= 1.900.1
+                   "libxslt-dev"                        # >= 1.1.0
+                   "libxml2-dev"                        # >= 2.7.0
+                   "liblqr-dev"                         # >= 0.4.2
+                   "libfftw3-dev"                       # For GMic-Qt compilation
+                   "libx265-dev"                        # >= 2.2
+                   "wget"
+                   "tar"
+                   "bzip2"
+                   "gettext"
+                   "libtool"
+                   "fuse"
+                   "automake"
+                   "ccache"
+                   "yasm"
+                   "patch"
+                   "libdrm-dev"
+                   "libxcb1-dev"
+                   "libxcb-util0-dev"
+                   "libxcb-keysyms1-dev"
+                   "libx11-keyboard-perl"
+                   "xscreensaver"
+                   "gperf"
+                   "zlib1g-dev"
+                   "libfuse-dev"
+                   "libc6-dev"
+                   "libmariadb-dev"
+                   "libcppunit-dev"
+                   "libc++-dev"
+                   "libudev-dev"
+                   "libsqlite3-dev"
+                   "libexif-dev"
+                   ""
+                   ""
+                   ""
+                   ""
+                   ""
+                   ""
+                   ""
+                   ""
+                   ""
+                  )
+
+
+for pkg in ${optional_packages[@]}; do
+    sudo apt-get install -y ${pkg}
+    echo "-------------------------------------------------------------------"
+done
+
 return
 
 # Packages for base dependencies and Qt5.
 urpmi --auto \
-      wget \
-      tar \
-      bzip2 \
-      gettext \
+#      wget \
+#      tar \
+#      bzip2 \
+#      gettext \
 #      git \
-      subversion \
-      libtool \
-      which \
-      fuse \
-      automake \
+#      subversion \
+#      libtool \
+#      which \
+#      fuse \
+#      automake \
 #      cmake \
-      ccache \
+#      ccache \
 #      gcc-c++ \
-      yasm \
-      patch \
-      libdrm-devel \
-      libxcb \
-      libxcb-devel \
-      xcb-util-keysyms-devel \
-      xcb-util-devel \
-      xkeyboard-config \
-      xscreensaver \
-      gperf \
-      ruby \
-      bison \
-      flex \
-      zlib-devel \
+#      yasm \
+#      patch \
+#      libdrm-devel \
+#      libxcb \
+#      libxcb-devel \
+#      xcb-util-keysyms-devel \
+#      xcb-util-devel \
+#      xkeyboard-config \
+#      xscreensaver \
+#      gperf \
+#      ruby \
+#      bison \
+#      flex \
+#      zlib-devel \
 #      expat-devel \
-      fuse-devel \
-      glibc-devel \
-      mysql-devel \
-      eigen3-devel \
-      cppunit-devel \
-      libstdc++-devel \
-      libstdc++-static-devel \
-      libxml2-devel \
+#      fuse-devel \
+#      glibc-devel \
+#      mysql-devel \
+#      eigen3-devel \
+#      cppunit-devel \
+#      libstdc++-devel \
+#      libstdc++-static-devel \
+#      libxml2-devel \
 #      lcms2-devel \
-      glibc-devel \
-      libudev-devel \
-      sqlite-devel \
-      libexif-devel \
-      libxslt-devel \
+#      libudev-devel \
+#      sqlite-devel \
+#      libexif-devel \
+#      libxslt-devel \
       xz-devel \
       lz4-devel \
       inotify-tools-devel \
@@ -156,8 +217,8 @@ urpmi --auto \
       clang \
       cdialog \
       python \
-      ruby \
-      ruby-devel \
+#      ruby \
+#      ruby-devel \
       sqlite3-devel \
       boost-devel \
       gphoto2-devel \
@@ -189,11 +250,11 @@ urpmi --auto \
       ${LIBSUFFIX}glib2.0-devel \
       ${LIBSUFFIX}usb1.0-devel \
 #      ${LIBSUFFIX}jpeg-devel \
-      ${LIBSUFFIX}jasper-devel \
+#      ${LIBSUFFIX}jasper-devel \
 #      ${LIBSUFFIX}png-devel \
 #      ${LIBSUFFIX}tiff-devel \
-      ${LIBSUFFIX}lqr-devel \
-      ${LIBSUFFIX}fftw-devel \
+#      ${LIBSUFFIX}lqr-devel \
+#      ${LIBSUFFIX}fftw-devel \
       ${LIBSUFFIX}curl-devel \
       ${LIBSUFFIX}wayland-devel \
       ${LIBSUFFIX}clang-devel \
