@@ -40,12 +40,7 @@ StartScript
 ChecksCPUCores
 HostAdjustments
 RegisterRemoteServers
-
-if [[ "$(arch)" = "x86_64" ]] ; then
-    LIBSUFFIX=lib64
-else
-    LIBSUFFIX=lib
-fi
+CheckSystemReleaseID
 
 #################################################################################################
 
@@ -53,6 +48,16 @@ fi
 ORIG_WD="`pwd`"
 
 DK_RELEASEID=`cat $ORIG_WD/data/RELEASEID.txt`
+
+if [[ "$OS_NAME" == "ubuntu" ]] ; then
+
+    LIBSUFFIX="lib/x86_64-linux-gnu"
+
+else
+
+    LIBSUFFIX="lib64"
+
+fi
 
 #################################################################################################
 
@@ -120,6 +125,7 @@ cp -r /usr/share/opencv4                                  ./usr/share  || true
 
 cp -r /usr/share/dbus-1/interfaces/kf5*                   ./usr/share/dbus-1/interfaces/
 cp -r /usr/share/dbus-1/services/*kde*                    ./usr/share/dbus-1/services/
+
 cp -r /usr/${LIBSUFFIX}/libexec/kf5                       ./usr/lib/libexec/
 
 echo -e "------------- Copy AppImage stream data filess\n"
@@ -220,7 +226,17 @@ ln -s ../digikam/MANIFEST.txt           ./usr/share/showfoto/MANIFEST.txt || tru
 echo -e "---------- Copy system libraries for binary compatibility\n"
 
 # otherwise segfaults!?
-cp $(ldconfig -p | grep /${LIBSUFFIX}/libsasl2.so.3    | cut -d ">" -f 2 | xargs) ./usr/lib/
+
+if [[ "$OS_NAME" == "ubuntu" ]] ; then
+
+    cp $(ldconfig -p | grep /${LIBSUFFIX}/libsasl2.so.2    | cut -d ">" -f 2 | xargs) ./usr/lib/
+
+else
+
+    cp $(ldconfig -p | grep /${LIBSUFFIX}/libsasl2.so.3    | cut -d ">" -f 2 | xargs) ./usr/lib/
+
+fi
+
 cp $(ldconfig -p | grep /${LIBSUFFIX}/libGL.so.1       | cut -d ">" -f 2 | xargs) ./usr/lib/
 cp $(ldconfig -p | grep /${LIBSUFFIX}/libGLU.so.1      | cut -d ">" -f 2 | xargs) ./usr/lib/
 
@@ -420,9 +436,11 @@ rm -rf usr/share/pkgconfig || true
 echo -e "---------- Strip Symbols in Binaries Files\n"
 
 if [[ $DK_DEBUG = 1 ]] ; then
-    FILES=$(find . -type f -executable | grep -Ev '(digikam|showfoto)')
+    FILES=$(find . -type f  -exec file {} \; | grep ELF | grep -Ev '(digikam|showfoto)' | cut -d':' -f1)
+#    FILES=$(find . -type f -executable | grep -Ev '(digikam|showfoto)')
 else
-    FILES=$(find . -type f -executable)
+    FILES=$(find . -type f  -exec file {} \; | grep ELF | cut -d':' -f1)
+#    FILES=$(find . -type f -executable)
 fi
 
 for FILE in $FILES ; do
@@ -454,7 +472,7 @@ sed -i -e 's|././/share/X11/|/usr/share/X11/|g' ./usr/lib/libQt5XcbQpa.so.5
 cd $DOWNLOAD_DIR
 
 #if [ ! -f $DOWNLOAD_DIR/Image-ExifTool.tar.gz ] ; then
-    wget https://files.kde.org/digikam/exiftool/Image-ExifTool.tar.gz -O Image-ExifTool.tar.gz
+    wget --no-check-certificate https://files.kde.org/digikam/exiftool/Image-ExifTool.tar.gz -O Image-ExifTool.tar.gz
 #fi
 
 tar -xvf $DOWNLOAD_DIR/Image-ExifTool.tar.gz -C $APP_IMG_DIR/usr/bin
@@ -486,18 +504,14 @@ else
 
 fi
 
-if [[ "$ARCH" = "x86_64" ]] ; then
-    APPIMAGE=$APP"-"$DK_RELEASEID$DK_SUBVER"-x86-64$DEBUG_SUF.appimage"
-elif [[ "$ARCH" = "i686" ]] ; then
-    APPIMAGE=$APP"-"$DK_RELEASEID$DK_SUBVER"-i386$DEBUG_SUF.appimage"
-fi
+APPIMAGE=$APP"-"$DK_RELEASEID$DK_SUBVER"-x86-64$DEBUG_SUF.appimage"
 
 echo -e "---------- Create Bundle with AppImage SDK stage1\n"
 
 # Source functions
 
 if [[ ! -s ./functions.sh ]] ; then
-    wget -q https://github.com/probonopd/AppImages/raw/master/functions.sh -O ./functions.sh
+    wget --no-check-certificate https://github.com/probonopd/AppImages/raw/master/functions.sh -O ./functions.sh
 fi
 
 # Install desktopintegration in usr/bin/digikam.wrapper
@@ -520,11 +534,7 @@ cp -r /usr/share/icons/hicolor/128x128/apps/digikam.png ./usr/share/icons/defaul
 
 mkdir -p $ORIG_WD/bundle
 
-if [[ "$ARCH" = "x86_64" ]] ; then
-    rm -f $ORIG_WD/bundle/*x86-64$DEBUG_SUF* || true
-elif [[ "$ARCH" = "i686" ]] ; then
-    rm -f $ORIG_WD/bundle/*i386$DEBUG_SUF* || true
-fi
+rm -f $ORIG_WD/bundle/*x86-64$DEBUG_SUF* || true
 
 echo -e "---------- Create Bundle with AppImage SDK stage2\n"
 
@@ -532,14 +542,10 @@ cd /
 
 # Get right version of Appimage toolkit.
 
-if [[ "$ARCH" = "x86_64" ]] ; then
-    APPIMGBIN=AppImageTool-x86_64.AppImage
-elif [[ "$ARCH" = "i686" ]] ; then
-    APPIMGBIN=AppImageTool-i686.AppImage
-fi
+APPIMGBIN=AppImageTool-x86_64.AppImage
 
 if [[ ! -s ./$APPIMGBIN ]] ; then
-    wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/$APPIMGBIN -O ./$APPIMGBIN
+    wget --no-check-certificate https://github.com/AppImage/AppImageKit/releases/download/continuous/$APPIMGBIN -O ./$APPIMGBIN
 fi
 
 chmod a+x ./$APPIMGBIN
