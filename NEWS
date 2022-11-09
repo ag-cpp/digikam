@@ -50,5 +50,5 @@ BUGFIXES:
 035 ==> 461257 - digiKam crashes when displaying thumbnails for JP2 files.
 036 ==> 461348 - Does not start because - Failed to update the database schema from version 13 to version 14.
 037 ==> 461495 - 'Help' window does not work.
-038 ==> 
-
+038 ==> 461471 - 01-build-mxe Script Fails Due to Unavailable Github Repository
+039 ==> 
