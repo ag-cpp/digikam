@@ -200,8 +200,10 @@ echo -e "---------- Copy digiKam icons files\n"
 FILES=$(cat $ORIG_WD/logs/build-digikam.full.log | grep /usr/share/icons/ | cut -d' ' -f3)
 
 for FILE in $FILES ; do
-    echo $FILE
-    cp --parents $FILE ./
+    if [[ $FILE != "touch:" ]] ; then
+        echo $FILE
+        cp --parents $FILE ./
+    fi
 done
 
 echo -e "---------- Copy Marble data and plugins files\n"
