@@ -52,6 +52,6 @@ BUGFIXES:
 037 ==> 461495 - 'Help' window does not work.
 038 ==> 461471 - 01-build-mxe Script Fails Due to Unavailable Github Repository
 039 ==> 458754 - Geolocation of JPEG shown in Map vary of 100 meters from the correct position set in RAW.
-040 ==> ￼461522 - Geo Localisation differs between two jpg-Files.
+040 ==> 461522 - Geo Localisation differs between two jpg-Files.
 041 ==> 461633 - Using rounded coordinates for map display causes wrong emplacement of picture.
 042 ==> 
