@@ -95,12 +95,6 @@
     ${StrStr}
     ${StrStrAdv}
 
-    ;Requires Registry plugin :
-    ;http://nsis.sourceforge.net/Registry_plug-in
-
-    !addplugindir "./plugins"
-    !include "./plugins/Registry.nsh"
-
     ;Extra local scripts
 
     !include "process_running.nsh"
