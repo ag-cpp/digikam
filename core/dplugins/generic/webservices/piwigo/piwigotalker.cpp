@@ -562,7 +562,7 @@ void PiwigoTalker::parseResponseListAlbums(const QByteArray& data)
     PiwigoAlbumList albumList;
     PiwigoAlbumList::iterator iter = albumList.begin();
 
-    qCDebug(DIGIKAM_WEBSERVICES_LOG) << "parseResponseListAlbums";
+    qCDebug(DIGIKAM_WEBSERVICES_LOG) << "parseResponseListAlbums:" << QString::fromUtf8(data);
 
     while (!ts.atEnd())
     {
