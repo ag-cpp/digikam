@@ -5,9 +5,9 @@ NEW FEATURES:
 
 General  : Update internal Libraw with snapshot 2002-09-03
 General  : Update Exiftool to 12.45 to the bundles.
-MacOS    : Update frameworks Qt5 to 5.15.6 and KF5 to 5.99.
-AppIMage : Update frameworks KF5 to 5.99.
-Windows  : Update frameworks KF5 to 5.99.
+MacOS    : Update frameworks Qt5 to 5.15.7 and KF5 to 5.99.
+AppIMage : Update frameworks Qt5 to 5.15.7 and KF5 to 5.99.
+Windows  : Update frameworks Qt5 to 5.15.7 and KF5 to 5.99.
 
 *****************************************************************************************************
 BUGFIXES:
