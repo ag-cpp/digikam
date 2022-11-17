@@ -56,4 +56,5 @@ BUGFIXES:
 041 ==> 461633 - Using rounded coordinates for map display causes wrong emplacement of picture.
 042 ==> 461709 - Maintenance and Scan for New Items options remain disabled after cancelling operation.
 043 ==> 461792 - Map view draws only a partial subset of marker pins for images in album subfolders.
-044 ==> 
+044 ==> 461889 - digiKam crashes on close (perhaps properties dialog and/or exiftool).
+045 ==> 
