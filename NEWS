@@ -57,4 +57,5 @@ BUGFIXES:
 042 ==> 461709 - Maintenance and Scan for New Items options remain disabled after cancelling operation.
 043 ==> 461792 - Map view draws only a partial subset of marker pins for images in album subfolders.
 044 ==> 461889 - digiKam crashes on close (perhaps properties dialog and/or exiftool).
-045 ==> 
+045 ==> 461790 - Upload from Digikam 7.8.0 to piwigo 13.1.0 broken.
+046 ==> 
