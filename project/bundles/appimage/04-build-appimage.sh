@@ -308,6 +308,12 @@ for FILE in $FILES ; do
     CopyReccursiveDependencies ${FILE} ./usr/lib
 done
 
+FILES=$(ls /usr/plugins/digikam/*.so)
+
+for FILE in $FILES ; do
+    CopyReccursiveDependencies ${FILE} ./usr/lib
+done
+
 # Copy in the indirect dependencies
 FILES=$(find . -type f -executable)
 
