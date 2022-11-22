@@ -61,4 +61,5 @@ BUGFIXES:
 046 ==> 462013 - Preferences on application of changes not saved.
 047 ==> 462067 - Order by Exif date.
 048 ==> 462129 - Bomb after splash screen.
-049 ==> 
+049 ==> 461842 - digiKam crash at launch after migration kubuntu 20.04 LTS to 22.04 LTS.
+050 ==> 
