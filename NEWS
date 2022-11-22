@@ -60,4 +60,5 @@ BUGFIXES:
 045 ==> 461790 - Upload from Digikam 7.8.0 to piwigo 13.1.0 broken.
 046 ==> 462013 - Preferences on application of changes not saved.
 047 ==> 462067 - Order by Exif date.
-048 ==> 
+048 ==> 462129 - Bomb after splash screen.
+049 ==> 
