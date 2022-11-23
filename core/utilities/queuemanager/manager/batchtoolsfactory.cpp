@@ -80,10 +80,10 @@ BatchToolsFactory::BatchToolsFactory()
         if (bqm)
         {
             bqm->setup(this);
-
+/*
             qCDebug(DIGIKAM_GENERAL_LOG) << "BQM plugin named" << bqm->name()
                                          << "registered to" << this;
-
+*/
             foreach (BatchTool* const t, bqm->tools(this))
             {
                 registerTool(t);
