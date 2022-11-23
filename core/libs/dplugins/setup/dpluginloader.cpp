@@ -294,9 +294,10 @@ void DPluginLoader::registerGenericPlugins(QObject* const parent)
         {
             gene->setup(parent);
             gene->setVisible(plugin->shouldLoaded());
-
+/*
             qCDebug(DIGIKAM_GENERAL_LOG) << "Generic plugin named" << gene->name()
                                          << "registered to" << parent;
+*/
         }
     }
 }
@@ -311,9 +312,10 @@ void DPluginLoader::registerEditorPlugins(QObject* const parent)
         {
             edit->setup(parent);
             edit->setVisible(plugin->shouldLoaded());
-
+/*
             qCDebug(DIGIKAM_GENERAL_LOG) << "Editor plugin named" << edit->name()
                                          << "registered to" << parent;
+*/
         }
     }
 }
@@ -327,8 +329,10 @@ void DPluginLoader::registerRawImportPlugins(QObject* const parent)
         if (raw)
         {
             raw->setup(parent);
+/*
             qCDebug(DIGIKAM_GENERAL_LOG) << "Raw Import plugin named" << raw->name()
                                          << "registered to" << parent;
+*/
         }
     }
 }
