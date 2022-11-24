@@ -73,4 +73,15 @@ BUGFIXES:
 057 ==> 445694 - Thumbnails jump to the wrong place if you are "-" a photo for an incorrectly identified face when the same face is elsewhere in the photo.
 058 ==> 417833 - Geolocation is not shown under Maps view.
 059 ==> 413327 - Option to change video thumbnail.
-060 ==> 
+060 ==> 296838 - Export tool has problem with non ascii characters in new albums.
+061 ==> 289463 - The workflow for uploading photos to is not consistent with other export tools.
+062 ==> 287773 - digiKam crash.
+063 ==> 288207 - Trying to launch Scangui makes digiKam crash - always.
+064 ==> 282744 - Crash when importing photos from Android phone.
+065 ==> 242411 - digiKam crashed while importing pictures.
+066 ==> 234043 - I was importing a group of .NEF raw files (Nikon raw) and the application crashed.
+067 ==> 233228 - digiKam crashed when selected "download/delete all" from import window.
+068 ==> 232488 - Crash trying to download picture from SD card.
+069 ==> 231798 - digiKam crashed after trying to copy large amount of jpg's into a directory.
+070 ==> 231481 - digiKam crashes when trying to download images via SanDisk USB card reader.
+071 ==> 
