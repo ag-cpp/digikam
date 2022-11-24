@@ -4,11 +4,11 @@ digiKam 7.9.0 - Release date: 2022-xx-xx
 NEW FEATURES:
 
 General  : Update internal Libraw with snapshot 2022-11-23
-General  : Update Exiftool to 12.45 to the bundles.
+General  : Update Exiftool to 12.51 to the bundles.
 MacOS    : Update frameworks Qt5 to 5.15.7 and KF5 to 5.99.
 AppImage : Update frameworks Qt5 to 5.15.7 and KF5 to 5.99.
 Windows  : Update frameworks Qt5 to 5.15.7 and KF5 to 5.99.
-AppImage : Linux Ubuntu 18.04 is now used to compile AppImage with a binary compatibility of Glibc >= 2.27.
+AppImage : Linux Ubuntu 18.04 is now used to compile AppImage with a Glibc >= 2.27 binary compatibility.
 
 *****************************************************************************************************
 BUGFIXES:
