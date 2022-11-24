@@ -96,7 +96,7 @@ BUGFIXES:
 080 ==> 225401 - Cannot export to Flash.
 081 ==> 225197 - digiKam crashes each time I try to import new Pics from my Camera (seen as a USB disk).
 082 ==> 225060 - Tried to import pictures from a USB drive.
-083 ==> 
+083 ==> 424363 - If an album is created with google photos then with digikam we can't add photo to album.
 084 ==> 
 084 ==> 
 086 ==> 
