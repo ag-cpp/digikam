@@ -72,5 +72,5 @@ BUGFIXES:
 056 ==> 446931 - Can't upload pictures.
 057 ==> 445694 - Thumbnails jump to the wrong place if you are "-" a photo for an incorrectly identified face when the same face is elsewhere in the photo.
 058 ==> 417833 - Geolocation is not shown under Maps view.
-059 ==> 
+059 ==> 413327 - Option to change video thumbnail.
 060 ==> 
