@@ -65,4 +65,5 @@ BUGFIXES:
 049 ==> 461842 - digiKam crash at launch after migration kubuntu 20.04 LTS to 22.04 LTS.
 050 ==> 447304 - Appimage digiKam 7.4 will not start in Linux Mint 19 (Tara).
 051 ==> 443484 - digiKam 7.2 does not start after upgrading to Windows 11.
-052 ==> 
+052 ==> 436930 - Visualization of tracks in the Map tab.
+053 ==> 
