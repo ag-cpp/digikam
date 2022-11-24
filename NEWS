@@ -98,8 +98,8 @@ BUGFIXES:
 082 ==> 225060 - Tried to import pictures from a USB drive.
 083 ==> 424363 - If an album is created with google photos then with digikam we can't add photo to album.
 084 ==> 404900 - Exporting video, photo to Google photo fails.
-084 ==> 
-086 ==> 
+084 ==> 268773 - Crash while Adding Camera.
+086 ==> 269626 - Crash trying to add Camera.
 087 ==> 
 088 ==> 
 089 ==> 
