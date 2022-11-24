@@ -43,7 +43,7 @@ BUGFIXES:
 028 ==> 456882 - HEIF decoding in 7.7.0 flatpak version not supported.
 029 ==> 460746 - Face rectangle description boxes "fly out of the view" when zooming an image with many faces.
 030 ==> 425254 - Face tagging in digiKam: Exiv2 saves [XMP-mwg-rs] with "inf, inf, inf, inf" instead of numbers.
-031 ==> 461197 - English mistranslation in showfoto undo cache free space warning.
+031 ==> 461197 - English mistranslation in Showfoto undo cache free space warning.
 032 ==> 461221 - If Title and Description text is the same, only write one of these two to Google Caption Field to avoid duplication.
 033 ==> 459160 - Geolocation Editor maps don’t zoom enough.
 034 ==> 460775 - "TLS initialization failed" error whenever the app tries to download files.
@@ -57,7 +57,7 @@ BUGFIXES:
 042 ==> 461709 - Maintenance and Scan for New Items options remain disabled after cancelling operation.
 043 ==> 461792 - Map view draws only a partial subset of marker pins for images in album subfolders.
 044 ==> 461889 - digiKam crashes on close (perhaps properties dialog and/or exiftool).
-045 ==> 461790 - Upload from Digikam 7.8.0 to piwigo 13.1.0 broken.
+045 ==> 461790 - Upload from digiKam 7.8.0 to piwigo 13.1.0 broken.
 046 ==> 462013 - Preferences on application of changes not saved.
 047 ==> 462067 - Order by Exif date.
 048 ==> 462129 - Bomb after splash screen.
