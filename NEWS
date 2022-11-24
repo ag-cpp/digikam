@@ -66,4 +66,11 @@ BUGFIXES:
 050 ==> 447304 - Appimage digiKam 7.4 will not start in Linux Mint 19 (Tara).
 051 ==> 443484 - digiKam 7.2 does not start after upgrading to Windows 11.
 052 ==> 436930 - Visualization of tracks in the Map tab.
-053 ==> 
+053 ==> 458138 - Crash when adding new items to the Batch Queue Manager.
+054 ==> 458628 - Unconfirmed faces do not show up.
+055 ==> 452752 - Upon starting digiKam - the following message is displayed - There are two actions (Open Command Bar, Add Images...) that want to use the same shortcut (Ctrl+Alt+I).
+056 ==> 446931 - Can't upload pictures.
+057 ==> 445694 - Thumbnails jump to the wrong place if you are "-" a photo for an incorrectly identified face when the same face is elsewhere in the photo.
+058 ==> 
+059 ==> 
+060 ==> 
