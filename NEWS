@@ -71,6 +71,6 @@ BUGFIXES:
 055 ==> 452752 - Upon starting digiKam - the following message is displayed - There are two actions (Open Command Bar, Add Images...) that want to use the same shortcut (Ctrl+Alt+I).
 056 ==> 446931 - Can't upload pictures.
 057 ==> 445694 - Thumbnails jump to the wrong place if you are "-" a photo for an incorrectly identified face when the same face is elsewhere in the photo.
-058 ==> 
+058 ==> 417833 - Geolocation is not shown under Maps view.
 059 ==> 
 060 ==> 
