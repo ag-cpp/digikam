@@ -6,8 +6,9 @@ NEW FEATURES:
 General  : Update internal Libraw with snapshot 2022-11-23
 General  : Update Exiftool to 12.45 to the bundles.
 MacOS    : Update frameworks Qt5 to 5.15.7 and KF5 to 5.99.
-AppIMage : Update frameworks Qt5 to 5.15.7 and KF5 to 5.99.
+AppImage : Update frameworks Qt5 to 5.15.7 and KF5 to 5.99.
 Windows  : Update frameworks Qt5 to 5.15.7 and KF5 to 5.99.
+AppImage : Linux Ubuntu 18.04 is now used to compile AppImage with a binary compatibility of Glibc >= 2.27.
 
 *****************************************************************************************************
 BUGFIXES:
@@ -62,4 +63,5 @@ BUGFIXES:
 047 ==> 462067 - Order by Exif date.
 048 ==> 462129 - Bomb after splash screen.
 049 ==> 461842 - digiKam crash at launch after migration kubuntu 20.04 LTS to 22.04 LTS.
-050 ==> 
+050 ==> 447304 - Appimage digiKam 7.4 will not start in Linux Mint 19 (Tara).
+051 ==> 
