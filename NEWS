@@ -100,7 +100,7 @@ BUGFIXES:
 084 ==> 404900 - Exporting video, photo to Google photo fails.
 084 ==> 268773 - Crash while Adding Camera.
 086 ==> 269626 - Crash trying to add Camera.
-087 ==> 
+087 ==> 462286 - HEIF image loading broken with kimageformats 5.100.0.
 088 ==> 
 089 ==> 
 090 ==> 
