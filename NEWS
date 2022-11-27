@@ -102,7 +102,7 @@ BUGFIXES:
 086 ==> 269626 - Crash trying to add Camera.
 087 ==> 462286 - HEIF image loading broken with kimageformats 5.100.0.
 088 ==> 462137 - Information about applied Gmic-Qt filter not saved (neither in database nor in metadata Xmp.digiKam.ImageHistory).
-089 ==> 
+089 ==> 462066 - Filters missing from G'MIC.
 090 ==> 
 091 ==> 
 092 ==> 
