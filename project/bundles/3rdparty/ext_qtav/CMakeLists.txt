@@ -25,6 +25,8 @@ if(MINGW)
 
         GIT_REPOSITORY https://github.com/wang-bin/QtAV.git
 
+        PATCH_COMMAND ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/qtav-code-cleanup.patch
+
         CONFIGURE_COMMAND git submodule update --init &&
                           cp -f ${CMAKE_CURRENT_SOURCE_DIR}/../../../scripts/create_manifest.sh <SOURCE_DIR>/. &&
                           cd <SOURCE_DIR> &&
@@ -70,6 +72,7 @@ elseif(APPLE)
         GIT_REPOSITORY https://github.com/wang-bin/QtAV.git
 
         PATCH_COMMAND ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_BINARY_DIR}/qtav-rules-macos.patch &&
+                      ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/qtav-code-cleanup.patch &&
                       rm -fv <SOURCE_DIR>/examples/examples.pro &&
                       rm -fv <SOURCE_DIR>/qml/libQmlAV.pri &&
                       rm -fv <SOURCE_DIR>/qml/libQmlAV.pro
@@ -102,98 +105,47 @@ elseif(APPLE)
 
 else() #Linux
 
-    if(${ENABLE_QTVERSION} MATCHES "5.*")
+    ExternalProject_Add(ext_qtav
 
-        ExternalProject_Add(ext_qtav
+        DOWNLOAD_DIR ${EXTERNALS_DOWNLOAD_DIR}
 
-            DOWNLOAD_DIR ${EXTERNALS_DOWNLOAD_DIR}
+        GIT_REPOSITORY https://github.com/wang-bin/QtAV.git
 
-            GIT_REPOSITORY https://github.com/wang-bin/QtAV.git
+        PATCH_COMMAND ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/qtav-code-cleanup.patch
 
-            CONFIGURE_COMMAND cd <SOURCE_DIR> && git submodule update --init &&
-                              cp -f ${CMAKE_CURRENT_SOURCE_DIR}/../../../scripts/create_manifest.sh <SOURCE_DIR>/. &&
-                              cd <SOURCE_DIR> &&
-                              <SOURCE_DIR>/create_manifest.sh ${EXTERNALS_DOWNLOAD_DIR} qtav &&
-                              rm -rfv ${INSTALL_ROOT}/include/QtAV &&
-                              rm -rfv ${INSTALL_ROOT}/include/QtAVWidgets &&
-                              rm -fv  ${INSTALL_ROOT}/lib/libQtAV.so &&
-                              rm -fv  ${INSTALL_ROOT}/lib/libQtAV.so.1 &&
-                              rm -fv  ${INSTALL_ROOT}/lib/libQtAV.so.1.13 &&
-                              rm -fv  ${INSTALL_ROOT}/lib/libQtAV.so.1.13.0 &&
-                              rm -fv  ${INSTALL_ROOT}/lib/libQtAVWidgets.so &&
-                              rm -fv  ${INSTALL_ROOT}/lib/libQtAVWidgets.so.1 &&
-                              rm -fv  ${INSTALL_ROOT}/lib/libQtAVWidgets.so.1.13 &&
-                              rm -fv  ${INSTALL_ROOT}/lib/libQtAVWidgets.so.1.13.0 &&
-                              cd <SOURCE_DIR> && mkdir -p build && cd build &&
-                              $(CMAKE_COMMAND) .. -DCMAKE_INSTALL_PREFIX=${PREFIX_ext_qtav}
-                                                  -DCMAKE_BUILD_TYPE=${GLOBAL_BUILD_TYPE}
-                                                  ${GLOBAL_PROFILE}
-                                                  ${QtAV_Conf}
+        CONFIGURE_COMMAND cd <SOURCE_DIR> && git submodule update --init &&
+                          cp -f ${CMAKE_CURRENT_SOURCE_DIR}/../../../scripts/create_manifest.sh <SOURCE_DIR>/. &&
+                          cd <SOURCE_DIR> &&
+                          <SOURCE_DIR>/create_manifest.sh ${EXTERNALS_DOWNLOAD_DIR} qtav &&
+                          rm -rfv ${INSTALL_ROOT}/include/QtAV &&
+                          rm -rfv ${INSTALL_ROOT}/include/QtAVWidgets &&
+                          rm -fv  ${INSTALL_ROOT}/lib/libQtAV.so &&
+                          rm -fv  ${INSTALL_ROOT}/lib/libQtAV.so.1 &&
+                          rm -fv  ${INSTALL_ROOT}/lib/libQtAV.so.1.13 &&
+                          rm -fv  ${INSTALL_ROOT}/lib/libQtAV.so.1.13.0 &&
+                          rm -fv  ${INSTALL_ROOT}/lib/libQtAVWidgets.so &&
+                          rm -fv  ${INSTALL_ROOT}/lib/libQtAVWidgets.so.1 &&
+                          rm -fv  ${INSTALL_ROOT}/lib/libQtAVWidgets.so.1.13 &&
+                          rm -fv  ${INSTALL_ROOT}/lib/libQtAVWidgets.so.1.13.0 &&
+                          cd <SOURCE_DIR> && mkdir -p build && cd build &&
+                          $(CMAKE_COMMAND) .. -DCMAKE_INSTALL_PREFIX=${PREFIX_ext_qtav}
+                                              -DCMAKE_BUILD_TYPE=${GLOBAL_BUILD_TYPE}
+                                              ${GLOBAL_PROFILE}
+                                              ${QtAV_Conf}
 
-            BUILD_COMMAND cd <SOURCE_DIR>/build && $(MAKE)
+        BUILD_COMMAND cd <SOURCE_DIR>/build && $(MAKE)
 
-            INSTALL_COMMAND cp -rfv <SOURCE_DIR>/src/QtAV ${INSTALL_ROOT}/include/ &&
-                            cp -rfv <SOURCE_DIR>/widgets/QtAVWidgets ${INSTALL_ROOT}/include/ &&
-                            cp -fv  <SOURCE_DIR>/build/lib/libQtAV.so ${INSTALL_ROOT}/lib/ &&
-                            cp -fv  <SOURCE_DIR>/build/lib/libQtAV.so.1 ${INSTALL_ROOT}/lib/ &&
-                            cp -fv  <SOURCE_DIR>/build/lib/libQtAV.so.1.13.0 ${INSTALL_ROOT}/lib/ &&
-                            cp -fv  <SOURCE_DIR>/build/lib/libQtAVWidgets.so ${INSTALL_ROOT}/lib/ &&
-                            cp -fv  <SOURCE_DIR>/build/lib/libQtAVWidgets.so.1 ${INSTALL_ROOT}/lib/ &&
-                            cp -fv  <SOURCE_DIR>/build/lib/libQtAVWidgets.so.1.13.0 ${INSTALL_ROOT}/lib/
+        INSTALL_COMMAND cp -rfv <SOURCE_DIR>/src/QtAV ${INSTALL_ROOT}/include/ &&
+                        cp -rfv <SOURCE_DIR>/widgets/QtAVWidgets ${INSTALL_ROOT}/include/ &&
+                        cp -fv  <SOURCE_DIR>/build/lib/libQtAV.so ${INSTALL_ROOT}/lib/ &&
+                        cp -fv  <SOURCE_DIR>/build/lib/libQtAV.so.1 ${INSTALL_ROOT}/lib/ &&
+                        cp -fv  <SOURCE_DIR>/build/lib/libQtAV.so.1.13.0 ${INSTALL_ROOT}/lib/ &&
+                        cp -fv  <SOURCE_DIR>/build/lib/libQtAVWidgets.so ${INSTALL_ROOT}/lib/ &&
+                        cp -fv  <SOURCE_DIR>/build/lib/libQtAVWidgets.so.1 ${INSTALL_ROOT}/lib/ &&
+                        cp -fv  <SOURCE_DIR>/build/lib/libQtAVWidgets.so.1.13.0 ${INSTALL_ROOT}/lib/
 
-            UPDATE_COMMAND ""
-            ALWAYS 0
-        )
-
-    else()
-
-        ExternalProject_Add(ext_qtav
-
-            DOWNLOAD_DIR ${EXTERNALS_DOWNLOAD_DIR}
-
-            GIT_REPOSITORY https://github.com/wang-bin/QtAV.git
-
-            PATCH_COMMAND git reset --hard &&
-                          ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/qtav-qt6-pure.patch &&
-                          ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/qtav-rules-qt6.patch &&
-                          rm -fv <SOURCE_DIR>/examples/examples.pro &&
-                          rm -fv <SOURCE_DIR>/qml/libQmlAV.pri &&
-                          rm -fv <SOURCE_DIR>/qml/libQmlAV.pro
-
-            CONFIGURE_COMMAND cd <SOURCE_DIR> && git submodule update --init &&
-                              cp -f ${CMAKE_CURRENT_SOURCE_DIR}/../../../scripts/create_manifest.sh <SOURCE_DIR>/. &&
-                              cd <SOURCE_DIR> &&
-                              <SOURCE_DIR>/create_manifest.sh ${EXTERNALS_DOWNLOAD_DIR} qtav &&
-                              rm -rfv ${INSTALL_ROOT}/include/QtAV &&
-                              rm -rfv ${INSTALL_ROOT}/include/QtAVWidgets &&
-                              rm -fv  ${INSTALL_ROOT}/lib/libQtAV.so &&
-                              rm -fv  ${INSTALL_ROOT}/lib/libQtAV.so.1 &&
-                              rm -fv  ${INSTALL_ROOT}/lib/libQtAV.so.1.13 &&
-                              rm -fv  ${INSTALL_ROOT}/lib/libQtAV.so.1.13.0 &&
-                              rm -fv  ${INSTALL_ROOT}/lib/libQtAVWidgets.so &&
-                              rm -fv  ${INSTALL_ROOT}/lib/libQtAVWidgets.so.1 &&
-                              rm -fv  ${INSTALL_ROOT}/lib/libQtAVWidgets.so.1.13 &&
-                              rm -fv  ${INSTALL_ROOT}/lib/libQtAVWidgets.so.1.13.0 &&
-                              cd <SOURCE_DIR> && mkdir -p build && cd build &&
-                              qmake ..
-
-            BUILD_COMMAND cd <SOURCE_DIR>/build && $(MAKE)
-
-            INSTALL_COMMAND cp -rfv <SOURCE_DIR>/src/QtAV ${INSTALL_ROOT}/include/ &&
-                            cp -rfv <SOURCE_DIR>/widgets/QtAVWidgets ${INSTALL_ROOT}/include/ &&
-                            cp -fv  <SOURCE_DIR>/build/lib_linux_x86_64_llvm/libQtAV.so ${INSTALL_ROOT}/lib/ &&
-                            cp -fv  <SOURCE_DIR>/build/lib_linux_x86_64_llvm/libQtAV.so.1 ${INSTALL_ROOT}/lib/ &&
-                            cp -fv  <SOURCE_DIR>/build/lib_linux_x86_64_llvm/libQtAV.so.1.13.0 ${INSTALL_ROOT}/lib/ &&
-                            cp -fv  <SOURCE_DIR>/build/lib_linux_x86_64_llvm/libQtAVWidgets.so ${INSTALL_ROOT}/lib/ &&
-                            cp -fv  <SOURCE_DIR>/build/lib_linux_x86_64_llvm/libQtAVWidgets.so.1 ${INSTALL_ROOT}/lib/ &&
-                            cp -fv  <SOURCE_DIR>/build/lib_linux_x86_64_llvm/libQtAVWidgets.so.1.13.0 ${INSTALL_ROOT}/lib/
-
-            BUILD_IN_SOURCE 1
-
-            UPDATE_COMMAND ""
-            ALWAYS 0
-        )
-
-    endif()
+        UPDATE_COMMAND ""
+        ALWAYS 0
+    )
 
 endif()
