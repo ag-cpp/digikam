@@ -25,7 +25,8 @@ if(MINGW)
 
         GIT_REPOSITORY https://github.com/wang-bin/QtAV.git
 
-        PATCH_COMMAND ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/qtav-code-cleanup.patch
+        PATCH_COMMAND git reset --hard &&
+                      ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/qtav-code-cleanup.patch
 
         CONFIGURE_COMMAND git submodule update --init &&
                           cp -f ${CMAKE_CURRENT_SOURCE_DIR}/../../../scripts/create_manifest.sh <SOURCE_DIR>/. &&
@@ -71,7 +72,8 @@ elseif(APPLE)
 
         GIT_REPOSITORY https://github.com/wang-bin/QtAV.git
 
-        PATCH_COMMAND ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_BINARY_DIR}/qtav-rules-macos.patch &&
+        PATCH_COMMAND git reset --hard &&
+                      ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_BINARY_DIR}/qtav-rules-macos.patch &&
                       ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/qtav-code-cleanup.patch &&
                       rm -fv <SOURCE_DIR>/examples/examples.pro &&
                       rm -fv <SOURCE_DIR>/qml/libQmlAV.pri &&
@@ -111,7 +113,8 @@ else() #Linux
 
         GIT_REPOSITORY https://github.com/wang-bin/QtAV.git
 
-        PATCH_COMMAND ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/qtav-code-cleanup.patch
+        PATCH_COMMAND git reset --hard &&
+                      ${PATCH_COMMAND} -p1 -i ${CMAKE_CURRENT_SOURCE_DIR}/qtav-code-cleanup.patch
 
         CONFIGURE_COMMAND cd <SOURCE_DIR> && git submodule update --init &&
                           cp -f ${CMAKE_CURRENT_SOURCE_DIR}/../../../scripts/create_manifest.sh <SOURCE_DIR>/. &&
