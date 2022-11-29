@@ -76,8 +76,12 @@ export APPIMAGE_ORIGINAL_PATH=$PATH
 
 export LD_LIBRARY_PATH=$DIR/usr/lib/:$LD_LIBRARY_PATH
 export QT_PLUGIN_PATH=$DIR/usr/plugins/
+
 # See bug #427906
-export XKB_CONFIG_ROOT=/usr/share/X11/xkb/
+if [ -d "/usr/share/X11/xkb/" ]; then
+    export XKB_CONFIG_ROOT=/usr/share/X11/xkb/
+fi
+
 export XDG_DATA_DIRS=$DIR/usr/share/:$XDG_DATA_DIRS
 export PATH=$DIR/usr/bin:$DIR/usr/lib:$DIR/usr/lib/libexec/kf5:$DIR/usr/share/digikam/utils:$PATH
 export KDE_FORK_SLAVES=1
