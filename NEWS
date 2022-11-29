@@ -105,7 +105,13 @@ BUGFIXES:
 089 ==> 462066 - Filters missing from G'MIC.
 090 ==> 427906 - Appimage fails to launch on Wayland stating xkb.
 091 ==> 433766 - Flickr export does not work (7.1.0 appimage).
-092 ==> 
-093 ==> 
+092 ==> 323300 - Keyboard shortcuts do not respect the keymap.
+093 ==> 389054 - "use file dialog from system" fail.
 094 ==> 
-
+095 ==> 
+096 ==> 
+097 ==> 
+098 ==> 
+099 ==> 
+100 ==> 
+101 ==> 
