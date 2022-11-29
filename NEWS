@@ -103,7 +103,7 @@ BUGFIXES:
 087 ==> 462286 - HEIF image loading broken with kimageformats 5.100.0.
 088 ==> 462137 - Information about applied Gmic-Qt filter not saved (neither in database nor in metadata Xmp.digiKam.ImageHistory).
 089 ==> 462066 - Filters missing from G'MIC.
-090 ==> 
+090 ==> 427906 - Appimage fails to launch on Wayland stating xkb.
 091 ==> 
 092 ==> 
 093 ==> 
