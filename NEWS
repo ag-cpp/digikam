@@ -104,7 +104,7 @@ BUGFIXES:
 088 ==> 462137 - Information about applied Gmic-Qt filter not saved (neither in database nor in metadata Xmp.digiKam.ImageHistory).
 089 ==> 462066 - Filters missing from G'MIC.
 090 ==> 427906 - Appimage fails to launch on Wayland stating xkb.
-091 ==> 
+091 ==> 433766 - Flickr export does not work (7.1.0 appimage).
 092 ==> 
 093 ==> 
 094 ==> 
