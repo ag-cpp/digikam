@@ -108,7 +108,7 @@ BUGFIXES:
 092 ==> 323300 - Keyboard shortcuts do not respect the keymap.
 093 ==> 389054 - "use file dialog from system" fail.
 094 ==> 462226 - No Tool Bar in Presentation Tool in action.
-095 ==> 
+095 ==> 415999 - Progress bar goes backwards when tagging faces (from (100% to 0%).
 096 ==> 
 097 ==> 
 098 ==> 
