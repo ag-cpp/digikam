@@ -107,7 +107,7 @@ BUGFIXES:
 091 ==> 433766 - Flickr export does not work (7.1.0 appimage).
 092 ==> 323300 - Keyboard shortcuts do not respect the keymap.
 093 ==> 389054 - "use file dialog from system" fail.
-094 ==> 
+094 ==> 462226 - No Tool Bar in Presentation Tool in action.
 095 ==> 
 096 ==> 
 097 ==> 
