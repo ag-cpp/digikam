@@ -7,4 +7,6 @@ NEW FEATURES:
 *****************************************************************************************************
 BUGFIXES:
 
-001 ==>
+001 ==> 462598 - All groups disappeared after upgrade of Ubuntu and digiKam.
+002 ==> 322642 - MAINTENANCE : tools an optimizations to maintain database schema.
+003 ==> 
