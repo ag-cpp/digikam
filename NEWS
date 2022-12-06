@@ -10,4 +10,5 @@ BUGFIXES:
 001 ==> 462598 - All groups disappeared after upgrade of Ubuntu and digiKam.
 002 ==> 322642 - MAINTENANCE : tools an optimizations to maintain database schema.
 003 ==> 462686 - Compile Error in videodecoder_p.cpp.
-004 ==> 
+004 ==> 462685 - Darktable does not show in "open with" context menu.
+005 ==> 
