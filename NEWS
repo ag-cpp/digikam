@@ -11,4 +11,5 @@ BUGFIXES:
 002 ==> 322642 - MAINTENANCE : tools an optimizations to maintain database schema.
 003 ==> 462686 - Compile Error in videodecoder_p.cpp.
 004 ==> 462685 - Darktable does not show in "open with" context menu.
-005 ==> 
+005 ==> 462744 - Will digiKam run on Apple M1 or M2 chips?
+006 ==> 
