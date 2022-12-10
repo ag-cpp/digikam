@@ -36,7 +36,6 @@
 #include <QSqlDatabase>
 #include <QApplication>
 #include <QStandardPaths>
-#include <QSslConfiguration>
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 
