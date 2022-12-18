@@ -15,4 +15,5 @@ BUGFIXES:
 006 ==> 462825 - Rename tool combobox history not saving in version 7.9.0.
 007 ==> 462913 - Import Cancel button doesn't cancel during "Import > Add images...".
 008 ==> 463026 - Unable to reset custom collection collection icon.
-009 ==> 
+009 ==> 463120 - Crashes on startup.
+010 ==> 
