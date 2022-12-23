@@ -16,4 +16,5 @@ BUGFIXES:
 007 ==> 462913 - Import Cancel button doesn't cancel during "Import > Add images...".
 008 ==> 463026 - Unable to reset custom collection collection icon.
 009 ==> 463120 - Crashes on startup.
-010 ==> 
+010 ==> 463350 - Red eyes correction on windows 10 not functionning.
+011 ==> 
