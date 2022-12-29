@@ -3,6 +3,20 @@ digiKam 7.10.0 - Release date: 2023-xx-xx
 *****************************************************************************************************
 NEW FEATURES:
 
+Update Libraw to last stable 0.21 (https://www.libraw.org/news/libraw-0-21-release):
+    Camera format support:
+        Phase One/Leaf IIQ-S v2 support
+        Canon CR3 filmrolls/RawBurst
+        Canon CRM (movie) files
+        Tiled bit-packed (and 16-bit unpacked) DNGs
+        (non-standard) Deflate-compressed integer DNG files are allowed 
+    Camera device support:
+        Canon EOS R3, R7 and R10
+        Fujifilm X-H2S, X-T30 II
+        OM System OM-1
+        Leica M11
+        Sony A7-IV (ILCE-7M4)
+        DJI Mavic 3
 
 *****************************************************************************************************
 BUGFIXES:
