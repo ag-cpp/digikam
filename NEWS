@@ -31,4 +31,5 @@ BUGFIXES:
 008 ==> 463026 - Unable to reset custom collection collection icon.
 009 ==> 463120 - Crashes on startup.
 010 ==> 463350 - Red eyes correction on windows 10 not functionning.
-011 ==> 
+011 ==> 463726 - Cannot find folders with photos.
+012 ==> 
