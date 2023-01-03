@@ -43,7 +43,6 @@ namespace DigikamGenericSlideShowPlugin
 SlideEnd::SlideEnd(QWidget* const parent)
     : QWidget(parent)
 {
-    setAttribute(Qt::WA_DeleteOnClose);
     setMouseTracking(true);
     setAutoFillBackground(true);
 
