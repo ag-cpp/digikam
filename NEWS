@@ -3,7 +3,7 @@ digiKam 7.10.0 - Release date: 2023-xx-xx
 *****************************************************************************************************
 NEW FEATURES:
 
-Update Libraw to last stable 0.21 (https://www.libraw.org/news/libraw-0-21-release):
+Update Libraw to last stable 0.21.1 (https://www.libraw.org/news/libraw-0-21-release):
     Camera format support:
         Phase One/Leaf IIQ-S v2 support
         Canon CR3 filmrolls/RawBurst
