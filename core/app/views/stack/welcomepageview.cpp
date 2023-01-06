@@ -181,23 +181,19 @@ QStringList WelcomePageView::featuresTabContent() const
                         "<a href=\"https://community.kde.org/GSoC/2021/StatusReports/PhuocKhanhLE\">Image Quality Sorter</a>.");
     newFeatures << i18n("New tool to share items on the network with a Motion JPEG stream server.");
     newFeatures << i18n("Showfoto has a new left sidebar hosting a folder-view to quickly explore images from local file system.");
-    newFeatures << i18n("Update internal RAW engine to last Libraw 0.20.2 (snapshot 20210827) including Canon CR3 and Sony A7R4 support.");
-    newFeatures << i18n("New camera supported: "
-                        "Canon CR3, PowerShot G5 X Mark II, G7 X Mark III, SX70 HS, EOS R, EOS RP, EOS 90D, EOS 250D, EOS M6 Mark II, EOS M50, EOS M200, EOS 1DX Mark III (lossless files only) "
-                        "DJI Mavic Air, Air2, Osmo Action, "
-                        "FujiFilm Fujifilm compressed/16bit, GFX 100, X-A7, X-Pro3, X100V, X-T4, X-T200, "
-                        "GoPro Fusion, HERO5, HERO6, HERO7, HERO8, "
-                        "Hasselblad L1D-20c, X1D II 50C, "
-                        "Leica D-LUX7, Q-P, Q2, V-LUX5, C-Lux / CAM-DC25, SL2, M10 Monochrom, "
-                        "Nikon D780, Z50, P950, "
-                        "Olympus TG-6, E-M5 Mark III, E-PL10, E-M1 Mark III, "
-                        "Panasonic Panasonic 14-bit, DC-FZ1000 II, DC-G90, DC-S1, DC-S1R, DC-S1H, DC-TZ95, "
-                        "PhaseOne IQ4 150MP, "
-                        "Rapsberry Pi RAW+JPEG format, "
-                        "Ricoh GR III, "
-                        "Sony A7R IV, A9 II, ILCE-6100, ILCE-6600, RX0 II, RX100 VII, "
-                        "Zenit M, "
-                        "also multiple modern smartphones.");
+    newFeatures << i18n("Update internal RAW engine to last stable Libraw 0.21.1.");
+    newFeatures << i18n("New RAW features: "
+                        "Phase One/Leaf IIQ-S v2 support "
+                        "Canon CR3 filmrolls/RawBurst "
+                        "Canon CRM (movie) files "
+                        "Tiled bit-packed (and 16-bit unpacked) DNGs "
+                        "(non-standard) Deflate-compressed integer DNG files are allowed "
+                        "Canon EOS R3, R7 and R10 "
+                        "Fujifilm X-H2S, X-T30 II "
+                        "OM System OM-1 "
+                        "Leica M11 "
+                        "Sony A7-IV (ILCE-7M4) "
+                        "DJI Mavic 3");
 
     // Add new features here...
 
