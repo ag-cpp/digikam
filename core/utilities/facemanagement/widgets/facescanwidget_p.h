@@ -53,6 +53,7 @@
 // Local includes
 
 #include "digikam_config.h"
+#include "dxmlguiwindow.h"
 #include "dlayoutbox.h"
 #include "dnuminput.h"
 #include "digikam_debug.h"
@@ -64,7 +65,6 @@
 #include "dexpanderbox.h"
 #include "facedbaccess.h"
 #include "facedb.h"
-#include "facemanagementhelpdlg.h"
 
 namespace Digikam
 {

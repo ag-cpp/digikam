@@ -203,13 +203,44 @@ void DXmlGuiWindow::slotHelpContents()
     openHandbook();
 }
 
-void DXmlGuiWindow::openHandbook()
+void DXmlGuiWindow::openHandbook(const QString& section, const QString& chapter, const QString& reference)
 {
-    QUrl url = QUrl(QString::fromUtf8("https://docs.kde.org/?application=%1&branch=trunk5")
-               .arg(QApplication::applicationName()));
+    QUrl url;
+
+    if (section.isEmpty())
+    {
+        url = QUrl(QString::fromUtf8("https://docs.digikam.org/en/index.html"));
+    }
+    else
+    {
+        if (chapter.isEmpty())
+        {
+            url = QUrl(QString::fromUtf8("https://docs.digikam.org/en/%1.html").arg(section));
+        }
+        else
+        {
+            if (reference.isEmpty())
+            {
+                url = QUrl(QString::fromUtf8("https://docs.digikam.org/en/%1/%2.html").arg(section).arg(chapter));
+            }
+            else
+            {
+                url = QUrl(QString::fromUtf8("https://docs.digikam.org/en/%1/%2.html#%3").arg(section).arg(chapter).arg(reference));
+            }
+        }
+    }
+
+#ifdef HAVE_QWEBENGINE
 
     WebBrowserDlg* const browser = new WebBrowserDlg(url, qApp->activeWindow());
     browser->show();
+
+#else
+
+    QDesktopServices::openUrl(url);
+
+#endif
+
 }
 
 void DXmlGuiWindow::restoreWindowSize(QWindow* const win, const KConfigGroup& group)

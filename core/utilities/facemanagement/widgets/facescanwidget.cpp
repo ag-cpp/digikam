@@ -198,8 +198,7 @@ void FaceScanWidget::setupUi()
     connect(d->helpButton, &QPushButton::clicked,
             this, []()
         {
-            FaceManagementHelpDlg* const helpBox = new FaceManagementHelpDlg(qApp->activeWindow());
-            helpBox->show();
+            DXmlGuiWindow::openHandbook(QLatin1String("main_window"), QLatin1String("people_view"));
         }
     );
 

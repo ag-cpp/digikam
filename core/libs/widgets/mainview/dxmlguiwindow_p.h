@@ -50,6 +50,7 @@
 #include <QFileInfo>
 #include <QResource>
 #include <QStandardPaths>
+#include <QDesktopServices>
 
 // KDE includes
 
