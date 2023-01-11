@@ -38,41 +38,41 @@
 namespace DigikamEditorNoiseReductionToolPlugin
 {
 
-LocalContrastToolPlugin::LocalContrastToolPlugin(QObject* const parent)
+NoiseReductionToolPlugin::NoiseReductionToolPlugin(QObject* const parent)
     : DPluginEditor(parent)
 {
 }
 
-LocalContrastToolPlugin::~LocalContrastToolPlugin()
+NoiseReductionToolPlugin::~NoiseReductionToolPlugin()
 {
 }
 
-QString LocalContrastToolPlugin::name() const
+QString NoiseReductionToolPlugin::name() const
 {
     return i18nc("@title", "Noise Reduction");
 }
 
-QString LocalContrastToolPlugin::iid() const
+QString NoiseReductionToolPlugin::iid() const
 {
     return QLatin1String(DPLUGIN_IID);
 }
 
-QIcon LocalContrastToolPlugin::icon() const
+QIcon NoiseReductionToolPlugin::icon() const
 {
     return QIcon::fromTheme(QLatin1String("noisereduction"));
 }
 
-QString LocalContrastToolPlugin::description() const
+QString NoiseReductionToolPlugin::description() const
 {
     return i18nc("@info", "A tool to remove photograph noise using wavelets");
 }
 
-QString LocalContrastToolPlugin::details() const
+QString NoiseReductionToolPlugin::details() const
 {
     return i18nc("@info", "This Image Editor tool can reduce noise in image.");
 }
 
-QList<DPluginAuthor> LocalContrastToolPlugin::authors() const
+QList<DPluginAuthor> NoiseReductionToolPlugin::authors() const
 {
     return QList<DPluginAuthor>()
             << DPluginAuthor(QString::fromUtf8("Gilles Caulier"),
@@ -81,7 +81,7 @@ QList<DPluginAuthor> LocalContrastToolPlugin::authors() const
             ;
 }
 
-void LocalContrastToolPlugin::setup(QObject* const parent)
+void NoiseReductionToolPlugin::setup(QObject* const parent)
 {
     DPluginAction* const ac = new DPluginAction(parent);
     ac->setIcon(icon());
@@ -95,7 +95,7 @@ void LocalContrastToolPlugin::setup(QObject* const parent)
     addAction(ac);
 }
 
-void LocalContrastToolPlugin::slotNoiseReduction()
+void NoiseReductionToolPlugin::slotNoiseReduction()
 {
     EditorWindow* const editor = dynamic_cast<EditorWindow*>(sender()->parent());
 
