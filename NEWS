@@ -34,5 +34,6 @@ BUGFIXES:
 011 ==> 463726 - Cannot find folders with photos.
 012 ==> 461205 - HEIF images are not rotated properly.
 013 ==> 464003 - digiKam fills "ASCII" as photo caption from no apparent sources.
-014 ==> 447370 -GPS Processing Method tag is incorrectly read as Caption tag.
-015 ==> 
+014 ==> 447370 - GPS Processing Method tag is incorrectly read as Caption tag.
+015 ==> 464220 - Showfoto not exporting properly coded export videos.
+016 ==> 
