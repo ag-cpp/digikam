@@ -96,6 +96,8 @@ CameraFolderDialog::CameraFolderDialog(QWidget* const parent, const QMap<QString
     grid->addWidget(logo,          0, 0, 1, 1);
     grid->addWidget(message,       1, 0, 1, 1);
     grid->addWidget(d->folderView, 0, 1, 3, 1);
+    grid->setColumnStretch(0, 2);
+    grid->setColumnStretch(1, 10);
     grid->setRowStretch(2, 10);
     grid->setContentsMargins(spacing, spacing, spacing, spacing);
     grid->setSpacing(spacing);
