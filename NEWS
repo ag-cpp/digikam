@@ -36,4 +36,5 @@ BUGFIXES:
 013 ==> 464003 - digiKam fills "ASCII" as photo caption from no apparent sources.
 014 ==> 447370 - GPS Processing Method tag is incorrectly read as Caption tag.
 015 ==> 464220 - Showfoto not exporting properly coded export videos.
-016 ==> 
+016 ==> 464389 - Bad link to documentation.
+017 ==> 
