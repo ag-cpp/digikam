@@ -270,10 +270,12 @@ ContentAwareResizeTool::ContentAwareResizeTool(QObject* const parent)
 
     d->maskGroup = new QButtonGroup(d->gboxSettings->plainPage());
     d->maskGroup->setExclusive(true);
+    QPixmap btn(QSize(32, 32));
 
     QLabel* const labeRedMaskTool = new QLabel(i18n("Suppression weight mask:"), d->gboxSettings->plainPage());
     d->redMaskTool          = new QToolButton(d->gboxSettings->plainPage());
-    d->redMaskTool->setIcon(QIcon(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("digikam/data/indicator-red.png"))));
+    btn.fill(QColor(255, 0, 0));
+    d->redMaskTool->setIcon(QIcon(btn));
     d->redMaskTool->setCheckable(true);
     d->redMaskTool->setChecked(true);
     d->redMaskTool->setToolTip(i18n("Draw a suppression mask"));
@@ -285,7 +287,8 @@ ContentAwareResizeTool::ContentAwareResizeTool(QObject* const parent)
 
     QLabel* const labeGreenMaskTool = new QLabel(i18n("Preservation weight mask:"), d->gboxSettings->plainPage());
     d->greenMaskTool          = new QToolButton(d->gboxSettings->plainPage());
-    d->greenMaskTool->setIcon(QIcon(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("digikam/data/indicator-green.png"))));
+    btn.fill(QColor(0, 255, 0));
+    d->greenMaskTool->setIcon(QIcon(btn));
     d->greenMaskTool->setCheckable(true);
     d->greenMaskTool->setToolTip(i18n("Draw a preservation mask"));
     d->greenMaskTool->setWhatsThis(i18n("Click on this button to draw zones marking which areas of the "
@@ -295,7 +298,8 @@ ContentAwareResizeTool::ContentAwareResizeTool(QObject* const parent)
 
     QLabel* const labeEraseMaskTool = new QLabel(i18n("Erase mask:"), d->gboxSettings->plainPage());
     d->eraseMaskTool          = new QToolButton(d->gboxSettings->plainPage());
-    d->eraseMaskTool->setIcon(QIcon(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QLatin1String("digikam/data/indicator-gray.png"))));
+    btn.fill(QColor(255, 255, 0));
+    d->eraseMaskTool->setIcon(QIcon(btn));
     d->eraseMaskTool->setCheckable(true);
     d->eraseMaskTool->setToolTip(i18n("Erase mask"));
     d->eraseMaskTool->setWhatsThis(i18n("Click on this button to erase mask regions."));
