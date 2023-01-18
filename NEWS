@@ -38,4 +38,5 @@ BUGFIXES:
 015 ==> 464220 - Showfoto not exporting properly coded export videos.
 016 ==> 464389 - Bad link to documentation.
 017 ==> 464390 - po/ca@valencia/digikam.po excluded from tarballs.
-018 ==> 
+018 ==> 464468 - Menu Help Online Handbook goes to KDE Documentation, digikam unknown.
+019 ==> 
