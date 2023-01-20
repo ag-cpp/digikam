@@ -39,4 +39,5 @@ BUGFIXES:
 016 ==> 464389 - Bad link to documentation.
 017 ==> 464390 - po/ca@valencia/digikam.po excluded from tarballs.
 018 ==> 464468 - Menu Help Online Handbook goes to KDE Documentation, digikam unknown.
-019 ==> 
+019 ==> 464492 - Menu item Help - Online handbook is broken.
+020 ==> 464512 - Suggestion about to apply tags to whole Album contents.
