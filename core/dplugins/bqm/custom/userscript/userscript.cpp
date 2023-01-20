@@ -39,6 +39,7 @@
 // Local includes
 
 #include "digikam_globals.h"
+#include "digikam_debug.h"
 #include "dimg.h"
 #include "dcombobox.h"
 #include "dmetadata.h"
@@ -249,7 +250,7 @@ bool UserScript::toolOperations()
 
 #ifndef Q_OS_WIN
 
-    process.start(QLatin1String("/bin/sh"), QStringList() << QLatin1String("-c") << script);
+    process.start(QLatin1String("/bin/bash"), QStringList() << QLatin1String("-c") << script);
 
 #else
 
@@ -261,34 +262,51 @@ bool UserScript::toolOperations()
 
 #endif // Q_OS_WIN
 
+    bool ret = true;
+
     if (!process.waitForFinished(60000))
     {
         setErrorDescription(i18n("User Script: Timeout from script."));
         process.kill();
 
-        return false;
+        ret = false;
     }
 
-    if      (process.exitCode() == -2)
+    if      (process.exitCode() == 0)
+    {
+        setErrorDescription(i18n("User Script: No error."));
+    }
+    else if (process.exitCode() == -2)
     {
         setErrorDescription(i18n("User Script: Failed to start script."));
 
-        return false;
+        ret = false;
     }
     else if (process.exitCode() == -1)
     {
         setErrorDescription(i18n("User Script: Script process crashed."));
 
-        return false;
+        ret = false;
     }
     else if (process.exitCode() == 127)
     {
         setErrorDescription(i18n("User Script: Command not found."));
 
-        return false;
+        ret = false;
+    }
+    else
+    {
+        setErrorDescription(i18n("User Script: Error code returned %1.", process.exitCode()));
+
+        ret = false;
     }
 
-    return true;
+
+    qCDebug(DIGIKAM_DPLUGIN_BQM_LOG) << "Script stdout"     << process.readAllStandardOutput();
+    qCDebug(DIGIKAM_DPLUGIN_BQM_LOG) << "Script stderr"     << process.readAllStandardError();
+    qCDebug(DIGIKAM_DPLUGIN_BQM_LOG) << "Script exit code:" << process.exitCode();
+
+    return ret;
 }
 
 } // namespace DigikamBqmUserScriptPlugin
