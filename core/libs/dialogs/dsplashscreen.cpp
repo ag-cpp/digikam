@@ -117,9 +117,9 @@ void DSplashScreen::setColor(const QColor& color)
 void DSplashScreen::setMessage(const QString& message)
 {
     d->message = message;
-    QSplashScreen::showMessage(d->message,                                  // krazy:exclude=qclasses
-                               (layoutDirection() == Qt::RightToLeft) ? Qt::AlignLeft : Qt::AlignRight,
-                               d->messageColor);
+    showMessage(d->message,
+                (layoutDirection() == Qt::RightToLeft) ? Qt::AlignLeft : Qt::AlignRight,
+                d->messageColor);
     slotAnimate();
     qApp->processEvents();
 }
