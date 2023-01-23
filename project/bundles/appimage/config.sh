@@ -41,11 +41,11 @@ DK_BUILDTEMP=$BUILDING_DIR/dktemp
 
 # KDE Application version.
 # See official release here: https://download.kde.org/stable/release-service/
-DK_KA_VERSION="22.08.1"
+DK_KA_VERSION="22.12.1"
 
 # KDE KF5 frameworks version.
 # See official release here: https://download.kde.org/stable/frameworks/
-DK_KF5_VERSION="5.99"
+DK_KF5_VERSION="5.102"
 
 # Installer sub version to differentiates newer updates of the installer itself, even if the underlying application hasn’t changed.
 #DK_SUBVER="-01"
