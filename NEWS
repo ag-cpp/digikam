@@ -19,6 +19,7 @@ Update Libraw to last stable 0.21.1 (https://www.libraw.org/news/libraw-0-21-rel
         DJI Mavic 3
 
 Bundles ; Update KF5 framework to last 5.102 under macOS, Windiws, and Linux (AppImage).
+Bundles : Update libjasper to last 4.0.0
 
 *****************************************************************************************************
 BUGFIXES:
@@ -43,3 +44,5 @@ BUGFIXES:
 018 ==> 464468 - Menu Help Online Handbook goes to KDE Documentation, digikam unknown.
 019 ==> 464492 - Menu item Help - Online handbook is broken.
 020 ==> 464512 - Suggestion about to apply tags to whole Album contents.
+021 ==> 210779 - Update libjasper to AppImage to use new API >= 3.0 for a better stability.
+022 ==> 
