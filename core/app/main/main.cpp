@@ -187,7 +187,7 @@ int main(int argc, char* argv[])
     parser.process(app);
     aboutData.processCommandLine(&parser);
 
-    setupKSycocaDatabaseFile();
+    //setupKSycocaDatabaseFile();
 
     // See bug #438701
 
