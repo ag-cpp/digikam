@@ -45,4 +45,5 @@ BUGFIXES:
 019 ==> 464492 - Menu item Help - Online handbook is broken.
 020 ==> 464512 - Suggestion about to apply tags to whole Album contents.
 021 ==> 210779 - Update libjasper to AppImage to use new API >= 3.0 for a better stability.
-022 ==> 
+022 ==> 464777 - Start menu items disappear when using digikam for awhile.
+023 ==> 
