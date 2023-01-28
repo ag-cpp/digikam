@@ -70,13 +70,7 @@ bool DMetadata::loadUsingImageMagick(const QString& filePath)
 
     if (
         !fileInfo.exists() || ext.isEmpty() ||
-        rawFilesExt.toUpper().contains(ext) ||    // Ignore RAW files
-        (ext == QLatin1String("HEIF"))      ||    // Ignore HEIF files
-        (ext == QLatin1String("HEIC"))      ||    // Ignore HEIC files
-        (ext == QLatin1String("HIF"))       ||    // Ignore HIF files
-        (ext == QLatin1String("XCF"))       ||    // Ignore XCF files
-        (ext == QLatin1String("SVG"))       ||    // Ignore SVG files
-        (ext == QLatin1String("PDF"))             // Ignore PDF files
+        (ext != QLatin1String("FITS"))            // only FITS files
        )
     {
         return false;
