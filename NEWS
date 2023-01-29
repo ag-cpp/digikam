@@ -47,4 +47,5 @@ BUGFIXES:
 021 ==> 210779 - Update libjasper to AppImage to use new API >= 3.0 for a better stability.
 022 ==> 464777 - Start menu items disappear when using digikam for awhile.
 023 ==> 464966 - Pressing Escape in Trash clears the view.
-024 ==> 
+024 ==> 464941 - Settings / Configure DigiKam > add Ignored File extension.
+025 ==> 
