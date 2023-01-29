@@ -55,6 +55,7 @@ void ItemIconView::slotEscapePreview()
         (viewMode() == StackedView::IconViewMode)  ||
         (viewMode() == StackedView::MapWidgetMode) ||
         (viewMode() == StackedView::TableViewMode) ||
+        (viewMode() == StackedView::TrashViewMode) ||
         (viewMode() == StackedView::WelcomePageMode)
        )
     {
