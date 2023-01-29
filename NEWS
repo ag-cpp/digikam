@@ -48,4 +48,6 @@ BUGFIXES:
 022 ==> 464777 - Start menu items disappear when using digikam for awhile.
 023 ==> 464966 - Pressing Escape in Trash clears the view.
 024 ==> 464941 - Settings / Configure DigiKam > add Ignored File extension.
-025 ==> 
+025 ==> 464646 - Any faces detection command cause Core Dump error.
+026 ==> 464745 - Coredump on face detection or face assignation.
+027 ==> 
