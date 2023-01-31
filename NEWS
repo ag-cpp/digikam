@@ -51,4 +51,6 @@ BUGFIXES:
 025 ==> 464646 - Any faces detection command cause Core Dump error.
 026 ==> 464745 - Coredump on face detection or face assignation.
 027 ==> 465034 - digiKam crashes when trying to recognize faces.
-028 ==> 
+028 ==> 465046 - Refresh folder does nothing or causes crash.
+029 ==> 465044 - Deleting folders crashes the app.
+030 ==> 
