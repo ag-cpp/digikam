@@ -191,9 +191,9 @@ QPair<double, QMap<qlonglong, double> > HaarIface::bestMatchesForImageWithThresh
     Haar::SignatureData sig;
     haar.calcHaar(d->imageData(), &sig);
 
-    // Remove all previous similarities from pictures
+    // Remove all previous similarities from images
 
-    SimilarityDbAccess().db()->removeImageSimilarity(0);
+    SimilarityDbAccess().db()->clearImageSimilarity();
 
     // Apply duplicates search for the image. Use the image id 0 which cannot be present.
 
@@ -215,6 +215,15 @@ QPair<double, QMap<qlonglong, double> > HaarIface::bestMatchesForImageWithThresh
                                                                                     SketchType type)
 {
     Haar::SignatureData sig;
+
+    if (d->firstRunBestMatches)
+    {
+        d->firstRunBestMatches = false;
+
+        // Remove all previous similarities from images
+
+        SimilarityDbAccess().db()->clearImageSimilarity();
+    }
 
     if (d->hasSignatureCache())
     {
@@ -571,7 +580,7 @@ void HaarIface::getBestAndWorstPossibleScore(Haar::SignatureData* const sig,
                                              double* const highestAndWorstScore)
 {
     Haar::Weights weights(static_cast<Haar::Weights::SketchType>(type));
-    double score = 0;
+    double score = 0.0;
 
     // In the first step, the score is initialized with the weighted color channel averages.
     // We don't know the target channel average here, we only now its not negative => assume 0
@@ -588,7 +597,7 @@ void HaarIface::getBestAndWorstPossibleScore(Haar::SignatureData* const sig,
     // In the second step, for every coefficient in the sig that have query and target in common,
     // so in our case all 3*40, subtract the specifically assigned weighting.
 
-    score = 0;
+    score = 0.0;
 
     for (int channel = 0 ; channel < 3 ; ++channel)
     {
