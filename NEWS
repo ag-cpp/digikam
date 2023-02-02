@@ -53,4 +53,5 @@ BUGFIXES:
 027 ==> 465034 - digiKam crashes when trying to recognize faces.
 028 ==> 465046 - Refresh folder does nothing or causes crash.
 029 ==> 465044 - Deleting folders crashes the app.
-030 ==> 
+030 ==> 465183 - Link to documentation / Online-Help broken.
+031 ==> 
