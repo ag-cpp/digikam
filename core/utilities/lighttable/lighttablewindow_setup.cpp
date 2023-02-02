@@ -79,13 +79,13 @@ void LightTableWindow::setupActions()
     ac->addAction(QLatin1String("open_with_default_application"), openWithAction);
     ac->setDefaultShortcut(openWithAction, Qt::CTRL + Qt::Key_F4);
 
-    d->removeItemAction = new QAction(QIcon::fromTheme(QLatin1String("list-remove")), i18n("Remove item from LightTable"), this);
+    d->removeItemAction = new QAction(QIcon::fromTheme(QLatin1String("list-remove")), i18n("Remove item from Light Table"), this);
     d->removeItemAction->setEnabled(false);
     connect(d->removeItemAction, SIGNAL(triggered()), this, SLOT(slotRemoveItem()));
     ac->addAction(QLatin1String("lighttable_removeitem"), d->removeItemAction);
     ac->setDefaultShortcut(d->removeItemAction, Qt::CTRL + Qt::Key_K);
 
-    d->clearListAction = new QAction(QIcon::fromTheme(QLatin1String("edit-clear")), i18n("Remove all items from LightTable"), this);
+    d->clearListAction = new QAction(QIcon::fromTheme(QLatin1String("edit-clear")), i18n("Remove all items from Light Table"), this);
     d->clearListAction->setEnabled(false);
     connect(d->clearListAction, SIGNAL(triggered()), this, SLOT(slotClearItemsList()));
     ac->addAction(QLatin1String("lighttable_clearlist"), d->clearListAction);
