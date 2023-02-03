@@ -378,6 +378,7 @@ double SimilarityDb::getImageSimilarity(qlonglong imageID1, qlonglong imageID2, 
 void SimilarityDb::setImageSimilarity(qlonglong imageID1, qlonglong imageID2, double value, FuzzyAlgorithm algorithm)
 {
     // We don't do anything if the image ids are identical as this is a waste of space.
+
     if (imageID1 == imageID2)
     {
         return;
@@ -391,15 +392,26 @@ void SimilarityDb::setImageSimilarity(qlonglong imageID1, qlonglong imageID2, do
     QPair<qlonglong, qlonglong> orderedIds = orderIds(imageID1, imageID2);
 
     //Check if entry already exists for above pair of images.(Avoiding duplicate entries)
-    QString res = getImageSimilarityOrdered(orderedIds.first, orderedIds.second, algorithm);
 
-    if (res.isEmpty())
+    QString similarityValueString          = getImageSimilarityOrdered(orderedIds.first,
+                                                                       orderedIds.second,
+                                                                       algorithm);
+
+    if (!similarityValueString.isEmpty())
     {
-        d->db->execSql(QString::fromUtf8("REPLACE INTO ImageSimilarity "
-                                         "(imageid1, imageid2, value, algorithm) "
-                                         " VALUES(?, ?, ?, ?);"),
-                       orderedIds.first, orderedIds.second, value, (int)algorithm);
+        bool ok;
+        double val = similarityValueString.toDouble(&ok);
+
+        if (ok && (val == value))
+        {
+            return;
+        }
     }
+
+    d->db->execSql(QString::fromUtf8("REPLACE INTO ImageSimilarity "
+                                     "(imageid1, imageid2, value, algorithm) "
+                                     " VALUES(?, ?, ?, ?);"),
+                   orderedIds.first, orderedIds.second, value, (int)algorithm);
 }
 
 void SimilarityDb::removeImageSimilarity(qlonglong imageID, FuzzyAlgorithm algorithm)
@@ -416,6 +428,13 @@ void SimilarityDb::removeImageSimilarity(qlonglong imageID1, qlonglong imageID2,
     d->db->execSql(QString::fromUtf8("DELETE FROM ImageSimilarity "
                                      "WHERE imageid1=? AND imageid2=? AND algorithm=?;"),
                    orderedIds.first, orderedIds.second, (int)algorithm);
+}
+
+void SimilarityDb::clearImageSimilarity(FuzzyAlgorithm algorithm)
+{
+    d->db->execSql(QString::fromUtf8("DELETE FROM ImageSimilarity "
+                                     "WHERE algorithm=?;"),
+                   (int)algorithm);
 }
 
 QList<FuzzyAlgorithm> SimilarityDb::getImageSimilarityAlgorithms(qlonglong imageID1, qlonglong imageID2)
