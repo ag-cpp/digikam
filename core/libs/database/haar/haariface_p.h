@@ -128,10 +128,6 @@ public:
     const static QString            signatureQuery;
     const static Haar::WeightBin    weightBin;
 
-public:
-
-    bool                            firstRunBestMatches;
-
 private:
 
     QScopedPointer<SignatureCache>  m_signatureCache;
