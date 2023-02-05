@@ -55,4 +55,6 @@ BUGFIXES:
 029 ==> 465044 - Deleting folders crashes the app.
 030 ==> 465183 - Link to documentation / Online-Help broken.
 031 ==> 465310 - Tag option "toggle auto" not considered for face tags.
-032 ==> 
+032 ==> 465312 - Item Properties Unknown.
+033 ==> 465045 - Importing folder does not refresh overview.
+034 ==> 
