@@ -57,4 +57,5 @@ BUGFIXES:
 031 ==> 465310 - Tag option "toggle auto" not considered for face tags.
 032 ==> 465312 - Item Properties Unknown.
 033 ==> 465045 - Importing folder does not refresh overview.
-034 ==> 
+034 ==> 465461 - Tags set by DxO not visible in digiKam.
+035 ==> 
