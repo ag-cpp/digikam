@@ -59,4 +59,5 @@ BUGFIXES:
 033 ==> 465045 - Importing folder does not refresh overview.
 034 ==> 465461 - Tags set by DxO not visible in digiKam.
 035 ==> 465598 - Waste of space in iconview.
-036 ==> 
+036 ==> 465684 - Error message when import from Google Photos.
+037 ==> 
