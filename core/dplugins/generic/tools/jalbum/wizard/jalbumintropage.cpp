@@ -88,7 +88,7 @@ JAlbumIntroPage::JAlbumIntroPage(QWizard* const dialog, const QString& title)
     desc->setWordWrap(true);
     desc->setOpenExternalLinks(true);
     desc->setText(i18n("<qt>"
-                       "<p><h1><b>Welcome to jAlbum album tool</b></h1></p>"
+                       "<p><h1><b>Welcome to jAlbum export tool</b></h1></p>"
                        "<p>This assistant will guide you to export quickly</p><p></p>"
                        "<p>your images as a jAlbum project.</p>"
                        "</qt>"));
