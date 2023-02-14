@@ -61,4 +61,5 @@ BUGFIXES:
 035 ==> 465598 - Waste of space in iconview.
 036 ==> 465684 - Error message when import from Google Photos.
 037 ==> 465680 - Fails to start due to missing library in openSUSE.
-038 ==> 
+038 ==> 465728 - Sliders have the wrong orientation.
+039 ==> 
