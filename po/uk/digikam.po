@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: digikam\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-04 00:55+0000\n"
-"PO-Revision-Date: 2023-02-03 08:26+0200\n"
+"POT-Creation-Date: 2023-02-19 00:55+0000\n"
+"PO-Revision-Date: 2023-02-15 08:56+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -12136,10 +12136,10 @@ msgstr "Збереження змін —"
 #: core/dplugins/generic/webservices/google/gswindow.cpp:362
 #: core/dplugins/generic/webservices/google/gswindow.cpp:403
 #: core/dplugins/generic/webservices/google/gswindow.cpp:429
-#: core/dplugins/generic/webservices/google/gswindow.cpp:490
-#: core/dplugins/generic/webservices/google/gswindow.cpp:992
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1201
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1218
+#: core/dplugins/generic/webservices/google/gswindow.cpp:491
+#: core/dplugins/generic/webservices/google/gswindow.cpp:993
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1202
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1219
 #: core/dplugins/generic/webservices/inaturalist/inatwindow.cpp:608
 #: core/dplugins/generic/webservices/mediawiki/mediawikitalker.cpp:179
 #: core/dplugins/generic/webservices/onedrive/odtalker.cpp:404
@@ -17243,7 +17243,7 @@ msgid ""
 "Optimize image features (contrast, saturation, . . .) to be as global as "
 "possible."
 msgstr ""
-"Оптимізувати параметри зображення (контрастність, насиченість щодо) до "
+"Оптимізувати параметри зображення (контрастність, насиченість тощо) до "
 "загального рівня."
 
 #: core/dplugins/generic/tools/expoblending/blendingdlg/enfusesettings.cpp:123
@@ -17256,7 +17256,7 @@ msgid ""
 msgstr ""
 "Встановити автоматичний вибір рівнів (максимізацію) для пірамідального "
 "злиття, тобто оптимізувати параметри зображення (контрастність, насиченість "
-"щодо) до загального рівня."
+"тощо) до загального рівня."
 
 #: core/dplugins/generic/tools/expoblending/blendingdlg/enfusesettings.cpp:126
 #, kde-format
@@ -17700,7 +17700,7 @@ msgctxt "@title:window"
 msgid "Set Bracketed Images"
 msgstr "Визначення зображень «вилки»"
 
-#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:71
+#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:70
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -17710,26 +17710,26 @@ msgstr ""
 "Тут ви можете вказати список ваших зображень «вилки», які слід об'єднати. "
 "Зображення мають відповідати таким умовам:"
 
-#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:72
+#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:71
 #, kde-format
 msgctxt "@info"
 msgid "At least 2 images from the same subject must be added to the stack."
 msgstr "У стосі зображень має бути принаймні 2 знімки одного об'єкта."
 
-#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:73
+#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:72
 #: core/dplugins/generic/tools/panorama/wizard/panoitemspage.cpp:73
 #, kde-format
 msgctxt "@info"
 msgid "Do not mix images with different color depth."
 msgstr "Бітова глибина кольорів всіх зображень має бути однаковою."
 
-#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:74
+#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:73
 #, kde-format
 msgctxt "@info"
 msgid "All images must have the same dimensions."
 msgstr "Всі зображення повинні бути однакових розмірів."
 
-#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:78
+#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:77
 #, kde-format
 msgctxt "@title: column"
 msgid "Exposure (EV)"
@@ -18482,13 +18482,13 @@ msgstr "jAlbum завершено."
 #: core/dplugins/generic/tools/jalbum/wizard/jalbumintropage.cpp:82
 #, kde-format
 msgid ""
-"<qt><p><h1><b>Welcome to jAlbum album tool</b></h1></p><p>This assistant "
+"<qt><p><h1><b>Welcome to jAlbum export tool</b></h1></p><p>This assistant "
 "will guide you to export quickly</p><p></p><p>your images as a jAlbum "
 "project.</p></qt>"
 msgstr ""
-"<qt><p><h1><b>Вітаємо на сторінці інструмента альбомів jAlbum</b></h1></"
-"p><p>За допомогою цієї допоміжної програми ви зможете швидко</p><p></"
-"p><p>експортувати ваші зображення у форматі проєкту jAlbum.</p></qt>"
+"<qt><p><h1><b>Вітаємо на сторінці інструмента експортування альбомів jAlbum</"
+"b></h1></p><p>За допомогою цієї допоміжної програми ви зможете швидко</"
+"p><p></p><p>експортувати ваші зображення у форматі проєкту jAlbum.</p></qt>"
 
 #: core/dplugins/generic/tools/jalbum/wizard/jalbumintropage.cpp:102
 #, kde-format
@@ -18525,8 +18525,8 @@ msgstr "Створення альбому jAlbum"
 
 #: core/dplugins/generic/tools/jalbum/wizard/jalbumwizard.cpp:81
 #, kde-format
-msgid "Welcome to jAlbum Album Tool"
-msgstr "Вітаємо у засобі надсилання створення альбомів jAlbum"
+msgid "Welcome to jAlbum Export Tool"
+msgstr "Вітаємо у засобі експортування альбомів jAlbum"
 
 #: core/dplugins/generic/tools/jalbum/wizard/jalbumwizard.cpp:83
 #, kde-format
@@ -23151,7 +23151,7 @@ msgid "Start upload to Box"
 msgstr "Почати вивантаження до Box"
 
 #: core/dplugins/generic/webservices/box/boxwindow.cpp:245
-#: core/dplugins/generic/webservices/google/gswindow.cpp:491
+#: core/dplugins/generic/webservices/google/gswindow.cpp:492
 #: core/dplugins/generic/webservices/onedrive/odwindow.cpp:244
 #, kde-format
 msgctxt "@info"
@@ -23162,13 +23162,13 @@ msgstr ""
 
 #: core/dplugins/generic/webservices/box/boxwindow.cpp:252
 #: core/dplugins/generic/webservices/flickr/flickrwindow.cpp:849
-#: core/dplugins/generic/webservices/google/gswindow.cpp:506
-#: core/dplugins/generic/webservices/google/gswindow.cpp:531
-#: core/dplugins/generic/webservices/google/gswindow.cpp:944
-#: core/dplugins/generic/webservices/google/gswindow.cpp:965
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1013
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1063
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1256
+#: core/dplugins/generic/webservices/google/gswindow.cpp:507
+#: core/dplugins/generic/webservices/google/gswindow.cpp:532
+#: core/dplugins/generic/webservices/google/gswindow.cpp:945
+#: core/dplugins/generic/webservices/google/gswindow.cpp:966
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1014
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1064
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1257
 #: core/dplugins/generic/webservices/onedrive/odwindow.cpp:251
 #: core/dplugins/generic/webservices/pinterest/pwindow.cpp:255
 #: core/dplugins/generic/webservices/smugmug/smugwindow.cpp:670
@@ -23179,8 +23179,8 @@ msgid "Warning"
 msgstr "Попередження"
 
 #: core/dplugins/generic/webservices/box/boxwindow.cpp:253
-#: core/dplugins/generic/webservices/google/gswindow.cpp:507
-#: core/dplugins/generic/webservices/google/gswindow.cpp:532
+#: core/dplugins/generic/webservices/google/gswindow.cpp:508
+#: core/dplugins/generic/webservices/google/gswindow.cpp:533
 #: core/dplugins/generic/webservices/onedrive/odwindow.cpp:252
 #, kde-format
 msgctxt "@info"
@@ -23191,12 +23191,12 @@ msgstr ""
 
 #: core/dplugins/generic/webservices/box/boxwindow.cpp:256
 #: core/dplugins/generic/webservices/flickr/flickrwindow.cpp:854
-#: core/dplugins/generic/webservices/google/gswindow.cpp:510
-#: core/dplugins/generic/webservices/google/gswindow.cpp:535
-#: core/dplugins/generic/webservices/google/gswindow.cpp:949
-#: core/dplugins/generic/webservices/google/gswindow.cpp:970
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1019
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1261
+#: core/dplugins/generic/webservices/google/gswindow.cpp:511
+#: core/dplugins/generic/webservices/google/gswindow.cpp:536
+#: core/dplugins/generic/webservices/google/gswindow.cpp:950
+#: core/dplugins/generic/webservices/google/gswindow.cpp:971
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1020
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1262
 #: core/dplugins/generic/webservices/onedrive/odwindow.cpp:255
 #: core/dplugins/generic/webservices/pinterest/pwindow.cpp:259
 #: core/dplugins/generic/webservices/smugmug/smugwindow.cpp:675
@@ -23208,12 +23208,12 @@ msgstr "Продовжити"
 
 #: core/dplugins/generic/webservices/box/boxwindow.cpp:257
 #: core/dplugins/generic/webservices/flickr/flickrwindow.cpp:855
-#: core/dplugins/generic/webservices/google/gswindow.cpp:511
-#: core/dplugins/generic/webservices/google/gswindow.cpp:536
-#: core/dplugins/generic/webservices/google/gswindow.cpp:950
-#: core/dplugins/generic/webservices/google/gswindow.cpp:971
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1020
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1262
+#: core/dplugins/generic/webservices/google/gswindow.cpp:512
+#: core/dplugins/generic/webservices/google/gswindow.cpp:537
+#: core/dplugins/generic/webservices/google/gswindow.cpp:951
+#: core/dplugins/generic/webservices/google/gswindow.cpp:972
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1021
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1263
 #: core/dplugins/generic/webservices/onedrive/odwindow.cpp:256
 #: core/dplugins/generic/webservices/pinterest/pwindow.cpp:260
 #: core/dplugins/generic/webservices/smugmug/smugwindow.cpp:676
@@ -23225,7 +23225,7 @@ msgstr "Скасувати"
 
 #: core/dplugins/generic/webservices/box/boxwindow.cpp:285
 #: core/dplugins/generic/webservices/google/gswindow.cpp:385
-#: core/dplugins/generic/webservices/google/gswindow.cpp:612
+#: core/dplugins/generic/webservices/google/gswindow.cpp:613
 #: core/dplugins/generic/webservices/onedrive/odwindow.cpp:284
 #, kde-format
 msgctxt "@info: progress bar"
@@ -24629,19 +24629,19 @@ msgctxt "@info"
 msgid "Google Drive call failed: %1\n"
 msgstr "Помилка виклику Google Drive: %1\n"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:620
+#: core/dplugins/generic/webservices/google/gswindow.cpp:621
 #, kde-format
 msgctxt "@info"
 msgid "Google Drive export"
 msgstr "Експорт до Google Drive"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:626
+#: core/dplugins/generic/webservices/google/gswindow.cpp:627
 #, kde-format
 msgctxt "@info"
 msgid "Google Photo export"
 msgstr "Експортувати до Google Фото"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:945
+#: core/dplugins/generic/webservices/google/gswindow.cpp:946
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -24651,7 +24651,7 @@ msgstr ""
 "Не вдалося зберегти фотографію: %1\n"
 "Продовжити обробку?"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:966
+#: core/dplugins/generic/webservices/google/gswindow.cpp:967
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -24661,13 +24661,13 @@ msgstr ""
 "Не вдалося отримати фотографію: %1\n"
 "Продовжити обробку?"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:993
+#: core/dplugins/generic/webservices/google/gswindow.cpp:994
 #, kde-format
 msgctxt "@info"
 msgid "Failed to save image to %1"
 msgstr "Не вдалося зберегти зображення до %1"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1014
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1015
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -24679,7 +24679,7 @@ msgstr ""
 "%2\n"
 "Хочете продовжити виконання дії?"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1064
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1065
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -24691,13 +24691,13 @@ msgstr ""
 "%2\n"
 "На ваш обліковий запис зображень не вивантажено."
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1069
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1070
 #, kde-format
 msgctxt "@action:button"
 msgid "OK"
 msgstr "Гаразд"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1202
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1203
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -24707,7 +24707,7 @@ msgstr ""
 "Помилка виклику Google Drive:\n"
 "%1"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1219
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1220
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -24717,7 +24717,7 @@ msgstr ""
 "Помилка у виклику Google Фото:\n"
 "%1"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1257
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1258
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -27252,6 +27252,21 @@ msgstr "Параметри вебслужби"
 msgid "Export by Web Service"
 msgstr "Експортувати за допомогою вебслужби"
 
+#: core/dplugins/rawimport/art/rawimportartplugin.cpp:215
+#, kde-format
+msgid ""
+"Error to import RAW image with ART\n"
+"Close this dialog to load RAW image with native import tool"
+msgstr ""
+"Помилка під час спроби імпортувати цифровий негатив за допомогою ART.\n"
+"Закрийте це діалогове вікно, щоб завантажити зображення цифрового негатива "
+"за допомогою вбудованого засобу імпортування."
+
+#: core/dplugins/rawimport/art/rawimportartplugin.cpp:230
+#, kde-format
+msgid "ART Raw Conversion"
+msgstr "Перетворення цифрових негативів ART"
+
 #: core/dplugins/rawimport/darktable/rawimportdarktableplugin.cpp:275
 #, kde-format
 msgid ""
@@ -27482,7 +27497,7 @@ msgid "UFRaw Raw Conversion"
 msgstr "Перетворення цифрових негативів UFRaw"
 
 #: core/libs/album/engine/album.cpp:421
-#: core/libs/database/utils/ifaces/dio.cpp:805
+#: core/libs/database/utils/ifaces/dio.cpp:812
 #, kde-format
 msgid "Trash"
 msgstr "Смітник"
@@ -29526,49 +29541,49 @@ msgctxt "@action:button"
 msgid "Skip Automatically"
 msgstr "Автоматично пропустити"
 
-#: core/libs/database/utils/ifaces/dio.cpp:769
+#: core/libs/database/utils/ifaces/dio.cpp:776
 #, kde-format
 msgid "Copy Album"
 msgstr "Копіювати альбом"
 
-#: core/libs/database/utils/ifaces/dio.cpp:774
+#: core/libs/database/utils/ifaces/dio.cpp:781
 #, kde-format
 msgid "Copy Images"
 msgstr "Копіювати зображення"
 
-#: core/libs/database/utils/ifaces/dio.cpp:780
+#: core/libs/database/utils/ifaces/dio.cpp:787
 #, kde-format
 msgid "Copy Files"
 msgstr "Копіювати файли"
 
-#: core/libs/database/utils/ifaces/dio.cpp:785
+#: core/libs/database/utils/ifaces/dio.cpp:792
 #, kde-format
 msgid "Move Album"
 msgstr "Пересунути альбом"
 
-#: core/libs/database/utils/ifaces/dio.cpp:790
+#: core/libs/database/utils/ifaces/dio.cpp:797
 #, kde-format
 msgid "Move Images"
 msgstr "Пересунути зображення"
 
-#: core/libs/database/utils/ifaces/dio.cpp:795
+#: core/libs/database/utils/ifaces/dio.cpp:802
 #, kde-format
 msgid "Move Files"
 msgstr "Пересунути файли"
 
-#: core/libs/database/utils/ifaces/dio.cpp:800
+#: core/libs/database/utils/ifaces/dio.cpp:807
 #: core/utilities/searchwindow/editablesearchtreeview.cpp:63
 #: core/utilities/setup/metadata/advancedmetadatatab.cpp:362
 #, kde-format
 msgid "Delete"
 msgstr "Вилучити"
 
-#: core/libs/database/utils/ifaces/dio.cpp:810
+#: core/libs/database/utils/ifaces/dio.cpp:817
 #, kde-format
 msgid "Restore Trash"
 msgstr "Відновити зі смітника"
 
-#: core/libs/database/utils/ifaces/dio.cpp:815
+#: core/libs/database/utils/ifaces/dio.cpp:822
 #, kde-format
 msgid "Empty Trash"
 msgstr "Спорожнити смітник"
@@ -32273,7 +32288,7 @@ msgctxt "Convert image bit depth"
 msgid "Convert Depth"
 msgstr "Змінити глибину кольорів"
 
-#: core/libs/dimg/filters/dimgfiltermanager.cpp:429
+#: core/libs/dimg/filters/dimgfiltermanager.cpp:430
 #, kde-format
 msgid "Unknown filter"
 msgstr "Невідомий фільтр"
@@ -37335,12 +37350,12 @@ msgctxt "info"
 msgid "Binary data %1 bytes"
 msgstr "Двійкові дані, %1 байтів"
 
-#: core/libs/metadataengine/exiftool/exiftoolprocess.cpp:378
+#: core/libs/metadataengine/exiftool/exiftoolprocess.cpp:371
 #, kde-format
 msgid "ExifTool does not exists or exec permission is missing"
 msgstr "ExifTool немає у системі або файл програми не є виконуваним"
 
-#: core/libs/metadataengine/exiftool/exiftoolprocess.cpp:392
+#: core/libs/metadataengine/exiftool/exiftoolprocess.cpp:385
 #, kde-format
 msgid "Perl does not exists or exec permission is missing"
 msgstr "Perl немає у системі або файл програми не є виконуваним"
@@ -41274,7 +41289,7 @@ msgstr "Нульова мініатюра"
 msgid "File does not exist or is not a file"
 msgstr "Файла не існує або це не файл"
 
-#: core/libs/threadimageio/thumb/thumbnailcreator_engine.cpp:211
+#: core/libs/threadimageio/thumb/thumbnailcreator_engine.cpp:213
 #, kde-format
 msgid "Cannot create thumbnail for %1"
 msgstr "Не вдається створити мініатюру для %1"
@@ -44551,14 +44566,14 @@ msgctxt "@title: column"
 msgid "Description"
 msgstr "Опис"
 
-#: core/libs/widgets/metadata/exiftool/exiftoolconfpanel.cpp:183
-#: core/libs/widgets/metadata/exiftool/exiftoolconfpanel.cpp:184
+#: core/libs/widgets/metadata/exiftool/exiftoolconfpanel.cpp:188
+#: core/libs/widgets/metadata/exiftool/exiftoolconfpanel.cpp:189
 #, kde-format
 msgctxt "@info: status"
 msgid "yes"
 msgstr "так"
 
-#: core/libs/widgets/metadata/exiftool/exiftoolconfpanel.cpp:185
+#: core/libs/widgets/metadata/exiftool/exiftoolconfpanel.cpp:190
 #, kde-format
 msgctxt "@info: status"
 msgid "no"
@@ -59985,8 +60000,8 @@ msgstr "Країна"
 
 #: core/utilities/searchwindow/searchfields_createfield.cpp:640
 #, kde-format
-msgid "Country of the location shown in the item"
-msgstr "Країна місця, яку буде показано для запису"
+msgid "Country shown in the item"
+msgstr "Країна, яку буде показано для запису"
 
 #: core/utilities/searchwindow/searchfields_createfield.cpp:656
 #, kde-format
@@ -59995,28 +60010,28 @@ msgstr "Область"
 
 #: core/utilities/searchwindow/searchfields_createfield.cpp:656
 #, kde-format
-msgid "Province of the location shown in the item"
-msgstr "Область місця, яку буде показано для запису"
+msgid "Province shown in the item"
+msgstr "Область, яку буде показано для запису"
 
 #: core/utilities/searchwindow/searchfields_createfield.cpp:672
-#, kde-format
-msgid "County"
-msgstr "Район"
-
-#: core/utilities/searchwindow/searchfields_createfield.cpp:672
-#, kde-format
-msgid "County of the location shown in the item"
-msgstr "Район місця, який буде показано для запису"
-
-#: core/utilities/searchwindow/searchfields_createfield.cpp:688
 #, kde-format
 msgid "City"
 msgstr "Місто"
 
+#: core/utilities/searchwindow/searchfields_createfield.cpp:672
+#, kde-format
+msgid "City shown in the item"
+msgstr "Місто, яке буде показано для запису"
+
 #: core/utilities/searchwindow/searchfields_createfield.cpp:688
 #, kde-format
-msgid "City of the location shown in the item"
-msgstr "Місто місця, яке буде показано для запису"
+msgid "Sublocation"
+msgstr "Точне розташування"
+
+#: core/utilities/searchwindow/searchfields_createfield.cpp:688
+#, kde-format
+msgid "Sublocation shown in the item"
+msgstr "Район, який буде показано для запису"
 
 #: core/utilities/searchwindow/searchfields_createfield.cpp:702
 #, kde-format
@@ -65067,6 +65082,9 @@ msgstr ""
 msgctxt "@info"
 msgid "Do you want to reset all video settings to the default value?"
 msgstr "Хочете відновити типові значення для усіх параметрів відео?"
+
+#~ msgid "County"
+#~ msgstr "Район"
 
 #~ msgctxt "@title"
 #~ msgid "Geolocation Editor"

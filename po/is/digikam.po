@@ -30,8 +30,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: digikam\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-04 00:55+0000\n"
-"PO-Revision-Date: 2023-02-02 10:48+0000\n"
+"POT-Creation-Date: 2023-02-19 00:55+0000\n"
+"PO-Revision-Date: 2023-02-07 11:25+0000\n"
 "Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
 "Language-Team: Icelandic\n"
 "Language: is\n"
@@ -3228,7 +3228,7 @@ msgstr ""
 #: core/app/views/stack/welcomepageview.cpp:144
 #, kde-format
 msgid "Add JPEG-XL; WEBP, and AVIF converters in Batch Queue Manager."
-msgstr ""
+msgstr "Bætt við JPEG-XL; WEBP og AVIF umbreytum í Magnvinnslustjóra."
 
 #: core/app/views/stack/welcomepageview.cpp:145
 #, kde-format
@@ -3240,7 +3240,7 @@ msgstr ""
 #: core/app/views/stack/welcomepageview.cpp:146
 #, kde-format
 msgid "Add hamburger menu to tool-bar if main menu is hidden."
-msgstr ""
+msgstr "Birta (hamborgara)-valmynd á verkfærastiku ef aðalvalmynd er falin."
 
 #: core/app/views/stack/welcomepageview.cpp:147
 #, kde-format
@@ -3381,6 +3381,8 @@ msgid ""
 "<a href=\" https://docs.digikam.org/en/index.html\">Rewrite handbook</a> "
 "from DocBook to Sphinx/ReStructuredText framework."
 msgstr ""
+"<a href=\" https://docs.digikam.org/en/index.html\">Endurskrifun handbókar</"
+"a> úr DocBook yfir í Sphinx/ReStructuredText kerfi."
 
 #: core/app/views/stack/welcomepageview.cpp:169
 #, kde-format
@@ -5495,11 +5497,11 @@ msgid ""
 "container format.</para><para>See details about this format from <a "
 "href='https://en.wikipedia.org/wiki/AVIF'>this page</a>.</para>"
 msgstr ""
-"<p>Þetta verkfæri magnvinnslustjórans getur umbreytt myndgögnum yfir á AVIF-"
-"snið.</p><p>AV1 Image File Format sniðið er skráasnið til að geyma myndir "
-"eða myndarunur þjappaðar með AV1 í ISOBMFF-gagnagámasniði.</p><p>Skoðaðu "
-"nánari upplýsingar um þetta myndasnið á <a href='https://en.wikipedia.org/"
-"wiki/AVIF'>þessari síðu</a>.</p>"
+"<para>Þetta verkfæri magnvinnslustjórans getur umbreytt myndgögnum yfir á "
+"AVIF-snið.</para><para>AV1 Image File Format sniðið er skráasnið til að "
+"geyma myndir eða myndarunur þjappaðar með AV1 í ISOBMFF-gagnagámasniði.</"
+"para><para>Skoðaðu nánari upplýsingar um þetta myndasnið á <a href='https://"
+"en.wikipedia.org/wiki/AVIF'>þessari síðu</a>.</para>"
 
 #: core/dplugins/bqm/convert/converttodng/converttodngplugin.cpp:46
 #, kde-format
@@ -11864,10 +11866,10 @@ msgstr "Vista breytingar -"
 #: core/dplugins/generic/webservices/google/gswindow.cpp:362
 #: core/dplugins/generic/webservices/google/gswindow.cpp:403
 #: core/dplugins/generic/webservices/google/gswindow.cpp:429
-#: core/dplugins/generic/webservices/google/gswindow.cpp:490
-#: core/dplugins/generic/webservices/google/gswindow.cpp:992
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1201
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1218
+#: core/dplugins/generic/webservices/google/gswindow.cpp:491
+#: core/dplugins/generic/webservices/google/gswindow.cpp:993
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1202
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1219
 #: core/dplugins/generic/webservices/inaturalist/inatwindow.cpp:608
 #: core/dplugins/generic/webservices/mediawiki/mediawikitalker.cpp:179
 #: core/dplugins/generic/webservices/onedrive/odtalker.cpp:404
@@ -17351,7 +17353,7 @@ msgctxt "@title:window"
 msgid "Set Bracketed Images"
 msgstr "Veldu myndir í myndaröð"
 
-#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:71
+#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:70
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -17361,27 +17363,27 @@ msgstr ""
 "Settu hér lista yfir þær mislýstu myndir sem á að vinna með. Virtu "
 "eftirtalin skilyrði"
 
-#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:72
+#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:71
 #, kde-format
 msgctxt "@info"
 msgid "At least 2 images from the same subject must be added to the stack."
 msgstr ""
 "Að minnsta kosti 2 myndum með sama myndefni verður að bæta í myndröðina."
 
-#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:73
+#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:72
 #: core/dplugins/generic/tools/panorama/wizard/panoitemspage.cpp:73
 #, kde-format
 msgctxt "@info"
 msgid "Do not mix images with different color depth."
 msgstr "Ekki blanda saman myndum með ólíkri litadýpt."
 
-#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:74
+#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:73
 #, kde-format
 msgctxt "@info"
 msgid "All images must have the same dimensions."
 msgstr "Allar myndirnar verða að vera í sömu stærð."
 
-#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:78
+#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:77
 #, kde-format
 msgctxt "@title: column"
 msgid "Exposure (EV)"
@@ -18126,9 +18128,13 @@ msgid "Jalbum completed."
 msgstr "Gerð jAlbum-myndasafns er lokið."
 
 #: core/dplugins/generic/tools/jalbum/wizard/jalbumintropage.cpp:82
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "<qt><p><h1><b>Welcome to jAlbum album tool</b></h1></p><p>This assistant "
+#| "will guide you to export quickly</p><p></p><p>your images as a jAlbum "
+#| "project.</p></qt>"
 msgid ""
-"<qt><p><h1><b>Welcome to jAlbum album tool</b></h1></p><p>This assistant "
+"<qt><p><h1><b>Welcome to jAlbum export tool</b></h1></p><p>This assistant "
 "will guide you to export quickly</p><p></p><p>your images as a jAlbum "
 "project.</p></qt>"
 msgstr ""
@@ -18170,8 +18176,9 @@ msgid "Create jAlbum Album"
 msgstr "Búa til jAlbum-albúm"
 
 #: core/dplugins/generic/tools/jalbum/wizard/jalbumwizard.cpp:81
-#, kde-format
-msgid "Welcome to jAlbum Album Tool"
+#, fuzzy, kde-format
+#| msgid "Welcome to jAlbum Album Tool"
+msgid "Welcome to jAlbum Export Tool"
 msgstr "Velkomin í jAlbum albúmaverkfærið"
 
 #: core/dplugins/generic/tools/jalbum/wizard/jalbumwizard.cpp:83
@@ -22717,7 +22724,7 @@ msgid "Start upload to Box"
 msgstr "Hefja sendingu í Box"
 
 #: core/dplugins/generic/webservices/box/boxwindow.cpp:245
-#: core/dplugins/generic/webservices/google/gswindow.cpp:491
+#: core/dplugins/generic/webservices/google/gswindow.cpp:492
 #: core/dplugins/generic/webservices/onedrive/odwindow.cpp:244
 #, kde-format
 msgctxt "@info"
@@ -22726,13 +22733,13 @@ msgstr "Engin mynd valin. Veldu hvaða myndir ætti að senda inn."
 
 #: core/dplugins/generic/webservices/box/boxwindow.cpp:252
 #: core/dplugins/generic/webservices/flickr/flickrwindow.cpp:849
-#: core/dplugins/generic/webservices/google/gswindow.cpp:506
-#: core/dplugins/generic/webservices/google/gswindow.cpp:531
-#: core/dplugins/generic/webservices/google/gswindow.cpp:944
-#: core/dplugins/generic/webservices/google/gswindow.cpp:965
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1013
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1063
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1256
+#: core/dplugins/generic/webservices/google/gswindow.cpp:507
+#: core/dplugins/generic/webservices/google/gswindow.cpp:532
+#: core/dplugins/generic/webservices/google/gswindow.cpp:945
+#: core/dplugins/generic/webservices/google/gswindow.cpp:966
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1014
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1064
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1257
 #: core/dplugins/generic/webservices/onedrive/odwindow.cpp:251
 #: core/dplugins/generic/webservices/pinterest/pwindow.cpp:255
 #: core/dplugins/generic/webservices/smugmug/smugwindow.cpp:670
@@ -22743,8 +22750,8 @@ msgid "Warning"
 msgstr "Aðvörun"
 
 #: core/dplugins/generic/webservices/box/boxwindow.cpp:253
-#: core/dplugins/generic/webservices/google/gswindow.cpp:507
-#: core/dplugins/generic/webservices/google/gswindow.cpp:532
+#: core/dplugins/generic/webservices/google/gswindow.cpp:508
+#: core/dplugins/generic/webservices/google/gswindow.cpp:533
 #: core/dplugins/generic/webservices/onedrive/odwindow.cpp:252
 #, kde-format
 msgctxt "@info"
@@ -22753,12 +22760,12 @@ msgstr "Auðkenning mistókst. Ýttu á 'Áfram' til að auðkenna."
 
 #: core/dplugins/generic/webservices/box/boxwindow.cpp:256
 #: core/dplugins/generic/webservices/flickr/flickrwindow.cpp:854
-#: core/dplugins/generic/webservices/google/gswindow.cpp:510
-#: core/dplugins/generic/webservices/google/gswindow.cpp:535
-#: core/dplugins/generic/webservices/google/gswindow.cpp:949
-#: core/dplugins/generic/webservices/google/gswindow.cpp:970
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1019
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1261
+#: core/dplugins/generic/webservices/google/gswindow.cpp:511
+#: core/dplugins/generic/webservices/google/gswindow.cpp:536
+#: core/dplugins/generic/webservices/google/gswindow.cpp:950
+#: core/dplugins/generic/webservices/google/gswindow.cpp:971
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1020
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1262
 #: core/dplugins/generic/webservices/onedrive/odwindow.cpp:255
 #: core/dplugins/generic/webservices/pinterest/pwindow.cpp:259
 #: core/dplugins/generic/webservices/smugmug/smugwindow.cpp:675
@@ -22770,12 +22777,12 @@ msgstr "Halda áfram"
 
 #: core/dplugins/generic/webservices/box/boxwindow.cpp:257
 #: core/dplugins/generic/webservices/flickr/flickrwindow.cpp:855
-#: core/dplugins/generic/webservices/google/gswindow.cpp:511
-#: core/dplugins/generic/webservices/google/gswindow.cpp:536
-#: core/dplugins/generic/webservices/google/gswindow.cpp:950
-#: core/dplugins/generic/webservices/google/gswindow.cpp:971
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1020
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1262
+#: core/dplugins/generic/webservices/google/gswindow.cpp:512
+#: core/dplugins/generic/webservices/google/gswindow.cpp:537
+#: core/dplugins/generic/webservices/google/gswindow.cpp:951
+#: core/dplugins/generic/webservices/google/gswindow.cpp:972
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1021
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1263
 #: core/dplugins/generic/webservices/onedrive/odwindow.cpp:256
 #: core/dplugins/generic/webservices/pinterest/pwindow.cpp:260
 #: core/dplugins/generic/webservices/smugmug/smugwindow.cpp:676
@@ -22787,7 +22794,7 @@ msgstr "Hætta við"
 
 #: core/dplugins/generic/webservices/box/boxwindow.cpp:285
 #: core/dplugins/generic/webservices/google/gswindow.cpp:385
-#: core/dplugins/generic/webservices/google/gswindow.cpp:612
+#: core/dplugins/generic/webservices/google/gswindow.cpp:613
 #: core/dplugins/generic/webservices/onedrive/odwindow.cpp:284
 #, kde-format
 msgctxt "@info: progress bar"
@@ -24160,19 +24167,19 @@ msgctxt "@info"
 msgid "Google Drive call failed: %1\n"
 msgstr "Google Drive skipun mistókst: %1\n"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:620
+#: core/dplugins/generic/webservices/google/gswindow.cpp:621
 #, kde-format
 msgctxt "@info"
 msgid "Google Drive export"
 msgstr "Google Drive útflutningur"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:626
+#: core/dplugins/generic/webservices/google/gswindow.cpp:627
 #, kde-format
 msgctxt "@info"
 msgid "Google Photo export"
 msgstr "Google Photo útflutningur"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:945
+#: core/dplugins/generic/webservices/google/gswindow.cpp:946
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -24182,7 +24189,7 @@ msgstr ""
 "Mistókst að vista mynd. %1\n"
 "Viltu halda áfram?"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:966
+#: core/dplugins/generic/webservices/google/gswindow.cpp:967
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -24192,13 +24199,13 @@ msgstr ""
 "Mistókst að ná í mynd. %1\n"
 "Viltu halda áfram?"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:993
+#: core/dplugins/generic/webservices/google/gswindow.cpp:994
 #, kde-format
 msgctxt "@info"
 msgid "Failed to save image to %1"
 msgstr "Tókst ekki að vista mynd í %1"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1014
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1015
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -24210,7 +24217,7 @@ msgstr ""
 "%2\n"
 "Viltu halda áfram?"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1064
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1065
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -24222,13 +24229,13 @@ msgstr ""
 "%2\n"
 "Engin mynd var send inn á notandaaðganginn þinn."
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1069
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1070
 #, kde-format
 msgctxt "@action:button"
 msgid "OK"
 msgstr "Í lagi"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1202
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1203
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -24238,7 +24245,7 @@ msgstr ""
 "Google Drive skipun mistókst: \n"
 "%1"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1219
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1220
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -24248,7 +24255,7 @@ msgstr ""
 "Google Photos skipun mistókst:\n"
 "%1"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1257
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1258
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -26753,6 +26760,21 @@ msgstr "Stillingar vefþjónustu"
 msgid "Export by Web Service"
 msgstr "Flytja út með vefþjónustu"
 
+#: core/dplugins/rawimport/art/rawimportartplugin.cpp:215
+#, kde-format
+msgid ""
+"Error to import RAW image with ART\n"
+"Close this dialog to load RAW image with native import tool"
+msgstr ""
+"Villa við að flytja inn RAW-mynd með ART\n"
+"Lokaðu þessum glugga til að hlaða inn RAW-mynd með innbyggða "
+"innflutningsverkfærinu"
+
+#: core/dplugins/rawimport/art/rawimportartplugin.cpp:230
+#, kde-format
+msgid "ART Raw Conversion"
+msgstr "RAW-umbreyting með ART"
+
 #: core/dplugins/rawimport/darktable/rawimportdarktableplugin.cpp:275
 #, kde-format
 msgid ""
@@ -26978,7 +27000,7 @@ msgid "UFRaw Raw Conversion"
 msgstr "RAW-umbreyting UFRaw"
 
 #: core/libs/album/engine/album.cpp:421
-#: core/libs/database/utils/ifaces/dio.cpp:805
+#: core/libs/database/utils/ifaces/dio.cpp:812
 #, kde-format
 msgid "Trash"
 msgstr "Rusl"
@@ -28997,49 +29019,49 @@ msgctxt "@action:button"
 msgid "Skip Automatically"
 msgstr "Sleppa henni sjálfkrafa"
 
-#: core/libs/database/utils/ifaces/dio.cpp:769
+#: core/libs/database/utils/ifaces/dio.cpp:776
 #, kde-format
 msgid "Copy Album"
 msgstr "Afrita albúm"
 
-#: core/libs/database/utils/ifaces/dio.cpp:774
+#: core/libs/database/utils/ifaces/dio.cpp:781
 #, kde-format
 msgid "Copy Images"
 msgstr "Afrita myndir"
 
-#: core/libs/database/utils/ifaces/dio.cpp:780
+#: core/libs/database/utils/ifaces/dio.cpp:787
 #, kde-format
 msgid "Copy Files"
 msgstr "Afrita skrár"
 
-#: core/libs/database/utils/ifaces/dio.cpp:785
+#: core/libs/database/utils/ifaces/dio.cpp:792
 #, kde-format
 msgid "Move Album"
 msgstr "Færa albúm"
 
-#: core/libs/database/utils/ifaces/dio.cpp:790
+#: core/libs/database/utils/ifaces/dio.cpp:797
 #, kde-format
 msgid "Move Images"
 msgstr "Færa myndir"
 
-#: core/libs/database/utils/ifaces/dio.cpp:795
+#: core/libs/database/utils/ifaces/dio.cpp:802
 #, kde-format
 msgid "Move Files"
 msgstr "Færa skrár"
 
-#: core/libs/database/utils/ifaces/dio.cpp:800
+#: core/libs/database/utils/ifaces/dio.cpp:807
 #: core/utilities/searchwindow/editablesearchtreeview.cpp:63
 #: core/utilities/setup/metadata/advancedmetadatatab.cpp:362
 #, kde-format
 msgid "Delete"
 msgstr "Eyða"
 
-#: core/libs/database/utils/ifaces/dio.cpp:810
+#: core/libs/database/utils/ifaces/dio.cpp:817
 #, kde-format
 msgid "Restore Trash"
 msgstr "Endurheimta úr ruslinu"
 
-#: core/libs/database/utils/ifaces/dio.cpp:815
+#: core/libs/database/utils/ifaces/dio.cpp:822
 #, kde-format
 msgid "Empty Trash"
 msgstr "Tæma rusl"
@@ -31682,7 +31704,7 @@ msgctxt "Convert image bit depth"
 msgid "Convert Depth"
 msgstr "Umbreyta litadýpt"
 
-#: core/libs/dimg/filters/dimgfiltermanager.cpp:429
+#: core/libs/dimg/filters/dimgfiltermanager.cpp:430
 #, kde-format
 msgid "Unknown filter"
 msgstr "Óþekkt sía"
@@ -36681,12 +36703,12 @@ msgctxt "info"
 msgid "Binary data %1 bytes"
 msgstr "Tvíundarkerfisgögn %1 bæti"
 
-#: core/libs/metadataengine/exiftool/exiftoolprocess.cpp:378
+#: core/libs/metadataengine/exiftool/exiftoolprocess.cpp:371
 #, kde-format
 msgid "ExifTool does not exists or exec permission is missing"
 msgstr "ExifTool er ekki til staðar eða að exec-keyrsluheimildir vantar"
 
-#: core/libs/metadataengine/exiftool/exiftoolprocess.cpp:392
+#: core/libs/metadataengine/exiftool/exiftoolprocess.cpp:385
 #, kde-format
 msgid "Perl does not exists or exec permission is missing"
 msgstr "Perl er ekki til staðar eða að exec-keyrsluheimildir vantar"
@@ -40542,7 +40564,7 @@ msgstr "Ógild smámynd"
 msgid "File does not exist or is not a file"
 msgstr "Skrá er ekki til eða er ekki venjuleg skrá"
 
-#: core/libs/threadimageio/thumb/thumbnailcreator_engine.cpp:211
+#: core/libs/threadimageio/thumb/thumbnailcreator_engine.cpp:213
 #, kde-format
 msgid "Cannot create thumbnail for %1"
 msgstr "Get ekki búið til smámynd fyrir %1"
@@ -43794,14 +43816,14 @@ msgctxt "@title: column"
 msgid "Description"
 msgstr "Lýsing"
 
-#: core/libs/widgets/metadata/exiftool/exiftoolconfpanel.cpp:183
-#: core/libs/widgets/metadata/exiftool/exiftoolconfpanel.cpp:184
+#: core/libs/widgets/metadata/exiftool/exiftoolconfpanel.cpp:188
+#: core/libs/widgets/metadata/exiftool/exiftoolconfpanel.cpp:189
 #, kde-format
 msgctxt "@info: status"
 msgid "yes"
 msgstr "já"
 
-#: core/libs/widgets/metadata/exiftool/exiftoolconfpanel.cpp:185
+#: core/libs/widgets/metadata/exiftool/exiftoolconfpanel.cpp:190
 #, kde-format
 msgctxt "@info: status"
 msgid "no"
@@ -57417,16 +57439,14 @@ msgid "Open the item with default assigned application."
 msgstr "Opna atriðið með sjálfgefnu forriti."
 
 #: core/utilities/lighttable/lighttablewindow_setup.cpp:73
-#, fuzzy, kde-format
-#| msgid "Remove item from LightTable"
+#, kde-format
 msgid "Remove item from Light Table"
-msgstr "Fjarlægja hlut af ljósaborði"
+msgstr "Fjarlægja atriði af ljósaborði"
 
 #: core/utilities/lighttable/lighttablewindow_setup.cpp:79
-#, fuzzy, kde-format
-#| msgid "Remove all items from LightTable"
+#, kde-format
 msgid "Remove all items from Light Table"
-msgstr "Fjarlægja alla hluti af ljósaborði"
+msgstr "Fjarlægja öll atriði af ljósaborði"
 
 #: core/utilities/lighttable/lighttablewindow_setup.cpp:85
 #, kde-format
@@ -59065,8 +59085,9 @@ msgid "Country"
 msgstr "Land"
 
 #: core/utilities/searchwindow/searchfields_createfield.cpp:640
-#, kde-format
-msgid "Country of the location shown in the item"
+#, fuzzy, kde-format
+#| msgid "Country of the location shown in the item"
+msgid "Country shown in the item"
 msgstr "Land staðsetningarinnar sem sýnd er í atriðinu"
 
 #: core/utilities/searchwindow/searchfields_createfield.cpp:656
@@ -59075,29 +59096,33 @@ msgid "Province"
 msgstr "Hérað"
 
 #: core/utilities/searchwindow/searchfields_createfield.cpp:656
-#, kde-format
-msgid "Province of the location shown in the item"
+#, fuzzy, kde-format
+#| msgid "Province of the location shown in the item"
+msgid "Province shown in the item"
 msgstr "Hérað staðsetningarinnar sem sýnd er í atriðinu"
 
 #: core/utilities/searchwindow/searchfields_createfield.cpp:672
 #, kde-format
-msgid "County"
-msgstr "Sveitarfélag"
-
-#: core/utilities/searchwindow/searchfields_createfield.cpp:672
-#, kde-format
-msgid "County of the location shown in the item"
-msgstr "Sveitarfélag staðsetningarinnar sem sýnd er í atriðinu"
-
-#: core/utilities/searchwindow/searchfields_createfield.cpp:688
-#, kde-format
 msgid "City"
 msgstr "Borg/Staður"
 
-#: core/utilities/searchwindow/searchfields_createfield.cpp:688
-#, kde-format
-msgid "City of the location shown in the item"
+#: core/utilities/searchwindow/searchfields_createfield.cpp:672
+#, fuzzy, kde-format
+#| msgid "City of the location shown in the item"
+msgid "City shown in the item"
 msgstr "Borg staðsetningarinnar sem sýnd er í atriðinu"
+
+#: core/utilities/searchwindow/searchfields_createfield.cpp:688
+#, fuzzy, kde-format
+#| msgid "Sublocation:"
+msgid "Sublocation"
+msgstr "Nákvæm staðsetning:"
+
+#: core/utilities/searchwindow/searchfields_createfield.cpp:688
+#, fuzzy, kde-format
+#| msgid "County of the location shown in the item"
+msgid "Sublocation shown in the item"
+msgstr "Sveitarfélag staðsetningarinnar sem sýnd er í atriðinu"
 
 #: core/utilities/searchwindow/searchfields_createfield.cpp:702
 #, kde-format
@@ -64023,6 +64048,9 @@ msgstr ""
 msgctxt "@info"
 msgid "Do you want to reset all video settings to the default value?"
 msgstr "Viltu frumstilla allar stillingar myndmerkis á sjálfgefin gildi?"
+
+#~ msgid "County"
+#~ msgstr "Sveitarfélag"
 
 #~ msgctxt "@title"
 #~ msgid "Geolocation Editor"

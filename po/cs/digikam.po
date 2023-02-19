@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: digikam\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-04 00:55+0000\n"
-"PO-Revision-Date: 2023-01-31 11:24+0100\n"
+"POT-Creation-Date: 2023-02-19 00:55+0000\n"
+"PO-Revision-Date: 2023-02-17 16:20+0100\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 22.12.1\n"
+"X-Generator: Lokalize 22.12.2\n"
 
 #: core/app/date/ddateedit.cpp:499
 #, kde-format
@@ -5827,7 +5827,7 @@ msgstr "Použít absolutní velikost"
 #: core/dplugins/bqm/decorate/watermark/watermark.cpp:197
 #, kde-format
 msgid "Watermark type: "
-msgstr ""
+msgstr "Typ vodoznaku: "
 
 #: core/dplugins/bqm/decorate/watermark/watermark.cpp:207
 #: core/dplugins/generic/webservices/piwigo/piwigowindow.cpp:486
@@ -5853,7 +5853,7 @@ msgstr "Klikněte pro výběr obrázku vodoznaku."
 #: core/dplugins/bqm/decorate/watermark/watermark.cpp:227
 #, kde-format
 msgid "Watermark image: "
-msgstr ""
+msgstr "Obrázek vodoznaku: "
 
 #: core/dplugins/bqm/decorate/watermark/watermark.cpp:235
 #, kde-format
@@ -5887,7 +5887,7 @@ msgstr ""
 #: core/dplugins/bqm/decorate/watermark/watermark.cpp:265
 #, kde-format
 msgid "Opacity (%): "
-msgstr ""
+msgstr "Krytí (%): "
 
 #: core/dplugins/bqm/decorate/watermark/watermark.cpp:271
 #, kde-format
@@ -5902,7 +5902,7 @@ msgstr "Sem zapište svůj text vodoznaku."
 #: core/dplugins/bqm/decorate/watermark/watermark.cpp:280
 #, kde-format
 msgid "Watermark text: "
-msgstr ""
+msgstr "Text vodoznaku: "
 
 #: core/dplugins/bqm/decorate/watermark/watermark.cpp:287
 #, kde-format
@@ -5917,12 +5917,12 @@ msgstr "Zde vyberte barvu písma."
 #: core/dplugins/bqm/decorate/watermark/watermark.cpp:295
 #, kde-format
 msgid "Font color: "
-msgstr ""
+msgstr "Barva písma: "
 
 #: core/dplugins/bqm/decorate/watermark/watermark.cpp:300
 #, kde-format
 msgid "Text opacity: "
-msgstr ""
+msgstr "Krytí textu: "
 
 #: core/dplugins/bqm/decorate/watermark/watermark.cpp:304
 #, kde-format
@@ -5950,12 +5950,12 @@ msgstr "Zvolte barvu pozadí vodoznaku."
 #: core/dplugins/bqm/decorate/watermark/watermark.cpp:323
 #, kde-format
 msgid "Background color: "
-msgstr ""
+msgstr "Barva pozadí: "
 
 #: core/dplugins/bqm/decorate/watermark/watermark.cpp:328
 #, kde-format
 msgid "Background opacity: "
-msgstr ""
+msgstr "Krytí pozadí: "
 
 #: core/dplugins/bqm/decorate/watermark/watermark.cpp:332
 #, kde-format
@@ -5983,7 +5983,7 @@ msgstr "Náhodné opakování"
 #: core/dplugins/bqm/decorate/watermark/watermark.cpp:347
 #, kde-format
 msgid "Placement Type: "
-msgstr ""
+msgstr "Typ umístění: "
 
 #: core/dplugins/bqm/decorate/watermark/watermark.cpp:355
 #, kde-format
@@ -6077,7 +6077,7 @@ msgstr "Dole uprostřed"
 #: core/dplugins/bqm/decorate/watermark/watermark.cpp:404
 #, kde-format
 msgid "Placement Position: "
-msgstr ""
+msgstr "Umístění: "
 
 #: core/dplugins/bqm/decorate/watermark/watermark.cpp:409
 #, kde-format
@@ -6112,7 +6112,7 @@ msgstr "Velikost vodoznaku v procentech označeného obrázku."
 #: core/dplugins/bqm/decorate/watermark/watermark.cpp:421
 #, kde-format
 msgid "Size (%): "
-msgstr ""
+msgstr "Velikost (%): "
 
 #: core/dplugins/bqm/decorate/watermark/watermark.cpp:428
 #, kde-format
@@ -6122,7 +6122,7 @@ msgstr "Okraj od hrany v ose X v procentech velikosti označeného obrázku."
 #: core/dplugins/bqm/decorate/watermark/watermark.cpp:429
 #, kde-format
 msgid "X margin (%): "
-msgstr ""
+msgstr "Okraj X (%): "
 
 #: core/dplugins/bqm/decorate/watermark/watermark.cpp:436
 #, kde-format
@@ -6132,7 +6132,7 @@ msgstr "Okraj od hrany v ose Y v procentech velikosti označeného obrázku."
 #: core/dplugins/bqm/decorate/watermark/watermark.cpp:437
 #, kde-format
 msgid "Y margin (%): "
-msgstr ""
+msgstr "Okraj Y (%): "
 
 #: core/dplugins/bqm/decorate/watermark/watermarkplugin.cpp:46
 #, kde-format
@@ -11461,10 +11461,10 @@ msgstr "Ukládání změn - "
 #: core/dplugins/generic/webservices/google/gswindow.cpp:362
 #: core/dplugins/generic/webservices/google/gswindow.cpp:403
 #: core/dplugins/generic/webservices/google/gswindow.cpp:429
-#: core/dplugins/generic/webservices/google/gswindow.cpp:490
-#: core/dplugins/generic/webservices/google/gswindow.cpp:992
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1201
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1218
+#: core/dplugins/generic/webservices/google/gswindow.cpp:491
+#: core/dplugins/generic/webservices/google/gswindow.cpp:993
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1202
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1219
 #: core/dplugins/generic/webservices/inaturalist/inatwindow.cpp:608
 #: core/dplugins/generic/webservices/mediawiki/mediawikitalker.cpp:179
 #: core/dplugins/generic/webservices/onedrive/odtalker.cpp:404
@@ -16835,7 +16835,7 @@ msgctxt "@title:window"
 msgid "Set Bracketed Images"
 msgstr "Nastavení sekvence obrázků"
 
-#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:71
+#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:70
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -16843,26 +16843,26 @@ msgid ""
 "conditions"
 msgstr ""
 
-#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:72
+#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:71
 #, kde-format
 msgctxt "@info"
 msgid "At least 2 images from the same subject must be added to the stack."
 msgstr ""
 
-#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:73
+#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:72
 #: core/dplugins/generic/tools/panorama/wizard/panoitemspage.cpp:73
 #, kde-format
 msgctxt "@info"
 msgid "Do not mix images with different color depth."
 msgstr ""
 
-#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:74
+#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:73
 #, kde-format
 msgctxt "@info"
 msgid "All images must have the same dimensions."
 msgstr ""
 
-#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:78
+#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:77
 #, kde-format
 msgctxt "@title: column"
 msgid "Exposure (EV)"
@@ -17588,7 +17588,7 @@ msgstr ""
 #: core/dplugins/generic/tools/jalbum/wizard/jalbumintropage.cpp:82
 #, kde-format
 msgid ""
-"<qt><p><h1><b>Welcome to jAlbum album tool</b></h1></p><p>This assistant "
+"<qt><p><h1><b>Welcome to jAlbum export tool</b></h1></p><p>This assistant "
 "will guide you to export quickly</p><p></p><p>your images as a jAlbum "
 "project.</p></qt>"
 msgstr ""
@@ -17628,8 +17628,8 @@ msgstr ""
 
 #: core/dplugins/generic/tools/jalbum/wizard/jalbumwizard.cpp:81
 #, kde-format
-msgid "Welcome to jAlbum Album Tool"
-msgstr ""
+msgid "Welcome to jAlbum Export Tool"
+msgstr "Vítejte v nástroji pro export jAlbum"
 
 #: core/dplugins/generic/tools/jalbum/wizard/jalbumwizard.cpp:83
 #, kde-format
@@ -20692,7 +20692,7 @@ msgstr "Na střed"
 #: core/dplugins/generic/view/glviewer/glviewerplugin.cpp:45
 #, kde-format
 msgid "OpenGL Viewer"
-msgstr ""
+msgstr "Prohlížeč OpenGL"
 
 #: core/dplugins/generic/view/glviewer/glviewerplugin.cpp:60
 #, kde-format
@@ -21966,7 +21966,7 @@ msgid "Start upload to Box"
 msgstr "Spustit odesílání do Boxu"
 
 #: core/dplugins/generic/webservices/box/boxwindow.cpp:245
-#: core/dplugins/generic/webservices/google/gswindow.cpp:491
+#: core/dplugins/generic/webservices/google/gswindow.cpp:492
 #: core/dplugins/generic/webservices/onedrive/odwindow.cpp:244
 #, kde-format
 msgctxt "@info"
@@ -21975,13 +21975,13 @@ msgstr "Nebyl vybrán žádný obrázek. Prosím vyberte obrázky pro odeslání
 
 #: core/dplugins/generic/webservices/box/boxwindow.cpp:252
 #: core/dplugins/generic/webservices/flickr/flickrwindow.cpp:849
-#: core/dplugins/generic/webservices/google/gswindow.cpp:506
-#: core/dplugins/generic/webservices/google/gswindow.cpp:531
-#: core/dplugins/generic/webservices/google/gswindow.cpp:944
-#: core/dplugins/generic/webservices/google/gswindow.cpp:965
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1013
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1063
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1256
+#: core/dplugins/generic/webservices/google/gswindow.cpp:507
+#: core/dplugins/generic/webservices/google/gswindow.cpp:532
+#: core/dplugins/generic/webservices/google/gswindow.cpp:945
+#: core/dplugins/generic/webservices/google/gswindow.cpp:966
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1014
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1064
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1257
 #: core/dplugins/generic/webservices/onedrive/odwindow.cpp:251
 #: core/dplugins/generic/webservices/pinterest/pwindow.cpp:255
 #: core/dplugins/generic/webservices/smugmug/smugwindow.cpp:670
@@ -21992,8 +21992,8 @@ msgid "Warning"
 msgstr "Varování"
 
 #: core/dplugins/generic/webservices/box/boxwindow.cpp:253
-#: core/dplugins/generic/webservices/google/gswindow.cpp:507
-#: core/dplugins/generic/webservices/google/gswindow.cpp:532
+#: core/dplugins/generic/webservices/google/gswindow.cpp:508
+#: core/dplugins/generic/webservices/google/gswindow.cpp:533
 #: core/dplugins/generic/webservices/onedrive/odwindow.cpp:252
 #, kde-format
 msgctxt "@info"
@@ -22002,12 +22002,12 @@ msgstr "Ověření totožnosti selhalo. Klikněte na \"Pokračovat\" pro ověře
 
 #: core/dplugins/generic/webservices/box/boxwindow.cpp:256
 #: core/dplugins/generic/webservices/flickr/flickrwindow.cpp:854
-#: core/dplugins/generic/webservices/google/gswindow.cpp:510
-#: core/dplugins/generic/webservices/google/gswindow.cpp:535
-#: core/dplugins/generic/webservices/google/gswindow.cpp:949
-#: core/dplugins/generic/webservices/google/gswindow.cpp:970
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1019
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1261
+#: core/dplugins/generic/webservices/google/gswindow.cpp:511
+#: core/dplugins/generic/webservices/google/gswindow.cpp:536
+#: core/dplugins/generic/webservices/google/gswindow.cpp:950
+#: core/dplugins/generic/webservices/google/gswindow.cpp:971
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1020
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1262
 #: core/dplugins/generic/webservices/onedrive/odwindow.cpp:255
 #: core/dplugins/generic/webservices/pinterest/pwindow.cpp:259
 #: core/dplugins/generic/webservices/smugmug/smugwindow.cpp:675
@@ -22019,12 +22019,12 @@ msgstr "Pokračovat"
 
 #: core/dplugins/generic/webservices/box/boxwindow.cpp:257
 #: core/dplugins/generic/webservices/flickr/flickrwindow.cpp:855
-#: core/dplugins/generic/webservices/google/gswindow.cpp:511
-#: core/dplugins/generic/webservices/google/gswindow.cpp:536
-#: core/dplugins/generic/webservices/google/gswindow.cpp:950
-#: core/dplugins/generic/webservices/google/gswindow.cpp:971
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1020
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1262
+#: core/dplugins/generic/webservices/google/gswindow.cpp:512
+#: core/dplugins/generic/webservices/google/gswindow.cpp:537
+#: core/dplugins/generic/webservices/google/gswindow.cpp:951
+#: core/dplugins/generic/webservices/google/gswindow.cpp:972
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1021
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1263
 #: core/dplugins/generic/webservices/onedrive/odwindow.cpp:256
 #: core/dplugins/generic/webservices/pinterest/pwindow.cpp:260
 #: core/dplugins/generic/webservices/smugmug/smugwindow.cpp:676
@@ -22036,7 +22036,7 @@ msgstr "Zrušit"
 
 #: core/dplugins/generic/webservices/box/boxwindow.cpp:285
 #: core/dplugins/generic/webservices/google/gswindow.cpp:385
-#: core/dplugins/generic/webservices/google/gswindow.cpp:612
+#: core/dplugins/generic/webservices/google/gswindow.cpp:613
 #: core/dplugins/generic/webservices/onedrive/odwindow.cpp:284
 #, kde-format
 msgctxt "@info: progress bar"
@@ -23380,19 +23380,19 @@ msgctxt "@info"
 msgid "Google Drive call failed: %1\n"
 msgstr "Volání Google Drive selhalo: %1\n"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:620
+#: core/dplugins/generic/webservices/google/gswindow.cpp:621
 #, kde-format
 msgctxt "@info"
 msgid "Google Drive export"
 msgstr "Export do Google Drive"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:626
+#: core/dplugins/generic/webservices/google/gswindow.cpp:627
 #, kde-format
 msgctxt "@info"
 msgid "Google Photo export"
 msgstr "Export do Google Photo"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:945
+#: core/dplugins/generic/webservices/google/gswindow.cpp:946
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -23402,7 +23402,7 @@ msgstr ""
 "Selhalo uložení fotografie: %1\n"
 "Přejete si pokračovat?"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:966
+#: core/dplugins/generic/webservices/google/gswindow.cpp:967
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -23412,13 +23412,13 @@ msgstr ""
 "Selhalo stahování fotografie: %1\n"
 "Přejete si pokračovat?"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:993
+#: core/dplugins/generic/webservices/google/gswindow.cpp:994
 #, kde-format
 msgctxt "@info"
 msgid "Failed to save image to %1"
 msgstr "Chyba při ukládání obrázku do %1"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1014
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1015
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -23430,7 +23430,7 @@ msgstr ""
 "%2\n"
 "Přejete si pokračovat?"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1064
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1065
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -23442,13 +23442,13 @@ msgstr ""
 "%2\n"
 "Na váš účet nebyla odeslána žádná fotografie."
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1069
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1070
 #, kde-format
 msgctxt "@action:button"
 msgid "OK"
 msgstr "OK"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1202
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1203
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -23458,7 +23458,7 @@ msgstr ""
 "Volání Google Drive selhalo: \n"
 "%1"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1219
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1220
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -23468,7 +23468,7 @@ msgstr ""
 "Volání Google Photos selhalo:\n"
 "%1"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1257
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1258
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -25899,6 +25899,18 @@ msgstr ""
 msgid "Export by Web Service"
 msgstr ""
 
+#: core/dplugins/rawimport/art/rawimportartplugin.cpp:215
+#, kde-format
+msgid ""
+"Error to import RAW image with ART\n"
+"Close this dialog to load RAW image with native import tool"
+msgstr ""
+
+#: core/dplugins/rawimport/art/rawimportartplugin.cpp:230
+#, kde-format
+msgid "ART Raw Conversion"
+msgstr ""
+
 #: core/dplugins/rawimport/darktable/rawimportdarktableplugin.cpp:275
 #, kde-format
 msgid ""
@@ -26108,7 +26120,7 @@ msgid "UFRaw Raw Conversion"
 msgstr "Převod RAW UFRaw"
 
 #: core/libs/album/engine/album.cpp:421
-#: core/libs/database/utils/ifaces/dio.cpp:805
+#: core/libs/database/utils/ifaces/dio.cpp:812
 #, kde-format
 msgid "Trash"
 msgstr "Koš"
@@ -28069,49 +28081,49 @@ msgctxt "@action:button"
 msgid "Skip Automatically"
 msgstr "Automaticky přeskočit"
 
-#: core/libs/database/utils/ifaces/dio.cpp:769
+#: core/libs/database/utils/ifaces/dio.cpp:776
 #, kde-format
 msgid "Copy Album"
 msgstr "Kopírovat album"
 
-#: core/libs/database/utils/ifaces/dio.cpp:774
+#: core/libs/database/utils/ifaces/dio.cpp:781
 #, kde-format
 msgid "Copy Images"
 msgstr "Kopírovat obrázky"
 
-#: core/libs/database/utils/ifaces/dio.cpp:780
+#: core/libs/database/utils/ifaces/dio.cpp:787
 #, kde-format
 msgid "Copy Files"
 msgstr "Kopírovat soubory"
 
-#: core/libs/database/utils/ifaces/dio.cpp:785
+#: core/libs/database/utils/ifaces/dio.cpp:792
 #, kde-format
 msgid "Move Album"
 msgstr "Přesunout album"
 
-#: core/libs/database/utils/ifaces/dio.cpp:790
+#: core/libs/database/utils/ifaces/dio.cpp:797
 #, kde-format
 msgid "Move Images"
 msgstr "Přesunout obrázky"
 
-#: core/libs/database/utils/ifaces/dio.cpp:795
+#: core/libs/database/utils/ifaces/dio.cpp:802
 #, kde-format
 msgid "Move Files"
 msgstr "Přesunout soubory"
 
-#: core/libs/database/utils/ifaces/dio.cpp:800
+#: core/libs/database/utils/ifaces/dio.cpp:807
 #: core/utilities/searchwindow/editablesearchtreeview.cpp:63
 #: core/utilities/setup/metadata/advancedmetadatatab.cpp:362
 #, kde-format
 msgid "Delete"
 msgstr "Smazat"
 
-#: core/libs/database/utils/ifaces/dio.cpp:810
+#: core/libs/database/utils/ifaces/dio.cpp:817
 #, kde-format
 msgid "Restore Trash"
 msgstr "Obnovit koš"
 
-#: core/libs/database/utils/ifaces/dio.cpp:815
+#: core/libs/database/utils/ifaces/dio.cpp:822
 #, kde-format
 msgid "Empty Trash"
 msgstr "Vyprázdnit koš"
@@ -28272,6 +28284,15 @@ msgid ""
 "file system such as NFS, cannot be used here. For performance reasons, it is "
 "also recommended not to use network storage media.</p><p></p>"
 msgstr ""
+"<p>Zvolte si umístění, kde budou uloženy soubory databáze. Budou celkem "
+"čtyři databáze: jedna pro uložení všech vlastností sbírek, jedna pro uložení "
+"komprimovaných náhledů a jedna pro uložení metadat rozpoznávání obličejů a "
+"jedna pro uložení otisků podobnosti.<br/>Aby bylo možné upravovat vlastnosti "
+"obrázků, je vyžadováno právo zápisu.</p><p>Databáze jsou nejdůležitější "
+"soubory digiKamu. Zvolte umístění na rychlém disku (např. SSD nebo NVME) s "
+"dostatkem místa - obzvláště pro databázi náhledů.</p><p>Poznámka: Nelze "
+"použít vzdálený systém souborů (například NFS). Zároveň z výkonových důvodů "
+"není vhodné používat síťová úložiště.</p><p></p>"
 
 #: core/libs/database/utils/widgets/dbsettingswidget.cpp:113
 #, kde-format
@@ -30711,7 +30732,7 @@ msgctxt "Convert image bit depth"
 msgid "Convert Depth"
 msgstr "Hloubka převodu"
 
-#: core/libs/dimg/filters/dimgfiltermanager.cpp:429
+#: core/libs/dimg/filters/dimgfiltermanager.cpp:430
 #, kde-format
 msgid "Unknown filter"
 msgstr "Neznámý filtr"
@@ -33040,7 +33061,7 @@ msgstr "Zápis"
 #, kde-format
 msgctxt "@title"
 msgid "Type-Mimes"
-msgstr "MIME-typy"
+msgstr "Typy MIME"
 
 #: core/libs/dplugins/setup/dpluginaboutdlg.cpp:60
 #, kde-format
@@ -35677,12 +35698,12 @@ msgctxt "info"
 msgid "Binary data %1 bytes"
 msgstr ""
 
-#: core/libs/metadataengine/exiftool/exiftoolprocess.cpp:378
+#: core/libs/metadataengine/exiftool/exiftoolprocess.cpp:371
 #, kde-format
 msgid "ExifTool does not exists or exec permission is missing"
 msgstr ""
 
-#: core/libs/metadataengine/exiftool/exiftoolprocess.cpp:392
+#: core/libs/metadataengine/exiftool/exiftoolprocess.cpp:385
 #, kde-format
 msgid "Perl does not exists or exec permission is missing"
 msgstr ""
@@ -39381,7 +39402,7 @@ msgstr "Náhled je prázdný"
 msgid "File does not exist or is not a file"
 msgstr "Soubor neexistuje nebo se nejedná o soubor"
 
-#: core/libs/threadimageio/thumb/thumbnailcreator_engine.cpp:211
+#: core/libs/threadimageio/thumb/thumbnailcreator_engine.cpp:213
 #, kde-format
 msgid "Cannot create thumbnail for %1"
 msgstr "Nelze vytvořit náhled %1"
@@ -42587,14 +42608,14 @@ msgctxt "@title: column"
 msgid "Description"
 msgstr "Popis"
 
-#: core/libs/widgets/metadata/exiftool/exiftoolconfpanel.cpp:183
-#: core/libs/widgets/metadata/exiftool/exiftoolconfpanel.cpp:184
+#: core/libs/widgets/metadata/exiftool/exiftoolconfpanel.cpp:188
+#: core/libs/widgets/metadata/exiftool/exiftoolconfpanel.cpp:189
 #, kde-format
 msgctxt "@info: status"
 msgid "yes"
 msgstr "ano"
 
-#: core/libs/widgets/metadata/exiftool/exiftoolconfpanel.cpp:185
+#: core/libs/widgets/metadata/exiftool/exiftoolconfpanel.cpp:190
 #, kde-format
 msgctxt "@info: status"
 msgid "no"
@@ -47324,23 +47345,23 @@ msgstr ""
 #: core/libs/widgets/text/donlinetranslator_bing.cpp:48
 #, kde-format
 msgid "Error: Unable to find Bing credentials in web version."
-msgstr ""
+msgstr "Chyba: Nelze najít přihlašovací údaje Bing ve webové verzi."
 
 #: core/libs/widgets/text/donlinetranslator_bing.cpp:57
 #, kde-format
 msgid "Error: Unable to extract Bing key from web version."
-msgstr ""
+msgstr "Chyba: Nelze získat klíč Bing z webové verze."
 
 #: core/libs/widgets/text/donlinetranslator_bing.cpp:67
 #, kde-format
 msgid "Error: Unable to extract Bing token from web version."
-msgstr ""
+msgstr "Chyba: Nelze získat token Bing z webové verze."
 
 #: core/libs/widgets/text/donlinetranslator_bing.cpp:77
 #: core/libs/widgets/text/donlinetranslator_bing.cpp:87
 #, kde-format
 msgid "Error: Unable to extract additional Bing information from web version."
-msgstr ""
+msgstr "Chyba: Nelze získat dodatečné informace Bing z webové verze."
 
 #: core/libs/widgets/text/donlinetranslator_bing.cpp:145
 #: core/libs/widgets/text/donlinetranslator_google.cpp:88
@@ -47348,7 +47369,7 @@ msgstr ""
 #: core/libs/widgets/text/donlinetranslator_yandex.cpp:168
 #, kde-format
 msgid "Error: Unable to parse autodetected language"
-msgstr ""
+msgstr "Chyba: Nelze zpracovat automaticky detekovaný jazyk"
 
 #: core/libs/widgets/text/donlinetranslator_google.cpp:53
 #: core/libs/widgets/text/donlinetranslator_google.cpp:70
@@ -48158,12 +48179,12 @@ msgstr ""
 #: core/libs/widgets/text/donlinetranslator_yandex.cpp:60
 #, kde-format
 msgid "Error: Unable to find Yandex SID in web version."
-msgstr ""
+msgstr "Chyba: Nelze najít Yandex SID ve webové verzi."
 
 #: core/libs/widgets/text/donlinetranslator_yandex.cpp:69
 #, kde-format
 msgid "Error: Unable to extract Yandex SID from web version."
-msgstr ""
+msgstr "Chyba: Nelze získat Yandex SID z webové verze."
 
 #: core/libs/widgets/text/localizeconfig.cpp:58
 #, kde-format
@@ -51664,6 +51685,22 @@ msgid ""
 "You can force digiKam to scan for new items manually using the <b>Tools-"
 ">Maintenance->Scan for new items</b> menu entry.</p></qt>"
 msgstr ""
+"<qt><p>Gratulujeme! Vaše prvotní nastavení je u konce.</p><p>Nezapomeňte, že "
+"další nastavení můžete měnit v ovládacím  panelu digiKamu. Chcete-li se "
+"dozvědět více o možnostech digiKamu, doporučujeme k přečtení <b>příručku "
+"digiKamu</b> dostupnou z nabídky <b>Nápověda / Příručka aplikace digiKam</b> "
+"(za předpokladu, že jste si nainstalovali samostatný balíček s dokumentací "
+"digiKamu). Můžete si také přečíst dokumentaci dostupnou online na <a "
+"href='https://docs.digikam.org/en/index.html'>webu digikam.org</a>.</"
+"p><p>Pro ukončení tohoto průvodce klikněte na tlačítko <b>Dokončit</b>. "
+"digiKam začne procházet vaše sbírky a přidávat alba do databáze. Položky v "
+"albech budou po startu přidávána na pozadí.</p><p><i>Poznámka:</i> Tato "
+"operace může trvat déle, v závislosti na velikosti vaší sbírky. Pokud "
+"operaci procházení sbírky přerušíte, při příštím spuštění digiKamu začne "
+"znovu.</p><p>Jakmile bude úvodní procházení sbírky provedeno, při "
+"následujícím spuštění bude digiKam kontrolovat pouze nová alba ve sbírkách - "
+"což je mnohem rychlejší. Vyhledání nových položek můžete také spustit ručně "
+"z nabídky <b>Nástroje->Správa->Vyhledat nové položky</b>.</p></qt>"
 
 #: core/utilities/firstrun/tooltipspage.cpp:56
 #, kde-format
@@ -57731,37 +57768,37 @@ msgstr "Země"
 
 #: core/utilities/searchwindow/searchfields_createfield.cpp:640
 #, kde-format
-msgid "Country of the location shown in the item"
+msgid "Country shown in the item"
 msgstr ""
 
 #: core/utilities/searchwindow/searchfields_createfield.cpp:656
 #, kde-format
 msgid "Province"
-msgstr ""
+msgstr "Provincie"
 
 #: core/utilities/searchwindow/searchfields_createfield.cpp:656
 #, kde-format
-msgid "Province of the location shown in the item"
+msgid "Province shown in the item"
 msgstr ""
 
 #: core/utilities/searchwindow/searchfields_createfield.cpp:672
-#, kde-format
-msgid "County"
-msgstr ""
-
-#: core/utilities/searchwindow/searchfields_createfield.cpp:672
-#, kde-format
-msgid "County of the location shown in the item"
-msgstr ""
-
-#: core/utilities/searchwindow/searchfields_createfield.cpp:688
 #, kde-format
 msgid "City"
 msgstr "Město"
 
+#: core/utilities/searchwindow/searchfields_createfield.cpp:672
+#, kde-format
+msgid "City shown in the item"
+msgstr ""
+
 #: core/utilities/searchwindow/searchfields_createfield.cpp:688
 #, kde-format
-msgid "City of the location shown in the item"
+msgid "Sublocation"
+msgstr ""
+
+#: core/utilities/searchwindow/searchfields_createfield.cpp:688
+#, kde-format
+msgid "Sublocation shown in the item"
 msgstr ""
 
 #: core/utilities/searchwindow/searchfields_createfield.cpp:702
@@ -58658,7 +58695,7 @@ msgstr "Celá obrazovka"
 #, kde-format
 msgctxt "@title:tab"
 msgid "Mime Types"
-msgstr "MIME typy"
+msgstr "Typy MIME"
 
 #: core/utilities/setup/album/setupalbumview.cpp:371
 #, kde-format
@@ -61887,7 +61924,7 @@ msgid ""
 "a few selected profiles. Store all your additional color profiles in the "
 "directory set here.</p>"
 msgstr ""
-"<p>digiKam hledá ICC profily ve výchozích systémových adresářích a sám dodá "
+"<p>digiKam hledá ICC profily ve výchozích systémových složkách a sám dodá "
 "několik vybraných profilů. Všechny vaše další profily barev uložte do zde "
 "zvoleného adresáře.</p>"
 

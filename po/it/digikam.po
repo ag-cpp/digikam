@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: digikam\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-04 00:55+0000\n"
-"PO-Revision-Date: 2023-01-28 19:14+0100\n"
+"POT-Creation-Date: 2023-02-19 00:55+0000\n"
+"PO-Revision-Date: 2023-02-13 23:07+0100\n"
 "Last-Translator: Valter Mura <valtermura@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -33,7 +33,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 22.12.1\n"
+"X-Generator: Lokalize 22.12.2\n"
 
 #: core/app/date/ddateedit.cpp:499
 #, kde-format
@@ -3142,7 +3142,7 @@ msgstr "Annulla"
 #: core/app/views/stack/trashview.cpp:117
 #, kde-format
 msgid "Restore only the last entry in the trash-bin."
-msgstr ""
+msgstr "Ripristina solo l'ultima voce nel cestino."
 
 #: core/app/views/stack/trashview.cpp:121
 #, kde-format
@@ -3150,11 +3150,9 @@ msgid "Restore"
 msgstr "Ripristina"
 
 #: core/app/views/stack/trashview.cpp:122
-#, fuzzy, kde-format
-#| msgctxt "@info"
-#| msgid "Remove selected images from the list"
+#, kde-format
 msgid "Restore selection of files from the trash-bin."
-msgstr "Rimuovi le immagini selezionate dall'elenco"
+msgstr "Ripristina la selezione di file dal cestino."
 
 #: core/app/views/stack/trashview.cpp:126
 #, kde-format
@@ -3165,6 +3163,8 @@ msgstr "Elimina..."
 #, kde-format
 msgid "Remove permanently the items selection or all items from the trash-bin."
 msgstr ""
+"Rimuove permanentemente tutti gli elementi, o una loro selezione, dal "
+"cestino."
 
 #: core/app/views/stack/trashview.cpp:131
 #, kde-format
@@ -12103,10 +12103,10 @@ msgstr "Salvataggio delle modifiche -"
 #: core/dplugins/generic/webservices/google/gswindow.cpp:362
 #: core/dplugins/generic/webservices/google/gswindow.cpp:403
 #: core/dplugins/generic/webservices/google/gswindow.cpp:429
-#: core/dplugins/generic/webservices/google/gswindow.cpp:490
-#: core/dplugins/generic/webservices/google/gswindow.cpp:992
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1201
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1218
+#: core/dplugins/generic/webservices/google/gswindow.cpp:491
+#: core/dplugins/generic/webservices/google/gswindow.cpp:993
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1202
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1219
 #: core/dplugins/generic/webservices/inaturalist/inatwindow.cpp:608
 #: core/dplugins/generic/webservices/mediawiki/mediawikitalker.cpp:179
 #: core/dplugins/generic/webservices/onedrive/odtalker.cpp:404
@@ -17658,7 +17658,7 @@ msgctxt "@title:window"
 msgid "Set Bracketed Images"
 msgstr "Imposta le immagini raggruppate"
 
-#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:71
+#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:70
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -17668,27 +17668,27 @@ msgstr ""
 "Imposta qui l'elenco delle immagini raggruppate da fondere. Rispetta queste "
 "condizioni"
 
-#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:72
+#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:71
 #, kde-format
 msgctxt "@info"
 msgid "At least 2 images from the same subject must be added to the stack."
 msgstr ""
 "Devono essere aggiunte alla pila almeno due immagini dello stesso soggetto."
 
-#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:73
+#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:72
 #: core/dplugins/generic/tools/panorama/wizard/panoitemspage.cpp:73
 #, kde-format
 msgctxt "@info"
 msgid "Do not mix images with different color depth."
 msgstr "Non mettere insieme immagini con profondità di colore diverse."
 
-#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:74
+#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:73
 #, kde-format
 msgctxt "@info"
 msgid "All images must have the same dimensions."
 msgstr "Tutte le immagini devono avere la stessa dimensione."
 
-#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:78
+#: core/dplugins/generic/tools/expoblending/wizard/expoblendingitemspage.cpp:77
 #, kde-format
 msgctxt "@title: column"
 msgid "Exposure (EV)"
@@ -18438,9 +18438,13 @@ msgid "Jalbum completed."
 msgstr "jAlbum completato."
 
 #: core/dplugins/generic/tools/jalbum/wizard/jalbumintropage.cpp:82
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "<qt><p><h1><b>Welcome to jAlbum album tool</b></h1></p><p>This assistant "
+#| "will guide you to export quickly</p><p></p><p>your images as a jAlbum "
+#| "project.</p></qt>"
 msgid ""
-"<qt><p><h1><b>Welcome to jAlbum album tool</b></h1></p><p>This assistant "
+"<qt><p><h1><b>Welcome to jAlbum export tool</b></h1></p><p>This assistant "
 "will guide you to export quickly</p><p></p><p>your images as a jAlbum "
 "project.</p></qt>"
 msgstr ""
@@ -18482,8 +18486,9 @@ msgid "Create jAlbum Album"
 msgstr "Crea album jAlbum"
 
 #: core/dplugins/generic/tools/jalbum/wizard/jalbumwizard.cpp:81
-#, kde-format
-msgid "Welcome to jAlbum Album Tool"
+#, fuzzy, kde-format
+#| msgid "Welcome to jAlbum Album Tool"
+msgid "Welcome to jAlbum Export Tool"
 msgstr "Benvenuto allo strumento per album jAlbum"
 
 #: core/dplugins/generic/tools/jalbum/wizard/jalbumwizard.cpp:83
@@ -23096,7 +23101,7 @@ msgid "Start upload to Box"
 msgstr "Avvia il caricamento a Box"
 
 #: core/dplugins/generic/webservices/box/boxwindow.cpp:245
-#: core/dplugins/generic/webservices/google/gswindow.cpp:491
+#: core/dplugins/generic/webservices/google/gswindow.cpp:492
 #: core/dplugins/generic/webservices/onedrive/odwindow.cpp:244
 #, kde-format
 msgctxt "@info"
@@ -23105,13 +23110,13 @@ msgstr "Nessuna immagine selezionata. Seleziona le immagini da caricare."
 
 #: core/dplugins/generic/webservices/box/boxwindow.cpp:252
 #: core/dplugins/generic/webservices/flickr/flickrwindow.cpp:849
-#: core/dplugins/generic/webservices/google/gswindow.cpp:506
-#: core/dplugins/generic/webservices/google/gswindow.cpp:531
-#: core/dplugins/generic/webservices/google/gswindow.cpp:944
-#: core/dplugins/generic/webservices/google/gswindow.cpp:965
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1013
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1063
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1256
+#: core/dplugins/generic/webservices/google/gswindow.cpp:507
+#: core/dplugins/generic/webservices/google/gswindow.cpp:532
+#: core/dplugins/generic/webservices/google/gswindow.cpp:945
+#: core/dplugins/generic/webservices/google/gswindow.cpp:966
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1014
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1064
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1257
 #: core/dplugins/generic/webservices/onedrive/odwindow.cpp:251
 #: core/dplugins/generic/webservices/pinterest/pwindow.cpp:255
 #: core/dplugins/generic/webservices/smugmug/smugwindow.cpp:670
@@ -23122,8 +23127,8 @@ msgid "Warning"
 msgstr "Avviso"
 
 #: core/dplugins/generic/webservices/box/boxwindow.cpp:253
-#: core/dplugins/generic/webservices/google/gswindow.cpp:507
-#: core/dplugins/generic/webservices/google/gswindow.cpp:532
+#: core/dplugins/generic/webservices/google/gswindow.cpp:508
+#: core/dplugins/generic/webservices/google/gswindow.cpp:533
 #: core/dplugins/generic/webservices/onedrive/odwindow.cpp:252
 #, kde-format
 msgctxt "@info"
@@ -23132,12 +23137,12 @@ msgstr "Autenticazione non riuscita. Fai clic su «Continua» per autenticarti."
 
 #: core/dplugins/generic/webservices/box/boxwindow.cpp:256
 #: core/dplugins/generic/webservices/flickr/flickrwindow.cpp:854
-#: core/dplugins/generic/webservices/google/gswindow.cpp:510
-#: core/dplugins/generic/webservices/google/gswindow.cpp:535
-#: core/dplugins/generic/webservices/google/gswindow.cpp:949
-#: core/dplugins/generic/webservices/google/gswindow.cpp:970
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1019
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1261
+#: core/dplugins/generic/webservices/google/gswindow.cpp:511
+#: core/dplugins/generic/webservices/google/gswindow.cpp:536
+#: core/dplugins/generic/webservices/google/gswindow.cpp:950
+#: core/dplugins/generic/webservices/google/gswindow.cpp:971
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1020
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1262
 #: core/dplugins/generic/webservices/onedrive/odwindow.cpp:255
 #: core/dplugins/generic/webservices/pinterest/pwindow.cpp:259
 #: core/dplugins/generic/webservices/smugmug/smugwindow.cpp:675
@@ -23149,12 +23154,12 @@ msgstr "Continua"
 
 #: core/dplugins/generic/webservices/box/boxwindow.cpp:257
 #: core/dplugins/generic/webservices/flickr/flickrwindow.cpp:855
-#: core/dplugins/generic/webservices/google/gswindow.cpp:511
-#: core/dplugins/generic/webservices/google/gswindow.cpp:536
-#: core/dplugins/generic/webservices/google/gswindow.cpp:950
-#: core/dplugins/generic/webservices/google/gswindow.cpp:971
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1020
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1262
+#: core/dplugins/generic/webservices/google/gswindow.cpp:512
+#: core/dplugins/generic/webservices/google/gswindow.cpp:537
+#: core/dplugins/generic/webservices/google/gswindow.cpp:951
+#: core/dplugins/generic/webservices/google/gswindow.cpp:972
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1021
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1263
 #: core/dplugins/generic/webservices/onedrive/odwindow.cpp:256
 #: core/dplugins/generic/webservices/pinterest/pwindow.cpp:260
 #: core/dplugins/generic/webservices/smugmug/smugwindow.cpp:676
@@ -23166,7 +23171,7 @@ msgstr "Annulla"
 
 #: core/dplugins/generic/webservices/box/boxwindow.cpp:285
 #: core/dplugins/generic/webservices/google/gswindow.cpp:385
-#: core/dplugins/generic/webservices/google/gswindow.cpp:612
+#: core/dplugins/generic/webservices/google/gswindow.cpp:613
 #: core/dplugins/generic/webservices/onedrive/odwindow.cpp:284
 #, kde-format
 msgctxt "@info: progress bar"
@@ -24553,19 +24558,19 @@ msgctxt "@info"
 msgid "Google Drive call failed: %1\n"
 msgstr "Chiamata a Google Drive non riuscita: %1\n"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:620
+#: core/dplugins/generic/webservices/google/gswindow.cpp:621
 #, kde-format
 msgctxt "@info"
 msgid "Google Drive export"
 msgstr "Esportazione in Google Drive"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:626
+#: core/dplugins/generic/webservices/google/gswindow.cpp:627
 #, kde-format
 msgctxt "@info"
 msgid "Google Photo export"
 msgstr "Esportazione in Google Foto"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:945
+#: core/dplugins/generic/webservices/google/gswindow.cpp:946
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -24575,7 +24580,7 @@ msgstr ""
 "Salvataggio della foto non riuscito: %1\n"
 "Vuoi continuare?"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:966
+#: core/dplugins/generic/webservices/google/gswindow.cpp:967
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -24585,13 +24590,13 @@ msgstr ""
 "Scaricamento della foto non riuscito: %1\n"
 "Vuoi continuare?"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:993
+#: core/dplugins/generic/webservices/google/gswindow.cpp:994
 #, kde-format
 msgctxt "@info"
 msgid "Failed to save image to %1"
 msgstr "Salvataggio dell'immagine su %1 non riuscito"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1014
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1015
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -24603,7 +24608,7 @@ msgstr ""
 "%2\n"
 "Vuoi continuare?"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1064
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1065
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -24615,13 +24620,13 @@ msgstr ""
 "%2\n"
 "Non è stata caricata alcuna immagine nel tuo account."
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1069
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1070
 #, kde-format
 msgctxt "@action:button"
 msgid "OK"
 msgstr "OK"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1202
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1203
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -24631,7 +24636,7 @@ msgstr ""
 "Chiamata a Google Drive non riuscita:\n"
 "%1"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1219
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1220
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -24641,7 +24646,7 @@ msgstr ""
 "Chiamata a Google Foto non riuscita:\n"
 "%1"
 
-#: core/dplugins/generic/webservices/google/gswindow.cpp:1257
+#: core/dplugins/generic/webservices/google/gswindow.cpp:1258
 #, kde-format
 msgctxt "@info"
 msgid ""
@@ -27167,6 +27172,21 @@ msgstr "Impostazioni del servizio web"
 msgid "Export by Web Service"
 msgstr "Esporta tramite servizio web"
 
+#: core/dplugins/rawimport/art/rawimportartplugin.cpp:215
+#, kde-format
+msgid ""
+"Error to import RAW image with ART\n"
+"Close this dialog to load RAW image with native import tool"
+msgstr ""
+"Errore durante l'importazione dell'immagine RAW con ART\n"
+"Chiudi la finestra di dialogo per caricare l'immagine RAW con lo strumento "
+"di importazione nativo"
+
+#: core/dplugins/rawimport/art/rawimportartplugin.cpp:230
+#, kde-format
+msgid "ART Raw Conversion"
+msgstr "Conversione RAW ART"
+
 #: core/dplugins/rawimport/darktable/rawimportdarktableplugin.cpp:275
 #, kde-format
 msgid ""
@@ -27392,7 +27412,7 @@ msgid "UFRaw Raw Conversion"
 msgstr "Conversione RAW UFRaw"
 
 #: core/libs/album/engine/album.cpp:421
-#: core/libs/database/utils/ifaces/dio.cpp:805
+#: core/libs/database/utils/ifaces/dio.cpp:812
 #, kde-format
 msgid "Trash"
 msgstr "Cestina"
@@ -29445,49 +29465,49 @@ msgctxt "@action:button"
 msgid "Skip Automatically"
 msgstr "Salta automaticamente"
 
-#: core/libs/database/utils/ifaces/dio.cpp:769
+#: core/libs/database/utils/ifaces/dio.cpp:776
 #, kde-format
 msgid "Copy Album"
 msgstr "Copia album"
 
-#: core/libs/database/utils/ifaces/dio.cpp:774
+#: core/libs/database/utils/ifaces/dio.cpp:781
 #, kde-format
 msgid "Copy Images"
 msgstr "Copia immagini"
 
-#: core/libs/database/utils/ifaces/dio.cpp:780
+#: core/libs/database/utils/ifaces/dio.cpp:787
 #, kde-format
 msgid "Copy Files"
 msgstr "Copia file"
 
-#: core/libs/database/utils/ifaces/dio.cpp:785
+#: core/libs/database/utils/ifaces/dio.cpp:792
 #, kde-format
 msgid "Move Album"
 msgstr "Sposta album"
 
-#: core/libs/database/utils/ifaces/dio.cpp:790
+#: core/libs/database/utils/ifaces/dio.cpp:797
 #, kde-format
 msgid "Move Images"
 msgstr "Sposta immagini"
 
-#: core/libs/database/utils/ifaces/dio.cpp:795
+#: core/libs/database/utils/ifaces/dio.cpp:802
 #, kde-format
 msgid "Move Files"
 msgstr "Sposta file"
 
-#: core/libs/database/utils/ifaces/dio.cpp:800
+#: core/libs/database/utils/ifaces/dio.cpp:807
 #: core/utilities/searchwindow/editablesearchtreeview.cpp:63
 #: core/utilities/setup/metadata/advancedmetadatatab.cpp:362
 #, kde-format
 msgid "Delete"
 msgstr "Elimina"
 
-#: core/libs/database/utils/ifaces/dio.cpp:810
+#: core/libs/database/utils/ifaces/dio.cpp:817
 #, kde-format
 msgid "Restore Trash"
 msgstr "Ripristina il cestino"
 
-#: core/libs/database/utils/ifaces/dio.cpp:815
+#: core/libs/database/utils/ifaces/dio.cpp:822
 #, kde-format
 msgid "Empty Trash"
 msgstr "Svuota il cestino"
@@ -29650,17 +29670,7 @@ msgstr ""
 "nella gestione di collezioni che contengono più di 100.000 elementi.</p>"
 
 #: core/libs/database/utils/widgets/dbsettingswidget.cpp:94
-#, fuzzy, kde-format
-#| msgid ""
-#| "<p>Set here the location where the database files will be stored on your "
-#| "system. There are four databases: one for all collections properties, one "
-#| "to store compressed thumbnails, one to store faces recognition metadata, "
-#| "and one to store similarity fingerprints.<br/>Write access is required to "
-#| "be able to edit image properties.</p><p>Databases are digiKam core "
-#| "engines. Take care to use a place hosted by fast hardware (as SSD) with "
-#| "enough free space especially for thumbnails database.</p><p>Note: a "
-#| "remote file system such as NFS, cannot be used here. For performance "
-#| "reasons, it is also recommended not to use removable media.</p><p></p>"
+#, kde-format
 msgid ""
 "<p>Set here the location where the database files will be stored on your "
 "system. There are four databases: one for all collections properties, one to "
@@ -29679,10 +29689,11 @@ msgstr ""
 "per memorizzare le impronte digitali somiglianti.<br/>Per modificare le "
 "proprietà delle immagini è richiesto il permesso di scrittura.</p><p>Le "
 "banche dati sono nuclei centrali di digiKam. Fai in modo di utilizzare una "
-"posizione in un dispositivo veloce (tipo SSD) con abbastanza spazio libero "
-"per la banca dati delle miniature.</p><p>Nota: qui non può essere utilizzato "
-"un sistema di file remoti, tipo NFS. Per ragioni di prestazioni, si "
-"raccomanda di non utilizzare dispositivi rimovibili.</p><p></p>"
+"posizione in un dispositivo veloce (per es. SSD o NVMe) con abbastanza "
+"spazio libero per la banca dati delle miniature.</p><p>Nota: qui non può "
+"essere utilizzato un sistema di file remoti, tipo NFS. Per ragioni di "
+"prestazioni, si raccomanda di non utilizzare dispositivi di memorizzazione "
+"di rete.</p><p></p>"
 
 #: core/libs/database/utils/widgets/dbsettingswidget.cpp:113
 #, kde-format
@@ -32183,7 +32194,7 @@ msgctxt "Convert image bit depth"
 msgid "Convert Depth"
 msgstr "Converti la profondità"
 
-#: core/libs/dimg/filters/dimgfiltermanager.cpp:429
+#: core/libs/dimg/filters/dimgfiltermanager.cpp:430
 #, kde-format
 msgid "Unknown filter"
 msgstr "Filtro sconosciuto"
@@ -36057,10 +36068,9 @@ msgstr ""
 "comunque copiata nell'album %2"
 
 #: core/libs/iojobs/iojob.cpp:187
-#, fuzzy, kde-format
-#| msgid "Could not move file %1 to album %2"
+#, kde-format
 msgid "Could not move sidecar from file %1 to album %2"
-msgstr "Impossibile spostare il file %1 nell'album %2"
+msgstr "Impossibile spostare il sidecar dal file %1 nell'album %2"
 
 #: core/libs/iojobs/iojob.cpp:193
 #, kde-format
@@ -36073,10 +36083,9 @@ msgid "Could not copy folder %1 to album %2"
 msgstr "Impossibile copiare la cartella %1 nell'album %2"
 
 #: core/libs/iojobs/iojob.cpp:228
-#, fuzzy, kde-format
-#| msgid "Could not copy file %1 to folder %2"
+#, kde-format
 msgid "Could not copy sidecar from file %1 to folder %2"
-msgstr "Impossibile copiare il file %1 nella cartella %2"
+msgstr "Impossibile copiare il sidecar dal file %1 nella cartella %2"
 
 #: core/libs/iojobs/iojob.cpp:236
 #, kde-format
@@ -37260,12 +37269,12 @@ msgctxt "info"
 msgid "Binary data %1 bytes"
 msgstr "Dati binari %1 byte"
 
-#: core/libs/metadataengine/exiftool/exiftoolprocess.cpp:378
+#: core/libs/metadataengine/exiftool/exiftoolprocess.cpp:371
 #, kde-format
 msgid "ExifTool does not exists or exec permission is missing"
 msgstr "ExifTool non esiste o i permessi exec sono mancanti"
 
-#: core/libs/metadataengine/exiftool/exiftoolprocess.cpp:392
+#: core/libs/metadataengine/exiftool/exiftoolprocess.cpp:385
 #, kde-format
 msgid "Perl does not exists or exec permission is missing"
 msgstr "Perl non esiste o i permessi exec sono mancanti"
@@ -41142,7 +41151,7 @@ msgstr "La miniatura è nulla"
 msgid "File does not exist or is not a file"
 msgstr "Il file non esiste o non è un file"
 
-#: core/libs/threadimageio/thumb/thumbnailcreator_engine.cpp:211
+#: core/libs/threadimageio/thumb/thumbnailcreator_engine.cpp:213
 #, kde-format
 msgid "Cannot create thumbnail for %1"
 msgstr "Impossibile creare la miniatura per %1"
@@ -44416,14 +44425,14 @@ msgctxt "@title: column"
 msgid "Description"
 msgstr "Descrizione"
 
-#: core/libs/widgets/metadata/exiftool/exiftoolconfpanel.cpp:183
-#: core/libs/widgets/metadata/exiftool/exiftoolconfpanel.cpp:184
+#: core/libs/widgets/metadata/exiftool/exiftoolconfpanel.cpp:188
+#: core/libs/widgets/metadata/exiftool/exiftoolconfpanel.cpp:189
 #, kde-format
 msgctxt "@info: status"
 msgid "yes"
 msgstr "sì"
 
-#: core/libs/widgets/metadata/exiftool/exiftoolconfpanel.cpp:185
+#: core/libs/widgets/metadata/exiftool/exiftoolconfpanel.cpp:190
 #, kde-format
 msgctxt "@info: status"
 msgid "no"
@@ -53606,24 +53615,7 @@ msgid "Scan Your Collection"
 msgstr "Analizza la tua raccolta"
 
 #: core/utilities/firstrun/startscanpage.cpp:40
-#, fuzzy, kde-format
-#| msgid ""
-#| "<qt><p>Congratulations. Your minimal setup is done.</p><p>Remember, you "
-#| "can customize more settings using the digiKam configuration panel. To "
-#| "learn more about the digiKam world, we recommend reading the <b>digiKam "
-#| "handbook</b> using the <b>Help/Handbook</b> menu entry (you need to "
-#| "install the separate digiKam documentation package.) You can also read "
-#| "the manual online from the <a href='https://www.digikam.org/docs'>digikam."
-#| "org website</a>.</p><p>Press <b>Finish</b> to close this assistant. "
-#| "digiKam will scan your collection to register all albums in the database. "
-#| "Items including in albums are collected after startup stage in background."
-#| "</p><p><i>Note:</i> depending on your collection size, this operation can "
-#| "take a while. If you cancel the scanning operation, it will start again "
-#| "in the next digiKam session.</p><p>When scanning has completed, at next "
-#| "start-up, digiKam will only check your collection to identify new albums "
-#| "- which is much faster. You can force digiKam to scan for new items "
-#| "manually using the <b>Tools->Maintenance->Scan for new items</b> menu "
-#| "entry.</p></qt>"
+#, kde-format
 msgid ""
 "<qt><p>Congratulations. Your minimal setup is done.</p><p>Remember, you can "
 "customize more settings using the digiKam configuration panel. To learn more "
@@ -53646,17 +53638,17 @@ msgstr ""
 "digiKam. Per sapere di più sul mondo di digiKam, raccomandiamo di leggere il "
 "<b>manuale di digiKam</b> usando la voce di menu <b>Aiuto/Manuale di "
 "digiKam</b> apposita (è necessario installare il pacchetto separato della "
-"documentazione di digiKam). Puoi anche leggere il manuale in linea sul sito "
-"<a href='https://www.digikam.org/docs'>digikam.org</a>.</p><p>Premi <b>Fine</"
-"b> per chiudere questa procedura guidata. digiKam analizzerà la tua raccolta "
-"per memorizzare tutti gli album nella banca dati.</p><p><i>Nota:</i> a "
-"seconda della dimensione della raccolta, questa operazione può durare un "
-"po'. Se interrompi l'operazione di analisi, questa partirà di nuovo alla "
-"prossima apertura di digiKam.</p><p>Quando l'analisi è completa, al "
-"successivo avvio digiKam controllerà la tua raccolta solo per trovare nuovi "
-"oggetti, il che è più veloce. Puoi forzare digiKam a controllare la presenza "
-"di nuovi elementi usando la voce di menu <b>Strumenti->Manutenzione->Cerca "
-"nuovi elementi</b>.</p></qt>"
+"documentazione di digiKam). Puoi anche leggere il manuale in linea sul <a "
+"href='https://docs.digikam.org/en/index.html'>sito web dedicato</a>.</"
+"p><p>Premi <b>Fine</b> per chiudere questa procedura guidata. digiKam "
+"analizzerà la tua raccolta per memorizzare tutti gli album nella banca dati."
+"</p><p><i>Nota:</i> a seconda della dimensione della raccolta, questa "
+"operazione può durare un po'. Se interrompi l'operazione di analisi, questa "
+"partirà di nuovo alla prossima apertura di digiKam.</p><p>Quando l'analisi è "
+"completa, al successivo avvio digiKam controllerà la tua raccolta solo per "
+"trovare nuovi oggetti, il che è più veloce. Puoi forzare digiKam a "
+"controllare la presenza di nuovi elementi usando la voce di menu "
+"<b>Strumenti->Manutenzione->Cerca nuovi elementi</b>.</p></qt>"
 
 #: core/utilities/firstrun/tooltipspage.cpp:56
 #, kde-format
@@ -58160,14 +58152,12 @@ msgid "Open the item with default assigned application."
 msgstr "Apri l'elemento con l'applicazione predefinita assegnata."
 
 #: core/utilities/lighttable/lighttablewindow_setup.cpp:73
-#, fuzzy, kde-format
-#| msgid "Remove item from LightTable"
+#, kde-format
 msgid "Remove item from Light Table"
 msgstr "Rimuovi elemento dal tavolo luminoso"
 
 #: core/utilities/lighttable/lighttablewindow_setup.cpp:79
-#, fuzzy, kde-format
-#| msgid "Remove all items from LightTable"
+#, kde-format
 msgid "Remove all items from Light Table"
 msgstr "Rimuovi tutti gli elementi dal tavolo luminoso"
 
@@ -59818,45 +59808,44 @@ msgid "Country"
 msgstr "Stato"
 
 #: core/utilities/searchwindow/searchfields_createfield.cpp:640
+#, fuzzy, kde-format
+#| msgid "Country of the location shown in the item"
+msgid "Country shown in the item"
+msgstr "Stato del luogo mostrato nell'elemento"
+
+#: core/utilities/searchwindow/searchfields_createfield.cpp:656
 #, kde-format
-msgid "Country of the location shown in the item"
-msgstr "Stato del luogo mostrato nell'elemento"
-
-#: core/utilities/searchwindow/searchfields_createfield.cpp:656
-#, fuzzy, kde-format
-#| msgid "Province:"
 msgid "Province"
-msgstr "Provincia:"
+msgstr "Provincia"
 
 #: core/utilities/searchwindow/searchfields_createfield.cpp:656
 #, fuzzy, kde-format
-#| msgid "Country of the location shown in the item"
-msgid "Province of the location shown in the item"
-msgstr "Stato del luogo mostrato nell'elemento"
+#| msgid "Province of the location shown in the item"
+msgid "Province shown in the item"
+msgstr "Provincia del luogo mostrato nell'elemento"
 
 #: core/utilities/searchwindow/searchfields_createfield.cpp:672
-#, fuzzy, kde-format
-#| msgid "Country"
-msgid "County"
-msgstr "Stato"
-
-#: core/utilities/searchwindow/searchfields_createfield.cpp:672
-#, fuzzy, kde-format
-#| msgid "Country of the location shown in the item"
-msgid "County of the location shown in the item"
-msgstr "Stato del luogo mostrato nell'elemento"
-
-#: core/utilities/searchwindow/searchfields_createfield.cpp:688
-#, fuzzy, kde-format
-#| msgid "City:"
+#, kde-format
 msgid "City"
-msgstr "Città:"
+msgstr "Città"
+
+#: core/utilities/searchwindow/searchfields_createfield.cpp:672
+#, fuzzy, kde-format
+#| msgid "City of the location shown in the item"
+msgid "City shown in the item"
+msgstr "Città del luogo mostrato nell'elemento"
 
 #: core/utilities/searchwindow/searchfields_createfield.cpp:688
 #, fuzzy, kde-format
-#| msgid "Country of the location shown in the item"
-msgid "City of the location shown in the item"
-msgstr "Stato del luogo mostrato nell'elemento"
+#| msgid "Sublocation:"
+msgid "Sublocation"
+msgstr "Posto:"
+
+#: core/utilities/searchwindow/searchfields_createfield.cpp:688
+#, fuzzy, kde-format
+#| msgid "County of the location shown in the item"
+msgid "Sublocation shown in the item"
+msgstr "Regione del luogo mostrato nell'elemento"
 
 #: core/utilities/searchwindow/searchfields_createfield.cpp:702
 #, kde-format
@@ -60485,35 +60474,31 @@ msgstr ""
 "miniatura dell'immagine."
 
 #: core/utilities/setup/album/setupalbumview.cpp:195
-#, fuzzy, kde-format
-#| msgid "Show digiKam tit&le"
+#, kde-format
 msgid "Show digiKam &pick label"
-msgstr "Mostra il tito&lo di digiKam"
+msgstr "Mostra l'etichetta di &scelta di digiKam"
 
 #: core/utilities/setup/album/setupalbumview.cpp:196
-#, fuzzy, kde-format
-#| msgid "Set this option to show the digiKam title below the image thumbnail."
+#, kde-format
 msgid ""
 "Set this option to show the digiKam pick label below the image thumbnail."
 msgstr ""
-"Abilita questa opzione per mostrare il titolo di digiKam sotto la miniatura "
-"dell'immagine."
+"Abilita questa opzione per mostrare l'etichetta di scelta di digiKam sotto "
+"la miniatura dell'immagine."
 
 #: core/utilities/setup/album/setupalbumview.cpp:199
-#, fuzzy, kde-format
-#| msgid "Show digiKam tit&le"
+#, kde-format
 msgid "Show digiKam color &label"
-msgstr "Mostra il tito&lo di digiKam"
+msgstr "Mostra l'etichetta co&lorata di digiKam"
 
 #: core/utilities/setup/album/setupalbumview.cpp:200
-#, fuzzy, kde-format
-#| msgid "Set this option to show the digiKam tags below the image thumbnail."
+#, kde-format
 msgid ""
 "Set this option to show the digiKam color label as a border around the "
 "thumbnail."
 msgstr ""
-"Abilita questa opzione per mostrare i tag di digiKam sotto la miniatura "
-"dell'immagine."
+"Abilita questa opzione per mostrare l'etichetta colorata di digiKam attorno "
+"alla miniatura."
 
 #: core/utilities/setup/album/setupalbumview.cpp:203
 #: core/utilities/setup/camera/setupcamera.cpp:499
@@ -61607,7 +61592,7 @@ msgstr "Inserisci le cartelle da ignorare per l'aggiunta alle tue raccolte."
 #, kde-format
 msgctxt "@title:tab"
 msgid "Ignored Directories"
-msgstr "Ignora cartelle"
+msgstr "Cartelle ignorate"
 
 #: core/utilities/setup/collections/setupcollections.cpp:236
 #, kde-format
@@ -64910,6 +64895,9 @@ msgstr ""
 msgctxt "@info"
 msgid "Do you want to reset all video settings to the default value?"
 msgstr "Vuoi riportare tutte le impostazioni video al valore predefinito?"
+
+#~ msgid "County"
+#~ msgstr "Regione"
 
 #~ msgctxt "@title"
 #~ msgid "Geolocation Editor"

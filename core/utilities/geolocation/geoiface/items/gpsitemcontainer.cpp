@@ -1135,16 +1135,22 @@ void GPSItemContainer::setLocationInfo(const TagData& tagData, IptcCoreLocationI
     {
         locationInfo.provinceState = tagData.tagName;
     }
-    else if (tagData.tipName == QLatin1String("{County}"))
+    else if (locationInfo.provinceState.isEmpty() &&
+             (tagData.tipName == QLatin1String("{County}")))
     {
-        locationInfo.location      = tagData.tagName;
+        locationInfo.provinceState = tagData.tagName;
     }
     else if (tagData.tipName == QLatin1String("{City}"))
     {
         locationInfo.city          = tagData.tagName;
     }
     else if (locationInfo.city.isEmpty() &&
-             (tagData.tipName == QLatin1String("{Place}")))
+             (tagData.tipName == QLatin1String("{City district}")))
+    {
+        locationInfo.city          = tagData.tagName;
+    }
+    else if (locationInfo.city.isEmpty() &&
+             (tagData.tipName == QLatin1String("{Suburb}")))
     {
         locationInfo.city          = tagData.tagName;
     }
@@ -1157,6 +1163,15 @@ void GPSItemContainer::setLocationInfo(const TagData& tagData, IptcCoreLocationI
              (tagData.tipName == QLatin1String("{Village}")))
     {
         locationInfo.city          = tagData.tagName;
+    }
+    else if (locationInfo.city.isEmpty() &&
+             (tagData.tipName == QLatin1String("{Hamlet}")))
+    {
+        locationInfo.city          = tagData.tagName;
+    }
+    else if (tagData.tipName == QLatin1String("{Street}"))
+    {
+        locationInfo.location      = tagData.tagName;
     }
 }
 
