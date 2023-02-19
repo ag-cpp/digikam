@@ -1104,6 +1104,23 @@ void AbstractAlbumTreeView::contextMenuEvent(QContextMenuEvent* event)
         // For the moment, disabling context menu for trash.
         // TODO : customize it.
 
+        QMenu* const trashAlbumMenu = new QMenu(this);
+        ContextMenuHelper cmhelper(trashAlbumMenu);
+        addCustomContextMenuActions(cmhelper, album);
+
+        QAction* emptyTrashAction = new QAction(QIcon::fromTheme(QLatin1String("edit-delete")),
+                                        i18n("Empty Trash"), this);
+
+        PAlbum* trashAlbum = dynamic_cast<PAlbum*>(album);
+        
+        connect(emptyTrashAction, SIGNAL(triggered()),
+                AlbumManager::instance(), SIGNAL(signalEmptyTrash()));
+
+        cmhelper.addAction(emptyTrashAction); 
+        AlbumPointer<Album> albumPointer(album);
+        QAction* const choice = cmhelper.exec(QCursor::pos());
+        handleCustomContextMenuAction(choice, albumPointer);
+
         return;
     }
 

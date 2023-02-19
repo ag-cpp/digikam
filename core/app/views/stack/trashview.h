@@ -81,6 +81,7 @@ private Q_SLOTS:
 Q_SIGNALS:
 
     void selectionChanged();
+    void signalEmptytrash();
 
 private:
 

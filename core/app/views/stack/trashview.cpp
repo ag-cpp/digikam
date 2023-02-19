@@ -164,6 +164,9 @@ TrashView::TrashView(QWidget* const parent)
 
     connect(d->deleteAction, SIGNAL(triggered()),
             this, SLOT(slotDeleteSelectedItems()));
+    
+    connect(this, SIGNAL(signalEmptytrash()),
+            this, SLOT(slotDeleteAllItems()));
 
     connect(d->deleteAllAction, SIGNAL(triggered()),
             this, SLOT(slotDeleteAllItems()));
