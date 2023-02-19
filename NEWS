@@ -62,4 +62,5 @@ BUGFIXES:
 036 ==> 465684 - Error message when import from Google Photos.
 037 ==> 465680 - Fails to start due to missing library in openSUSE.
 038 ==> 465728 - Sliders have the wrong orientation.
-039 ==> 
+039 ==> 466060 - Please give i18n context at "Import Window" in core/utilities/setup/camera/setupcamera.cpp.
+040 ==> 
