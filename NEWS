@@ -64,4 +64,8 @@ BUGFIXES:
 038 ==> 465728 - Sliders have the wrong orientation.
 039 ==> 466060 - Please give i18n context at "Import Window" in core/utilities/setup/camera/setupcamera.cpp.
 040 ==> 465922 - digiKam is crashing.
-041 ==> 
+041 ==> 466456 - Ability to show filepath to image.
+042 ==> 
+043 ==> 
+044 ==> 
+045 ==> 
