@@ -66,6 +66,6 @@ BUGFIXES:
 040 ==> 465922 - digiKam is crashing.
 041 ==> 466456 - Ability to show filepath to image.
 042 ==> 466459 - Cannot search on HEVC codec.
-043 ==> 
+043 ==> 466799 - Showfoto/Setup/Misc/Sort images by Name/Reverse ordering: sorts ascending rather than descending.
 044 ==> 
 045 ==> 
