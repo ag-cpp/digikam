@@ -97,6 +97,13 @@ DK_KF5_VERSION="5.102"
 # Qt version to use in bundle and provided by Macports.
 DK_QTVERSION="5.15"
 
+DK_MARIADB_VERSION="10.5"
+
+if [[ ! -z "$DK_MARIADB_VERSION" ]] ; then
+    MP_MARIADB_VARIANT="+mariadb$DK_MARIADB_VERSION"
+    MP_MARIADB_VARIANT=${MP_MARIADB_VARIANT//./_}
+fi
+
 # digiKam tag version from git. Official tarball do not include extra shared libraries.
 # The list of tags can be listed with this url: https://invent.kde.org/graphics/digikam/-/tags
 # If you want to package current implementation from git, use "master" as tag.
