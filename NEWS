@@ -68,4 +68,5 @@ BUGFIXES:
 042 ==> 466459 - Cannot search on HEVC codec.
 043 ==> 466799 - Showfoto/Setup/Misc/Sort images by Name/Reverse ordering: sorts ascending rather than descending.
 044 ==> 466943 - Image Quality Sorter - AI Option Does NOT Exist.
-045 ==> 
+045 ==> 466991 - Remove Duplicates Not Active.
+046 ==> 
