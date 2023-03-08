@@ -69,4 +69,6 @@ BUGFIXES:
 043 ==> 466799 - Showfoto/Setup/Misc/Sort images by Name/Reverse ordering: sorts ascending rather than descending.
 044 ==> 466943 - Image Quality Sorter - AI Option Does NOT Exist.
 045 ==> 466991 - Remove Duplicates Not Active.
-046 ==> 
+046 ==> 467013 - Enable copying file path to the clipboard in Windows.
+047 ==> 443682 - Add "copy file path" option to right-click menu.
+048 ==> 

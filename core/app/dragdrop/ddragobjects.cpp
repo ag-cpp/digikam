@@ -28,6 +28,10 @@
 #include <QByteArray>
 #include <QDataStream>
 
+// Local includes
+
+#include "digikam_config.h"
+
 namespace Digikam
 {
 
@@ -54,6 +58,25 @@ DItemDrag::DItemDrag(const QList<QUrl>& urls,
     QDataStream ds4(&ba4, QIODevice::WriteOnly);
     ds4 << imageIDs;
     setData(QLatin1String("digikam/item-ids"), ba4);
+
+    QString txt;
+
+    foreach (const QUrl& url, urls)
+    {
+
+#ifdef Q_OS_WIN
+
+    txt.append(QString::fromUtf8("%1\r\n").arg(url.toLocalFile()));
+
+#else
+
+    txt.append(QString::fromUtf8("%1\n").arg(url.toLocalFile()));
+
+#endif
+
+    }
+
+    setText(txt);
 
     // commonly accessible mime data, for dragging to outside digikam
 
