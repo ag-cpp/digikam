@@ -71,4 +71,6 @@ BUGFIXES:
 045 ==> 466991 - Remove Duplicates Not Active.
 046 ==> 467013 - Enable copying file path to the clipboard in Windows.
 047 ==> 443682 - Add "copy file path" option to right-click menu.
-048 ==> 
+048 ==> 463941 - After upgrading to 7.9.0 from 7.8.0 digikam does not connect to database mariadb server.
+049 ==> 462736 - Connection to external Mysql-Server fails.
+050 ==> 
