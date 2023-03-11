@@ -824,13 +824,13 @@ HaarIface::DuplicatesResultsMap HaarIface::findDuplicates(const QSet<qlonglong>&
                                             info.dimensions().height();
 
                     if (
-                        !refDateTime.isValid()                ||
-                        (info.dateTime()  <  refDateTime)     ||
-                        ((info.dateTime() == refDateTime)  &&
-                         (infoPixelSize   >  refPixelSize))   ||
-                        ((info.dateTime() == refDateTime)  &&
-                         (infoPixelSize   == refPixelSize) &&
-                         (info.fileSize() >  refFileSize))
+                        !refDateTime.isValid()             ||
+                        (infoPixelSize    >  refPixelSize) ||
+                        ((infoPixelSize   == refPixelSize) &&
+                         (info.fileSize() >  refFileSize)) ||
+                        ((infoPixelSize   == refPixelSize) &&
+                         (info.fileSize() == refFileSize)  &&
+                         (info.dateTime() <  refDateTime))
                        )
                     {
                         reference    = refId;
