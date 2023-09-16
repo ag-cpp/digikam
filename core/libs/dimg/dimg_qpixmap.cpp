@@ -79,7 +79,7 @@ QPixmap DImg::convertToPixmap() const
 
         // alpha channel is auto-detected during QImage->QPixmap conversion
 
-        return QPixmap::fromImage(img);
+        return QPixmap::fromImage(std::move(img));
     }
     else
     {
@@ -96,7 +96,7 @@ QPixmap DImg::convertToPixmap() const
 
         // alpha channel is auto-detected during QImage->QPixmap conversion
 
-        return QPixmap::fromImage(img);
+        return QPixmap::fromImage(std::move(img));
     }
 }
 

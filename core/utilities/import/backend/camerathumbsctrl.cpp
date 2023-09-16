@@ -146,7 +146,7 @@ void CameraThumbsCtrl::slotThumbInfo(const QString&, const QString& file, const 
         IccManager::transformForDisplay(thumbnail, static_d->profile);
     }
 
-    putItemToCache(info.url(), info, QPixmap::fromImage(thumbnail));
+    putItemToCache(info.url(), info, QPixmap::fromImage(std::move(thumbnail)));
     d->pendingItems.remove(info.url());
     Q_EMIT signalThumbInfoReady(info);
 }

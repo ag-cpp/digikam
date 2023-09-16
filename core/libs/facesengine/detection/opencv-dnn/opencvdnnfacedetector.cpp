@@ -124,7 +124,7 @@ cv::Mat OpenCVDNNFaceDetector::prepareForDetection(const QImage& inputImage, cv:
 
         default:
         {
-            qimage         = qimage.convertToFormat(QImage::Format_RGB888);
+            qimage.convertTo(QImage::Format_RGB888);
             cvImageWrapper = cv::Mat(qimage.height(), qimage.width(), CV_8UC3,
                                      qimage.scanLine(0), qimage.bytesPerLine());
             cvtColor(cvImageWrapper, cvImage, cv::COLOR_RGB2BGR);

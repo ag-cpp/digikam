@@ -150,7 +150,7 @@ void ColorGradientWidget::paintEvent(QPaintEvent*)
                                 color1.blue()  + blueDiff  * s / psize);
     }
 
-    QPixmap pm = QPixmap::fromImage(image);
+    QPixmap pm = QPixmap::fromImage(std::move(image));
     QPainter p(this);
     p.drawPixmap(contentsRect(), pm);
     p.setPen(colorf);

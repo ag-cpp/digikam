@@ -48,7 +48,7 @@ void EffectMngr::Private::updateCurrentFrame(const QRectF& area)
                             .scaled(eff_outSize,
                                     Qt::KeepAspectRatioByExpanding,
                                     Qt::SmoothTransformation);
-    eff_curFrame = kbImg.convertToFormat(QImage::Format_ARGB32);
+    eff_curFrame = std::move(kbImg).convertToFormat(QImage::Format_ARGB32);
 }
 
 int EffectMngr::Private::effectRandom(bool /*aInit*/)

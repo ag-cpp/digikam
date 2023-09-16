@@ -89,7 +89,7 @@ QIcon ImageDialogIconProvider::icon(const QFileInfo& info) const
                 {
                     // resize and center pixmap on target icon.
 
-                    QPixmap pix = QPixmap::fromImage(images.first());
+                    QPixmap pix = QPixmap::fromImage(std::move(images.first()));
                     pix         = pix.scaled(QSize(256, 256),
                                              Qt::KeepAspectRatio,
                                              Qt::FastTransformation);

@@ -194,7 +194,7 @@ void FuzzySearchView::dropEvent(QDropEvent* e)
         {
             HaarIface haarIface;
             QString path       = urls.first().toLocalFile();
-            const QImage image = haarIface.loadQImage(path);
+            QImage image = haarIface.loadQImage(path);
 
             if (!image.isNull())
             {
@@ -203,7 +203,7 @@ void FuzzySearchView::dropEvent(QDropEvent* e)
                 d->imageInfo = ItemInfo(-1);
                 d->imageUrl  = urls.first();
 
-                d->imageWidget->setPixmap(QPixmap::fromImage(image).scaled(256, 256, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+                d->imageWidget->setPixmap(QPixmap::fromImage(std::move(image)).scaled(256, 256, Qt::KeepAspectRatio, Qt::SmoothTransformation));
 
                 AlbumManager::instance()->clearCurrentAlbums();
                 QString haarTitle = SAlbum::getTemporaryHaarTitle(DatabaseSearch::HaarImageSearch);

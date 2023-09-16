@@ -142,10 +142,11 @@ void BlackFrameListViewItem::slotHotPixelsParsed(const QList<HotPixelProps>& hot
         p.drawPoint((int) hpThumbX - 1, (int) hpThumbY + 1);
         p.drawPoint((int) hpThumbX + 1, (int) hpThumbY - 1);
     }
+    p.end();
 
     // Preview
 
-    setIcon(PREVIEW, QPixmap::fromImage(thumb));
+    setIcon(PREVIEW, QPixmap::fromImage(std::move(thumb)));
 
     // Image size
 

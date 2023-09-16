@@ -302,7 +302,7 @@ void SetupEditorIface::slotExpoSettingsChanged()
     QPixmap pix                = d->preview.convertToPixmap();
     QPainter p(&pix);
     QImage pureColorMask       = d->preview.pureColorMask(&prm);
-    QPixmap pixMask            = QPixmap::fromImage(pureColorMask);
+    QPixmap pixMask            = QPixmap::fromImage(std::move(pureColorMask));
     p.drawPixmap(0, 0, pixMask, 0, 0, pixMask.width(), pixMask.height());
 
     d->expoPreview->setPixmap(pix);

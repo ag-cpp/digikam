@@ -413,7 +413,7 @@ void ImageIface::paint(QPaintDevice* const device, const QRect& rect, QPainter* 
         if (expoSettings && (expoSettings->underExposureIndicator || expoSettings->overExposureIndicator))
         {
             QImage pureColorMask = d->targetPreviewImage.pureColorMask(expoSettings);
-            QPixmap pixMask      = QPixmap::fromImage(pureColorMask);
+            QPixmap pixMask      = QPixmap::fromImage(std::move(pureColorMask));
             p->drawPixmap(x, y, pixMask, 0, 0, width, height);
         }
     }
