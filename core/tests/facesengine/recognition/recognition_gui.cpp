@@ -257,7 +257,7 @@ void MainWindow::slotDetectFaces(const QListWidgetItem* imageItem)
     extractFaces(img, imgScaled, faces);
 
     // Only setPixmap after finishing drawing bboxes around detected faces
-    m_fullImage->setPixmap(QPixmap::fromImage(imgScaled));
+    m_fullImage->setPixmap(QPixmap::fromImage(std::move(imgScaled)));
 
     connect(m_alignedList, &QListWidget::currentRowChanged,
             this, &MainWindow::slotIdentify);

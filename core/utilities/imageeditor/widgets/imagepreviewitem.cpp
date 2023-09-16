@@ -146,7 +146,7 @@ void ImagePreviewItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* 
         if (expoSettings->underExposureIndicator || expoSettings->overExposureIndicator)
         {
             QImage pureColorMask = scaledImage.pureColorMask(expoSettings);
-            QPixmap pixMask      = QPixmap::fromImage(pureColorMask);
+            QPixmap pixMask      = QPixmap::fromImage(std::move(pureColorMask));
             painter->drawPixmap(drawRect, pixMask);
         }
     }

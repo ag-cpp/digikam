@@ -180,7 +180,7 @@ void ImageRegionItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* o
         if (expoSettings->underExposureIndicator || expoSettings->overExposureIndicator)
         {
             QImage pureColorMask = scaledImage.pureColorMask(expoSettings);
-            QPixmap pixMask      = QPixmap::fromImage(pureColorMask);
+            QPixmap pixMask      = QPixmap::fromImage(std::move(pureColorMask));
             painter->drawPixmap(dd->drawRect.topLeft(), pixMask);
         }
     }

@@ -343,7 +343,7 @@ bool Benchmark::preprocess(QImage* faceImg, cv::Mat& face) const
 
         default:
 
-            croppedFace = croppedFace.convertToFormat(QImage::Format_RGB888);
+            croppedFace = std::move(croppedFace).convertToFormat(QImage::Format_RGB888);
             face        = cv::Mat(croppedFace.height(), croppedFace.width(), CV_8UC3, croppedFace.scanLine(0), croppedFace.bytesPerLine());
 /*
             cvtColor(cvImageWrapper, cvImage, CV_RGB2GRAY);

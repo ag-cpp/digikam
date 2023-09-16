@@ -83,9 +83,9 @@ bool QPainterRenderer::preparePixmap(const VideoFrame& frame)
                           imgfmt);
 
     if (swapRGB)
-        image = image.rgbSwapped();
+        image = std::move(image).rgbSwapped();
 
-    d.pixmap = QPixmap::fromImage(image);
+    d.pixmap = QPixmap::fromImage(std::move(image));
 
     // Format_RGB32 is fast. see document
 

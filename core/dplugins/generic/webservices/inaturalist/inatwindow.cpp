@@ -727,14 +727,14 @@ void INatWindow::slotLoadUrlSucceeded(const QUrl& url, const QByteArray& data)
     {
         QImage image;
         image.loadFromData(data);
-        d->identificationImage->setPixmap(QPixmap::fromImage(image));
+        d->identificationImage->setPixmap(QPixmap::fromImage(std::move(image)));
         d->identificationImage->show();
     }
     else if (url == d->iconUrl)
     {
         QImage image;
         image.loadFromData(data);
-        d->accountIcon->setPixmap(QPixmap::fromImage(image));
+        d->accountIcon->setPixmap(QPixmap::fromImage(std::move(image)));
         d->accountIcon->show();
     }
 }
