@@ -135,7 +135,7 @@ void MainWindow::slotDetectFaces(const QListWidgetItem* imageItem)
 
     // Only setPixmap after finishing drawing bboxes around detected faces
 
-    m_fullImage->setPixmap(QPixmap::fromImage(imgScaled));
+    m_fullImage->setPixmap(QPixmap::fromImage(std::move(imgScaled)));
 }
 
 QPixmap MainWindow::showCVMat(const cv::Mat& cvimage) const

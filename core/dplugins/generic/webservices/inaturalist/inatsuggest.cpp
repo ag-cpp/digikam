@@ -444,7 +444,7 @@ void SuggestTaxonCompletion::slotImageLoaded(const QUrl& url, const QByteArray& 
         QTreeWidgetItem* const item = d->url2item[url];
         QImage image;
         image.loadFromData(data);
-        QIcon icon(QPixmap::fromImage(image));
+        QIcon icon(QPixmap::fromImage(std::move(image)));
         item->setIcon(ITEM_PHOTO_IDX, icon);
         d->popup->resizeColumnToContents(ITEM_PHOTO_IDX);
         d->popup->resizeColumnToContents(ITEM_NAME_IDX);

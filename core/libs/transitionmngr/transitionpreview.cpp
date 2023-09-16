@@ -114,7 +114,7 @@ void TransitionPreview::slotProgressTransition()
 {
     int tmout  = -1;
     QImage img = d->mngr->currentFrame(tmout);
-    setPixmap(QPixmap::fromImage(img));
+    setPixmap(QPixmap::fromImage(std::move(img)));
 
     if (tmout == -1)
     {

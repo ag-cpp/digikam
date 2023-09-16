@@ -125,7 +125,7 @@ void ThumbnailCreator::storeFreedesktop(const ThumbnailInfo& info, const Thumbna
 
     if (qimage.format() != QImage::Format_ARGB32)
     {
-        qimage = qimage.convertToFormat(QImage::Format_ARGB32);
+        qimage = std::move(qimage).convertToFormat(QImage::Format_ARGB32);
     }
 
     qimage.setText(QLatin1String("Thumb::URI"),   uri);

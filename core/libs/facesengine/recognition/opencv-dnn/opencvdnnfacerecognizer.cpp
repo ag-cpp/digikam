@@ -45,7 +45,7 @@ cv::Mat OpenCVDNNFaceRecognizer::prepareForRecognition(QImage& inputImage)
 
     if (inputImage.format() != QImage::Format_ARGB32_Premultiplied)
     {
-        inputImage = inputImage.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+        inputImage = std::move(inputImage).convertToFormat(QImage::Format_ARGB32_Premultiplied);
     }
 
     cvImageWrapper = cv::Mat(inputImage.height(), inputImage.width(), CV_8UC4, inputImage.scanLine(0), inputImage.bytesPerLine());
