@@ -715,12 +715,12 @@ void PresentationGL::montage(QImage& top, QImage& bot)
 
     if (top.depth() != 32)
     {
-        top = top.convertToFormat(QImage::Format_RGB32);
+        top.convertTo(QImage::Format_RGB32);
     }
 
     if (bot.depth() != 32)
     {
-        bot = bot.convertToFormat(QImage::Format_RGB32);
+        bot.convertTo(QImage::Format_RGB32);
     }
 
     int sw = bw / 2 - tw / 2; // int ew = bw/2 + tw/2;
