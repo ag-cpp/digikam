@@ -540,7 +540,7 @@ void CIETongueWidget::fillTongue()
         }
     }
 
-    d->pixmap = QPixmap::fromImage(Img, Qt::AvoidDither);
+    d->pixmap = QPixmap::fromImage(std::move(Img), Qt::AvoidDither);
 }
 
 void CIETongueWidget::drawTongueAxis()
