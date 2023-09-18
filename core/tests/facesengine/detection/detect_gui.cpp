@@ -95,9 +95,10 @@ void detectFaces(const QString& imagePath)
         layout->addWidget(label);
         painter.drawRect(rectDraw);
     }
+    painter.end();
 
     // Only setPixmap after finishing drawing bboxes around detected faces
-    fullImage->setPixmap(QPixmap::fromImage(imgScaled));
+    fullImage->setPixmap(QPixmap::fromImage(std::move(imgScaled)));
 
     scrollArea->show();
     scrollArea->setWindowTitle(imagePath);
