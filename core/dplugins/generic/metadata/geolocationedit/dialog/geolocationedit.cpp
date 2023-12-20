@@ -669,22 +669,22 @@ void GeolocationEdit::readSettings()
 
     // TODO: sanely determine a default backend
 
-    const KConfigGroup groupMapWidget = KConfigGroup(&group, "Map Widget");
+    const KConfigGroup groupMapWidget = KConfigGroup(&group, QStringLiteral("Map Widget"));
     d->mapWidget->readSettingsFromGroup(&groupMapWidget);
 
-    const KConfigGroup groupCorrelatorWidget = KConfigGroup(&group, "Correlator Widget");
+    const KConfigGroup groupCorrelatorWidget = KConfigGroup(&group, QStringLiteral("Correlator Widget"));
     d->correlatorWidget->readSettingsFromGroup(&groupCorrelatorWidget);
 
-    const KConfigGroup groupTreeView = KConfigGroup(&group, "Tree View");
+    const KConfigGroup groupTreeView = KConfigGroup(&group, QStringLiteral("Tree View"));
     d->treeView->readSettingsFromGroup(&groupTreeView);
 
-    const KConfigGroup groupSearchResultWidget = KConfigGroup(&group, "Search Widget");
+    const KConfigGroup groupSearchResultWidget = KConfigGroup(&group, QStringLiteral("Search Widget"));
     d->searchWidget->readSettingsFromGroup(&groupSearchResultWidget);
 
-    const KConfigGroup groupRGWidget = KConfigGroup(&group, "Reverse Geocoding Widget");
+    const KConfigGroup groupRGWidget = KConfigGroup(&group, QStringLiteral("Reverse Geocoding Widget"));
     d->rgWidget->readSettingsFromGroup(&groupRGWidget);
 
-    const KConfigGroup groupDialog = KConfigGroup(&group, "Dialog");
+    const KConfigGroup groupDialog = KConfigGroup(&group, QStringLiteral("Dialog"));
 
     // --------------------------
 
@@ -735,7 +735,7 @@ void GeolocationEdit::readSettings()
 
     if (d->mapWidget2)
     {
-        const KConfigGroup groupMapWidget2 = KConfigGroup(&group, "Map Widget 2");
+        const KConfigGroup groupMapWidget2 = KConfigGroup(&group, QStringLiteral("Map Widget 2"));
         d->mapWidget2->readSettingsFromGroup(&groupMapWidget2);
 
         d->mapWidget2->setActive(true);
@@ -749,25 +749,25 @@ void GeolocationEdit::saveSettings()
 
     // --------------------------
 
-    KConfigGroup groupMapWidget = KConfigGroup(&group, "Map Widget");
+    KConfigGroup groupMapWidget = KConfigGroup(&group, QStringLiteral("Map Widget"));
     d->mapWidget->saveSettingsToGroup(&groupMapWidget);
 
     if (d->mapWidget2)
     {
-        KConfigGroup groupMapWidget2 = KConfigGroup(&group, "Map Widget 2");
+        KConfigGroup groupMapWidget2 = KConfigGroup(&group, QStringLiteral("Map Widget 2"));
         d->mapWidget2->saveSettingsToGroup(&groupMapWidget2);
     }
 
-    KConfigGroup groupCorrelatorWidget = KConfigGroup(&group, "Correlator Widget");
+    KConfigGroup groupCorrelatorWidget = KConfigGroup(&group, QStringLiteral("Correlator Widget"));
     d->correlatorWidget->saveSettingsToGroup(&groupCorrelatorWidget);
 
-    KConfigGroup groupTreeView = KConfigGroup(&group, "Tree View");
+    KConfigGroup groupTreeView = KConfigGroup(&group, QStringLiteral("Tree View"));
     d->treeView->saveSettingsToGroup(&groupTreeView);
 
-    KConfigGroup groupSearchResultWidget = KConfigGroup(&group, "Search Widget");
+    KConfigGroup groupSearchResultWidget = KConfigGroup(&group, QStringLiteral("Search Widget"));
     d->searchWidget->saveSettingsToGroup(&groupSearchResultWidget);
 
-    KConfigGroup groupRGWidget = KConfigGroup(&group, "Reverse Geocoding Widget");
+    KConfigGroup groupRGWidget = KConfigGroup(&group, QStringLiteral("Reverse Geocoding Widget"));
     d->rgWidget->saveSettingsToGroup(&groupRGWidget);
 
     // --------------------------
@@ -1143,7 +1143,7 @@ void GeolocationEdit::adjustMapLayout(const bool syncSettings)
             {
                 KSharedConfig::Ptr config         = KSharedConfig::openConfig();
                 KConfigGroup group                = config->group(QLatin1String("Geolocation Edit Settings"));
-                const KConfigGroup groupMapWidget = KConfigGroup(&group, "Map Widget");
+                const KConfigGroup groupMapWidget = KConfigGroup(&group, QStringLiteral("Map Widget"));
                 d->mapWidget2->readSettingsFromGroup(&groupMapWidget);
                 d->mapWidget2->setActive(true);
             }
