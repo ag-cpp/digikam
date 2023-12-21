@@ -91,3 +91,5 @@ QVariant AlbumModel::albumData(Album* a, int role) const
 }
 
 } // namespace Digikam
+
+#include "moc_albummodel.cpp"
