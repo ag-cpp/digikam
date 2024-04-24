@@ -66,10 +66,11 @@ public:
 
 // ----------------------------------------------------------------------------------------
 
-TrainerWorker::TrainerWorker(FacePipeline::Private* const dd)
+TrainerWorker::TrainerWorker(FacePipeline::Private* const dd, FaceScanSettings::TrainingDataHandling trainingDataHandling)
     : imageRetriever(dd),
       d             (dd)
 {
+    this->trainingDataHandling = trainingDataHandling;
 }
 
 TrainerWorker::~TrainerWorker()
@@ -96,6 +97,35 @@ void TrainerWorker::process(const FacePipelineExtendedPackage::Ptr& package)
     {
         if (face.roles & FacePipelineFaceTagsIface::ForTraining)
         {
+            switch (this->trainingDataHandling)
+                {
+                    case FaceScanSettings::AllTrainingData:
+                    {
+                        // do nothing as we keep all the data
+                        break;
+                    }
+                    case FaceScanSettings::Last100:
+                    {
+                        // TODO: needs to be implemented
+                        break;
+                    }
+                    case FaceScanSettings::LastTwoYears:
+                    {
+                        // Skip images older than two years
+                        
+                        ItemInfo info = ItemInfo(face.imageId());
+                        QFileInfo fileInfo(info.fileUrl().toLocalFile());
+                        // TODO: instead of using "last modified", use creation date
+                        QDateTime modifiedDate = fileInfo.lastModified();
+                        QString str = QLocale().toString(modifiedDate, QLocale::ShortFormat);
+
+                        if (modifiedDate.daysTo(QDateTime::currentDateTime()) > (2 * 365))
+                        {
+                            continue;
+                        }
+                        break;
+                    }
+                }
             FaceTagsIface dbFace = face;
             dbFace.setType(FaceTagsIface::FaceForTraining);
             toTrain << dbFace;

@@ -43,6 +43,8 @@ MaintenanceSettings MaintenanceDlg::settings() const
     prm.faceManagement                      = d->expanderBox->isChecked(Private::FaceManagement);
     prm.faceSettings.alreadyScannedHandling = (FaceScanSettings::AlreadyScannedHandling)
                                                   d->faceScannedHandling->itemData(d->faceScannedHandling->currentIndex()).toInt();
+    prm.faceSettings.trainingDataHandling   = (FaceScanSettings::TrainingDataHandling)
+                                                  d->trainingDataHandling->itemData(d->trainingDataHandling->currentIndex()).toInt();
     prm.faceSettings.task                   = d->retrainAllFaces->isChecked() ? FaceScanSettings::RetrainAll
                                                                               : FaceScanSettings::DetectAndRecognize;
     prm.faceSettings.albums                 = d->albumSelectors->selectedAlbums();

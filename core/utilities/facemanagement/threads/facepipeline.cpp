@@ -151,9 +151,9 @@ void FacePipeline::plugDatabaseWriter(WriteMode mode)
     d->databaseWriter = new DatabaseWriter(mode, d);
 }
 
-void FacePipeline::plugTrainer()
+void FacePipeline::plugTrainer(FaceScanSettings::TrainingDataHandling trainingDataHandling)
 {
-    d->trainerWorker = new TrainerWorker(d);
+    d->trainerWorker = new TrainerWorker(d, trainingDataHandling);
 }
 
 void FacePipeline::plugDetectionBenchmarker()

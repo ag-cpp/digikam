@@ -143,6 +143,7 @@ public:
     DVBox*                    duplicatesBox             = nullptr;
     DIntRangeBox*             similarityRange           = nullptr;
     QComboBox*                faceScannedHandling       = nullptr;
+    QComboBox*                trainingDataHandling      = nullptr;
     QComboBox*                searchResultRestriction   = nullptr;
     DExpanderBox*             expanderBox               = nullptr;
     AlbumSelectors*           albumSelectors            = nullptr;
