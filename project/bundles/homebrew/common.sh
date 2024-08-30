@@ -10,11 +10,15 @@
 ChecksRunAsRoot()
 {
 
-if [[ $EUID -ne 0 ]]; then
-    echo "This script should be run as root using sudo command."
-    exit 1
+if [[ $NO_ROOT -ne 1 ]] ; then
+    if [[ $EUID -ne 0 ]] ; then
+        echo "This script should be run as root using sudo command."
+        exit 1
+    else
+        echo "Check run as root passed..."
+    fi
 else
-    echo "Check run as root passed..."
+    echo "Root not required"
 fi
 
 }
@@ -222,18 +226,22 @@ for FILE in ${FILESLIST[@]} ; do
 
         echo "Relocate $FILE"
 
-        # List all external dependencies starting with INSTALL_PREFIX
+        copy_lib="$INSTALL_PREFIX/bin/python3 $ORIG_WD/package_lib.py --file=$FILE --bundle-root=$TEMPROOT/$DK_APP_CONTENTS --homebrew=$INSTALL_PREFIX --processed-cache=update  --found-cache=update --signed-cache=update --update-binary=true --copy=true"
+        eval "$copy_lib"
 
-        DEPS=$(otool -L $FILE | grep $INSTALL_PREFIX | awk -F ' \\\(' '{print $1}')
 
-        for EXTLIB in $DEPS ; do
+#         # List all external dependencies starting with INSTALL_PREFIX
 
-            RPATHLIB=${EXTLIB/$INSTALL_PREFIX/$RPATHSTR}
- #           echo "   $EXTLIB ==> $RPATHLIB"
-            install_name_tool -change $EXTLIB $RPATHLIB $FILE
-            codesign --force -s - $FILE
+#         DEPS=$(otool -L $FILE | grep $INSTALL_PREFIX | awk -F ' \\\(' '{print $1}')
 
-        done
+#         for EXTLIB in $DEPS ; do
+
+#             RPATHLIB=${EXTLIB/$INSTALL_PREFIX/$RPATHSTR}
+#  #           echo "   $EXTLIB ==> $RPATHLIB"
+#             install_name_tool -change $EXTLIB $RPATHLIB $FILE
+#             codesign --force -s - $FILE
+
+#         done
 
     fi
 

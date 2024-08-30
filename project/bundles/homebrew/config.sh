@@ -81,11 +81,11 @@ DK_BUILDTEMP=~/dktemp
 
 # KDE Plasma version.
 # See official release here: https://download.kde.org/stable/plasma/
-DK_KP_VERSION="5.27.8"
+DK_KP_VERSION="v6.0.4"
 
 # KDE Application version.
 # See official release here: https://download.kde.org/stable/release-service/
-DK_KA_VERSION="23.08.1"
+DK_KA_VERSION="v24.02.2"
 
 # Qt version to use in bundle and provided by Homebrew.
 DK_QTVERSION="6"
@@ -120,7 +120,7 @@ if [[ $DK_QTVERSION == 5 ]] ; then
 
 else
 
-    DK_KDE_VERSION="master"                                 # Qt6 version use master code for the moment.
+    DK_KDE_VERSION="v6.2.0"                                 # Qt6 version use master code for the moment.
     DK_UPLOADDIR="/srv/archives/files/digikam/unstable"     # Qt6 version is considerated unstable for the moment.
 
 fi

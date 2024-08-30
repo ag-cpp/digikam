@@ -2,25 +2,9 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 10164bc0..cd87e790 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -71,6 +71,13 @@ function(generate_binary_resource target outfile)
-     set(RESOURCES_WORKING_DIR ${CMAKE_CURRENT_BINARY_DIR}/res)
-     set(RESOURCE_FILE ${RESOURCES_WORKING_DIR}/breeze-${target}.qrc)
-     set(BINARY_RESOURCE_FILE ${CMAKE_CURRENT_BINARY_DIR}/breeze-${target}.rcc)
-+    string(FIND ${target} "dark" position)
-+    if("${position}" STREQUAL "-1")
-+        set(RESOURCE_PREFIX "/icons/breeze")
-+    else()
-+        set(RESOURCE_PREFIX "/icons/breeze-dark")
-+    endif()
-+    message(STATUS "Processing resource with prefix: ${RESOURCE_PREFIX}")
- 
-     # Use $<IF:$<BOOL:${MSVC}>,PATH,LD_LIBRARY_PATH> instead of ${pathVarName} once CMake 3.8 is minimum
-     if(MSVC)
-@@ -102,6 +109,7 @@ function(generate_binary_resource target outfile)
-     add_custom_command(OUTPUT ${BINARY_RESOURCE_FILE}
-         COMMAND ${QT_RCC_EXECUTABLE} --binary
-                     -o ${BINARY_RESOURCE_FILE}
-+                    -root ${RESOURCE_PREFIX}
-                     ${RESOURCE_FILE}
-         DEPENDS ${RESOURCE_FILE}
-         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+@@ -68,4 +68,4 @@ ) # The exact amount of indentation used in the line(s) above is intentional
+
+-option(BINARY_ICONS_RESOURCE "Install Qt binary resource files containing breeze icons (breeze-icons.rcc, breeze-icons-dark.rcc)" OFF)
++option(BINARY_ICONS_RESOURCE "Install Qt binary resource files containing breeze icons (breeze-icons.rcc, breeze-icons-dark.rcc)" ON)
+ option(SKIP_INSTALL_ICONS "Skip installing the icons files" OFF)
+ option(ICONS_LIBRARY "Install a library including the breeze & breeze dark icons as resources & functions to use them. This is intended for self contained deployments and should generally not be enabled for systems that have the concept of icon themes like Linux distributions/*BSD" OFF)
