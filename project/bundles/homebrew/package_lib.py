@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-from __future__ import print_function
 import sys, os, traceback, shutil, subprocess, re, pickle, glob
+from __future__ import print_function
 from pathlib import Path
 from ast import literal_eval
 
