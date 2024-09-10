@@ -265,9 +265,9 @@ public:
 
     QRect desktopRectForPoint(const QPoint& point)
     {
-        QList<QScreen*> screens = QGuiApplication::screens();
+        const auto screens = QGuiApplication::screens();
 
-        Q_FOREACH (const QScreen* screen, screens)
+        for (const QScreen* screen : screens)
         {
             if (screen->geometry().contains(point))
             {   // cppcheck-suppress useStlAlgorithm

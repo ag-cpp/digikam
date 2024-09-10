@@ -422,7 +422,9 @@ void ItemPropertiesTab::setTemplate(const Template& t)
 
     if (!t.authors().isEmpty())
     {
-        Q_FOREACH (const QString& s, t.authors())
+        const auto auths = t.authors();
+
+        for (const QString& s : auths)
         {
             if (!s.isEmpty())
             {
@@ -433,13 +435,7 @@ void ItemPropertiesTab::setTemplate(const Template& t)
 
     if (!t.credit().isEmpty())
     {
-        Q_FOREACH (const QString& s, t.credit())
-        {
-            if (!s.isEmpty())
-            {
-                rights << s;
-            }
-        }
+        rights << t.credit();
     }
 
     if (!t.copyright().contains(QLatin1String("x-default")))

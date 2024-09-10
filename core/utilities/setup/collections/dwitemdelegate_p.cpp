@@ -85,7 +85,9 @@ void DWItemDelegatePrivate::slotDWDataChanged(const QModelIndex& topLeft, const 
 
 void DWItemDelegatePrivate::slotDWLayoutChanged()
 {
-    Q_FOREACH (QWidget* const widget, widgetPool->invalidIndexesWidgets())
+    const auto wdgs = widgetPool->invalidIndexesWidgets();
+
+    for (QWidget* const widget : wdgs)
     {
         widget->setVisible(false);
     }
@@ -101,14 +103,22 @@ void DWItemDelegatePrivate::slotDWModelReset()
 
 void DWItemDelegatePrivate::slotDWSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected)
 {
-    Q_FOREACH (const QModelIndex& index, selected.indexes())
     {
-        widgetPool->findWidgets(index, optionView(index));
+        const auto idx = selected.indexes();
+
+        for (const QModelIndex& index : idx)
+        {
+            widgetPool->findWidgets(index, optionView(index));
+        }
     }
 
-    Q_FOREACH (const QModelIndex& index, deselected.indexes())
     {
-        widgetPool->findWidgets(index, optionView(index));
+        const auto idx = deselected.indexes();
+
+        for (const QModelIndex& index : idx)
+        {
+            widgetPool->findWidgets(index, optionView(index));
+        }
     }
 }
 
@@ -125,7 +135,7 @@ void DWItemDelegatePrivate::updateRowRange(const QModelIndex& parent, int start,
                                                                                                       : DWItemDelegatePool::UpdateWidgets);
             if (isRemoving)
             {
-                Q_FOREACH (QWidget* const widget, widgetList)
+                for (QWidget* const widget : std::as_const(widgetList))
                 {
                     const QModelIndex idx = widgetPool->d->widgetInIndex[widget];
                     widgetPool->d->usedWidgets.remove(idx);
@@ -264,7 +274,9 @@ bool DWItemDelegatePrivate::eventFilter(QObject* watched, QEvent* event)
         {
             if (qobject_cast<QAbstractItemView*>(watched))
             {
-                Q_FOREACH (const QModelIndex& index, selectionModel->selectedIndexes())
+                const auto idx = selectionModel->selectedIndexes();
+
+                for (const QModelIndex& index : idx)
                 {
                     if (index.isValid())
                     {

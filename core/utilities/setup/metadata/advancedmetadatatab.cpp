@@ -173,7 +173,7 @@ void AdvancedMetadataTab::slotLoadProfile()
     DMetadataSettingsContainer container;
     container.readFromConfig(group2);
 
-    if (container.mappingKeys().size() != 5)
+    if (container.mappingKeys().size() != 6)
     {
         return;
     }
@@ -242,6 +242,10 @@ void AdvancedMetadataTab::slotAddNewNamespace()
     else if (d->metadataType->currentData().toString() == NamespaceEntry::DM_COMMENT_CONTAINER())
     {
         entry.nsType = NamespaceEntry::COMMENT;
+    }
+    else if (d->metadataType->currentData().toString() == NamespaceEntry::DM_PICKLABEL_CONTAINER())
+    {
+        entry.nsType = NamespaceEntry::PICKLABEL;
     }
     else if (d->metadataType->currentData().toString() == NamespaceEntry::DM_COLORLABEL_CONTAINER())
     {
@@ -542,7 +546,7 @@ void AdvancedMetadataTab::setModels()
 
     QList<QString> keys = d->container.mappingKeys();
 
-    Q_FOREACH (const QString& str, keys)
+    for (const QString& str : std::as_const(keys))
     {
         d->metadataType->addItem(d->container.translateMappingKey(str), str);
     }
@@ -563,12 +567,12 @@ void AdvancedMetadataTab::setModels()
 
     int index = 0;
 
-    Q_FOREACH (const QString& str, keys)
+    for (const QString& str : std::as_const(keys))
     {
         setModelData(d->models.at(index++), d->container.getReadMapping(str));
     }
 
-    Q_FOREACH (const QString& str, keys)
+    for (const QString& str : std::as_const(keys))
     {
         setModelData(d->models.at(index++), d->container.getWriteMapping(str));
     }
@@ -584,13 +588,13 @@ void AdvancedMetadataTab::updateContainer()
     QList<QString> keys = d->container.mappingKeys();
     int index           = 0;
 
-    Q_FOREACH (const QString& str, keys)
+    for (const QString& str : std::as_const(keys))
     {
         d->container.getReadMapping(str).clear();
         saveModelData(d->models.at(index++), d->container.getReadMapping(str));
     }
 
-    Q_FOREACH (const QString& str, keys)
+    for (const QString& str : std::as_const(keys))
     {
         d->container.getWriteMapping(str).clear();
         saveModelData(d->models.at(index++), d->container.getWriteMapping(str));

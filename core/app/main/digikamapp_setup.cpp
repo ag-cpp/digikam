@@ -116,6 +116,7 @@ void DigikamApp::setupStatusBar()
 void DigikamApp::setupActions()
 {
     KActionCollection* const ac = actionCollection();
+    ac->addAssociatedWidget(this);
 
     d->solidCameraActionGroup   = new QActionGroup(this);
     connect(d->solidCameraActionGroup, SIGNAL(triggered(QAction*)),
@@ -183,6 +184,7 @@ void DigikamApp::setupActions()
 
     d->refreshAction = new QAction(QIcon::fromTheme(QLatin1String("view-refresh")),
                                    i18nc("@action: setup", "Refresh"), this);
+    d->refreshAction->setShortcutContext(Qt::WidgetWithChildrenShortcut);
     d->refreshAction->setWhatsThis(i18nc("@info: setup", "Refresh the current contents."));
     connect(d->refreshAction, SIGNAL(triggered()), d->view, SLOT(slotRefresh()));
     ac->addAction(QLatin1String("view_refresh"), d->refreshAction);
@@ -190,7 +192,9 @@ void DigikamApp::setupActions()
 
     // -----------------------------------------------------------------
 
-    Q_FOREACH (SidebarWidget* const leftWidget, d->view->leftSidebarWidgets())
+    const auto wdgs = d->view->leftSidebarWidgets();
+
+    for (SidebarWidget* const leftWidget : wdgs)
     {
         QString actionName = QLatin1String("browse_") + leftWidget->objectName()
                                                         .remove(QLatin1Char(' '))
@@ -243,6 +247,7 @@ void DigikamApp::setupActions()
 
     d->renameAction = new QAction(QIcon::fromTheme(QLatin1String("document-edit")),
                                   i18nc("@action: setup", "Rename..."), this);
+    d->renameAction->setShortcutContext(Qt::WidgetWithChildrenShortcut);
     connect(d->renameAction, SIGNAL(triggered()), d->view, SLOT(slotRenameAlbum()));
     ac->addAction(QLatin1String("album_rename"), d->renameAction);
     ac->setDefaultShortcut(d->renameAction, Qt::SHIFT | Qt::Key_F2);
@@ -336,6 +341,7 @@ void DigikamApp::setupActions()
 
     d->imagePreviewAction = new QAction(QIcon::fromTheme(QLatin1String("view-preview")),
                                         i18nc("@action: View the selected image", "Preview"), this);
+    d->imagePreviewAction->setShortcutContext(Qt::WidgetWithChildrenShortcut);
     d->imagePreviewAction->setCheckable(true);
     ac->addAction(QLatin1String("image_view"), d->imagePreviewAction);
     ac->setDefaultShortcut(d->imagePreviewAction, Qt::Key_F3);
@@ -364,6 +370,7 @@ void DigikamApp::setupActions()
 
     d->imageViewAction = new QAction(QIcon::fromTheme(QLatin1String("quickopen-file")),
                                      i18nc("@action: setup", "Open..."), this);
+    d->imageViewAction->setShortcutContext(Qt::WidgetWithChildrenShortcut);
     d->imageViewAction->setWhatsThis(i18nc("@info: setup", "Open the selected item."));
     connect(d->imageViewAction, SIGNAL(triggered()), d->view, SLOT(slotImageEdit()));
     ac->addAction(QLatin1String("image_edit"), d->imageViewAction);
@@ -796,6 +803,7 @@ void DigikamApp::setupActions()
 
     d->viewCMViewAction = new QAction(QIcon::fromTheme(QLatin1String("video-display")),
                                       i18nc("@action: setup", "Color-Managed View"), this);
+    d->viewCMViewAction->setShortcutContext(Qt::WidgetWithChildrenShortcut);
     d->viewCMViewAction->setCheckable(true);
     connect(d->viewCMViewAction, SIGNAL(triggered()), this, SLOT(slotToggleColorManagedView()));
     ac->addAction(QLatin1String("color_managed_view"), d->viewCMViewAction);
@@ -1151,7 +1159,9 @@ void DigikamApp::initGui()
     d->openWithAction->setEnabled(false);
     d->imageAutoExifActionMenu->setEnabled(false);
 
-    Q_FOREACH (DPluginAction* const ac, DPluginLoader::instance()->pluginsActions(DPluginAction::GenericMetadata, this))
+    const auto acs = DPluginLoader::instance()->pluginsActions(DPluginAction::GenericMetadata, this);
+
+    for (DPluginAction* const ac : acs)
     {
         ac->setEnabled(false);
     }

@@ -123,7 +123,7 @@ void ItemIconView::slotLeftSidebarChangedTab(QWidget* w)
 
     SidebarWidget* const widget = dynamic_cast<SidebarWidget*>(w);
 
-    Q_FOREACH (SidebarWidget* const sideBarWidget, d->leftSideBarWidgets)
+    for (SidebarWidget* const sideBarWidget : std::as_const(d->leftSideBarWidgets))
     {
         bool active = (widget && (widget == sideBarWidget));
         sideBarWidget->setActive(active);
@@ -137,6 +137,26 @@ void ItemIconView::slotSidebarTabTitleStyleChanged()
 
     /// @todo Which settings actually have to be reloaded?
     //d->rightSideBar->applySettings();
+}
+
+void ItemIconView::slotLeftSideBarEnabled(bool busy)
+{
+    d->leftSideBar->setEnabled(!busy);
+    d->albumFolderSideBar->setEnabled(!busy);
+    d->tagViewSideBar->setEnabled(!busy);
+    d->labelsSideBar->setEnabled(!busy);
+    d->dateViewSideBar->setEnabled(!busy);
+    d->timelineSideBar->setEnabled(!busy);
+    d->searchSideBar->setEnabled(!busy);
+    d->fuzzySearchSideBar->setEnabled(!busy);
+
+#ifdef HAVE_GEOLOCATION
+
+    d->gpsSearchSideBar->setEnabled(!busy);
+
+#endif // HAVE_GEOLOCATION
+
+    d->peopleSideBar->setEnabled(!busy);
 }
 
 void ItemIconView::slotPopupFiltersView()

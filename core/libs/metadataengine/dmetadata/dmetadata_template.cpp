@@ -204,7 +204,7 @@ bool DMetadata::setMetadataTemplate(const Template& t) const
         QStringList list = t.IptcSubjects();
         QStringList newList;
 
-        Q_FOREACH (QString str, list) // krazy:exclude=foreach
+        for (QString str : EXIV2_AS_CONST(list))
         {
             if (str.startsWith(QLatin1String("XMP")))
             {

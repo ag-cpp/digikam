@@ -53,8 +53,12 @@ public:
 
     Private() = default;
 
+public:
+
     const QString configGroupName                   = QLatin1String("AdvancedRename Widget");
     const QString configExpandedStateEntry          = QLatin1String("Options are expanded");
+
+public:
 
     bool                 configExpandedStateDefault = true;
 
@@ -229,8 +233,9 @@ void AdvancedRenameWidget::registerParserControls()
                                                style()->pixelMetric(QStyle::PM_LayoutBottomMargin))));
 
             DynamicLayout* const layout = new DynamicLayout(cmargin, cmargin);
+            const auto list             = d->parser->options();
 
-            for (Rule* const p : d->parser->options())
+            for (Rule* const p : list)
             {
                 btn = p->registerButton(this);
 
@@ -413,8 +418,8 @@ void AdvancedRenameWidget::setupWidgets()
 
 void AdvancedRenameWidget::slotTokenMarked(bool marked)
 {
-    bool enable    = marked && d->parser;
-    bool enableMod = enable && !(d->parser->modifiers().isEmpty());
+    bool enable    = (marked && d->parser);
+    bool enableMod = (enable && !(d->parser->modifiers().isEmpty()));
 
     if (d->layoutStyle == LayoutNormal)
     {

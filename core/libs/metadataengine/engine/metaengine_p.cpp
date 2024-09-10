@@ -385,7 +385,7 @@ bool MetaEngine::Private::saveUsingExiv2(const QFileInfo& finfo,
                 pairedTags << qMakePair(QLatin1String("Xmp.dc.subject"),
                                         QLatin1String("Iptc.Application2.Keywords"));
 
-                Q_FOREACH (const StringPair& pair, pairedTags)
+                for (const StringPair& pair : EXIV2_AS_CONST(pairedTags))
                 {
                     Exiv2::XmpKey xmpKey(pair.first.toLatin1().constData());
                     Exiv2::XmpData::const_iterator it1 = image->xmpData().findKey(xmpKey);
@@ -702,9 +702,11 @@ QString MetaEngine::Private::detectEncodingAndDecode(const std::string& value) c
 
     for (int i = 0 ; i < localString.size() ; ++i)
     {
-        if (!localString.at(i).isPrint()             &&
+        if (
+            !localString.at(i).isPrint()             &&
             (localString.at(i) != QLatin1Char('\n')) &&
-            (localString.at(i) != QLatin1Char('\r')))
+            (localString.at(i) != QLatin1Char('\r'))
+           )
         {
             localString[i] = QLatin1Char('_');
         }

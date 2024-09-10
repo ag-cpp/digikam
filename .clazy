@@ -33,12 +33,13 @@ no-fully-qualified-moc-types,\
 no-qproperty-without-notify,\
 no-old-style-connect,\
 no-rule-of-three,\
-no-inefficient-qlist-soft,\
 no-qstring-allocations,\
 no-qstring-arg,\
 no-qstring-insensitive-allocation,\
 no-qstring-ref,\
 no-function-args-by-value,\
+no-qproperty-without-notify,\
+no-fully-qualified-moc-types,\
 qt6-qhash-signature,\
 qt6-deprecated-api-fixes,\
 qt6-fwd-fixes,\
@@ -47,7 +48,6 @@ unexpected-flag-enumerator-value,\
 signal-with-return-value,\
 raw-environment-function,\
 qt-keywords,\
-missing-qobject-macro\
+missing-qobject-macro,\
+range-loop-detach\
 "
-
-#qt6-qlatin1stringchar-to-u         What is that exactly ???

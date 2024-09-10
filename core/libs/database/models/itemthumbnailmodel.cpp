@@ -160,7 +160,7 @@ void ItemThumbnailModel::preloadThumbnails(const QList<ItemInfo>& infos)
 
     QList<ThumbnailIdentifier> ids;
 
-    Q_FOREACH (const ItemInfo& info, infos)
+    for (const ItemInfo& info : std::as_const(infos))
     {
         ids << info.thumbnailIdentifier();
     }
@@ -178,7 +178,7 @@ void ItemThumbnailModel::preloadThumbnails(const QList<QModelIndex>& indexesToPr
 
     QList<ThumbnailIdentifier> ids;
 
-    Q_FOREACH (const QModelIndex& index, indexesToPreload)
+    for (const QModelIndex& index : std::as_const(indexesToPreload))
     {
         ids << imageInfoRef(index).thumbnailIdentifier();
     }
@@ -228,16 +228,26 @@ QVariant ItemThumbnailModel::data(const QModelIndex& index, int role) const
 
         if (!d->detailRect.isNull())
         {
-            if (d->storageThread->find(info.thumbnailIdentifier(),
-                                       d->detailRect, thumbnail, thumbSize, true))
+            if      (d->storageThread->find(info.thumbnailIdentifier(),
+                                            d->detailRect, thumbnail, thumbSize, true))
+            {
+                return thumbnail;
+            }
+            else if (d->storageThread->findBuffered(info.thumbnailIdentifier(),
+                                                    d->detailRect, thumbnail, thumbSize))
             {
                 return thumbnail;
             }
         }
         else
         {
-            if (d->storageThread->find(info.thumbnailIdentifier(),
-                                       thumbnail, thumbSize, true))
+            if      (d->storageThread->find(info.thumbnailIdentifier(),
+                                            thumbnail, thumbSize, true))
+            {
+                return thumbnail;
+            }
+            else if (d->storageThread->findBuffered(info.thumbnailIdentifier(),
+                                                    QRect(), thumbnail, thumbSize))
             {
                 return thumbnail;
             }
@@ -356,7 +366,7 @@ void ItemThumbnailModel::slotThumbnailLoaded(const LoadingDescription& loadingDe
         indexes = indexesForPath(thumbId.filePath);
     }
 
-    Q_FOREACH (const QModelIndex& index, indexes)
+    for (const QModelIndex& index : std::as_const(indexes))
     {
         if (thumb.isNull())
         {

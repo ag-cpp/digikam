@@ -66,7 +66,7 @@ void PreviewLoadingTask::execute()
 
         lookupKeys.prepend(m_loadingDescription.cacheKey());
 
-        Q_FOREACH (const QString& key, lookupKeys)
+        for (const QString& key : std::as_const(lookupKeys))
         {
             if ((cachedImg = cache->retrieveImage(key)))
             {
@@ -534,27 +534,22 @@ void PreviewLoadingTask::convertQImageToDImg()
 
     // In case we don't get the original size from the metadata.
 
-    if (orgSize.isNull())
+    if      (orgSize.isNull())
     {
         orgSize = QSize(m_img.width(), m_img.height());
     }
-
-    // Set the ratio of width and height of the
-    // original size to the same ratio of the loaded image.
-    // Because a half RAW preview was probably already rotated.
-
-    if ((format == DImg::RAW) && !m_fromRawEmbeddedPreview)
+    else if (
+             ((m_img.width() < m_img.height()) && (orgSize.width() > orgSize.height())) ||
+             ((m_img.width() > m_img.height()) && (orgSize.width() < orgSize.height()))
+            )
     {
-        if (
-            ((m_img.width() < m_img.height()) && (orgSize.width() > orgSize.height())) ||
-            ((m_img.width() > m_img.height()) && (orgSize.width() < orgSize.height()))
-           )
-        {
-            orgSize.transpose();
-        }
+        // Set the ratio of width and height of the original
+        // size to the same ratio of the loaded image.
+
+        orgSize.transpose();
     }
 
-    m_img.setAttribute(QLatin1String("originalSize"),   orgSize);
+    m_img.setAttribute(QLatin1String("originalSize"), orgSize);
 
     m_img.setMetadata(metadata->data());
 

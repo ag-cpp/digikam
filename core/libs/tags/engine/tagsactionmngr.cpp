@@ -149,7 +149,7 @@ void TagsActionMngr::registerTagsActionCollections()
 
     QList<int> tagIds = TagsCache::instance()->tagsWithProperty(TagPropertyName::tagKeyboardShortcut());
 
-    Q_FOREACH (int tagId, tagIds)
+    for (int tagId : std::as_const(tagIds))
     {
         createTagActionShortcut(tagId);
     }
@@ -190,12 +190,16 @@ void TagsActionMngr::registerActionsToWidget(QWidget* const wdg)
 
     if (win)
     {
-        Q_FOREACH (QAction* const ac, win->actionCollection()->actions())
+        const auto acs = win->actionCollection()->actions();
+
+        for (QAction* const ac : acs)
         {
-            if (ac->objectName().startsWith(d->ratingShortcutPrefix) ||
+            if (
+                ac->objectName().startsWith(d->ratingShortcutPrefix) ||
                 ac->objectName().startsWith(d->tagShortcutPrefix)    ||
                 ac->objectName().startsWith(d->pickShortcutPrefix)   ||
-                ac->objectName().startsWith(d->colorShortcutPrefix))
+                ac->objectName().startsWith(d->colorShortcutPrefix)
+               )
             {
                 wdg->addAction(ac);
             }
@@ -291,12 +295,13 @@ bool TagsActionMngr::createTagActionShortcut(int tagId)
                                  << " to Tag " << talbum->title()
                                  << " (" << tagId << ")";
 
-    Q_FOREACH (KActionCollection* const ac, d->actionCollectionList)
+    for (KActionCollection* const ac : std::as_const(d->actionCollectionList))
     {
-        QAction* const action = ac->addAction(QString::fromUtf8("%1-%2").arg(d->tagShortcutPrefix).arg(tagId));
-        action->setText(i18n("Assign Tag \"%1\"", talbum->title()));
-        action->setParent(this);
-        ac->setDefaultShortcut(action, ks);
+        QString actionName    = QString::fromUtf8("%1-%2").arg(d->tagShortcutPrefix).arg(tagId);
+        QAction* const action = new QAction(i18n("Assign Tag \"%1\"", talbum->title()), this);
+        action->setShortcut(ks);
+        ac->addAction(actionName, action);
+        ac->writeSettings(nullptr, true, action);
         action->setIcon(icon);
         action->setData(tagId);
 
@@ -354,6 +359,18 @@ void TagsActionMngr::updateTagShortcut(int tagId, const QKeySequence& ks, bool d
 
     if (ks.isEmpty())
     {
+        for (KActionCollection* const ac : std::as_const(d->actionCollectionList))
+        {
+            QString actionName    = QString::fromUtf8("%1-%2").arg(d->tagShortcutPrefix).arg(tagId);
+            QAction* const action = ac->action(actionName);
+
+            if (action)
+            {
+                action->setShortcut(QKeySequence());
+                ac->writeSettings(nullptr, true, action);
+            }
+        }
+
         removeTagActionShortcut(tagId, delAction);
         tprop.removeProperties(TagPropertyName::tagKeyboardShortcut());
     }
@@ -387,7 +404,9 @@ bool TagsActionMngr::removeTagActionShortcut(int tagId, bool delAction)
         return false;
     }
 
-    Q_FOREACH (QAction* const act, d->tagsActionMap.values(tagId))
+    const auto acs = d->tagsActionMap.values(tagId);
+
+    for (QAction* const act : acs)
     {
         if (act)
         {

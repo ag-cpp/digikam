@@ -234,7 +234,7 @@ bool ThumbnailLoadThread::find(const ThumbnailIdentifier& identifier,
                                const QRect& detailRect,
                                bool onlyStorage)
 {
-    const QPixmap* pix = nullptr;
+    QPixmap pix;
     LoadingDescription description;
 
     if (detailRect.isNull())
@@ -256,21 +256,26 @@ bool ThumbnailLoadThread::find(const ThumbnailIdentifier& identifier,
     {
         LoadingCache* const cache = LoadingCache::cache();
         LoadingCache::CacheLock lock(cache);
-        pix                       = cache->retrieveThumbnailPixmap(cacheKey);
+        const QPixmap* cachePix   = cache->retrieveThumbnailPixmap(cacheKey);
+
+        if (cachePix)
+        {
+            pix = *cachePix;
+        }
     }
 
-    if (pix)
+    if (!pix.isNull())
     {
         if (retPixmap)
         {
-            *retPixmap = *pix;
+            *retPixmap = pix;
         }
 
         if (emitSignal)
         {
             load(description);
 
-            Q_EMIT signalThumbnailLoaded(description, QPixmap(*pix));
+            Q_EMIT signalThumbnailLoaded(description, pix);
         }
 
         return true;
@@ -368,6 +373,38 @@ void ThumbnailLoadThread::findGroup(const QList<QPair<ThumbnailIdentifier, QRect
 
     QList<LoadingDescription> descriptions = d->makeDescriptions(idsAndRects, size);
     ManagedLoadSaveThread::prependThumbnailGroup(descriptions);
+}
+
+bool ThumbnailLoadThread::findBuffered(const ThumbnailIdentifier& identifier,
+                                       const QRect& rect, QPixmap& pixmap, int size)
+{
+    LoadingDescription description;
+
+    if (rect.isNull())
+    {
+        description = d->createLoadingDescription(identifier, size);
+    }
+    else
+    {
+        description = d->createLoadingDescription(identifier, size, rect);
+    }
+
+    QString cacheKey = description.cacheKey();
+
+    {
+        LoadingCache* const cache = LoadingCache::cache();
+        LoadingCache::CacheLock lock(cache);
+        const QPixmap* cachePix   = cache->retrieveBufferedTPixmap(cacheKey);
+
+        if (cachePix)
+        {
+            pixmap = *cachePix;
+
+            return true;
+        }
+    }
+
+    return false;
 }
 
 // --- Preloading ---
@@ -525,7 +562,7 @@ void ThumbnailLoadThread::slotThumbnailsAvailable()
         d->notifiedForResults = false;
     }
 
-    Q_FOREACH (const ThumbnailResult& result, results)
+    for (const ThumbnailResult& result : std::as_const(results))
     {
         slotThumbnailLoaded(result.loadingDescription, result.image);
     }
@@ -636,7 +673,7 @@ void ThumbnailLoadThread::deleteThumbnail(const QString& filePath)
         LoadingCache::CacheLock lock(cache);
         QStringList possibleKeys  = LoadingDescription::possibleThumbnailCacheKeys(filePath);
 
-        Q_FOREACH (const QString& cacheKey, possibleKeys)
+        for (const QString& cacheKey : std::as_const(possibleKeys))
         {
             cache->removeThumbnail(cacheKey);
         }
@@ -771,7 +808,7 @@ int ThumbnailImageCatcher::enqueue()
 
     QMutexLocker lock(&d->mutex);
 
-    Q_FOREACH (const LoadingDescription& description, descriptions)
+    for (const LoadingDescription& description : std::as_const(descriptions))
     {
         d->tasks << Private::CatcherResult(description);
     }
@@ -791,7 +828,7 @@ QList<QImage> ThumbnailImageCatcher::waitForThumbnails()
 
     // first, handle results received between request and calling this method
 
-    Q_FOREACH (const Private::CatcherResult& result, d->intermediate)
+    for (const Private::CatcherResult& result : std::as_const(d->intermediate))
     {
         d->harvest(result.description, result.image);
     }
@@ -807,7 +844,7 @@ QList<QImage> ThumbnailImageCatcher::waitForThumbnails()
 
     QList<QImage> result;
 
-    Q_FOREACH (const Private::CatcherResult& task, d->tasks)
+    for (const Private::CatcherResult& task : std::as_const(d->tasks))
     {
         result << task.image;
     }

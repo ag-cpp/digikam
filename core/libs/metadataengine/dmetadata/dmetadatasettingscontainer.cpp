@@ -225,6 +225,7 @@ DMetadataSettingsContainer::DMetadataSettingsContainer()
     addMapping(NamespaceEntry::DM_TITLE_CONTAINER());
     addMapping(NamespaceEntry::DM_RATING_CONTAINER());
     addMapping(NamespaceEntry::DM_COMMENT_CONTAINER());
+    addMapping(NamespaceEntry::DM_PICKLABEL_CONTAINER());
     addMapping(NamespaceEntry::DM_COLORLABEL_CONTAINER());
 }
 
@@ -271,8 +272,9 @@ void DMetadataSettingsContainer::readFromConfig(KConfigGroup& group)
     bool valid                   = true;
     const QString readNameSpace  = QLatin1String("read%1Namespaces");
     const QString writeNameSpace = QLatin1String("write%1Namespaces");
+    const auto keys              = mappingKeys();
 
-    Q_FOREACH (const QString& str, mappingKeys())
+    for (const QString& str : EXIV2_AS_CONST(keys))
     {
         if (!group.hasGroup(readNameSpace.arg(str)))
         {
@@ -291,9 +293,11 @@ void DMetadataSettingsContainer::readFromConfig(KConfigGroup& group)
 
     if (valid)
     {
-        Q_FOREACH (const QString& str, mappingKeys())
+        const auto keys2 = mappingKeys();
+
+        for (const QString& str : EXIV2_AS_CONST(keys2))
         {
-            readOneGroup(group, readNameSpace.arg(str), getReadMapping(str));
+            readOneGroup(group, readNameSpace.arg(str),  getReadMapping(str));
             readOneGroup(group, writeNameSpace.arg(str), getWriteMapping(str));
         }
     }
@@ -313,14 +317,18 @@ void DMetadataSettingsContainer::writeToConfig(KConfigGroup& group) const
 
     // Remove all old group elements.
 
-    Q_FOREACH (const QString& groupKey, group.groupList())
+    const auto list = group.groupList();
+
+    for (const QString& groupKey : EXIV2_AS_CONST(list))
     {
         group.deleteGroup(groupKey);
     }
 
-    Q_FOREACH (const QString& str, mappingKeys())
+    const auto keys = mappingKeys();
+
+    for (const QString& str : EXIV2_AS_CONST(keys))
     {
-        writeOneGroup(group, readNameSpace.arg(str), getReadMapping(str));
+        writeOneGroup(group, readNameSpace.arg(str),  getReadMapping(str));
         writeOneGroup(group, writeNameSpace.arg(str), getWriteMapping(str));
     }
 
@@ -340,6 +348,7 @@ void DMetadataSettingsContainer::defaultValues()
     defaultTitleValues();
     defaultRatingValues();
     defaultCommentValues();
+    defaultPickLabelValues();
     defaultColorLabelValues();
 }
 
@@ -623,6 +632,37 @@ void DMetadataSettingsContainer::defaultCommentValues()
         = QList<NamespaceEntry>(getReadMapping(NamespaceEntry::DM_COMMENT_CONTAINER()));
 }
 
+void DMetadataSettingsContainer::defaultPickLabelValues()
+{
+    NamespaceEntry pickNs1;
+    pickNs1.namespaceName   = QLatin1String("Xmp.digiKam.PickLabel");
+    pickNs1.nsType          = NamespaceEntry::PICKLABEL;
+    pickNs1.specialOpts     = NamespaceEntry::NO_OPTS;
+    pickNs1.index           = 0;
+    pickNs1.subspace        = NamespaceEntry::XMP;
+
+    NamespaceEntry pickNs2;
+    pickNs2.namespaceName   = QLatin1String("Xmp.xmpDM.pick");
+    pickNs2.nsType          = NamespaceEntry::PICKLABEL;
+    pickNs2.specialOpts     = NamespaceEntry::NO_OPTS;
+    pickNs2.index           = 1;
+    pickNs2.subspace        = NamespaceEntry::XMP;
+
+    NamespaceEntry pickNs3;
+    pickNs3.namespaceName   = QLatin1String("Xmp.xmpDM.good");
+    pickNs3.nsType          = NamespaceEntry::PICKLABEL;
+    pickNs3.specialOpts     = NamespaceEntry::NO_OPTS;
+    pickNs3.index           = 2;
+    pickNs3.subspace        = NamespaceEntry::XMP;
+
+    getReadMapping(NamespaceEntry::DM_PICKLABEL_CONTAINER()) << pickNs1
+                                                             << pickNs2
+                                                             << pickNs3;
+
+    d->writeMappings[NamespaceEntry::DM_PICKLABEL_CONTAINER()]
+        = QList<NamespaceEntry>(getReadMapping(NamespaceEntry::DM_PICKLABEL_CONTAINER()));
+}
+
 void DMetadataSettingsContainer::defaultColorLabelValues()
 {
     NamespaceEntry colorNs1;
@@ -657,8 +697,9 @@ void DMetadataSettingsContainer::defaultColorLabelValues()
 void DMetadataSettingsContainer::readOneGroup(KConfigGroup& group, const QString& name, QList<NamespaceEntry>& container)
 {
     KConfigGroup myItems = group.group(name);
+    const auto list      = myItems.groupList();
 
-    Q_FOREACH (const QString& element, myItems.groupList())
+    for (const QString& element : EXIV2_AS_CONST(list))
     {
         KConfigGroup gr      = myItems.group(element);
         NamespaceEntry ns;
@@ -686,7 +727,9 @@ void DMetadataSettingsContainer::readOneGroup(KConfigGroup& group, const QString
 
         if (!conversion.isEmpty() || (ns.nsType == NamespaceEntry::RATING))
         {
-            Q_FOREACH (const QString& str, conversion.split(QLatin1String(",")))
+            const auto list2 = conversion.split(QLatin1String(","));
+
+            for (const QString& str : EXIV2_AS_CONST(list2))
             {
                 ns.convertRatio.append(str.toInt());
             }
@@ -712,7 +755,7 @@ void DMetadataSettingsContainer::writeOneGroup(KConfigGroup& group, const QStrin
     KConfigGroup namespacesGroup = group.group(name);
     int index                    = 0;
 
-    Q_FOREACH (const NamespaceEntry& e, container)
+    for (const NamespaceEntry& e : EXIV2_AS_CONST(container))
     {
         QString groupNumber = QString::fromLatin1("#%1")
                               .arg(index++, 4, 10, QLatin1Char('0'));
@@ -820,14 +863,18 @@ QDebug operator<<(QDebug dbg, const DMetadataSettingsContainer& inf)
 {
     dbg.nospace() << "[DMetadataSettingsContainer] readMappings(";
 
-    Q_FOREACH (const QString& str, inf.mappingKeys())
+    const auto keys = inf.mappingKeys();
+
+    for (const QString& str : EXIV2_AS_CONST(keys))
     {
         dbg.nospace() << inf.getReadMapping(str) << "), ";
     }
 
     dbg.nospace() << "writeMappings(";
 
-    Q_FOREACH (const QString& str, inf.mappingKeys())
+    const auto keys2 = inf.mappingKeys();
+
+    for (const QString& str : EXIV2_AS_CONST(keys2))
     {
         dbg.nospace() << inf.getWriteMapping(str) << "), ";
     }

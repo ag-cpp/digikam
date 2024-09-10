@@ -53,6 +53,7 @@ public:
     QCache<QString, DImg>           imageCache;
     QCache<QString, QImage>         thumbnailImageCache;
     QCache<QString, QPixmap>        thumbnailPixmapCache;
+    QCache<QString, QPixmap>        bufferedTPixmapCache;
     QMultiHash<QString, QString>    imageFilePathHash;
     QMultiHash<QString, QString>    thumbnailFilePathHash;
     QHash<LoadingProcess*, QString> loadingDict;
@@ -276,6 +277,11 @@ const QPixmap* LoadingCache::retrieveThumbnailPixmap(const QString& cacheKey) co
     return d->thumbnailPixmapCache[cacheKey];
 }
 
+const QPixmap* LoadingCache::retrieveBufferedTPixmap(const QString& cacheKey) const
+{
+    return d->bufferedTPixmapCache[cacheKey];
+}
+
 bool LoadingCache::hasThumbnailPixmap(const QString& cacheKey) const
 {
     return d->thumbnailPixmapCache.contains(cacheKey);
@@ -298,6 +304,8 @@ void LoadingCache::putThumbnail(const QString& cacheKey, const QPixmap& thumb, c
     if (d->thumbnailPixmapCache.insert(cacheKey, new QPixmap(thumb), cost))
     {
         d->mapThumbnailFilePath(filePath, cacheKey);
+
+        d->bufferedTPixmapCache.remove(cacheKey);
     }
 }
 
@@ -315,11 +323,15 @@ void LoadingCache::removeThumbnails()
 
 void LoadingCache::setThumbnailCacheSize(int numberOfQImages, int numberOfQPixmaps)
 {
-    d->thumbnailImageCache.setMaxCost(numberOfQImages *
+    d->thumbnailImageCache.setMaxCost(numberOfQImages                *
                                       ThumbnailSize::maxThumbsSize() *
                                       ThumbnailSize::maxThumbsSize() * 4);
 
-    d->thumbnailPixmapCache.setMaxCost(numberOfQPixmaps *
+    d->thumbnailPixmapCache.setMaxCost(numberOfQPixmaps               *
+                                       ThumbnailSize::maxThumbsSize() *
+                                       ThumbnailSize::maxThumbsSize() * QPixmap::defaultDepth() / 8);
+
+    d->bufferedTPixmapCache.setMaxCost((numberOfQPixmaps / 2)         *
                                        ThumbnailSize::maxThumbsSize() *
                                        ThumbnailSize::maxThumbsSize() * QPixmap::defaultDepth() / 8);
 }
@@ -335,15 +347,27 @@ void LoadingCache::notifyFileChanged(const QString& filePath, bool notify)
 {
     QList<QString> keys = d->imageFilePathHash.values(filePath);
 
-    Q_FOREACH (const QString& cacheKey, keys)
+    for (const QString& cacheKey : std::as_const(keys))
     {
         d->imageCache.remove(cacheKey);
     }
 
     keys = d->thumbnailFilePathHash.values(filePath);
 
-    Q_FOREACH (const QString& cacheKey, keys)
+    for (const QString& cacheKey : std::as_const(keys))
     {
+        if (d->thumbnailPixmapCache.contains(cacheKey))
+        {
+            QPixmap* const thumb = d->thumbnailPixmapCache[cacheKey];
+
+            if (thumb)
+            {
+                int cost = thumb->width() * thumb->height() * thumb->depth() / 8;
+
+                d->bufferedTPixmapCache.insert(cacheKey, new QPixmap(*thumb), cost);
+            }
+        }
+
         d->thumbnailImageCache.remove(cacheKey);
         d->thumbnailPixmapCache.remove(cacheKey);
     }

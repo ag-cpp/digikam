@@ -421,7 +421,7 @@ void ItemIconView::slotShowGroupContextMenu(QContextMenuEvent* event,
 {
     QList<qlonglong> selectedImageIDs;
 
-    Q_FOREACH (const ItemInfo& info, selectedInfos)
+    for (const ItemInfo& info : std::as_const(selectedInfos))
     {
         selectedImageIDs << info.id();
     }
@@ -452,18 +452,6 @@ void ItemIconView::slotShowGroupContextMenu(QContextMenuEvent* event,
             this, SLOT(slotRemoveSelectedFromGroup()));
 
     cmhelper.exec(event->globalPos());
-}
-
-void ItemIconView::slotLeftSideBarEnabled(bool busy)
-{
-    d->leftSideBar->setEnabled(!busy);
-    d->albumFolderSideBar->setEnabled(!busy);
-    d->tagViewSideBar->setEnabled(!busy);
-    d->labelsSideBar->setEnabled(!busy);
-    d->dateViewSideBar->setEnabled(!busy);
-    d->timelineSideBar->setEnabled(!busy);
-    d->searchSideBar->setEnabled(!busy);
-    d->fuzzySearchSideBar->setEnabled(!busy);
 }
 
 } // namespace Digikam

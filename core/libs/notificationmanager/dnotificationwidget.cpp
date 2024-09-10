@@ -279,7 +279,9 @@ void DNotificationWidget::removeAction(QAction* action)
 
 void DNotificationWidget::clearAllActions()
 {
-    Q_FOREACH (QAction* const action, actions())
+    const auto acs = actions();
+
+    for (QAction* const action : acs)
     {
         QFrame::removeAction(action);
     }
