@@ -48,10 +48,6 @@ ORIG_WD="`pwd`"
 export PATH=$INSTALL_PREFIX/bin:/$INSTALL_PREFIX/sbin:/$INSTALL_PREFIX/opt/qt6/bin:/$INSTALL_PREFIX/opt/bison/bin:$ORIG_PATH
 
 #################################################################################################
-# activate the python3 venv
-source ${INSTALL_PREFIX}/bin/activate
-
-#################################################################################################
 # Install out-dated dependencies
 
 cd $BUILDING_DIR
@@ -206,10 +202,9 @@ cmake $ORIG_WD/../3rdparty \
        -DKA_VERSION=$DK_KA_VERSION \
        -DKDE_VERSION=$DK_KDE_VERSION \
        -DENABLE_QTVERSION=$DK_QTVERSION \
-       -DCMAKE_OSX_DEPLOYMENT_TARGET=11.3 \
        -Wno-dev
 
-#cmake --build . --config RelWithDebInfo --target ext_gmic_qt    -- -j$CPU_CORES
+cmake --build . --config RelWithDebInfo --target ext_gmic_qt    -- -j$CPU_CORES
 cmake --build . --config RelWithDebInfo --target ext_mosaicwall -- -j$CPU_CORES
 cmake --build . --config RelWithDebInfo --target ext_flowview   -- -j$CPU_CORES
 

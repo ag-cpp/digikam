@@ -64,10 +64,6 @@ for FILE in $FILES ; do
 done
 
 #################################################################################################
-# activate the python3 venv
-source ${INSTALL_PREFIX}/bin/activate
-
-#################################################################################################
 
 # Create the build dir for the 3rdparty deps
 if [ ! -d $BUILDING_DIR ] ; then
