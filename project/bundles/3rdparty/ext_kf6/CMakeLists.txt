@@ -96,14 +96,6 @@ function(InstallKF6Component
             )
         endif()
         
-if(APPLE)
-set_target_properties(ext_${name} 
-                    PROPERTIES
-                    MACOSX_BUNDLE TRUE
-                    MACOSX_BUNDLE_BUNDLE_NAME "digiKam.org"
-                    MACOSX_BUNDLE_GUI_IDENTIFIER "org.digiKam.digikam")
-
-endif()
 endfunction()
 
 if(MSVC)
