@@ -119,25 +119,26 @@ if [[ $CONTINUE_INSTALL == 0 ]]; then
     # Use this section to do a default Homebrew installation
     
     NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    (echo; echo 'eval "$($INSTALL_PREFIX/bin/brew shellenv)"') >> /Users/${USER}/.zprofile
-    eval "$(/$INSTALL_PREFIX/bin/brew shellenv)"
+    (echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> /Users/${USER}/.zprofile
+    #eval "$(/opt/homebrew/bin/brew shellenv)"
 
 fi
 
 #################################################################################################
 # Homebrew update
 
+# removed to keep build dependencies stable
 
-echo -e "\n"
-echo "---------- Updating HomeBrew"
-#brew -v update
+# echo -e "\n"
+# echo "---------- Updating HomeBrew"
+# brew -v selfupdate
 
-if [[ $CONTINUE_INSTALL == 0 ]]; then
+# if [[ $CONTINUE_INSTALL == 0 ]]; then
 
-#    brew -v upgrade outdated
-    echo -e "\n"
+# #    brew -v upgrade outdated
+#     echo -e "\n"
 
-fi
+# fi
 
 #################################################################################################
 # Dependencies build and installation
@@ -155,7 +156,7 @@ if [[ $DK_QTVERSION = 5 ]] ; then
     exit
 fi
 
-brew install \
+${INSTALL_PREFIX}/bin/brew install \
              cmake \
              ccache \
              libpng \
@@ -198,7 +199,7 @@ brew install \
 echo -e "\n"
 
 # these packages have to be built by us so we can update the library paths and code signature
-# brew install --build-from-source \
+# ${INSTALL_PREFIX}/bin/brew install --build-from-source \
 
 # echo -e "\n"
 

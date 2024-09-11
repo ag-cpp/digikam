@@ -207,6 +207,7 @@ cmake $ORIG_WD/../3rdparty \
        -DKDE_VERSION=$DK_KDE_VERSION \
        -DENABLE_QTVERSION=$DK_QTVERSION \
        -DCMAKE_OSX_DEPLOYMENT_TARGET=11.3 \
+       -DDK_APPLE_PACKAGE_MANAGER=$DK_APPLE_PACKAGE_MANAGER \
        -Wno-dev
 
 cmake --build . --config RelWithDebInfo --target ext_gmic_qt    -- -j$CPU_CORES
