@@ -10,11 +10,15 @@
 ChecksRunAsRoot()
 {
 
-if [[ $EUID -ne 0 ]]; then
-    echo "This script should be run as root using sudo command."
-    exit 1
+if [[ $NO_ROOT -ne 1 ]] ; then
+    if [[ $EUID -ne 0 ]] ; then
+        echo "This script should be run as root using sudo command."
+        exit 1
+    else
+        echo "Check run as root passed..."
+    fi
 else
-    echo "Check run as root passed..."
+    echo "Root not required"
 fi
 
 }
@@ -222,18 +226,23 @@ for FILE in ${FILESLIST[@]} ; do
 
         echo "Relocate $FILE"
 
+        copy_lib="$INSTALL_PREFIX/bin/python3 $ORIG_WD/package_lib.py --file=$FILE --bundle-root=$TEMPROOT/$DK_APP_CONTENTS --homebrew=$INSTALL_PREFIX --processed-cache=update  --found-cache=update --signed-cache=update --update-binary=1 --copy=1 --preserve_rpath=0"
+        #copy_lib="$INSTALL_PREFIX/bin/python3 $ORIG_WD/package_lib.py --file=$FILE --bundle-root=$TEMPROOT/$DK_APP_CONTENTS --processed-cache=update  --found-cache=update --signed-cache=update --update-binary=true --copy=false"
+        eval "$copy_lib"
+
+
         # List all external dependencies starting with INSTALL_PREFIX
 
-        DEPS=$(otool -L $FILE | grep $INSTALL_PREFIX | awk -F ' \\\(' '{print $1}')
+        # DEPS=$(otool -L $FILE | grep $INSTALL_PREFIX | awk -F ' \\\(' '{print $1}')
 
-        for EXTLIB in $DEPS ; do
+        # for EXTLIB in $DEPS ; do
 
-            RPATHLIB=${EXTLIB/$INSTALL_PREFIX/$RPATHSTR}
- #           echo "   $EXTLIB ==> $RPATHLIB"
-            install_name_tool -change $EXTLIB $RPATHLIB $FILE
-            codesign --force -s - $FILE
+        #     RPATHLIB=${EXTLIB/$INSTALL_PREFIX/$RPATHSTR}
+        #     echo "   $EXTLIB ==> $RPATHLIB"
+        #     install_name_tool -change $EXTLIB $RPATHLIB $FILE
+        #     codesign --force -s - $FILE
 
-        done
+        # done
 
     fi
 
@@ -308,4 +317,25 @@ for EXTLIB in $DEPS ; do
 
 done
 
+}
+
+CopyDebugSymbols()
+{
+if [ $DK_COPY_DEBUG_SYMBOLS==1 ] ; then
+
+    if [ ! -d "$ORIG_WD/data/symbols" ] ; then
+        mkdir -p "$ORIG_WD/data/symbols"
+    fi
+
+    files=`find "$INSTALL_PREFIX" -iname "*.dsym"`
+    for file in $files ; do
+        sudo cp -rv $file "$ORIG_WD/data/symbols"
+    done
+    file=`find "$ORIG_WD/temp.build" -iname "*.dsym"`
+    for file in $files ; do
+        sudo cp -rv $file "$ORIG_WD/data/symbols"
+    done
+    # cp -rv "$INSTALL_PREFIX/**/*.dSYM" "$ORIG_WD/data/symbols"
+    # cp -rv "$ORIG_WD/temp.build/**/*.dSYM" "$ORIG_WD/data/symbols"
+fi
 }
