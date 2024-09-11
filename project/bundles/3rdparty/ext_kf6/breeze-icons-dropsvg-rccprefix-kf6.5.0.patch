@@ -1,0 +1,10 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 10164bc0..cd87e790 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -65,4 +65,4 @@ # pure compatibility option for e.g. Kexi, not used in general and wastes disk space
+ # FIXME: remove after e.g. Kexi is ported
+-option(BINARY_ICONS_RESOURCE "Install Qt binary resource file containing breeze icons (breeze-icons.rcc), should only be used if needed for compatibility" OFF)
++option(BINARY_ICONS_RESOURCE "Install Qt binary resource file containing breeze icons (breeze-icons.rcc), should only be used if needed for compatibility" ON)
+
+ set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF6BreezeIcons")

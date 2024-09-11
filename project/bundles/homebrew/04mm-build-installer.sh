@@ -124,6 +124,7 @@ lib/libdigikam*.dSYM \
 lib/libgphoto2 \
 lib/libgphoto2_port \
 opt/mariadb \
+share/QtCurve/Breeze.qtcurve \
 lib/ImageMagick* \
 share/ImageMagick* \
 etc/ImageMagick* \
@@ -614,6 +615,7 @@ cp "$ORIG_WD/data/qt.conf" "$TEMPROOT/$DK_APP_CONTENTS/Resources/qt.conf"
 QT_FULL_VERSION=`ls "$TEMPROOT/$DK_APP_CONTENTS/Cellar/qt"`
 
 # symlink Qt dirs
+ln -s "./Resources/QtCurve" "$TEMPROOT/$DK_APP_CONTENTS/share/QtCurve"
 ln -s "../Cellar/qt/$QT_FULL_VERSION/lib/QtWebEngineCore.framework/Versions/A/Helpers/QtWebEngineProcess.app/Contents/MacOS/QtWebEngineProcess" "$TEMPROOT/$DK_APP_CONTENTS/MacOS/QtWebEngineProcess"
 ln -s "./libexec/qt6/plugins" "$TEMPROOT/$DK_APP_CONTENTS/PlugIns"
 ln -s "../../Cellar/qt/$QT_FULL_VERSION/lib/QtWebEngineCore.framework/Versions/A/Resources/qtwebengine_locales" "$TEMPROOT/$DK_APP_CONTENTS/Resources/translations/qtwebengine_locales"
@@ -625,13 +627,6 @@ for WER in $WEBENGINE_RESOURCES ; do
     echo "Moving WER: $WER"
     mv "$WER" "$TEMPROOT/$DK_APP_CONTENTS/Resources"
 done
-
-# #################################################################################################
-# # Use the Qt tool to create the bundle
-# CURR_WD="`pwd`"
-# cd $TEMPROOT
-# "$INSTALL_PREFIX/bin/macdeployqt" digikam.app -verbose=2
-# cd $CURR_WD
 
 #################################################################################################
 # configure MySQL/MariaDB 

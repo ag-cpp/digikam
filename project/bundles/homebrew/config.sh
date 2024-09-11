@@ -47,10 +47,18 @@ if [[ $ARCH_TARGET = "x86_64" ]] ; then
     # Older values cannot be set as it do not support x86_64.
     OSX_MIN_TARGET="10.15"
 
+    # Directory to build and install HomeBrew packages.
+    INSTALL_PREFIX="/usr/local/homebrew"
+    # INSTALL_PREFIX="/usr/local/hb-digikam.org.$ARCH_TARGET"
+
 elif [[ $ARCH_TARGET = "arm64" ]] ; then
 
     # Apple Silicon is supported since macOS BigSur
     OSX_MIN_TARGET="11.3"
+
+    # Directory to build and install HomeBrew packages.
+    INSTALL_PREFIX="/opt/homebrew"
+    # INSTALL_PREFIX="/opt/hb-digikam.org.$ARCH_TARGET"
 
 else
 
@@ -58,11 +66,6 @@ else
     exit -1
 
 fi
-
-# Directory to build and install HomeBrew packages.
-INSTALL_PREFIX="/opt/homebrew"
-# INSTALL_PREFIX="/opt/hb-digikam.org.$ARCH_TARGET"
-
 
 # Directory where target bundle contents will be installed.
 RELOCATE_PREFIX="/Applications/digiKam.org"
@@ -130,7 +133,7 @@ if [[ $DK_QTVERSION == 5 ]] ; then
 
 else
 
-    DK_KDE_VERSION="v6.2.0"                                 # Qt6 version use master code for the moment.
+    DK_KDE_VERSION="v6.5.0"                                 # Qt6 version use master code for the moment.
     DK_UPLOADDIR="/srv/archives/files/digikam/unstable"     # Qt6 version is considerated unstable for the moment.
 
 fi
