@@ -157,13 +157,26 @@ etc/mariadb$MARIADB_SUFFIX \
 
 # Additional Data Directories - to be copied recursively
 OTHER_DATA="\
-share/applications \
 share/opencv4 \
 share/k* \
-share/lensfun \
 share/mime \
 Library/Application/ \
+share/applications \
 "
+
+if [[ $ARCH_TARGET = "x86_64" ]] ; then
+
+    OTHER_DATA=$OTHER_DATA"\
+    share/lensfun \
+    "
+
+else
+
+    OTHER_DATA=$OTHER_DATA"\
+    lensfun \
+    "
+
+fi
 
 # Packaging tool paths
 PACKAGESBUILD="/usr/local/bin/packagesbuild"
@@ -349,7 +362,7 @@ rm -rf "$TEMPROOT/showfoto.app/Contents/Resources"
 cd "$ORIG_WD"
 
 #################################################################################################
-# Move digiKam and KF5 run-time plugins to the right place
+# Move digiKam and KF run-time plugins to the right place
 
 cp -a $TEMPROOT/lib/plugins $TEMPROOT/libexec/qt$DK_QTVERSION/
 rm -rf $TEMPROOT/lib/plugins
