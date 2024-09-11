@@ -75,8 +75,18 @@ Applications/digiKam.org \
 "
 
 # Other apps - non-MacOS binaries & libraries to be included with required dylibs
+
+if [[ $ARCH_TARGET = "x86_64" ]] ; then
+    QT_PLUGIN_EXT="so"
+else
+    QT_PLUGIN_EXT="dylib"
+fi
+
+# Note: lib/plugins/styles/ files are so in both architecture. Why ?
+
+
 OTHER_APPS="\
-lib/plugins/imageformats/*.so \
+lib/plugins/imageformats/*.$QT_PLUGIN_EXT \
 lib/plugins/styles/*.so \
 lib/plugins/digikam/bqm/*.so \
 lib/plugins/digikam/generic/*.so \
@@ -93,16 +103,16 @@ lib/mariadb$MARIADB_SUFFIX/plugin/*.so \
 bin/kbuildsycoca5 \
 bin/solid-hardware5 \
 bin/ffmpeg \
-libexec/qt5/plugins/imageformats/*.dylib \
-libexec/qt5/plugins/sqldrivers/*.dylib \
-libexec/qt5/plugins/printsupport/*.dylib \
-libexec/qt5/plugins/platforms/*.dylib \
-libexec/qt5/plugins/platformthemes/*.dylib \
-libexec/qt5/plugins/iconengines/*.dylib \
-libexec/qt5/plugins/generic/*.dylib \
-libexec/qt5/plugins/styles/*.dylib \
-libexec/qt5/plugins/bearer/*.dylib \
-libexec/qt5/plugins/audio/*.dylib \
+libexec/qt$DK_QTVERSION/plugins/imageformats/*.dylib \
+libexec/qt$DK_QTVERSION/plugins/sqldrivers/*.dylib \
+libexec/qt$DK_QTVERSION/plugins/printsupport/*.dylib \
+libexec/qt$DK_QTVERSION/plugins/platforms/*.dylib \
+libexec/qt$DK_QTVERSION/plugins/platformthemes/*.dylib \
+libexec/qt$DK_QTVERSION/plugins/iconengines/*.dylib \
+libexec/qt$DK_QTVERSION/plugins/generic/*.dylib \
+libexec/qt$DK_QTVERSION/plugins/styles/*.dylib \
+libexec/qt$DK_QTVERSION/plugins/bearer/*.dylib \
+libexec/qt$DK_QTVERSION/plugins/audio/*.dylib \
 "
 
 #lib/sane/*.so \
@@ -112,7 +122,7 @@ binaries="$OTHER_APPS"
 # Additional Files/Directories - to be copied recursively but not checked for dependencies
 # Note: dSYM directories are copied as well and cleaned later if debug symbols must be removed in final bundle.
 OTHER_DIRS="\
-libexec/qt5/translations \
+libexec/qt$DK_QTVERSION/translations \
 lib/libdigikam*.dSYM \
 lib/plugins \
 lib/libgphoto2 \
@@ -302,7 +312,7 @@ done
 
 # Move Qt translation data files at the right place in the bundle. See Bug #438701.
 
-mv -v $TEMPROOT/libexec/qt5/translations $TEMPROOT/digikam.app/Contents/Resources/
+mv -v $TEMPROOT/libexec/qt$DK_QTVERSION/translations $TEMPROOT/digikam.app/Contents/Resources/
 
 # To support localized system menu entries from MacOS. See bug #432650.
 
@@ -324,11 +334,11 @@ cd "$ORIG_WD"
 #################################################################################################
 # Move digiKam and KF5 run-time plugins to the right place
 
-cp -a $TEMPROOT/lib/plugins $TEMPROOT/libexec/qt5/
+cp -a $TEMPROOT/lib/plugins $TEMPROOT/libexec/qt$DK_QTVERSION/
 rm -rf $TEMPROOT/lib/plugins
 
 # See bug #476290
-rm -fr $TEMPROOT/libexec/qt5/plugins/imageformats/libqjp2.dylib
+rm -fr $TEMPROOT/libexec/qt$DK_QTVERSION/plugins/imageformats/libqjp2.dylib
 
 #################################################################################################
 # Merge Manifest files

@@ -140,13 +140,19 @@ sed -e "s/DBUILD_TESTING=ON/DBUILD_TESTING=OFF/g"               ./bootstrap.macp
 sed -e "s/DENABLE_DBUS=ON/DENABLE_DBUS=OFF/g"                   ./bootstrap.macports > ./tmp.macports ; mv -f ./tmp.macports ./bootstrap.macports
 sed -e "s/DENABLE_APPSTYLES=OFF/DENABLE_APPSTYLES=ON/g"         ./bootstrap.macports > ./tmp.macports ; mv -f ./tmp.macports ./bootstrap.macports
 
+if [[ $DK_QTVERSION = 6 ]] ; then
+
+    sed -e "s/DBUILD_WITH_QT6=OFF/DBUILD_WITH_QT6=ON/g"         ./bootstrap.macports > ./tmp.macports ; mv -f ./tmp.macports ./bootstrap.macports
+
+fi
+
 chmod +x ./bootstrap.macports
 
 cp -f $ORIG_WD/fixbundledatapath.sh $DK_BUILDTEMP/digikam-$DK_VERSION
 
 ./fixbundledatapath.sh
 
-./bootstrap.macports "$INSTALL_PREFIX" "Debug" "x86_64" "-Wno-dev"
+./bootstrap.macports "$INSTALL_PREFIX" "Debug" "$ARCH_TARGET" "-Wno-dev"
 
 if [ $? -ne 0 ]; then
     echo "---------- Cannot configure digiKam $DK_VERSION."
@@ -207,7 +213,8 @@ cmake --build . --config RelWithDebInfo --target ext_gmic_qt    -- -j$CPU_CORES
 cmake --build . --config RelWithDebInfo --target ext_mosaicwall -- -j$CPU_CORES
 cmake --build . --config RelWithDebInfo --target ext_flowview   -- -j$CPU_CORES
 
-mv -f $INSTALL_PREFIX/libexec/qt5/plugins/digikam/editor/*.so* $INSTALL_PREFIX/lib/plugins/digikam/editor/
+mv -f $INSTALL_PREFIX/libexec/qt$DK_QTVERSION/plugins/digikam/editor/*.so* $INSTALL_PREFIX/lib/plugins/digikam/editor/
+mv -f $INSTALL_PREFIX/libexec/qt$DK_QTVERSION/plugins/digikam/bqm/*.so*    $INSTALL_PREFIX/lib/plugins/digikam/bqm/
 
 #################################################################################################
 

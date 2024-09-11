@@ -346,6 +346,8 @@ if [[ $DK_QTVERSION = 5 ]] ; then
     port install qt$DK_QTVERSION-qtxmlpatterns
 fi
 
+port install qt$DK_QTVERSION-qtscxml
+port install qt$DK_QTVERSION-qtspeech
 port install qt$DK_QTVERSION-qtsvg
 port install qt$DK_QTVERSION-qttools
 port install qt$DK_QTVERSION-qttranslations
@@ -374,6 +376,10 @@ cmake --build . --config RelWithDebInfo --target ext_imagemagick -- -j$CPU_CORES
 
 port install libjxl
 port install libavif -docs -tests
+
+# for rll.py script.
+port install python27
+port select --set python2 python27
 
 #################################################################################################
 
