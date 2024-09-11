@@ -210,8 +210,6 @@ RPATHSTR="@rpath"
 
 FILESLIST=("${!1}")
 
-#echo "Relocatable list: ${FILESLIST[@]}"
-
 for FILE in ${FILESLIST[@]} ; do
 
     ISMACHO=`file "$FILE" | grep "Mach-O" || true`
@@ -323,19 +321,19 @@ CopyDebugSymbols()
 {
 if [ $DK_COPY_DEBUG_SYMBOLS==1 ] ; then
 
-    if [ ! -d "$ORIG_WD/data/symbols" ] ; then
-        mkdir -p "$ORIG_WD/data/symbols"
+    if [ ! -d "$ORIG_WD/temp.symbols" ] ; then
+        mkdir -p "$ORIG_WD/temp.symbols"
     fi
 
     files=`find "$INSTALL_PREFIX" -iname "*.dsym"`
     for file in $files ; do
-        sudo cp -rv $file "$ORIG_WD/data/symbols"
+        sudo cp -rv $file "$ORIG_WD/temp.symbols"
     done
+
     file=`find "$ORIG_WD/temp.build" -iname "*.dsym"`
     for file in $files ; do
-        sudo cp -rv $file "$ORIG_WD/data/symbols"
+        sudo cp -rv $file "$ORIG_WD/temp.symbols"
     done
-    # cp -rv "$INSTALL_PREFIX/**/*.dSYM" "$ORIG_WD/data/symbols"
-    # cp -rv "$ORIG_WD/temp.build/**/*.dSYM" "$ORIG_WD/data/symbols"
+
 fi
 }

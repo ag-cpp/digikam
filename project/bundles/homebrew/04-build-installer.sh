@@ -501,16 +501,15 @@ for APP in ${EXECFILES[@]} ; do
 
     if [[ $ISBINARY ]] && [[ ! $ISDSYM ]] && [[ $BASENAME != "applet" ]] ; then
 
+        install_name_tool -add_rpath @executable_path/ $APP
         install_name_tool -add_rpath @executable_path/.. $APP
-        install_name_tool -add_rpath @executable_path/../.. $APP
-#        install_name_tool -add_rpath @executable_path/../../.. $APP
-#        install_name_tool -add_rpath @executable_path/../../../.. $APP
-#        install_name_tool -add_rpath @executable_path/../../../../.. $APP
-#        install_name_tool -add_rpath @executable_path/../../../../../.. $APP
-#        install_name_tool -add_rpath @executable_path/../../../../../../.. $APP
-#        install_name_tool -add_rpath @executable_path/../../../../../../../.. $APP
-#        install_name_tool -add_rpath @executable_path/../../../../../../../../.. $APP
-#        install_name_tool -add_rpath @executable_path/../../../../../../../../../.. $APP
+        install_name_tool -add_rpath @executable_path/../lib $APP
+        install_name_tool -add_rpath @executable_path/../opt $APP
+
+        install_name_tool -add_rpath @loader_path/ $APP
+        install_name_tool -add_rpath @loader_path/.. $APP
+        install_name_tool -add_rpath @loader_path/../lib $APP
+        install_name_tool -add_rpath @loader_path/../opt $APP
         codesign --force -s - $APP
 
         echo "Patch $APP"
