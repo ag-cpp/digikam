@@ -119,10 +119,8 @@ InstallKF6Component(kconfig                  ${KDE_VERSION}     "${Qt6CommonOpti
 InstallKF6Component(breeze-icons             ${KDE_VERSION}     "${Qt6CommonOptions};${BreezeIconsOptions}"                 "breeze-icons-dropsvg.patch")
 
 if("${DK_APPLE_PACKAGE_MANAGER}" STREQUAL "homebrew")
-    InstallKF6Component(breeze-icons             ${KDE_VERSION}     "${Qt6CommonOptions};${BreezeIconsOptions}"                 "breeze-icons-dropsvg-rccprefix-kf6.5.0.patch")
     InstallKF6Component(solid                    ${KDE_VERSION}     "${Qt6CommonOptions}"                                       "solid-iokit-cfrelease.patch")
 else()
-    InstallKF6Component(breeze-icons             ${KDE_VERSION}     "${Qt6CommonOptions};${BreezeIconsOptions}"                 "breeze-icons-dropsvg-rccprefix.patch")
     InstallKF6Component(solid                    ${KDE_VERSION}     "${Qt6CommonOptions}"                                       "")
 endif()
 
