@@ -151,69 +151,16 @@ else
 
     # KDE Plasma version.
     # See official release here: https://download.kde.org/stable/plasma/
-    DK_KP_VERSION="v6.0.4"
+    DK_KP_VERSION="v6.1.5"
 
     # KDE Application version.
     # See official release here: https://download.kde.org/stable/release-service/
-    DK_KA_VERSION="v24.02.2"
+    DK_KA_VERSION="v24.08.0"
 
     # KDE KF6 frameworks version.
     # See official release here: https://download.kde.org/stable/frameworks/
-    DK_KDE_VERSION="v6.2.0"
+    DK_KDE_VERSION="v6.5.0"
 
     DK_UPLOADDIR="/srv/archives/files/digikam/"
 
 fi
-
-# NOTE: The order to compile each component here is very important.
-
-FRAMEWORK_COMPONENTS="\
-ext_extra-cmake-modules \
-ext_kconfig \
-ext_breeze-icons \
-ext_kcoreaddons \
-ext_kwindowsystem \
-ext_solid \
-ext_threadweaver \
-ext_karchive \
-ext_kdbusaddons \
-ext_ki18n \
-ext_kcrash \
-ext_kcodecs \
-ext_kauth \
-ext_kguiaddons \
-ext_kwidgetsaddons \
-ext_kitemviews \
-ext_kcompletion \
-ext_kcolorscheme \
-ext_kconfigwidgets \
-ext_kiconthemes \
-ext_kservice \
-ext_kglobalaccel \
-ext_kxmlgui \
-ext_kbookmarks \
-ext_kimageformats \
-ext_knotifications \
-ext_kjobwidgets \
-ext_kio \
-ext_knotifyconfig \
-ext_sonnet \
-ext_ktextwidgets \
-ext_qca \
-ext_kwallet \
-ext_kcalendarcore \
-"
-
-#ext_ksanecore \
-#ext_libksane \
-#ext_plasma-wayland-protocols \
-#ext_kfilemetadata \
-#ext_kdoctools \
-#ext_phonon \
-#ext_qca \
-#ext_kpackage \
-#ext_attica \
-#ext_knewstuff \
-#ext_kitemmodels \
-#ext_kparts \
-#ext_krunner \

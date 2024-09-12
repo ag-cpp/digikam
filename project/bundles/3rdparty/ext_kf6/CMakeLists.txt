@@ -38,6 +38,7 @@ function(InstallKF6Component
         message(STATUS "Patch to apply   : ${patch}")
 
         if(APPLE)
+
             if(NOT "${patch}" STREQUAL "")
                 set(patch "${PATCH_COMMAND};-p1;-i;${CMAKE_CURRENT_SOURCE_DIR}/${patch};&&")
             endif()
@@ -72,10 +73,11 @@ function(InstallKF6Component
             endif()
 
         else()
+
             if(NOT "${patch}" STREQUAL "")
                 set(patch "${PATCH_COMMAND};-p1;-i;${CMAKE_CURRENT_SOURCE_DIR}/${patch}")
             endif()
-            
+
             ExternalProject_Add(ext_${name}
                                 DOWNLOAD_DIR ${EXTERNALS_DOWNLOAD_DIR}
                                 GIT_REPOSITORY ${giturl}
@@ -94,8 +96,9 @@ function(InstallKF6Component
                                 UPDATE_COMMAND ""
                                 ALWAYS 0
             )
+
         endif()
-        
+
 endfunction()
 
 if(MSVC)
@@ -106,13 +109,15 @@ else()
 endif()
 
 set(MarbleQtOnlyOptions -DWITH_DESIGNER_PLUGIN=OFF -DBUILD_MARBLE_TESTS=OFF -DBUILD_MARBLE_TOOLS=OFF -DBUILD_MARBLE_EXAMPLES=OFF -DBUILD_MARBLE_APPS=OFF -DBUILD_WITH_DBUS=OFF -DQTONLY=ON -DBUILD_TESTING=OFF)
-set(BreezeOptions -DBUILD_QT6=ON -DBUILD_QT5=OFF -DWITH_DECORATIONS=OFF -DWITH_WALLPAPERS=OFF)
+set(BreezeOptions -DBUILD_QT6=ON -DBUILD_QT5=OFF -DWITH_DECORATIONS=OFF -DWITH_WALLPAPERS=OFF -DBUILD_TESTING=OFF)
 
 set(Qt6CommonOptions -DQT_MAJOR_VERSION=6 -DBUILD_WITH_QT6=ON)
 
 InstallKF6Component(extra-cmake-modules      ${KDE_VERSION}     "${Qt6CommonOptions}"                                       "")
 InstallKF6Component(plasma-wayland-protocols ${KDE_VERSION}     "${Qt6CommonOptions}"                                       "wayland-proto-ecm-version.patch")
 InstallKF6Component(kconfig                  ${KDE_VERSION}     "${Qt6CommonOptions};-DKCONFIG_USE_QML=OFF"                 "")
+InstallKF6Component(breeze-icons             ${KDE_VERSION}     "${Qt6CommonOptions};${BreezeIconsOptions}"                 "breeze-icons-dropsvg.patch")
+
 if("${DK_APPLE_PACKAGE_MANAGER}" STREQUAL "homebrew")
     InstallKF6Component(breeze-icons             ${KDE_VERSION}     "${Qt6CommonOptions};${BreezeIconsOptions}"                 "breeze-icons-dropsvg-rccprefix-kf6.5.0.patch")
     InstallKF6Component(solid                    ${KDE_VERSION}     "${Qt6CommonOptions}"                                       "solid-iokit-cfrelease.patch")
@@ -120,6 +125,7 @@ else()
     InstallKF6Component(breeze-icons             ${KDE_VERSION}     "${Qt6CommonOptions};${BreezeIconsOptions}"                 "breeze-icons-dropsvg-rccprefix.patch")
     InstallKF6Component(solid                    ${KDE_VERSION}     "${Qt6CommonOptions}"                                       "")
 endif()
+
 InstallKF6Component(kcoreaddons              ${KDE_VERSION}     "${Qt6CommonOptions};-DKCOREADDONS_USE_QML=OFF"             "")
 InstallKF6Component(threadweaver             ${KDE_VERSION}     "${Qt6CommonOptions}"                                       "")
 InstallKF6Component(kwindowsystem            ${KDE_VERSION}     "${Qt6CommonOptions};-DKWINDOWSYSTEM_WAYLAND=OFF"           "")
