@@ -137,9 +137,14 @@ fi
 binaries="$OTHER_APPS"
 
 # Additional Files/Directories - to be copied recursively but not checked for dependencies
-# Note: dSYM directories are copied as well and cleaned later if debug symbols must be removed in final bundle.
+#
+# NOTE: dSYM directories are copied as well and cleaned later if debug symbols must be removed in final bundle.
+#
+#       QtWebEngine runtime process and binary archives (.pak) are located in libexec/qt$DK_QTVERSION/lib/QtWebEngineCore.framework/
+#
 OTHER_DIRS="\
 libexec/qt$DK_QTVERSION/translations \
+libexec/qt$DK_QTVERSION/lib/QtWebEngineCore.framework \
 lib/libdigikam*.dSYM \
 lib/plugins \
 lib/libgphoto2 \
@@ -317,13 +322,6 @@ done
 
 mkdir -p "$TEMPROOT/digikam.app/Contents/Resources/icons/"
 cp -a "$INSTALL_PREFIX/share/icons/hicolor" "$TEMPROOT/digikam.app/Contents/Resources/icons/"
-
-echo "---------- Copying Qt Web Backend files..."
-
-# Qt Web framework bin data files.
-# NOTE: Since Qt 5.15.0, QtWebEngine runtime process is now located in
-#       libexec/qt5/lib/QtWebEngineCore.framework/Versions/5/Helpers/QtWebEngineProcess.app/Contents/MacOS
-#       instead of libexec/qt5/libexec/. No needs to make extra rules for this runtime process.
 
 echo "---------- Copying i18n..."
 
@@ -563,6 +561,27 @@ ln -sv "../../digikam.app/Contents/lib"       "$TEMPROOT/showfoto.app/Contents/l
 ln -sv "../../digikam.app/Contents/libexec"   "$TEMPROOT/showfoto.app/Contents/libexec"
 ln -sv "../../digikam.app/Contents/share"     "$TEMPROOT/showfoto.app/Contents/share"
 ln -sv "../../digikam.app/Contents/Resources" "$TEMPROOT/showfoto.app/Contents/Resources"
+
+if [[ $DK_QTVERSION == 6 ]] ; then
+
+    # Specific plugin paths need to linked in the bundle for Qt6
+
+    ln -sv "../../digikam.app/Contents/MacOS/designer"      "$TEMPROOT/digikam.app/Contents/libexec/qt6/plugins/designer"
+    ln -sv "../../digikam.app/Contents/MacOS/generic"       "$TEMPROOT/digikam.app/Contents/libexec/qt6/plugins/generic"
+    ln -sv "../../digikam.app/Contents/MacOS/imageformats"  "$TEMPROOT/digikam.app/Contents/libexec/qt6/plugins/imageformats"
+    ln -sv "../../digikam.app/Contents/MacOS/platforms"     "$TEMPROOT/digikam.app/Contents/libexec/qt6/plugins/platforms"
+    ln -sv "../../digikam.app/Contents/MacOS/styles"        "$TEMPROOT/digikam.app/Contents/libexec/qt6/plugins/styles"
+    ln -sv "../../digikam.app/Contents/MacOS/iconengines"   "$TEMPROOT/digikam.app/Contents/libexec/qt6/plugins/iconengines"
+    ln -sv "../../digikam.app/Contents/MacOS/multimedia"    "$TEMPROOT/digikam.app/Contents/libexec/qt6/plugins/multimedia"
+    ln -sv "../../digikam.app/Contents/MacOS/sqldrivers"    "$TEMPROOT/digikam.app/Contents/libexec/qt6/plugins/sqldrivers"
+    ln -sv "../../digikam.app/Contents/MacOS/tls"           "$TEMPROOT/digikam.app/Contents/libexec/qt6/plugins/tls"
+
+    ln -sv "../../digikam.app/Contents/MacOS/kiconthemes6"  "$TEMPROOT/digikam.app/Contents/libexec/qt6/plugins/kiconthemes6"
+    ln -sv "../../digikam.app/Contents/MacOS/kf6"           "$TEMPROOT/digikam.app/Contents/libexec/qt6/plugins/kf6"
+
+    ln -sv "../../digikam.app/libexec/qt6/plugins/digikam"  "$TEMPROOT/digikam.app/Contents/libexec/qt6/plugins/digikam"
+
+fi
 
 echo -e "\n---------- Cleanup files in bundle"
 
