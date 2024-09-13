@@ -64,7 +64,7 @@ function(InstallKF6Component
                                 ALWAYS 0
             )
 
-            if("${DK_APPLE_PACKAGE_MANAGER}" STREQUAL "homebrew")
+            if(${DK_APPLE_PACKAGE_MANAGER} STREQUAL "homebrew")
                 set_target_properties(ext_${name} 
                                     PROPERTIES
                                     MACOSX_BUNDLE TRUE
@@ -160,9 +160,4 @@ InstallKF6Component(knewstuff                ${KDE_VERSION}     "${Qt6CommonOpti
 InstallKF6Component(kitemmodels              ${KDE_VERSION}     "${Qt6CommonOptions}"                                       "kitemmodels-drop-qml.patch")
 InstallKF6Component(kparts                   ${KDE_VERSION}     "${Qt6CommonOptions}"                                       "")
 InstallKF6Component(krunner                  ${KDE_VERSION}     "${Qt6CommonOptions}"                                       "")
-
-if("${DK_APPLE_PACKAGE_MANAGER}" STREQUAL "homebrew")
-    InstallKF6Component(breeze                   ${KP_VERSION}      "${Qt6CommonOptions};${BreezeOptions}"                      "breeze-common-rules-KF6.5.0.patch")
-else()
-    InstallKF6Component(breeze                   ${KP_VERSION}      "${Qt6CommonOptions};${BreezeOptions}"                      "breeze-common-rules.patch")
-endif()
+InstallKF6Component(breeze                   ${KP_VERSION}      "${Qt6CommonOptions};${BreezeOptions}"                      "breeze-common-rules.patch")

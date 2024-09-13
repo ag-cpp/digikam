@@ -175,10 +175,16 @@ extern "C" MAIN_EXPORT int MAIN_FN(int argc, char** argv)
 
 #ifdef HAVE_IMAGE_MAGICK
 
-#ifdef Q_CC_MSVC
+#if defined(Q_CC_MSVC)
 
     qputenv("MAGICK_CODER_MODULE_PATH", qApp->applicationDirPath().toUtf8());
     qputenv("MAGICK_CODER_FILTER_PATH", qApp->applicationDirPath().toUtf8());
+
+#elif (DK_APPLE_PACKAGE_HOMEBREW)
+
+    qputenv("MAGICK_CODER_MODULE_PATH",(qApp->applicationDirPath() + QString::fromUtf8("/../lib/ImageMagick/modules-Q16HDRI/coders", -1)).toUtf8());
+    qputenv("MAGICK_CODER_FILTER_PATH", (qApp->applicationDirPath() + QString::fromUtf8("/../lib/ImageMagick/modules-Q16HDRI/filters", -1)).toUtf8());
+    qputenv("PATH", (qApp->applicationDirPath() + QString::fromUtf8("/../bin:", -1) + QString::fromLocal8Bit(qgetenv("PATH"))).toUtf8());
 
 #endif
 

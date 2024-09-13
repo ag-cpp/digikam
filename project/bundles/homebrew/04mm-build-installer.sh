@@ -630,60 +630,77 @@ done
 
 #################################################################################################
 # configure MySQL/MariaDB 
+
+# clean up old cache files
+if [ -f "$ORIG_WD/found_dylibs_cache.pkl" ] ; then
+    rm "$ORIG_WD/found_dylibs_cache.pkl"
+fi
+
+if [ -f "$ORIG_WD/processed_dylibs_cache.pkl" ] ; then
+    rm "$ORIG_WD/processed_dylibs_cache.pkl"
+fi
+if [ -f "$ORIG_WD/signed_dylibs_cache.pkl" ] ; then
+    rm "$ORIG_WD/signed_dylibs_cache.pkl"
+fi
+
 rm -rfv $TEMPROOT/digikam.app/Contents/opt/mariadb/bin/mysql-test
+
+mv $TEMPROOT/$DK_APP_CONTENTS/opt/mariadb $TEMPROOT/$DK_APP_CONTENTS/lib/
+cp $INSTALL_PREFIX/Library/Application/digikam/database/mysql-global.conf "$TEMPROOT/$DK_APP_CONTENTS/Resources/digikam/database/mysql-global.conf"
+
+# find the binaries
+MARIADB_BINARIES=`find $TEMPROOT/$DK_APP_CONTENTS/lib/mariadb -type f -perm +111`
+for FILE in $MARIADB_BINARIES ; do
+        # install_name_tool -add_rpath @executable_path/.. $FILE || true
+        # install_name_tool -add_rpath @executable_path/../.. $FILE || true
+        # install_name_tool -add_rpath @executable_path/../../.. $FILE || true
+        # install_name_tool -add_rpath @executable_path/../../../.. $FILE || true
+        # codesign --force -s - $APP
+
+        copy_lib="$INSTALL_PREFIX/bin/python3 $ORIG_WD/package_lib.py --file=$FILE --bundle-root=$TEMPROOT/$DK_APP_CONTENTS/lib/mariadb --homebrew=$INSTALL_PREFIX --processed-cache=update  --found-cache=update --signed-cache=update --update-binary=1 --copy=1 --preserve_rpath=0"
+        #copy_lib="$INSTALL_PREFIX/bin/python3 $ORIG_WD/package_lib.py --file=$FILE --bundle-root=$TEMPROOT/$DK_APP_CONTENTS --processed-cache=update  --found-cache=update --signed-cache=update --update-binary=true --copy=false"
+        eval "$copy_lib"
+done
 
 echo -e "\n---------- Patch config and script files in bundle"
 
-# MARIADBDIRS=(`find $TEMPROOT -type d -name "mariadb"`)
+MARIADB_VERSION=`ls "$INSTALL_PREFIX/Cellar/mariadb"`
 
-# for DIR in ${MARIADBDIRS[@]} ; do
+echo "MariaDB Version is: - $MARIADB_VERSION -"
 
-#     MARIADBFILES=(`find $DIR -type f ! -name "*.dylib" ! -name "*.so"`)
+MARIADBFILES=`find $TEMPROOT/$DK_APP_CONTENTS/lib/mariadb -type f ! -name "*.dylib" ! -name "*.so"`
 
-#     for FILE in ${MARIADBFILES[@]} ; do
+for FILE in $MARIADBFILES ; do
 
-#         # to handle only text files
-#         ISTEXT=`file "$FILE" | grep "ASCII text" || true`
+    echo "MariaDB processing: $FILE"
+    # to handle only text files
+    ISTEXT=`file "$FILE" | grep -e "ASCII text" -e "Perl script text" || true`
 
-#         if [[ $ISTEXT ]] ; then
+    if [[ $ISTEXT ]] ; then
 
-#             NEEDPATCH=`grep "$INSTALL_PREFIX" "$FILE" || true`
+        echo "MariaDB text file: $FILE"
+        NEEDPATCH=`grep "$INSTALL_PREFIX" "$FILE" || true`
 
-#             if [[ $NEEDPATCH ]] ; then
+        if [[ $NEEDPATCH ]] ; then
 
-#                 echo -e "--- Patching $FILE..."
-#                 sed -i '' "s|$INSTALL_PREFIX/var|$RELOCATE_PREFIX/digikam.app/Contents/var|g" $FILE
-#                 sed -i '' "s|$INSTALL_PREFIX/lib|$RELOCATE_PREFIX/digikam.app/Contents/lib|g" $FILE
-#                 sed -i '' "s|$INSTALL_PREFIX/share|$RELOCATE_PREFIX/digikam.app/Contents/share|g" $FILE
-#                 sed -i '' "s|$INSTALL_PREFIX/etc|$RELOCATE_PREFIX/digikam.app/Contents/etc|g" $FILE
-#                 sed -i '' "s|$INSTALL_PREFIX|$RELOCATE_PREFIX/digikam.app/Contents/|g" $FILE
+            echo -e "--- Patching $FILE..."
+            sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/bin|$RELOCATE_PREFIX/digikam.app/Contents/lib/mariadb/bin|g" $FILE
+            sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/var|$RELOCATE_PREFIX/digikam.app/Contents/lib/mariadb/var|g" $FILE
+            sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/lib|$RELOCATE_PREFIX/digikam.app/Contents/lib/mariadb/lib|g" $FILE
+            sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/libexec|$RELOCATE_PREFIX/digikam.app/Contents/lib/mariadb/libexec|g" $FILE
+            sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/share|$RELOCATE_PREFIX/digikam.app/Contents/lib/mariadb/share|g" $FILE
+            sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/etc|$RELOCATE_PREFIX/digikam.app/Contents/lib/mariadb/etc|g" $FILE
+            sed -i '' "s|$INSTALL_PREFIX|$RELOCATE_PREFIX/digikam.app/Contents/lib/mariadb|g" $FILE
 
-#             fi
+        fi
 
-#         fi
+    fi
 
-#     done
-
-# done
+done
 
 # #################################################################################################
 # # See bug #436624: move mariadb share files at basedir (this must be done after patch operations)
 
-# mkdir -p "$TEMPROOT/digikam.app/Contents/lib/mariadb"
-# rsync -a "$TEMPROOT/digikam.app/Contents/opt/mariadb/share" "$TEMPROOT/digikam.app/Contents/lib/mariadb"
-# rm -fr "$TEMPROOT/digikam.app/Contents/opt/mariadb/share"
-
-# # rebase MariaDB here
-# rm $ORIG_WD/processed_dylibs_cache.pkl
-# rm $ORIG_WD/found_dylibs_cache.pkl
-# rm $ORIG_WD/signed_dylibs_cache.pkl
-
-# # find the binaries
-# MARIADB_BINARIES=(`find $TEMPROOT/$DK_APP_CONTENTS -path "**mariadb**" -type f -perm +111`)
-# for FILE in $MARIADB_BINARIES ; do
-#     copy_lib="$INSTALL_PREFIX/bin/python3 $ORIG_WD/package_lib.py --file=$FILE --bundle-root=$TEMPROOT/$DK_APP_CONTENTS --homebrew=$INSTALL_PREFIX --processed-cache=update  --found-cache=update --signed-cache=update --update-binary=true --copy=false"
-#    eval "$copy_lib"
-# done
 
 
 #################################################################################################
@@ -806,6 +823,19 @@ else
     echo -e "\n------------------------------------------------------------------"
     curl https://download.kde.org/README_UPLOAD
     echo -e "------------------------------------------------------------------\n"
+fi
+
+#################################################################################################
+# clean up old cache files
+if [ -f "$ORIG_WD/found_dylibs_cache.pkl" ] ; then
+    rm "$ORIG_WD/found_dylibs_cache.pkl"
+fi
+
+if [ -f "$ORIG_WD/processed_dylibs_cache.pkl" ] ; then
+    rm "$ORIG_WD/processed_dylibs_cache.pkl"
+fi
+if [ -f "$ORIG_WD/signed_dylibs_cache.pkl" ] ; then
+    rm "$ORIG_WD/signed_dylibs_cache.pkl"
 fi
 
 #################################################################################################
