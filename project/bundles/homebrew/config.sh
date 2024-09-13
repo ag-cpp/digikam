@@ -74,8 +74,8 @@ RELOCATE_PREFIX="/Applications/digiKam.org"
 
 # URL to git repository to checkout digiKam source code
 # git protocol version which require a developer account with ssh keys.
-DK_GITURL="git@invent.kde.org:graphics/digikam.git"
-#DK_GITURL="git@invent.kde.org:michmill/digi-kam-mac-os-arm-64-michmill.git"
+#DK_GITURL="git@invent.kde.org:graphics/digikam.git"
+DK_GITURL="git@invent.kde.org:michmill/digi-kam-mac-os-arm-64-michmill.git"
 # https protocol version which give annonyous access.
 #DK_GITURL="https://invent.kde.org/graphics/digikam.git"
 
@@ -87,11 +87,11 @@ DK_BUILDTEMP=~/dktemp
 
 # KDE Plasma version.
 # See official release here: https://download.kde.org/stable/plasma/
-DK_KP_VERSION="v6.0.4"
+DK_KP_VERSION="v6.1.5"
 
 # KDE Application version.
 # See official release here: https://download.kde.org/stable/release-service/
-DK_KA_VERSION="v24.02.2"
+DK_KA_VERSION="v24.08.0"
 
 # Qt version to use in bundle and provided by Homebrew.
 DK_QTVERSION="6"
@@ -100,8 +100,8 @@ DK_QTVERSION="6"
 # The list of tags can be listed with this url: https://invent.kde.org/graphics/digikam/-/tags
 # If you want to package current implementation from git, use "master" as tag.
 #DK_VERSION=v7.2.0-beta1
-DK_VERSION=master
-#DK_VERSION=fix_bundle_01
+#DK_VERSION=master
+DK_VERSION="work/michmill/imagemagick-coder-paths"
 #DK_VERSION=development/dplugins
 
 # Installer sub version to differentiates newer updates of the installer itself, even if the underlying application hasn’t changed.

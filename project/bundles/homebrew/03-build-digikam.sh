@@ -159,6 +159,7 @@ if [ $? -ne 0 ]; then
     exit;
 fi
 
+echo "-DDK_APPLE_PACKAGE_MANAGER is: $DK_APPLE_PACKAGE_MANAGER"
 echo -e "\n\n"
 echo "---------- Building digiKam $DK_VERSION"
 
