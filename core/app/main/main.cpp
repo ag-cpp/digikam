@@ -180,7 +180,7 @@ extern "C" MAIN_EXPORT int MAIN_FN(int argc, char** argv)
     qputenv("MAGICK_CODER_MODULE_PATH", qApp->applicationDirPath().toUtf8());
     qputenv("MAGICK_CODER_FILTER_PATH", qApp->applicationDirPath().toUtf8());
 
-#elif (DK_APPLE_PACKAGE_HOMEBREW)
+#elif defined(DK_APPLE_PACKAGE_HOMEBREW)
 
     qputenv("MAGICK_CODER_MODULE_PATH",(qApp->applicationDirPath() + QString::fromUtf8("/../lib/ImageMagick/modules-Q16HDRI/coders", -1)).toUtf8());
     qputenv("MAGICK_CODER_FILTER_PATH", (qApp->applicationDirPath() + QString::fromUtf8("/../lib/ImageMagick/modules-Q16HDRI/filters", -1)).toUtf8());
