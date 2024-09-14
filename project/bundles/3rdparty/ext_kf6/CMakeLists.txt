@@ -64,7 +64,7 @@ function(InstallKF6Component
                                 ALWAYS 0
             )
 
-            if(${DK_APPLE_PACKAGE_MANAGER} STREQUAL "homebrew")
+            if("${DK_APPLE_PACKAGE_MANAGER}" STREQUAL "homebrew")
                 set_target_properties(ext_${name} 
                                     PROPERTIES
                                     MACOSX_BUNDLE TRUE
