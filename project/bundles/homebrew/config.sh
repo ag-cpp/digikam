@@ -16,7 +16,7 @@ BUILDING_DIR="`pwd`/temp.build"
 ########################################################################
 
 # Target macOS architecture: "x86_64" for Intel 64 bits, or "arm64" for Apple Silicon 64 bits.
-ARCH_TARGET="arm64"
+ARCH_TARGET="`uname -m`"
 
 if [[ $ARCH_TARGET = "x86_64" ]] ; then
 
@@ -101,7 +101,7 @@ DK_QTVERSION="6"
 # If you want to package current implementation from git, use "master" as tag.
 #DK_VERSION=v7.2.0-beta1
 DK_VERSION=master
-#DK_VERSION="work/michmill/cmake-bulltproofing"
+#DK_VERSION="work/michmill/cleanup-for-merge"
 #DK_VERSION=development/dplugins
 
 # Installer sub version to differentiates newer updates of the installer itself, even if the underlying application hasn’t changed.

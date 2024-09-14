@@ -180,14 +180,11 @@ extern "C" MAIN_EXPORT int MAIN_FN(int argc, char** argv)
 
 #if defined(Q_CC_MSVC)
 
-    qputenv("MAGICK_CODER_MODULE_PATH", qApp->applicationDirPath().toUtf8());
-    qputenv("MAGICK_CODER_FILTER_PATH", qApp->applicationDirPath().toUtf8());
+    setWindowsEnvironment(app);
 
-#elif defined(DK_APPLE_PACKAGE_HOMEBREW)
+#elif defined(Q_OS_MACOS)
 
-    qputenv("MAGICK_CODER_MODULE_PATH",(qApp->applicationDirPath() + QString::fromUtf8("/../lib/ImageMagick/modules-Q16HDRI/coders", -1)).toUtf8());
-    qputenv("MAGICK_CODER_FILTER_PATH", (qApp->applicationDirPath() + QString::fromUtf8("/../lib/ImageMagick/modules-Q16HDRI/filters", -1)).toUtf8());
-    qputenv("PATH", (qApp->applicationDirPath() + QString::fromUtf8("/../bin:", -1) + QString::fromLocal8Bit(qgetenv("PATH"))).toUtf8());
+    setMacOSEnvironment();
 
 #endif
 
