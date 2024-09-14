@@ -38,6 +38,8 @@ build_dir
 .flatpak-builder
 compile_commands.json
 temp.*/
+Applications/
+bundle/
 
 # Ignore temporary files
 *.orig
@@ -50,3 +52,9 @@ GPATH
 GRTAGS
 GSYMS
 BROWSE
+project/bundles/homebrew/data/liblqr_manifest.txt
+project/bundles/homebrew/data/libraw_manifest.txt
+project/bundles/homebrew/data/o2_manifest.txt
+project/bundles/homebrew/data/RELEASEID.txt
+project/bundles/homebrew/installer/postinstall
+project/bundles/homebrew/installer/preinstall
