@@ -673,9 +673,8 @@ MARIADBFILES=`find $TEMPROOT/$DK_APP_CONTENTS/lib/mariadb -type f ! -name "*.dyl
 
 for FILE in $MARIADBFILES ; do
 
-    echo "MariaDB processing: $FILE"
     # to handle only text files
-    ISTEXT=`file "$FILE" | grep -e "ASCII text" -e "Perl script text" || true`
+    ISTEXT=`file "$FILE" | grep -e "ASCII text" || true`
 
     if [[ $ISTEXT ]] ; then
 
@@ -685,14 +684,51 @@ for FILE in $MARIADBFILES ; do
         if [[ $NEEDPATCH ]] ; then
 
             echo -e "--- Patching $FILE..."
-            sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/bin|$RELOCATE_PREFIX/digikam.app/Contents/lib/mariadb/bin|g" $FILE
-            sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/var|$RELOCATE_PREFIX/digikam.app/Contents/lib/mariadb/var|g" $FILE
-            sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/lib|$RELOCATE_PREFIX/digikam.app/Contents/lib/mariadb/lib|g" $FILE
-            sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/libexec|$RELOCATE_PREFIX/digikam.app/Contents/lib/mariadb/libexec|g" $FILE
-            sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/share|$RELOCATE_PREFIX/digikam.app/Contents/lib/mariadb/share|g" $FILE
-            sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/etc|$RELOCATE_PREFIX/digikam.app/Contents/lib/mariadb/etc|g" $FILE
-            sed -i '' "s|$INSTALL_PREFIX|$RELOCATE_PREFIX/digikam.app/Contents/lib/mariadb|g" $FILE
+            sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/bin|\$DK_MARIADB_DIR/bin|g" $FILE
+            sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/var|\$DK_MARIADB_DIR/var|g" $FILE
+            sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/lib|\$DK_MARIADB_DIR/lib|g" $FILE
+            sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/libexec|\$DK_MARIADB_DIR/libexec|g" $FILE
+            sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/share|\$DK_MARIADB_DIR/share|g" $FILE
+            sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/etc|\$DK_MARIADB_DIR/etc|g" $FILE
+            sed -i '' "s|$INSTALL_PREFIX|\$DK_MARIADB_DIR|g" $FILE
 
+            # sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/bin|$RELOCATE_PREFIX/digikam.app/Contents/lib/mariadb/bin|g" $FILE
+            # sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/var|$RELOCATE_PREFIX/digikam.app/Contents/lib/mariadb/var|g" $FILE
+            # sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/lib|$RELOCATE_PREFIX/digikam.app/Contents/lib/mariadb/lib|g" $FILE
+            # sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/libexec|$RELOCATE_PREFIX/digikam.app/Contents/lib/mariadb/libexec|g" $FILE
+            # sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/share|$RELOCATE_PREFIX/digikam.app/Contents/lib/mariadb/share|g" $FILE
+            # sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/etc|$RELOCATE_PREFIX/digikam.app/Contents/lib/mariadb/etc|g" $FILE
+            # sed -i '' "s|$INSTALL_PREFIX|$RELOCATE_PREFIX/digikam.app/Contents/lib/mariadb|g" $FILE
+        fi
+
+    fi
+
+   # to handle only text files
+    ISPERLTEXT=`file "$FILE" | grep -e "Perl script text" || true`
+
+    if [[ $ISPERLTEXT ]] ; then
+
+        echo "MariaDB text file: $FILE"
+        NEEDPATCH=`grep "$INSTALL_PREFIX" "$FILE" || true`
+
+        if [[ $NEEDPATCH ]] ; then
+
+            echo -e "--- Patching $FILE..."
+            sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/bin|\$ENV{DK_MARIADB_DIR}/bin|g" $FILE
+            sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/var|\$ENV{DK_MARIADB_DIR}/var|g" $FILE
+            sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/lib|\$ENV{DK_MARIADB_DIR}/lib|g" $FILE
+            sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/libexec|\$ENV{DK_MARIADB_DIR}/libexec|g" $FILE
+            sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/share|\$ENV{DK_MARIADB_DIR}/share|g" $FILE
+            sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/etc|\$ENV{DK_MARIADB_DIR}/etc|g" $FILE
+            sed -i '' "s|$INSTALL_PREFIX|\$ENV{DK_MARIADB_DIR}|g" $FILE
+
+            # sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/bin|$RELOCATE_PREFIX/digikam.app/Contents/lib/mariadb/bin|g" $FILE
+            # sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/var|$RELOCATE_PREFIX/digikam.app/Contents/lib/mariadb/var|g" $FILE
+            # sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/lib|$RELOCATE_PREFIX/digikam.app/Contents/lib/mariadb/lib|g" $FILE
+            # sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/libexec|$RELOCATE_PREFIX/digikam.app/Contents/lib/mariadb/libexec|g" $FILE
+            # sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/share|$RELOCATE_PREFIX/digikam.app/Contents/lib/mariadb/share|g" $FILE
+            # sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/etc|$RELOCATE_PREFIX/digikam.app/Contents/lib/mariadb/etc|g" $FILE
+            # sed -i '' "s|$INSTALL_PREFIX|$RELOCATE_PREFIX/digikam.app/Contents/lib/mariadb|g" $FILE
         fi
 
     fi
