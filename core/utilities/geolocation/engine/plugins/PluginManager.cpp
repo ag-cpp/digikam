@@ -39,7 +39,7 @@ class Q_DECL_HIDDEN PluginManagerPrivate
 {
 public:
 
-    PluginManagerPrivate(PluginManager* parent)
+    PluginManagerPrivate(PluginManager* const parent)
         : m_parent(parent)
     {
     }
@@ -49,7 +49,7 @@ public:
 public:
 
     void loadPlugins();
-    bool addPlugin(QObject* obj, const QPluginLoader* loader);
+    bool addPlugin(QObject* const obj, const QPluginLoader* const loader);
 
 public:
 
@@ -84,6 +84,7 @@ PluginManager::PluginManager(QObject* parent) : QObject(parent),
 
 #endif
 
+    d->loadPlugins();
 }
 
 PluginManager::~PluginManager()
@@ -189,7 +190,7 @@ void PluginManager::whitelistPlugin(const QString& filename)
  * Append obj to the given plugins list if it inherits both T and U
  */
 template<class Iface, class Plugin>
-bool appendPlugin(QObject* obj, const QPluginLoader* loader, QList<Plugin>& plugins)
+bool appendPlugin(QObject* const obj, const QPluginLoader* const loader, QList<Plugin>& plugins)
 {
     if (qobject_cast<Iface*>(obj) && qobject_cast<Plugin>(obj))
     {
@@ -211,16 +212,17 @@ bool appendPlugin(QObject* obj, const QPluginLoader* loader, QList<Plugin>& plug
     return false;
 }
 
-bool PluginManagerPrivate::addPlugin(QObject* obj, const QPluginLoader* loader)
+bool PluginManagerPrivate::addPlugin(QObject* const obj, const QPluginLoader* const loader)
 {
-    bool isPlugin = appendPlugin<RenderPluginInterface>
-                    (obj, loader, m_renderPluginTemplates);
-    isPlugin      = isPlugin || appendPlugin<SearchRunnerPlugin>
-                    (obj, loader, m_searchRunnerPlugins);
-    isPlugin      = isPlugin || appendPlugin<ReverseGeocodingRunnerPlugin>
-                    (obj, loader, m_reverseGeocodingRunnerPlugins);
-    isPlugin      = isPlugin || appendPlugin<ParseRunnerPlugin>
-                    (obj, loader, m_parsingRunnerPlugins);
+    if (!obj || !loader)
+    {
+        return false;
+    }
+
+    bool isPlugin =             appendPlugin<RenderPluginInterface>       (obj, loader, m_renderPluginTemplates);
+    isPlugin      = isPlugin || appendPlugin<SearchRunnerPlugin>          (obj, loader, m_searchRunnerPlugins);
+    isPlugin      = isPlugin || appendPlugin<ReverseGeocodingRunnerPlugin>(obj, loader, m_reverseGeocodingRunnerPlugins);
+    isPlugin      = isPlugin || appendPlugin<ParseRunnerPlugin>           (obj, loader, m_parsingRunnerPlugins);
 
     if (!isPlugin)
     {
@@ -258,7 +260,7 @@ void PluginManagerPrivate::loadPlugins()
 
     bool foundPlugin = false;
 
-    for (const QString& fileName : pluginFileNameList)
+    for (const QString& fileName : std::as_const(pluginFileNameList))
     {
         QString const baseName = QFileInfo(fileName).baseName();
 
@@ -279,12 +281,14 @@ void PluginManagerPrivate::loadPlugins()
         if (!m_whitelist.isEmpty() && !m_whitelist.contains(baseName) && !m_whitelist.contains(libBaseName))
         {
             qCDebug(DIGIKAM_MARBLE_LOG) << "Ignoring non-whitelisted plugin " << fileName;
+
             continue;
         }
 
         if (m_blacklist.contains(baseName) || m_blacklist.contains(libBaseName))
         {
             qCDebug(DIGIKAM_MARBLE_LOG) << "Ignoring blacklisted plugin " << fileName;
+
             continue;
         }
 
@@ -327,7 +331,8 @@ void PluginManagerPrivate::loadPlugins()
 
         else
         {
-            qCWarning(DIGIKAM_MARBLE_LOG) << "Ignoring to load the following file since it doesn't look like a valid Marble plugin:" << path << Qt::endl
+            qCWarning(DIGIKAM_MARBLE_LOG) << "Ignoring to load the following file since it doesn't look like a valid Marble plugin:"
+                                          << path << Qt::endl
                                           << "Reason:" << loader->errorString();
             delete loader;
         }
@@ -364,10 +369,10 @@ void PluginManager::installPluginsFromAssets() const
     pluginHome.mkpath(MarbleDirs::pluginLocalPath());
     pluginHome.setCurrent(MarbleDirs::pluginLocalPath());
 
-    QStringList pluginNameFilter = QStringList() << "lib*.so";
+    QStringList pluginNameFilter      = QStringList() << "lib*.so";
     QStringList const existingPlugins = QDir(MarbleDirs::pluginLocalPath()).entryList(pluginNameFilter, QDir::Files);
 
-    for (const QString& existingPlugin : existingPlugins)
+    for (const QString& existingPlugin : std::as_const(existingPlugins))
     {
         QFile::remove(existingPlugin);
     }

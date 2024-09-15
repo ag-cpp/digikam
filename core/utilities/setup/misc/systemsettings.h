@@ -51,35 +51,40 @@ public:
 
 #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 
-    bool useHighDpiScaling = false;
-    bool useHighDpiPixmaps = false;
+    bool    useHighDpiScaling = false;
+    bool    useHighDpiPixmaps = false;
 
 #endif
 
-    bool enableFaceEngine  = false;
-    bool enableAesthetic   = false;
-    bool enableAutoTags    = false;
-    bool softwareOpenGL    = false;
-    bool enableLogging     = false;
-    bool disableOpenCL     = true;
+    bool    enableFaceEngine  = false;
+    bool    enableAesthetic   = false;
+    bool    enableAutoTags    = false;
+    bool    softwareOpenGL    = false;
+    bool    enableLogging     = false;
+    bool    disableOpenCL     = true;
+
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+
+#   ifdef Q_OS_WIN
 
     // Video Settings Windows
 
-#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)) && defined(Q_OS_WIN)
+    bool    disableHWConv     = false;
 
-    bool    disableHWConv  = false;
-    QString videoBackend   = QLatin1String("ffmpeg");
+#   endif
+
+    QString videoBackend      = QLatin1String("ffmpeg");
 
 #endif
 
     // Proxy Settings.
 
     QString proxyUrl;
-    int     proxyPort      = 8080;
+    int     proxyPort         = 8080;
     QString proxyUser;
     QString proxyPass;
-    int     proxyType      = HttpProxy;
-    bool    proxyAuth      = false;
+    int     proxyType         = HttpProxy;
+    bool    proxyAuth         = false;
 
 private:
 

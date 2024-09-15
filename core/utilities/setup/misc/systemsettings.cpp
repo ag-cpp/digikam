@@ -87,11 +87,16 @@ void SystemSettings::readSettings()
     enableLogging        = settings.value(QLatin1String("enableLogging"),     false).toBool();
     disableOpenCL        = settings.value(QLatin1String("disableOpenCL"),     true).toBool();
 
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+
+#   ifdef Q_OS_WIN
+
     // Video Settings Windows
 
-#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)) && defined(Q_OS_WIN)
-
     disableHWConv        = settings.value(QLatin1String("disableHWConv"),     false).toBool();
+
+#   endif
+
     videoBackend         = settings.value(QLatin1String("videoBackend"),      QLatin1String("ffmpeg")).toString();
 
 #endif
@@ -173,9 +178,14 @@ void SystemSettings::saveSettings()
         settings.remove(QLatin1String("disableFaceEngine"));
     }
 
-#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)) && defined(Q_OS_WIN)
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+
+#   ifdef Q_OS_WIN
 
     settings.setValue(QLatin1String("disableHWConv"),     disableHWConv);
+
+#   endif
+
     settings.setValue(QLatin1String("videoBackend"),      videoBackend);
 
 #endif
