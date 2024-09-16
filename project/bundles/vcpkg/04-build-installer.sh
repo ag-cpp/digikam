@@ -174,6 +174,8 @@ if [[ $DK_QTVERSION = 6 ]] ; then
 
     cp $BUILDDIR/../common/breeze.rcc                                     $BUNDLEDIR/breeze.rcc                 2>/dev/null
 
+    cp -r $VCPKG_INSTALL_PREFIX/Qt6/plugins/kiconthemes6                  $BUNDLEDIR/                           2>/dev/null
+
 else
 
     cp $BUILDDIR/../common/breeze.rcc                                     $BUNDLEDIR/breeze.rcc                 2>/dev/null
