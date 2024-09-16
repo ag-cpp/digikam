@@ -74,8 +74,8 @@ RELOCATE_PREFIX="/Applications/digiKam.org"
 
 # URL to git repository to checkout digiKam source code
 # git protocol version which require a developer account with ssh keys.
-DK_GITURL="git@invent.kde.org:graphics/digikam.git"
-#DK_GITURL="git@invent.kde.org:michmill/digi-kam-mac-os-arm-64-michmill.git"
+#DK_GITURL="git@invent.kde.org:graphics/digikam.git"
+DK_GITURL="git@invent.kde.org:michmill/digi-kam-mac-os-arm-64-michmill.git"
 # https protocol version which give annonyous access.
 #DK_GITURL="https://invent.kde.org/graphics/digikam.git"
 
