@@ -90,19 +90,19 @@ BUGFIXES:
 071 ==> 490553 - Audio delay when playing movie.
 072 ==> 493193 - Deletion of image from album in thumbnail view re-indexes active position to top row.
 073 ==> 425304 - digiKam doesn't quit in full-screen mode.
-074 ==> 
-075 ==> 
-076 ==> 
-077 ==> 
-078 ==> 
-079 ==> 
-080 ==> 
-081 ==> 
-082 ==> 
-083 ==> 
-084 ==> 
-085 ==> 
-086 ==> 
+074 ==> 479033 - digiKam crashes on "Find New Items".
+075 ==> 485393 - digiKam crash on library import.
+076 ==> 486296 - Open for 2 sec and then crash.
+077 ==> 470530 - Camera list is missing when adding camera.
+078 ==> 451719 - Camera list is empty.
+079 ==> 451727 - Empty Camera List.
+080 ==> 460252 - No cameras listed in import cameras module.
+081 ==> 491870 - Slideshow: open settings with F2 and switch overlay with F4 is no longer possible.
+082 ==> 491885 - Selected tags in the settings window of the filter are not marked with a checkmark.
+083 ==> 491042 - MariaDB (MySQL) embedded files missing in fresh install.
+084 ==> 486632 - Camera is never detected using bundled gphoto2 libraries.
+085 ==> 465652 - Rescan activated for all collection when adding new collection.
+086 ==> 491040 - Unable to use Darktable for demosaicing on MacOS ARM.
 087 ==> 
 088 ==> 
 089 ==> 
