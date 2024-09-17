@@ -77,6 +77,71 @@ Applications/digiKam.org \
 "
 #bin \
 
+QT_FRAMEWORKS="\
+QtQuickTimeline \
+Qt3DInput \
+QtQuick3DAssetUtils \
+QtWebEngineCore \
+QtDesigner \
+QtWebEngineQuick \
+QtQuick3DAssetImport \
+QtWebEngineWidgets \
+QtQuickWidgets \
+QtShaderTools \
+Qt3DQuickScene2D \
+QtOpcUa \
+QtPdf \
+Qt3DRender \
+QtQuick3DRuntimeRender \
+QtGui \
+QtDBus \
+QtQuick3DUtils \
+QtPositioningQuick \
+Qt3DCore \
+QtLocation \
+QtXml \
+QtSerialPort \
+QtWebView \
+QtQuick \
+QtScxml \
+QtCore \
+QtQml \
+Qt3DExtras \
+QtWebChannel \
+QtMultimedia \
+QtVirtualKeyboard \
+QtOpenGL \
+QtQmlCompiler \
+QtOpenGLWidgets \
+Qt3DQuick \
+QtWidgets \
+QtPositioning \
+QtQuick3D \
+Qt3DLogic \
+QtQuickShapes \
+QtNetwork \
+QtSvg \
+QtWebChannelQuick \
+QtQmlModels \
+QtSensors \
+Qt3DAnimation \
+QtTextToSpeech \
+QtWebViewQuick \
+QtSerialBus \
+QtConcurrent \
+QtNetworkAuth \
+QtPrintSupport \
+QtStateMachine \
+QtSvgWidgets \
+QtMultimediaWidgets \
+QtSql \
+QtWebEngineCore \
+QtMultimediaWidgets \
+QtNetworkAuth \
+QtPrintSupport \
+QtStateMachine \
+QtSvgWidgets \
+"
 # Other apps - non-MacOS binaries & libraries to be included with required dylibsQT_PLUGIN_EXT
 
 if [[ $ARCH_TARGET = "x86_64" ]] ; then
@@ -107,18 +172,17 @@ bin/solid-hardware$DK_QTVERSION \
 bin/ffmpeg \
 bin/hunspell \
 opt/qt$DK_QTVERSION/share/qt/plugins/imageformats/*.dylib \
-opt/qt-mariadb/share/qt/plugins/sqldrivers/*.dylib \
+opt/qt$DK_QTVERSION/share/qt/plugins/sqldrivers/*.dylib \
 opt/qt$DK_QTVERSION/share/qt/plugins/platforms/*.dylib \
 opt/qt$DK_QTVERSION/share/qt/plugins/iconengines/*.dylib \
 opt/qt$DK_QTVERSION/share/qt/plugins/generic/*.dylib \
 opt/qt$DK_QTVERSION/share/qt/plugins/styles/*.dylib \
-opt/qt$DK_QTVERSION/share/qt/plugins/sqldrivers/*.dylib \
 opt/qt$DK_QTVERSION/share/qt/plugins/multimedia/*.dylib \
 opt/qt$DK_QTVERSION/share/qt/plugins/tls/*.dylib \
 lib/libhunspell*.dylib \
 opt/openssl@3/lib/*.dylib \
 "
-
+#opt/qt-mariadb/share/qt/plugins/sqldrivers/*.dylib \
 #lib/sane/*.so \
 
 binaries="$OTHER_APPS"
@@ -131,8 +195,6 @@ binaries="$OTHER_APPS"
 #
 OTHER_DIRS="\
 opt/qt$DK_QTVERSION/share/qt/translations \
-Cellar/qt/6.7.0_2/lib/QtWebEngineCore.framework/Versions/A/Helpers/QtWebEngineProcess.app \
-Cellar/qt/6.7.0_2/lib/QtWebEngineCore.framework/Versions/A/Resources \
 share/qt/plugins \
 lib/libdigikam*.dSYM \
 lib/plugins \
@@ -143,6 +205,8 @@ lib/ImageMagick* \
 share/ImageMagick* \
 etc/ImageMagick* \
 "
+# Cellar/qt/6.7.0_2/lib/QtWebEngineCore.framework/Versions/A/Helpers/QtWebEngineProcess.app \
+# Cellar/qt/6.7.0_2/lib/QtWebEngineCore.framework/Versions/A/Resources \
 
 # etc/my.cnf
 # etc/my.cnf.default
@@ -159,9 +223,7 @@ share/k* \
 share/mime \
 Library/Application/ \
 share/applications \
-
 share/lensfun \
-
 share/QtCurve/Breeze.qtcurve \
 "
 #share/locale \
@@ -241,6 +303,26 @@ for app in $KDE_MENU_APPS ; do
         fi
 
     done
+
+done
+
+#################################################################################################
+# Copy Qt Frameworks to the staging area (creating directories as required)
+
+echo "---------- Copying Qt frameworks..."
+
+rm -rf $INSTALL_PREFIX/Cellar/qt/.DS_Store || true
+mkdir $TEMPROOT/Frameworks
+QT_FULL_VERSION=`ls "$INSTALL_PREFIX/Cellar/qt/"`
+
+for framework in $QT_FRAMEWORKS ; do
+
+    echo "Copying Qt framework: $framework"
+
+    # Copy framework
+    cp -R "$INSTALL_PREFIX/Cellar/qt/$QT_FULL_VERSION/Frameworks/$framework.framework" "$TEMPROOT/Frameworks"
+    cp -R "$INSTALL_PREFIX/Cellar/qt/$QT_FULL_VERSION/lib/$framework.framework" "$TEMPROOT/lib"
+    #cp -R "$INSTALL_PREFIX/Cellar/qt/$QT_FULL_VERSION/lib/$framework.framework" "$TEMPROOT/lib"
 
 done
 
@@ -505,20 +587,22 @@ mv -v $TEMPROOT/etc                           $TEMPROOT/digikam.app/Contents/
 mv -v $TEMPROOT/lib                           $TEMPROOT/digikam.app/Contents/
 #mv -v $TEMPROOT/libexec                       $TEMPROOT/digikam.app/Contents/
 mv -v $TEMPROOT/opt                           $TEMPROOT/digikam.app/Contents/
+mv -v $TEMPROOT/Frameworks                    $TEMPROOT/digikam.app/Contents/
 if [ ! -d $TEMPROOT/Cellar ] ; then
     mkdir $TEMPROOT/Cellar
 fi
 mv -v $TEMPROOT/Cellar                        $TEMPROOT/digikam.app/Contents/
 
-ln -sv "../../digikam.app/Contents/bin"       "$TEMPROOT/showfoto.app/Contents/bin"
-ln -sv "../../digikam.app/Contents/etc"       "$TEMPROOT/showfoto.app/Contents/etc"
-ln -sv "../../digikam.app/Contents/lib"       "$TEMPROOT/showfoto.app/Contents/lib"
+ln -sv "../../digikam.app/Contents/bin"        "$TEMPROOT/showfoto.app/Contents/bin"
+ln -sv "../../digikam.app/Contents/etc"        "$TEMPROOT/showfoto.app/Contents/etc"
+ln -sv "../../digikam.app/Contents/lib"        "$TEMPROOT/showfoto.app/Contents/lib"
 #ln -sv "../../digikam.app/Contents/libexec"   "$TEMPROOT/showfoto.app/Contents/libexec"
-ln -sv "../../digikam.app/Contents/share"     "$TEMPROOT/showfoto.app/Contents/share"
-ln -sv "../../digikam.app/Contents/Resources" "$TEMPROOT/showfoto.app/Contents/Resources"
-ln -sv "../../digikam.app/Contents/opt"       "$TEMPROOT/showfoto.app/Contents/opt"
-ln -sv "../../digikam.app/Contents/Cellar"    "$TEMPROOT/showfoto.app/Contents/Cellar"
-ln -sv "../../digikam.app/Contents/plugins"   "$TEMPROOT/showfoto.app/Contents/plugins"
+ln -sv "../../digikam.app/Contents/share"      "$TEMPROOT/showfoto.app/Contents/share"
+ln -sv "../../digikam.app/Contents/Resources"  "$TEMPROOT/showfoto.app/Contents/Resources"
+ln -sv "../../digikam.app/Contents/opt"        "$TEMPROOT/showfoto.app/Contents/opt"
+ln -sv "../../digikam.app/Contents/Frameworks" "$TEMPROOT/showfoto.app/Contents/Frameworks"
+ln -sv "../../digikam.app/Contents/Cellar"     "$TEMPROOT/showfoto.app/Contents/Cellar"
+ln -sv "../../digikam.app/Contents/plugins"    "$TEMPROOT/showfoto.app/Contents/plugins"
 
 ln -sv "../lib" $TEMPROOT/digikam.app/Contents/opt/lib
 
@@ -601,25 +685,31 @@ echo -e "\n---------- Adjusting Qt"
 
 # Copy qt.conf
 cp "$ORIG_WD/data/qt.conf" "$TEMPROOT/$DK_APP_CONTENTS/Resources/qt.conf"
-QT_FULL_VERSION=`ls "$TEMPROOT/$DK_APP_CONTENTS/Cellar/qt"`
+#QT_FULL_VERSION=`ls "$TEMPROOT/$DK_APP_CONTENTS/Cellar/qt"`
 
 # symlink Qt dirs
 ln -s "./Resources/QtCurve" "$TEMPROOT/$DK_APP_CONTENTS/share/QtCurve"
-ln -s "../Cellar/qt/$QT_FULL_VERSION/lib/QtWebEngineCore.framework/Versions/A/Helpers/QtWebEngineProcess.app/Contents/MacOS/QtWebEngineProcess" "$TEMPROOT/$DK_APP_CONTENTS/MacOS/QtWebEngineProcess"
+#ln -s "../Cellar/qt/$QT_FULL_VERSION/lib/QtWebEngineCore.framework/Versions/A/Helpers/QtWebEngineProcess.app/Contents/MacOS/QtWebEngineProcess" "$TEMPROOT/$DK_APP_CONTENTS/MacOS/QtWebEngineProcess"
 ln -s "./share/qt/plugins"  "$TEMPROOT/$DK_APP_CONTENTS/plugins"
-ln -s "../../Cellar/qt/$QT_FULL_VERSION/lib/QtWebEngineCore.framework/Versions/A/Resources/qtwebengine_locales" "$TEMPROOT/$DK_APP_CONTENTS/Resources/translations/qtwebengine_locales"
+#ln -s "../../Cellar/qt/$QT_FULL_VERSION/lib/QtWebEngineCore.framework/Versions/A/Resources/qtwebengine_locales" "$TEMPROOT/$DK_APP_CONTENTS/Resources/translations/qtwebengine_locales"
+
+# add additional rpaths and re-sign QtWebEngineProcess
+WEP=`find $TEMPROOT/$DK_APP_CONTENTS -name "QtWebEngineProcess"`
+install_name_tool -add_rpath @loader_path/../../../../../../../../ $WEP
+codesign --force -s - $WEP
 
 # move the QtWebEngine resources
 echo -e "\n     ----- Moving QtWebEngine Resources"
 
-WEBENGINE_RESOURCES=`find "$TEMPROOT/$DK_APP_CONTENTS/Cellar/qt/$QT_FULL_VERSION/lib/QtWebEngineCore.framework/Versions/A/Resources" -name "*.*" -maxdepth 1 ! -name '*.plist'`
+#WEBENGINE_RESOURCES=`find "$TEMPROOT/$DK_APP_CONTENTS/Cellar/qt/$QT_FULL_VERSION/lib/QtWebEngineCore.framework/Versions/A/Resources" -name "*.*" -maxdepth 1 ! -name '*.plist'`
+# WEBENGINE_RESOURCES=`find "$TEMPROOT/$DK_APP_CONTENTS/Frameworks/QtWebEngineCore.framework/Versions/A/Resources" -name "*.*" -maxdepth 1 ! -name '*.plist'`
 
-for WER in $WEBENGINE_RESOURCES ; do
+# for WER in $WEBENGINE_RESOURCES ; do
 
-    echo "Moving WER: $WER"
-    mv "$WER" "$TEMPROOT/$DK_APP_CONTENTS/Resources"
+#     echo "Moving WER: $WER"
+#     mv "$WER" "$TEMPROOT/$DK_APP_CONTENTS/Resources"
 
-done
+# done
 
 #################################################################################################
 # configure MySQL/MariaDB 
