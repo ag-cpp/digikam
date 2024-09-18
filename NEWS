@@ -4,15 +4,19 @@ digiKam 8.5.0 - Release date: 2024-xx-xx
 NEW FEATURES:
 
 Bundles:   Update Exiftool to last 12.96.
-Bundles:   update to last Exiv2 version 0.28.3.
-Bundles:   update to last ExifTool version 12.89.
+Bundles:   Update to last Exiv2 version 0.28.3.
+Bundles:   Update to last ExifTool version 12.89.
 Bundles:   AppImage are now based on KDE framework 6.5.0.
 Bundles:   Windows installer are now based on KDE framework 6.5.0.
-Bundles:   MacOS Silicon package is now based on Qt6 framework 6.7.2 and KDE framework 6.5.0.
+Bundles:   New MacOS Silicon (arm64) package based on Qt6 framework 6.7.2,
+           KDE framework 6.5.0, and ffmpeg 6.1.
 
-Database:  update to new unique file hash V3 added.
+Database:  Update to new unique file hash V3 added.
 RawEngine: Update internal libraw to last 20240916 upstream.
 Video:     Update internal QtAVPlayer to last 20240820 upstream (Qt5 only).
+
+IconView:  More compact thumbnails by using a simple horizontal line instead a frame
+           to render Color Labels.
 
 *****************************************************************************************************
 BUGFIXES:
@@ -103,9 +107,9 @@ BUGFIXES:
 084 ==> 486632 - Camera is never detected using bundled gphoto2 libraries.
 085 ==> 465652 - Rescan activated for all collection when adding new collection.
 086 ==> 491040 - Unable to use Darktable for demosaicing on MacOS ARM.
-087 ==> 
-088 ==> 
-089 ==> 
+087 ==> 448045 - Reduce intensity of Colour Labels Displayed in Album/Thumbnail View or Replace with Discreet Colour Label.
+088 ==> 487799 - Geolocalization icon always black in thumbnail view.
+089 ==> 486341 - Edit Bookmarks menu item does nothing.
 090 ==> 
 091 ==> 
 092 ==> 
