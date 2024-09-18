@@ -151,6 +151,7 @@ else
 fi
 
 # Note: lib/plugins/styles/ files are *.so in both architectures. Why this mess?
+MARIADB_SOURCE_DIR="opt/mariadb"
 
 OTHER_APPS="\
 lib/plugins/imageformats/*.$QT_PLUGIN_EXT \
@@ -160,13 +161,6 @@ lib/plugins/digikam/generic/*.so \
 lib/plugins/digikam/editor/*.so \
 lib/plugins/digikam/dimg/*.so \
 lib/plugins/digikam/rawimport/*.so \
-opt/mariadb/bin/mysql \
-opt/mariadb/bin/mysqld \
-opt/mariadb/bin/my_print_defaults \
-opt/mariadb/bin/mysqladmin \
-opt/mariadb/bin/mysqltest \
-opt/mariadb/lib/*.dylib \
-opt/mariadb/lib/plugin/*.so \
 bin/kbuildsycoca$DK_QTVERSION \
 bin/solid-hardware$DK_QTVERSION \
 bin/ffmpeg \
@@ -184,6 +178,13 @@ opt/openssl@3/lib/*.dylib \
 "
 #opt/qt-mariadb/share/qt/plugins/sqldrivers/*.dylib \
 #lib/sane/*.so \
+# opt/mariadb/bin/mysql \
+# opt/mariadb/bin/mysqld \
+# opt/mariadb/bin/my_print_defaults \
+# opt/mariadb/bin/mysqladmin \
+# opt/mariadb/bin/mysqltest \
+# opt/mariadb/lib/*.dylib \
+# opt/mariadb/lib/plugin/*.so \
 
 binaries="$OTHER_APPS"
 
@@ -200,7 +201,6 @@ lib/libdigikam*.dSYM \
 lib/plugins \
 lib/libgphoto2 \
 lib/libgphoto2_port \
-opt/mariadb \
 lib/ImageMagick* \
 share/ImageMagick* \
 etc/ImageMagick* \
@@ -322,7 +322,6 @@ for framework in $QT_FRAMEWORKS ; do
     # Copy framework
     cp -R "$INSTALL_PREFIX/Cellar/qt/$QT_FULL_VERSION/Frameworks/$framework.framework" "$TEMPROOT/Frameworks"
     cp -R "$INSTALL_PREFIX/Cellar/qt/$QT_FULL_VERSION/lib/$framework.framework" "$TEMPROOT/lib"
-    #cp -R "$INSTALL_PREFIX/Cellar/qt/$QT_FULL_VERSION/lib/$framework.framework" "$TEMPROOT/lib"
 
 done
 
@@ -452,12 +451,23 @@ echo "---------- Move digiKam and KF6 run-time plugins\n"
 rm -fr $TEMPROOT/bin/digikam.app
 rm -fr $TEMPROOT/bin/showfoto.app
 
-# FIX ME LATER
-# mkdir -p $TEMPROOT/libexec/qt$DK_QTVERSION/
 cp -a  $TEMPROOT/lib/plugins/         $TEMPROOT/share/qt/plugins
 rm -rf $TEMPROOT/lib/plugins/
-# cp -a  $TEMPROOT/opt/qt$DK_QTVERSION/share/qt/plugins $TEMPROOT/libexec/qt$DK_QTVERSION/
-# rm -rf $TEMPROOT/opt/qt$DK_QTVERSION/
+
+#################################################################################################
+# Copy MariaDB 
+
+echo "---------- Copying MariaDB to bundle\n"
+
+rm -rf $INSTALL_PREFIX/Cellar/mariadb/.DS_Store || true
+MARIADB_VERSION=`ls "$INSTALL_PREFIX/Cellar/mariadb"`
+
+echo "MariaDB Version is: - $MARIADB_VERSION -"
+
+mkdir $TEMPROOT/lib/mariadb
+
+rsync -av --exclude="include/*" --exclude="lib/plugin/ha_*" --exclude="support-files/*" --exclude="share/man/*" $INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/ $TEMPROOT/lib/mariadb
+
 
 #################################################################################################
 # Merge Manifest files
@@ -532,7 +542,6 @@ chmod 755 "$PROJECTDIR/postinstall"
 # Copy icons-set resource files.
 
 cp $INSTALL_PREFIX/share/icons/breeze/breeze-icons.rcc           $TEMPROOT/$DK_APP_CONTENTS/Resources/breeze.rcc
-#cp $INSTALL_PREFIX/share/icons/breeze-dark/breeze-icons-dark.rcc $TEMPROOT/digikam.app/Contents/Resources/breeze-dark.rcc
 
 #################################################################################################
 # Cleanup symbols in binary files to free space.
@@ -674,9 +683,9 @@ RelocatableBinaries EXECFILES[@]
 
 # done
 
-#################################################################################################
-# fix ImageMagick config
-sed -i '' "s|$INSTALL_PREFIX|..|g" $TEMPROOT/$DK_APP_CONTENTS/lib/ImageMagick/config-Q16HDRI/configure.xml
+# #################################################################################################
+# # fix ImageMagick config
+# sed -i '' "s|$INSTALL_PREFIX|..|g" $TEMPROOT/$DK_APP_CONTENTS/lib/ImageMagick/config-Q16HDRI/configure.xml
 
 #################################################################################################
 # fix the Qt directories and copy the qt.conf file
@@ -714,7 +723,7 @@ echo -e "\n     ----- Moving QtWebEngine Resources"
 #################################################################################################
 # configure MySQL/MariaDB 
 
-echo -e "\n     ----- Relocating MariaDB"
+echo -e "\n     ----- Rebasing MariaDB"
 
 # clean up old cache files
 if [ -f "$ORIG_WD/found_dylibs_cache.pkl" ] ; then
@@ -728,34 +737,25 @@ if [ -f "$ORIG_WD/signed_dylibs_cache.pkl" ] ; then
     rm "$ORIG_WD/signed_dylibs_cache.pkl"
 fi
 
-rm -rfv $TEMPROOT/digikam.app/Contents/opt/mariadb/bin/mysql-test
-
 # move MariaDB and patch up links to libs
-mv $TEMPROOT/$DK_APP_CONTENTS/opt/mariadb $TEMPROOT/$DK_APP_CONTENTS/lib/
 cp $INSTALL_PREFIX/Library/Application/digikam/database/mysql-global.conf "$TEMPROOT/$DK_APP_CONTENTS/Resources/digikam/database/mysql-global.conf"
 mkdir $TEMPROOT/$DK_APP_CONTENTS/lib/mariadb/opt
-ln -s "../../../opt/openssl@3" $TEMPROOT/$DK_APP_CONTENTS/lib/mariadb/opt/openssl@3
+# link missing libs instead of copying them
+ln -s "../../../opt/openssl@3" "$TEMPROOT/$DK_APP_CONTENTS/lib/mariadb/opt/openssl@3"
+ln -s "../../../opt/pcre2" "$TEMPROOT/$DK_APP_CONTENTS/lib/mariadb/opt/pcre2"
 
-
-# relocate libqsqlmysql.dylib and the other MariaDB binaries since we moved MariaDB
-copy_lib="$INSTALL_PREFIX/bin/python3 $ORIG_WD/package_lib.py --file=$TEMPROOT/$DK_APP_CONTENTS/share/qt/plugins/sqldrivers/libqsqlmysql.dylib --bundle-root=$TEMPROOT/$DK_APP_CONTENTS --homebrew=$INSTALL_PREFIX --processed-cache=none  --found-cache=none --signed-cache=none --update-binary=1 --copy=0 --preserve_rpath=0"
-eval "$copy_lib"
-
+# rebase the MariaDB binaries to the MariaDB dir
 # find the binaries
-MARIADB_BINARIES=`find $TEMPROOT/$DK_APP_CONTENTS/lib/mariadb -type f -perm +111`
+MARIADB_BINARIES=`find $TEMPROOT/$DK_APP_CONTENTS/lib/mariadb/bin -type f -perm +111`
 
 for FILE in $MARIADB_BINARIES ; do
 
-        copy_lib="$INSTALL_PREFIX/bin/python3 $ORIG_WD/package_lib.py --file=$FILE --bundle-root=$TEMPROOT/$DK_APP_CONTENTS/lib/mariadb --homebrew=$INSTALL_PREFIX --processed-cache=update  --found-cache=update --signed-cache=update --update-binary=1 --copy=1 --preserve_rpath=0"
+        copy_lib="$INSTALL_PREFIX/bin/python3 $ORIG_WD/package_lib.py --file=$FILE --bundle-root=$TEMPROOT/$DK_APP_CONTENTS/lib/mariadb --homebrew=$INSTALL_PREFIX --processed-cache=update  --found-cache=update --signed-cache=update --update-binary=1 --copy=0 --preserve_rpath=0"
         eval "$copy_lib"
 
 done
 
 echo -e "\n---------- Patch config and script files in MariaDB"
-
-MARIADB_VERSION=`ls "$INSTALL_PREFIX/Cellar/mariadb"`
-
-echo "MariaDB Version is: - $MARIADB_VERSION -"
 
 MARIADBFILES=`find $TEMPROOT/$DK_APP_CONTENTS/lib/mariadb -type f ! -name "*.dylib" ! -name "*.so"`
 
@@ -770,7 +770,7 @@ for FILE in $MARIADBFILES ; do
 
         if [[ $NEEDPATCH ]] ; then
 
-            echo -e "--- Patching $FILE..."
+            echo -e "--- Patching MariaDB text file: $FILE"
             sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/bin|\$DK_MARIADB_DIR/bin|g" $FILE
             sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/var|\$DK_MARIADB_DIR/var|g" $FILE
             sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/lib|\$DK_MARIADB_DIR/lib|g" $FILE
@@ -783,17 +783,16 @@ for FILE in $MARIADBFILES ; do
 
     fi
 
-   # to handle only text files
+   # to handle only Perl files
     ISPERLTEXT=`file "$FILE" | grep -e "Perl script text" || true`
 
     if [[ $ISPERLTEXT ]] ; then
 
-        echo "MariaDB text file: $FILE"
         NEEDPATCH=`grep "$INSTALL_PREFIX" "$FILE" || true`
 
         if [[ $NEEDPATCH ]] ; then
 
-            echo -e "--- Patching $FILE..."
+            echo -e "--- Patching mariaDB Perl file: $FILE"
             sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/bin|\$ENV{DK_MARIADB_DIR}/bin|g" $FILE
             sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/var|\$ENV{DK_MARIADB_DIR}/var|g" $FILE
             sed -i '' "s|$INSTALL_PREFIX/Cellar/mariadb/$MARIADB_VERSION/lib|\$ENV{DK_MARIADB_DIR}/lib|g" $FILE
