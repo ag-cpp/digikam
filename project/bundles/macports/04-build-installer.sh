@@ -330,11 +330,11 @@ cp -a "$INSTALL_PREFIX/share/icons/hicolor" "$TEMPROOT/digikam.app/Contents/Reso
 
 if [[ $DK_QTVERSION = 5 ]] ; then
 
-    cp $ORIG_WD/data/qt.conf.qt5 "$TEMPROOT/digikam.app/Contents/Resources/"
+    cp $ORIG_WD/data/qt.conf.qt5 "$TEMPROOT/digikam.app/Contents/Resources/qt.conf"
 
 else
 
-    cp $ORIG_WD/data/qt.conf.qt6 "$TEMPROOT/digikam.app/Contents/Resources/"
+    cp $ORIG_WD/data/qt.conf.qt6 "$TEMPROOT/digikam.app/Contents/Resources/qt.conf"
 
 fi
 
@@ -409,6 +409,9 @@ echo "---------- Create package pre-install script"
 cat << EOF > "$PROJECTDIR/preinstall"
 #!/bin/bash
 
+# This is the legacy install paths
+# TODO: remove this legacy rules in the future
+
 if [ -d /Applications/digiKam ] ; then
     echo "Removing digiKam directory from Applications folder"
     rm -r /Applications/digiKam
@@ -428,6 +431,14 @@ if [ -d "/opt/digikam" ] ; then
     echo "Removing legacy /opt/digikam"
     rm -rf "/opt/digikam"
 fi
+
+# This is the offcial main directory containing both applications since many years now
+
+if [ -d /Applications/digiKam.org ] ; then
+    echo "Removing digiKam.org from Applications folder"
+    rm -r /Applications/digiKam.org
+fi
+
 EOF
 
 # Pre-install script need to be executable
@@ -591,33 +602,53 @@ ln -sv "../../digikam.app/Contents/Resources" "$TEMPROOT/showfoto.app/Contents/R
 
 # For digiKam
 
-ln -sv "../../../digikam.app/Contents/libexec/qt$DK_QTVERSION/plugins/designer"                  "$TEMPROOT/digikam.app/Contents/MacOS/designer"
-ln -sv "../../../digikam.app/Contents/libexec/qt$DK_QTVERSION/plugins/generic"                   "$TEMPROOT/digikam.app/Contents/MacOS/generic"
-ln -sv "../../../digikam.app/Contents/libexec/qt$DK_QTVERSION/plugins/imageformats"              "$TEMPROOT/digikam.app/Contents/MacOS/imageformats"
-ln -sv "../../../digikam.app/Contents/libexec/qt$DK_QTVERSION/plugins/platforms"                 "$TEMPROOT/digikam.app/Contents/MacOS/platforms"
-ln -sv "../../../digikam.app/Contents/libexec/qt$DK_QTVERSION/plugins/styles"                    "$TEMPROOT/digikam.app/Contents/MacOS/styles"
-ln -sv "../../../digikam.app/Contents/libexec/qt$DK_QTVERSION/plugins/iconengines"               "$TEMPROOT/digikam.app/Contents/MacOS/iconengines"
-ln -sv "../../../digikam.app/Contents/libexec/qt$DK_QTVERSION/plugins/multimedia"                "$TEMPROOT/digikam.app/Contents/MacOS/multimedia"
-ln -sv "../../../digikam.app/Contents/libexec/qt$DK_QTVERSION/plugins/sqldrivers"                "$TEMPROOT/digikam.app/Contents/MacOS/sqldrivers"
-ln -sv "../../../digikam.app/Contents/libexec/qt$DK_QTVERSION/plugins/tls"                       "$TEMPROOT/digikam.app/Contents/MacOS/tls"
+ln -sv "../../../digikam.app/Contents/libexec/qt$DK_QTVERSION/plugins/designer"                      "$TEMPROOT/digikam.app/Contents/MacOS/designer"
+ln -sv "../../../digikam.app/Contents/libexec/qt$DK_QTVERSION/plugins/generic"                       "$TEMPROOT/digikam.app/Contents/MacOS/generic"
+ln -sv "../../../digikam.app/Contents/libexec/qt$DK_QTVERSION/plugins/imageformats"                  "$TEMPROOT/digikam.app/Contents/MacOS/imageformats"
+ln -sv "../../../digikam.app/Contents/libexec/qt$DK_QTVERSION/plugins/platforms"                     "$TEMPROOT/digikam.app/Contents/MacOS/platforms"
+ln -sv "../../../digikam.app/Contents/libexec/qt$DK_QTVERSION/plugins/styles"                        "$TEMPROOT/digikam.app/Contents/MacOS/styles"
+ln -sv "../../../digikam.app/Contents/libexec/qt$DK_QTVERSION/plugins/iconengines"                   "$TEMPROOT/digikam.app/Contents/MacOS/iconengines"
+ln -sv "../../../digikam.app/Contents/libexec/qt$DK_QTVERSION/plugins/sqldrivers"                    "$TEMPROOT/digikam.app/Contents/MacOS/sqldrivers"
+ln -sv "../../../digikam.app/Contents/libexec/qt$DK_QTVERSION/plugins/kf$DK_QTVERSION"               "$TEMPROOT/digikam.app/Contents/MacOS/kf$DK_QTVERSION"
 
-ln -sv "../../../digikam.app/Contents/libexec/qt$DK_QTVERSION/plugins/kiconthemes$DK_QTVERSION"  "$TEMPROOT/digikam.app/Contents/MacOS/kiconthemes$DK_QTVERSION"
-ln -sv "../../../digikam.app/Contents/libexec/qt$DK_QTVERSION/plugins/kf$DK_QTVERSION"           "$TEMPROOT/digikam.app/Contents/MacOS/kf$DK_QTVERSION"
+if [[ $DK_QTVERSION = 6 ]] ; then
+
+    ln -sv "../../../digikam.app/Contents/libexec/qt$DK_QTVERSION/plugins/multimedia"                "$TEMPROOT/digikam.app/Contents/MacOS/multimedia"
+    ln -sv "../../../digikam.app/Contents/libexec/qt$DK_QTVERSION/plugins/tls"                       "$TEMPROOT/digikam.app/Contents/MacOS/tls"
+    ln -sv "../../../digikam.app/Contents/libexec/qt$DK_QTVERSION/plugins/kiconthemes$DK_QTVERSION"  "$TEMPROOT/digikam.app/Contents/MacOS/kiconthemes$DK_QTVERSION"
+
+else
+
+    # Qt5 only
+
+    ln -sv "../../../digikam.app/Contents/libexec/qt$DK_QTVERSION/plugins/kauth"                     "$TEMPROOT/digikam.app/Contents/MacOS/kauth"
+
+fi
 
 # For Showfoto
 
-ln -sv "../../../showfoto.app/Contents/libexec/qt$DK_QTVERSION/plugins/designer"                 "$TEMPROOT/showfoto.app/Contents/MacOS/designer"
-ln -sv "../../../showfoto.app/Contents/libexec/qt$DK_QTVERSION/plugins/generic"                  "$TEMPROOT/showfoto.app/Contents/MacOS/generic"
-ln -sv "../../../showfoto.app/Contents/libexec/qt$DK_QTVERSION/plugins/imageformats"             "$TEMPROOT/showfoto.app/Contents/MacOS/imageformats"
-ln -sv "../../../showfoto.app/Contents/libexec/qt$DK_QTVERSION/plugins/platforms"                "$TEMPROOT/showfoto.app/Contents/MacOS/platforms"
-ln -sv "../../../showfoto.app/Contents/libexec/qt$DK_QTVERSION/plugins/styles"                   "$TEMPROOT/showfoto.app/Contents/MacOS/styles"
-ln -sv "../../../showfoto.app/Contents/libexec/qt$DK_QTVERSION/plugins/iconengines"              "$TEMPROOT/showfoto.app/Contents/MacOS/iconengines"
-ln -sv "../../../showfoto.app/Contents/libexec/qt$DK_QTVERSION/plugins/multimedia"               "$TEMPROOT/showfoto.app/Contents/MacOS/multimedia"
-ln -sv "../../../showfoto.app/Contents/libexec/qt$DK_QTVERSION/plugins/sqldrivers"               "$TEMPROOT/showfoto.app/Contents/MacOS/sqldrivers"
-ln -sv "../../../showfoto.app/Contents/libexec/qt$DK_QTVERSION/plugins/tls"                      "$TEMPROOT/showfoto.app/Contents/MacOS/tls"
+ln -sv "../../../showfoto.app/Contents/libexec/qt$DK_QTVERSION/plugins/designer"                     "$TEMPROOT/showfoto.app/Contents/MacOS/designer"
+ln -sv "../../../showfoto.app/Contents/libexec/qt$DK_QTVERSION/plugins/generic"                      "$TEMPROOT/showfoto.app/Contents/MacOS/generic"
+ln -sv "../../../showfoto.app/Contents/libexec/qt$DK_QTVERSION/plugins/imageformats"                 "$TEMPROOT/showfoto.app/Contents/MacOS/imageformats"
+ln -sv "../../../showfoto.app/Contents/libexec/qt$DK_QTVERSION/plugins/platforms"                    "$TEMPROOT/showfoto.app/Contents/MacOS/platforms"
+ln -sv "../../../showfoto.app/Contents/libexec/qt$DK_QTVERSION/plugins/styles"                       "$TEMPROOT/showfoto.app/Contents/MacOS/styles"
+ln -sv "../../../showfoto.app/Contents/libexec/qt$DK_QTVERSION/plugins/iconengines"                  "$TEMPROOT/showfoto.app/Contents/MacOS/iconengines"
+ln -sv "../../../showfoto.app/Contents/libexec/qt$DK_QTVERSION/plugins/sqldrivers"                   "$TEMPROOT/showfoto.app/Contents/MacOS/sqldrivers"
+ln -sv "../../../showfoto.app/Contents/libexec/qt$DK_QTVERSION/plugins/kf$DK_QTVERSION"              "$TEMPROOT/showfoto.app/Contents/MacOS/kf$DK_QTVERSION"
 
-ln -sv "../../../showfoto.app/Contents/libexec/qt$DK_QTVERSION/plugins/kiconthemes$DK_QTVERSION" "$TEMPROOT/showfoto.app/Contents/MacOS/kiconthemes$DK_QTVERSION"
-ln -sv "../../../showfoto.app/Contents/libexec/qt$DK_QTVERSION/plugins/kf$DK_QTVERSION"          "$TEMPROOT/showfoto.app/Contents/MacOS/kf$DK_QTVERSION"
+if [[ $DK_QTVERSION = 6 ]] ; then
+
+    ln -sv "../../../showfoto.app/Contents/libexec/qt$DK_QTVERSION/plugins/multimedia"               "$TEMPROOT/showfoto.app/Contents/MacOS/multimedia"
+    ln -sv "../../../showfoto.app/Contents/libexec/qt$DK_QTVERSION/plugins/tls"                      "$TEMPROOT/showfoto.app/Contents/MacOS/tls"
+    ln -sv "../../../showfoto.app/Contents/libexec/qt$DK_QTVERSION/plugins/kiconthemes$DK_QTVERSION" "$TEMPROOT/showfoto.app/Contents/MacOS/kiconthemes$DK_QTVERSION"
+
+else
+
+    # Qt5 only
+
+    ln -sv "../../../showfoto.app/Contents/libexec/qt$DK_QTVERSION/plugins/kauth"                     "$TEMPROOT/showfoto.app/Contents/MacOS/kauth"
+
+fi
 
 echo -e "\n---------- Cleanup files in bundle"
 
