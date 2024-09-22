@@ -124,19 +124,34 @@ cv::Mat DNNFaceDetectorYuNet::callModel(const cv::Mat& inputImage)
     // lock the model for single threading
     std::lock_guard<std::mutex> lock(lockModel);
 
-    // set up the detector with new params
-    cv_model->setInputSize(inputImage.size());
-    cv_model->setScoreThreshold(confidenceThreshold);
-    cv_model->setNMSThreshold(nmsThreshold);
+    try 
+    {
 
-    // detect faces
-    cv::Mat faces;
-    
-    timer.start();
-    
-    cv_model->detect(inputImage, faces);
+        // set up the detector with new params
+        cv_model->setInputSize(inputImage.size());
+        cv_model->setScoreThreshold(confidenceThreshold);
+        cv_model->setNMSThreshold(nmsThreshold);
 
-    qCDebug(DIGIKAM_FACESENGINE_LOG) << "YuNet detected" << faces.rows << "faces in" << timer.elapsed() << "ms";
+        // detect faces
+        cv::Mat faces;
+        
+        timer.start();
+        
+        cv_model->detect(inputImage, faces);
+
+        qCDebug(DIGIKAM_FACESENGINE_LOG) << "YuNet detected" << faces.rows << "faces in" << timer.elapsed() << "ms";
+
+    }
+
+    catch (const std::exception& ex) {
+        // ...
+    } catch (const std::string& ex) {
+        // ...
+    } catch (...) {
+        // ...
+        qCCritical(DIGIKAM_FACESENGINE_LOG) << "Face detection encountered a critical error.  Reloading model";
+        loadModels();
+    }
 
     return faces;
 }
