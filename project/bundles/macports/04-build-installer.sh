@@ -157,7 +157,13 @@ etc/ImageMagick* \
 etc/mariadb$MARIADB_SUFFIX \
 "
 
-#etc/sane.d \
+if [[ $DK_QTVERSION == 6 ]] ; then
+
+    OTHER_DIRS=$OTHER_DIRS"\
+    libexec/qt$DK_QTVERSION/lib/QtWebEngineCore.framework \
+    "
+
+fi
 
 # Additional Data Directories - to be copied recursively
 OTHER_DATA="\
@@ -169,17 +175,12 @@ share/applications \
 lensfun \
 "
 
-if [[ $ARCH_TARGET = "x86_64" ]] ; then
+if [[ $DK_QTVERSION == 6 ]] ; then
 
-    OTHER_DATA=$OTHER_DATA"\
-    "
-    # NOTE: QtCurve is located in Library/Application
-
-else    # Arm64
+    # NOTE: Qt5Curve is located in Library/Application
 
     OTHER_DATA=$OTHER_DATA"\
     share/QtCurve
-    libexec/qt$DK_QTVERSION/lib/QtWebEngineCore.framework \
     "
 
 fi
@@ -711,9 +712,6 @@ rm -fr "$TEMPROOT/digikam.app/Contents/share/mariadb$MARIADB_SUFFIX"
 ln -sv "../../../../../digikam.app/Contents/lib/mariadb$MARIADB_SUFFIX/share/mariadb$MARIADB_SUFFIX" "$TEMPROOT/digikam.app/Contents/lib/mariadb$MARIADB_SUFFIX/share/mariadb"
 ln -sv "../../../digikam.app/Contents/lib/mariadb$MARIADB_SUFFIX"                                    "$TEMPROOT/digikam.app/Contents/lib/mariadb"
 ln -sv "../../../digikam.app/Contents/etc/mariadb$MARIADB_SUFFIX"                                    "$TEMPROOT/digikam.app/Contents/etc/mariadb"
-
-# See bug 491042
-ln -sv "../../../digikam.app/Contents/lib/mariadb/lib"                                               "$TEMPROOT/digikam.app/Contents/lib"
 
 #################################################################################################
 # Install ExifTool binary.

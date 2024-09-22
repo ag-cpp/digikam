@@ -185,7 +185,7 @@ void MultiValuesEdit::slotSelectionChanged()
 {
     if (!d->valueBox->selectedItems().isEmpty())
     {
-        d->dataList->findText(d->valueBox->selectedItems()[0]->text());
+        d->dataList->setCurrent(d->valueBox->selectedItems()[0]->text());
         d->delValueButton->setEnabled(true);
         d->repValueButton->setEnabled(true);
     }
