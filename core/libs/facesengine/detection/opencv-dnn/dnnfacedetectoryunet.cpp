@@ -120,6 +120,7 @@ bool DNNFaceDetectorYuNet::loadModels()
 cv::Mat DNNFaceDetectorYuNet::callModel(const cv::Mat& inputImage)
 {
     QElapsedTimer timer;
+    cv::Mat faces;
 
     // lock the model for single threading
     std::lock_guard<std::mutex> lock(lockModel);
@@ -132,9 +133,7 @@ cv::Mat DNNFaceDetectorYuNet::callModel(const cv::Mat& inputImage)
         cv_model->setScoreThreshold(confidenceThreshold);
         cv_model->setNMSThreshold(nmsThreshold);
 
-        // detect faces
-        cv::Mat faces;
-        
+        // detect faces        
         timer.start();
         
         cv_model->detect(inputImage, faces);
