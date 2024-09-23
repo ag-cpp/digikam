@@ -83,8 +83,6 @@ bool DNNFaceDetectorYuNet::loadModels()
         target_id = str2target.at(cvTarget.toLower().toUtf8().data());
     }
 
-    const int 
-
     QString model   = QLatin1String("face_detection_yunet_2023mar.onnx");
 
     QString nnmodel = appPath + QLatin1Char('/') + model;
