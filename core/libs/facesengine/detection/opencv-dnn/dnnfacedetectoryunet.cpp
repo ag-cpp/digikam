@@ -38,13 +38,21 @@
 
 namespace Digikam
 {
+const std::map<std::string, int> str2backend{
+    {"opencv", cv::dnn::DNN_BACKEND_OPENCV}, {"cuda", cv::dnn::DNN_BACKEND_CUDA},
+    {"timvx",  cv::dnn::DNN_BACKEND_TIMVX},  {"cann", cv::dnn::DNN_BACKEND_CANN}
+};
+const std::map<std::string, int> str2target{
+    {"cpu", cv::dnn::DNN_TARGET_CPU}, {"cuda", cv::dnn::DNN_TARGET_CUDA},
+    {"npu", cv::dnn::DNN_TARGET_NPU}, {"cuda_fp16", cv::dnn::DNN_TARGET_CUDA_FP16}
+};
 
 std::mutex DNNFaceDetectorYuNet::lockModel;
 
 DNNFaceDetectorYuNet::DNNFaceDetectorYuNet()
     : DNNFaceDetectorBase(1.0F / 255.0F,
                           cv::Scalar(0.0, 0.0, 0.0),
-                          cv::Size(1024, 1024))
+                          cv::Size(640, 640))
 {
     qCDebug(DIGIKAM_FACESENGINE_LOG) << "Creating new instance of DNNFaceDetectorYuNet";
 
@@ -63,14 +71,23 @@ bool DNNFaceDetectorYuNet::loadModels()
     int target_id = 0;
 
     // TODO: detect backends and targets.  Pick the best one.
+    QString cvBackend = QString::fromLocal8Bit(qgetenv("DIGIKAM_YUNET_BACKEND"));
+    QString cvTarget = QString::fromLocal8Bit(qgetenv("DIGIKAM_YUNET_TARGET"));
 
-    // net.setPreferableBackend(cv::dnn::DNN_BACKEND_DEFAULT);
-    // net.setPreferableTarget(cv::dnn::DNN_TARGET_CPU);
+    if (cvBackend.length() > 0)
+    {
+        backend_id = str2backend.at(cvBackend.toLower().toUtf8().data());
+    }
+    if (cvTarget.length() > 0)
+    {
+        target_id = str2target.at(cvTarget.toLower().toUtf8().data());
+    }
 
+    const int 
 
-     QString model   = QLatin1String("face_detection_yunet_2023mar.onnx");
+    QString model   = QLatin1String("face_detection_yunet_2023mar.onnx");
 
-     QString nnmodel = appPath + QLatin1Char('/') + model;
+    QString nnmodel = appPath + QLatin1Char('/') + model;
 
     if (QFileInfo::exists(nnmodel))
     {
