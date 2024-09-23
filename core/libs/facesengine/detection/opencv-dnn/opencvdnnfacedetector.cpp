@@ -100,14 +100,16 @@ cv::Mat OpenCVDNNFaceDetector::prepareForDetection(const DImg& inputImage, cv::S
     {
         cvImage.convertTo(cvImage, CV_8UC3, 1 / 256.0);
     }
-    if (DetectorNNModel::YUNET == m_modelType)
-    {
-        return prepareForDetectionYuNet(cvImage, paddedSize);
-    }
-    else
-    {
-        return prepareForDetection(cvImage, paddedSize);
-    }
+    // if (DetectorNNModel::YUNET == m_modelType)
+    // {
+    //     return prepareForDetectionYuNet(cvImage, paddedSize);
+    // }
+    // else
+    // {
+    //     return prepareForDetection(cvImage, paddedSize);
+    // }
+    
+    return prepareForDetection(cvImage, paddedSize);
 }
 
 cv::Mat OpenCVDNNFaceDetector::prepareForDetection(const QImage& inputImage, cv::Size& paddedSize) const

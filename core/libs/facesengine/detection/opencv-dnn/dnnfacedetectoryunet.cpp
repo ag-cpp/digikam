@@ -125,6 +125,8 @@ cv::Mat DNNFaceDetectorYuNet::callModel(const cv::Mat& inputImage)
     // lock the model for single threading
     std::lock_guard<std::mutex> lock(lockModel);
 
+    qCDebug(DIGIKAM_FACESENGINE_LOG) << "starting YuNet face detection";
+    
     try 
     {
 
