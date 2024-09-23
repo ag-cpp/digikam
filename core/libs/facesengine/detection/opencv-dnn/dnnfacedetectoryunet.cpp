@@ -39,6 +39,8 @@
 namespace Digikam
 {
 
+std::mutex DNNFaceDetectorYuNet::lockModel;
+
 DNNFaceDetectorYuNet::DNNFaceDetectorYuNet()
     : DNNFaceDetectorBase(1.0F / 255.0F,
                           cv::Scalar(0.0, 0.0, 0.0),
@@ -122,22 +124,22 @@ cv::Mat DNNFaceDetectorYuNet::callModel(const cv::Mat& inputImage)
     QElapsedTimer timer;
     cv::Mat faces;
 
+    qCDebug(DIGIKAM_FACESENGINE_LOG) << "starting YuNet face detection";
+
     // lock the model for single threading
     std::lock_guard<std::mutex> lock(lockModel);
 
-    qCDebug(DIGIKAM_FACESENGINE_LOG) << "starting YuNet face detection";
-    
     try 
     {
+        // start the timer so we know how long we're locking for
+        timer.start();
 
         // set up the detector with new params
         cv_model->setInputSize(inputImage.size());
         cv_model->setScoreThreshold(confidenceThreshold);
         cv_model->setNMSThreshold(nmsThreshold);
 
-        // detect faces        
-        timer.start();
-        
+        // detect faces
         cv_model->detect(inputImage, faces);
 
         qCDebug(DIGIKAM_FACESENGINE_LOG) << "YuNet detected" << faces.rows << "faces in" << timer.elapsed() << "ms";
@@ -166,7 +168,7 @@ void DNNFaceDetectorYuNet::detectFaces(const cv::Mat& inputImage,
     // safety check
     if (inputImage.empty())
     {
-        qCDebug(DIGIKAM_FACESENGINE_LOG) << "Invalid image given, not detecting faces.";
+        qCDebug(DIGIKAM_FACESENGINE_LOG) << "Invalid image given to YuNet, not detecting faces.";
         return;
     }
 

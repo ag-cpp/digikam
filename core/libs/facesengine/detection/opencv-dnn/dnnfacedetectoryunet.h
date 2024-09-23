@@ -31,7 +31,7 @@ class DIGIKAM_EXPORT DNNFaceDetectorYuNet: public DNNFaceDetectorBase
 {
 protected:
     cv::Ptr<cv::FaceDetectorYN> cv_model;   // the YuNet model
-    std::mutex lockModel;                   // mutex for single-threading calls to the model
+    static std::mutex lockModel;            // mutex for single-threading calls to the model
 
 public:
 
