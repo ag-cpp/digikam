@@ -78,12 +78,27 @@ bool DNNFaceDetectorYuNet::loadModels()
 
     if (cvBackend.length() > 0)
     {
-        backend_id = str2backend.at(cvBackend.toLower().toUtf8().data());
+        try
+        {
+            backend_id = str2backend.at(cvBackend.toLower().toUtf8().data());
+        }
+        catch(...)
+        {
+            qCDebug(DIGIKAM_FACEDB_LOG) << "Invalid YuNet OpenCV backend:" << cvBackend;
+        }
     }
     if (cvTarget.length() > 0)
     {
-        target_id = str2target.at(cvTarget.toLower().toUtf8().data());
+        try
+        {
+            target_id = str2target.at(cvTarget.toLower().toUtf8().data());
+        }
+        catch(...)
+        {
+            qCDebug(DIGIKAM_FACEDB_LOG) << "Invalid YuNet OpenCV target:" << cvTarget;
+        }
     }
+
 
     QString model   = QLatin1String("face_detection_yunet_2023mar.onnx");
 
