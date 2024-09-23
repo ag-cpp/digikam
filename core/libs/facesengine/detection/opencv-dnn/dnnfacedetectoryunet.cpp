@@ -81,11 +81,11 @@ bool DNNFaceDetectorYuNet::loadModels()
         try
         {
             backend_id = str2backend.at(cvBackend.toLower().toUtf8().data());
-            qCDebug(DIGIKAM_FACEDB_LOG) << "YuNet using OpenCV backend:" << cvBackend;
+            qCDebug(DIGIKAM_FACESENGINE_LOG) << "YuNet using OpenCV backend:" << cvBackend;
         }
         catch(...)
         {
-            qCDebug(DIGIKAM_FACEDB_LOG) << "Invalid YuNet OpenCV backend:" << cvBackend;
+            qCDebug(DIGIKAM_FACESENGINE_LOG) << "Invalid YuNet OpenCV backend:" << cvBackend;
         }
     }
     if (cvTarget.length() > 0)
@@ -93,11 +93,11 @@ bool DNNFaceDetectorYuNet::loadModels()
         try
         {
             target_id = str2target.at(cvTarget.toLower().toUtf8().data());
-            qCDebug(DIGIKAM_FACEDB_LOG) << "YuNet using OpenCV target:" << cvTarget;
+            qCDebug(DIGIKAM_FACESENGINE_LOG) << "YuNet using OpenCV target:" << cvTarget;
         }
         catch(...)
         {
-            qCDebug(DIGIKAM_FACEDB_LOG) << "Invalid YuNet OpenCV target:" << cvTarget;
+            qCDebug(DIGIKAM_FACESENGINE_LOG) << "Invalid YuNet OpenCV target:" << cvTarget;
         }
     }
 
@@ -110,7 +110,7 @@ bool DNNFaceDetectorYuNet::loadModels()
     {
         try
         {
-            qCDebug(DIGIKAM_FACEDB_LOG) << "YuNet model:" << model;
+            qCDebug(DIGIKAM_FACESENGINE_LOG) << "YuNet model:" << model;
 
 #ifdef Q_OS_WIN
 
@@ -132,21 +132,21 @@ bool DNNFaceDetectorYuNet::loadModels()
         }
         catch (cv::Exception& e)
         {
-            qCWarning(DIGIKAM_FACEDB_LOG) << "cv::Exception:" << e.what();
+            qCWarning(DIGIKAM_FACESENGINE_LOG) << "cv::Exception:" << e.what();
 
             return false;
         }
         catch (...)
         {
-           qCWarning(DIGIKAM_FACEDB_LOG) << "Default exception from OpenCV";
+           qCWarning(DIGIKAM_FACESENGINE_LOG) << "Default exception from OpenCV";
 
            return false;
         }
     }
     else
     {
-        qCCritical(DIGIKAM_FACEDB_LOG) << "Cannot find faces engine DNN model" << model;
-        qCCritical(DIGIKAM_FACEDB_LOG) << "Faces detection feature cannot be used!";
+        qCCritical(DIGIKAM_FACESENGINE_LOG) << "Cannot find faces engine DNN model" << model;
+        qCCritical(DIGIKAM_FACESENGINE_LOG) << "Faces detection feature cannot be used!";
 
         return false;
     }
