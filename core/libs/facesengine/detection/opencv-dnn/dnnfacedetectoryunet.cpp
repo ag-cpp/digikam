@@ -81,6 +81,7 @@ bool DNNFaceDetectorYuNet::loadModels()
         try
         {
             backend_id = str2backend.at(cvBackend.toLower().toUtf8().data());
+            qCDebug(DIGIKAM_FACEDB_LOG) << "YuNet using OpenCV backend:" << cvBackend;
         }
         catch(...)
         {
@@ -92,6 +93,7 @@ bool DNNFaceDetectorYuNet::loadModels()
         try
         {
             target_id = str2target.at(cvTarget.toLower().toUtf8().data());
+            qCDebug(DIGIKAM_FACEDB_LOG) << "YuNet using OpenCV target:" << cvTarget;
         }
         catch(...)
         {
