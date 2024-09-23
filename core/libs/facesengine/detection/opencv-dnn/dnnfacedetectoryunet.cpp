@@ -44,7 +44,8 @@ const std::map<std::string, int> str2backend{
 };
 const std::map<std::string, int> str2target{
     {"cpu", cv::dnn::DNN_TARGET_CPU}, {"cuda", cv::dnn::DNN_TARGET_CUDA},
-    {"npu", cv::dnn::DNN_TARGET_NPU}, {"cuda_fp16", cv::dnn::DNN_TARGET_CUDA_FP16}
+    {"npu", cv::dnn::DNN_TARGET_NPU}, {"cuda_fp16", cv::dnn::DNN_TARGET_CUDA_FP16},
+    {"opencl", cv::dnn::DNN_TARGET_OPENCL}
 };
 
 std::mutex DNNFaceDetectorYuNet::lockModel;
@@ -67,8 +68,8 @@ bool DNNFaceDetectorYuNet::loadModels()
     float conf_threshold = 0.3f;
     float nms_threshold = 0.3f;
     int top_k = 5000;
-    int backend_id = 0;
-    int target_id = 0;
+    int backend_id = cv::dnn::DNN_BACKEND_OPENCV;
+    int target_id = cv::dnn::DNN_TARGET_CPU;
 
     // TODO: detect backends and targets.  Pick the best one.
     QString cvBackend = QString::fromLocal8Bit(qgetenv("DIGIKAM_YUNET_BACKEND"));
