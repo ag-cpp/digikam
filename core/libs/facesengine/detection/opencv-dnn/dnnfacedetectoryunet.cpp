@@ -54,7 +54,7 @@ std::mutex DNNFaceDetectorYuNet::lockModel;
 DNNFaceDetectorYuNet::DNNFaceDetectorYuNet()
     : DNNFaceDetectorBase(1.0F / 255.0F,
                           cv::Scalar(0.0, 0.0, 0.0),
-                          cv::Size(640, 640))
+                          cv::Size(800, 800))
 {
     qCDebug(DIGIKAM_FACESENGINE_LOG) << "Creating new instance of DNNFaceDetectorYuNet";
 
