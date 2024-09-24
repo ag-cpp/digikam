@@ -61,6 +61,16 @@ DNNFaceDetectorYuNet::DNNFaceDetectorYuNet()
 {
     qCDebug(DIGIKAM_FACESENGINE_LOG) << "Creating new instance of DNNFaceDetectorYuNet";
 
+    // this is temporary until we have a slider in the UI
+    QString maxImageDimensionEnv    = QString::fromLocal8Bit(qgetenv("DIGIKAM_YUNET_IMAGE_DIMENSION_MAX"));
+    if (maxImageDimensionEnv.length() > 0)
+    {
+        int maxImageDimension = maxImageDimensionEnv.toInt();
+        
+        // inputImageSize should be set from the UI
+        inputImageSize = cv::Size(maxImageDimension, maxImageDimension);
+    }
+
     loadModels();
 }
 
