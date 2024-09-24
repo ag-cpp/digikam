@@ -5,9 +5,9 @@
  * Date        : 2010-09-02
  * Description : A convenience class for a standalone face detector
  *
- * SPDX-FileCopyrightText:      2010 by Marcel Wiesweg <marcel dot wiesweg at gmx dot de>
+ * SPDX-FileCopyrightText: 2010      by Marcel Wiesweg <marcel dot wiesweg at gmx dot de>
  * SPDX-FileCopyrightText: 2010-2024 by Gilles Caulier <caulier dot gilles at gmail dot com>
- * SPDX-FileCopyrightText: 2024 by Michael Miller <michael underscore miller at msn dot com>
+ * SPDX-FileCopyrightText: 2024      by Michael Miller <michael underscore miller at msn dot com>
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
  *
@@ -43,8 +43,10 @@ public:
     {
         if (!m_dnnDetectorBackend)
         {
-            if (m_parameters.contains(QLatin1String("useyolov3")) &&
-                m_parameters.value(QLatin1String("useyolov3")).toBool())
+            if (
+                m_parameters.contains(QLatin1String("useyolov3")) &&
+                m_parameters.value(QLatin1String("useyolov3")).toBool()
+               )
             {
                 m_dnnDetectorBackend = new OpenCVDNNFaceDetector(DetectorNNModel::YOLO);
             }
@@ -52,6 +54,7 @@ public:
             {
                 // TODO: remove SSD model permanently
                 // m_dnnDetectorBackend = new OpenCVDNNFaceDetector(DetectorNNModel::SSDMOBILENET);
+
                 m_dnnDetectorBackend = new OpenCVDNNFaceDetector(DetectorNNModel::YUNET);
             }
         }
@@ -72,6 +75,7 @@ public:
         }
 
         // TODO Handle settings
+
         if (m_parameters.contains(QLatin1String("accuracy")))
         {
                 backend()->setAccuracy(static_cast<float>(m_parameters.value(QLatin1String("accuracy")).toDouble()));
