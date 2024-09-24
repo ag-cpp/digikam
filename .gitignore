@@ -59,3 +59,5 @@ project/bundles/homebrew/data/o2_manifest.txt
 project/bundles/homebrew/data/RELEASEID.txt
 project/bundles/homebrew/installer/postinstall
 project/bundles/homebrew/installer/preinstall
+core/app/main/QDBusArgument
+core/app/main/qdbusargument.h

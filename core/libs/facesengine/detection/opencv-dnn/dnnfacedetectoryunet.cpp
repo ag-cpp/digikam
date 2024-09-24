@@ -52,6 +52,8 @@ const std::map<std::string, int> str2target{
     {"opencl_fp16", cv::dnn::DNN_TARGET_OPENCL_FP16}
 };
 
+const int DNNFaceDetectorYuNet::imageSizeMaxDimensions[5] = {420, 620, 800, 1200, 2000};
+
 QMutex DNNFaceDetectorYuNet::lockModel;
 
 DNNFaceDetectorYuNet::DNNFaceDetectorYuNet()
@@ -65,10 +67,17 @@ DNNFaceDetectorYuNet::DNNFaceDetectorYuNet()
     QString maxImageDimensionEnv    = QString::fromLocal8Bit(qgetenv("DIGIKAM_YUNET_IMAGE_DIMENSION_MAX"));
     if (maxImageDimensionEnv.length() > 0)
     {
-        int maxImageDimension = maxImageDimensionEnv.toInt();
+        try
+        {
+            int maxImageDimension = maxImageDimensionEnv.toInt();
+            // inputImageSize should be set from the UI
+            inputImageSize = cv::Size(imageSizeMaxDimensions[maxImageDimension], imageSizeMaxDimensions[maxImageDimension]);
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << "Invalid image dimension index." << e.what() << '\n';
+        }
         
-        // inputImageSize should be set from the UI
-        inputImageSize = cv::Size(maxImageDimension, maxImageDimension);
     }
 
     loadModels();
