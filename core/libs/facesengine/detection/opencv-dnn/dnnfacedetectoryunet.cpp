@@ -70,12 +70,15 @@ DNNFaceDetectorYuNet::DNNFaceDetectorYuNet()
         try
         {
             int maxImageDimension = maxImageDimensionEnv.toInt();
-            // inputImageSize should be set from the UI
-            inputImageSize = cv::Size(imageSizeMaxDimensions[maxImageDimension], imageSizeMaxDimensions[maxImageDimension]);
+            if (maxImageDimension > 250)
+            {
+                // inputImageSize should be set from the UI
+                inputImageSize = cv::Size(maxImageDimension, maxImageDimension);
+            }
         }
         catch(const std::exception& e)
         {
-            std::cerr << "Invalid image dimension index." << e.what() << '\n';
+            std::cerr << "Invalid image dimension size." << e.what() << '\n';
         }
         
     }
