@@ -46,6 +46,13 @@ public:
         ClearAll
     };
 
+    enum TrainingDataHandling
+    {
+        AllTrainingData,
+        Last100,
+        LastTwoYears
+    };
+
 public:
 
     FaceScanSettings()  = default;
@@ -74,6 +81,8 @@ public:
     ScanTask                                task                        = Detect;
 
     AlreadyScannedHandling                  alreadyScannedHandling      = Skip;
+
+    TrainingDataHandling                    trainingDataHandling        = AllTrainingData;
 };
 
 } // namespace Digikam

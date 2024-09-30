@@ -162,6 +162,16 @@ MaintenanceDlg::MaintenanceDlg(QWidget* const parent)
                                i18n("Detect and recognize Faces"), QLatin1String("FaceManagement"), false);
     d->expanderBox->setCheckBoxVisible(Private::FaceManagement, true);
 
+    DHBox* const hbox4     = new DHBox(d->vbox4);
+    new QLabel(i18n("Filter training data: "), hbox4);
+    QWidget* const space10  = new QWidget(hbox4);
+    hbox4->setStretchFactor(space10, 10);
+    hbox4->setEnabled(false);
+    d->trainingDataHandling = new QComboBox(hbox4);
+    d->trainingDataHandling->addItem(i18nc("@label:listbox", "Use all available images"),              FaceScanSettings::AllTrainingData);
+    d->trainingDataHandling->addItem(i18nc("@label:listbox", "Use the last 100 images per person"),    FaceScanSettings::Last100);
+    d->trainingDataHandling->addItem(i18nc("@label:listbox", "Use images from the last two years"),    FaceScanSettings::LastTwoYears);
+
     // --------------------------------------------------------------------------------------
 
     d->vbox5               = new DVBox;
@@ -298,6 +308,13 @@ MaintenanceDlg::MaintenanceDlg(QWidget* const parent)
             this, [hbox3](bool on)
         {
             hbox3->setEnabled(!on);
+        }
+    );
+
+    connect(d->retrainAllFaces, &QCheckBox::toggled,
+            this, [hbox4](bool on)
+        {
+            hbox4->setEnabled(on);
         }
     );
 

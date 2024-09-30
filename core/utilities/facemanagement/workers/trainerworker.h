@@ -29,7 +29,7 @@ class Q_DECL_HIDDEN TrainerWorker : public WorkerObject
 
 public:
 
-    explicit TrainerWorker(FacePipeline::Private* const dd);
+    explicit TrainerWorker(FacePipeline::Private* const dd, FaceScanSettings::TrainingDataHandling trainingDataHandling=FaceScanSettings::AllTrainingData);
     ~TrainerWorker() override;
 
 protected:
@@ -49,6 +49,9 @@ protected:
     FacialRecognitionWrapper     recognizer;
     FaceItemRetriever            imageRetriever;
     FacePipeline::Private* const d              = nullptr;
+
+private:
+    FaceScanSettings::TrainingDataHandling trainingDataHandling;
 };
 
 } // namespace Digikam

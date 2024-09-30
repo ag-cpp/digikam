@@ -114,7 +114,7 @@ FacesDetector::FacesDetector(const FaceScanSettings& settings, ProgressItem* con
 
         FacialRecognitionWrapper().clearAllTraining(QLatin1String("digikam"));
         d->pipeline.plugRetrainingDatabaseFilter();
-        d->pipeline.plugTrainer();
+        d->pipeline.plugTrainer(settings.trainingDataHandling);
         d->pipeline.construct();
     }
     else if (settings.task == FaceScanSettings::BenchmarkDetection)

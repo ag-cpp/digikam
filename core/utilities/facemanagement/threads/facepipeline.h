@@ -18,6 +18,7 @@
 // Local includes
 
 #include "facepipelinepackage.h"
+#include "facescansettings.h"
 
 namespace Digikam
 {
@@ -104,7 +105,7 @@ public:
     void plugFaceRecognizer();
     void plugDatabaseWriter(WriteMode mode);
     void plugDatabaseEditor();
-    void plugTrainer();
+    void plugTrainer(FaceScanSettings::TrainingDataHandling trainingDataHandling=FaceScanSettings::AllTrainingData);
     void plugDetectionBenchmarker();
     void plugRecognitionBenchmarker();
     void construct();
